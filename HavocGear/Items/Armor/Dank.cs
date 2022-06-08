@@ -18,11 +18,11 @@ namespace SGAmod.HavocGear.Items.Armor
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 20;
-            item.value = 10000;
-            item.rare = 1;
-            item.defense = 2;
+            Item.width = 30;
+            Item.height = 20;
+            Item.value = 10000;
+            Item.rare = 1;
+            Item.defense = 2;
         }
 
         public override void UpdateEquip(Player player)
@@ -33,13 +33,7 @@ namespace SGAmod.HavocGear.Items.Armor
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DankWood", 50);
-            recipe.AddIngredient(null, "DankCore", 1);
-            recipe.AddTile(TileID.WorkBenches);
-
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "DankWood", 50).AddIngredient(null, "DankCore", 1).AddTile(TileID.WorkBenches).Register();
         }
     }
     [AutoloadEquip(EquipType.Body)]
@@ -53,29 +47,24 @@ namespace SGAmod.HavocGear.Items.Armor
 
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 22;
-            item.value = 10000;
-            item.rare = 1;
-            item.lifeRegen = 1;
-            item.defense = 3;
+            Item.width = 28;
+            Item.height = 22;
+            Item.value = 10000;
+            Item.rare = 1;
+            Item.lifeRegen = 1;
+            Item.defense = 3;
         }
 
         public override void UpdateEquip(Player player)
         {
-            SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+            SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
             sgaplayer.UseTimeMul += 0.08f;
             sgaplayer.DoTResist *= 0.75f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DankWood", 30);
-            recipe.AddIngredient(null, "DankCore", 1);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "DankWood", 30).AddIngredient(null, "DankCore", 1).AddTile(TileID.WorkBenches).Register();
         }
     }
 
@@ -90,11 +79,11 @@ namespace SGAmod.HavocGear.Items.Armor
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-            item.height = 12;
-			item.value = 10000;
-			item.rare = 1;
-			item.defense = 2;
+			Item.width = 18;
+            Item.height = 12;
+			Item.value = 10000;
+			Item.rare = 1;
+			Item.defense = 2;
 		}
 
 		public override void UpdateEquip(Player player)
@@ -106,12 +95,7 @@ namespace SGAmod.HavocGear.Items.Armor
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DankWood", 25);
-            recipe.AddIngredient(null, "DankCore", 1);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "DankWood", 25).AddIngredient(null, "DankCore", 1).AddTile(TileID.WorkBenches).Register();
         }
     }
 }

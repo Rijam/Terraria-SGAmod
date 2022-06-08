@@ -14,7 +14,8 @@ using System.Linq;
 using Steamworks;
 using Terraria.ModLoader.Engine;
 using System.Reflection;
-using Terraria.ModLoader.Audio;
+//using Terraria.ModLoader.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Consumables
 {
@@ -28,19 +29,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
 			SGAPlayer.centerOverrideTimerIsActive = 300;
 			player.SGAPly().centerOverrideTimer = 300;
@@ -64,15 +65,15 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 8;
-			item.useTime = 8;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
+			Item.width = 14;
+			Item.height = 14;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 8;
+			Item.useTime = 8;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
 		}
 		public override string Texture
 		{
@@ -81,11 +82,11 @@ namespace SGAmod.Items.Consumables
 
         public override void UpdateInventory(Player player)
         {
-			if (player.inventory[49].type == item.type && (SGAmod.TotalCheating) && player.SGAPly().Sequence)
+			if (player.inventory[49].type == Item.type && (SGAmod.TotalCheating) && player.SGAPly().Sequence)
 			{
 				SGAmod.cheating = false;
 				SGAWorld.cheating = false;
-				var snd = Main.PlaySound(SoundID.PlayerKilled, -1, -1);
+				var snd = SoundEngine.PlaySound(SoundID.PlayerKilled, -1, -1);
 				if (snd != null)
                 {
 					snd.Pitch = -0.80f;
@@ -104,26 +105,26 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 8;
-			item.useTime = 8;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
+			Item.width = 14;
+			Item.height = 14;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 8;
+			Item.useTime = 8;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
 		}
 		public override string Texture
 		{
 			get { return "Terraria/UI/Camera_5"; }
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			Point who = new Point(player.whoAmI,0);
 			Vector2 whereWereWe = new Vector2(player.position.X, player.position.Y);
-			Player newguy =  new Player(true);//(Player)player.Clone();//
+			Player newguy =  new Player();//(Player)player.Clone();//
 			newguy.position = whereWereWe;
 			newguy.fallStart = (int)whereWereWe.Y;
 			newguy.fallStart2 = (int)whereWereWe.Y;
@@ -150,22 +151,22 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 8;
-			item.useTime = 8;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
+			Item.width = 14;
+			Item.height = 14;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 8;
+			Item.useTime = 8;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
 		}
 		public override string Texture
 		{
 			get { return "Terraria/Xmas_0"; }
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			Credits.CreditsManager.queuedCredits = true;
 			return true;
@@ -181,12 +182,12 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 666;
-			item.height = 666;
-			item.rare = 6;
-			item.value = 66666;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
+			Item.width = 666;
+			Item.height = 666;
+			Item.rare = 6;
+			Item.value = 66666;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
 		}
 		public override string Texture
 		{
@@ -204,12 +205,12 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.rare = 8;
-			item.value = 1000;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
+			Item.width = 14;
+			Item.height = 14;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
 		}
         public override void UpdateInventory(Player player)
         {
@@ -231,17 +232,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 8;
-			item.useTime = 8;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
+			Item.width = 14;
+			Item.height = 14;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 8;
+			Item.useTime = 8;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			foreach(ActionCooldownStack stack in player.SGAPly().CooldownStacks)
             {
@@ -267,19 +268,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		/*public override bool? UseItem(Player player)
 		{
 			//Main.NewText(SGAmod.musicTest != null);
 			SGAmod.musicTest = new MusicStreamingOGGPlus("tmod:SGAmod/Sounds/Music/creepy.ogg");
@@ -293,7 +294,7 @@ namespace SGAmod.Items.Consumables
 
 			return false;
 
-		}
+		}*/
 		public override string Texture
 		{
 			get { return "Terraria/Item_" + ItemID.Harp; }
@@ -310,23 +311,23 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
         public override bool CanUseItem(Player player)
         {
 			return SGAmod.SteamID == "76561198080218537";
         }
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
 		{
 			int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagAll);
 			Main.NewText("Hello... "+SteamFriends.GetPersonaName());
@@ -360,19 +361,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			for(int i=0;i<200; i+=1)
 			{
@@ -398,19 +399,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAmod.TryToggleUI(null);
 			return true;
@@ -431,19 +432,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.ExpertiseCollected += 100;
@@ -469,19 +470,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.ExpertiseCollected = 0;
@@ -515,19 +516,19 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			new DarkSector((int)player.Center.X/16, (int)player.Center.Y / 16);
 			return true;

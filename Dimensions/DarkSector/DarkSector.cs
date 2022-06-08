@@ -14,10 +14,10 @@ using Terraria.Utilities;
 using Terraria.DataStructures;
 using Microsoft.Win32;
 using System.Threading;
-using System.Runtime.InteropServices.WindowsRuntime;
+//using System.Runtime.InteropServices.WindowsRuntime;
 using Terraria.ID;
 using Idglibrary;
-using System.Runtime.Remoting.Messaging;
+//using System.Runtime.Remoting.Messaging;
 using Microsoft.Xna.Framework.Audio;
 using SGAmod.Buffs;
 

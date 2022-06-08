@@ -9,9 +9,9 @@ using System.Reflection;
 
 namespace SGAmod
 {
-	public class NotInSubworld : ModWorld //UpdateCache is run through here for now, very basic
+	public class NotInSubworld : ModSystem //UpdateCache is run through here for now, very basic
 	{
-		public override void PostUpdate()
+		public override void PostUpdateWorld()
 		{
 			SubworldCache.UpdateCache();
 		}
@@ -49,12 +49,12 @@ namespace SGAmod
 
 				SGAmod.Instance.Logger.Debug("Mod: " + mod.GetType().Name + " World: " + cachee.modwld + " bool: " + cachee.mybool);
 
-				Type modwld = mod.GetModWorld(cachee.modwld).GetType();
+				/*Type modwld = mod.GetModWorld(cachee.modwld).GetType();
 				FieldInfo fild = modwld.GetField(cachee.field, BindingFlags.Static | BindingFlags.Public);
 				if (cachee.myint != null)
 				fild.SetValue(mod.GetModWorld(cachee.modwld), (int)cachee.myint);
 				else
-				fild.SetValue(mod.GetModWorld(cachee.modwld), (bool)cachee.mybool);
+				fild.SetValue(mod.GetModWorld(cachee.modwld), (bool)cachee.mybool);*/
 			}
 
 

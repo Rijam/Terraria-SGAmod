@@ -9,7 +9,7 @@ namespace SGAmod.Tiles
 {
 	public class Biomass: ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSolid[Type] = true;
@@ -22,7 +22,7 @@ namespace SGAmod.Tiles
 			soundType = 3;
 			soundStyle = 9;
 			dustType = 128;
-			drop = mod.ItemType("Biomass");
+			drop = Mod.Find<ModItem>("Biomass").Type;
 			minPick = 10;
 			mineResist = 1f;
 			ModTranslation name = CreateMapEntryName();

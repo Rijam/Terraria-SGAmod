@@ -12,6 +12,7 @@ using Terraria.Utilities;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
 using SGAmod.Items.Consumables;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs
 {
@@ -30,22 +31,22 @@ namespace SGAmod.NPCs
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 48;
-			npc.height = 48;
-			npc.damage = 100;
-			npc.defense = 0;
-			npc.lifeMax = 1200;
+			NPC.width = 48;
+			NPC.height = 48;
+			NPC.damage = 100;
+			NPC.defense = 0;
+			NPC.lifeMax = 1200;
 			//npc.HitSound = SoundID.NPCHit1;
 			//npc.DeathSound = SoundID.NPCDeath1;
-			npc.value = 0f;
-			npc.knockBackResist = 0.2f;
-			npc.aiStyle = -1;
-			aiType = 0;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = 1500f;
-			npc.netAlways = true;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0.2f;
+			NPC.aiStyle = -1;
+			AIType = 0;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = 1500f;
+			NPC.netAlways = true;
 		}
 
         public override string Texture => "SGAmod/Items/VibraniumCrystal";
@@ -53,31 +54,31 @@ namespace SGAmod.NPCs
         public override void NPCLoot()
 		{
 			if (buffed == 2)
-			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VibraniumCrystal"), Main.rand.Next(3, 6));
+			Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("VibraniumCrystal").Type, Main.rand.Next(3, 6));
 		}
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life > 0)
+            if (NPC.life > 0)
             {
-				SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_CrystalCartImpact, (int)npc.Center.X, (int)npc.Center.Y);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact, (int)NPC.Center.X, (int)NPC.Center.Y);
 				if (sound != null)
 				{
-					sound.Pitch = 0.85f-((npc.life/(float)npc.lifeMax)*0.85f);
+					sound.Pitch = 0.85f-((NPC.life/(float)NPC.lifeMax)*0.85f);
 				}
             }
             else
             {
-				SoundEffectInstance sound = Main.PlaySound(SoundID.Shatter, (int)npc.Center.X, (int)npc.Center.Y);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Shatter, (int)NPC.Center.X, (int)NPC.Center.Y);
 				if (sound != null)
 				{
 					sound.Pitch = 0.75f;
 				}
 			}
 
-			foreach(Player player in Main.player.Where(testby => npc.Distance(testby.MountedCenter) < damage))
+			foreach(Player player in Main.player.Where(testby => NPC.Distance(testby.MountedCenter) < damage))
             {
-				float dist = npc.Distance(player.MountedCenter);
+				float dist = NPC.Distance(player.MountedCenter);
 				//float dister = (1f-MathHelper.Clamp(dist/(1200f*(float)buffed),0f,1f));
 				if (dist < 200)
 				{
@@ -99,17 +100,17 @@ namespace SGAmod.NPCs
 				astar = new AStarPathFinder();
 				astar.recursionLimit = 200;
 				astar.wallsWeight = 100;
-				astar.seed = npc.whoAmI;
+				astar.seed = NPC.whoAmI;
 			}
-			npc.localAI[0] += 1;
+			NPC.localAI[0] += 1;
 
-			npc.spriteDirection = npc.velocity.X > 0 ? -1 : 1;
+			NPC.spriteDirection = NPC.velocity.X > 0 ? -1 : 1;
 			//Main.NewText((int)astar.state + " " + npc.ai[1] + " " + npc.ai[0]+" "+ Path.Count);
 
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest();
+				NPC.TargetClosest();
 			}
 			else
 			{
@@ -119,23 +120,23 @@ namespace SGAmod.NPCs
 					buffed = bigtool || Dimensions.SpaceDim.postMoonLord ? 2 : 1;
 					if (buffed == 2)
 					{
-						npc.life *= 5;
-						npc.lifeMax *= 5;
-						npc.knockBackResist = 0f;
-						npc.value *= 4;
+						NPC.life *= 5;
+						NPC.lifeMax *= 5;
+						NPC.knockBackResist = 0f;
+						NPC.value *= 4;
 					}
 				}
 
-				if (npc.localAI[0] % 60 == 0)
+				if (NPC.localAI[0] % 60 == 0)
 				{
-					if (Collision.CanHitLine(P.MountedCenter, 1, 1, npc.Center, 1, 1))
+					if (Collision.CanHitLine(P.MountedCenter, 1, 1, NPC.Center, 1, 1))
 					{
-						Vector2 dist = P.Center- npc.Center;
+						Vector2 dist = P.Center- NPC.Center;
 
 						if (dist.Length() < 200+(buffed * 200))
 						{
-							Projectile.NewProjectile(npc.Center, dist, ModContent.ProjectileType<Items.Armors.Vibranium.VibraniumZapEffect>(), 0, 0);
-							SoundEffectInstance snd = Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 91);
+							Projectile.NewProjectile(NPC.Center, dist, ModContent.ProjectileType<Items.Armors.Vibranium.VibraniumZapEffect>(), 0, 0);
+							SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 91);
 							P.AddBuff(BuffID.WitheredArmor, 60 * 5);
 							P.AddBuff(BuffID.WitheredWeapon, 60 * 5);
 							P.SGAPly().StackDebuff(ModLoader.GetMod("IDGLibrary").GetBuff("Radiation" + (buffed == 2 ? "Two" : "One")).Type, 60*6);
@@ -149,7 +150,7 @@ namespace SGAmod.NPCs
 					//Time for the fancy AStar Nonsense!
 					if (astar.state != (int)PathState.Calculating)
 					{
-						npc.ai[1] = 0;
+						NPC.ai[1] = 0;
 						if (astar.state == (int)PathState.Finished || astar.state == (int)PathState.Failed)
 						{
 							//Gotta reverse it, so we don't start with the destination
@@ -158,23 +159,23 @@ namespace SGAmod.NPCs
 
 							astar.state = (int)PathState.Ready;
 						}
-						npc.ai[0] += (Path.Count<2 && npc.ai[0]<190) ? 3 : 1;
-						if (npc.ai[0] > 200)
+						NPC.ai[0] += (Path.Count<2 && NPC.ai[0]<190) ? 3 : 1;
+						if (NPC.ai[0] > 200)
 						{
-							astar.startingPosition = new Point16((int)npc.Center.X / 16, (int)npc.Center.Y / 16);
+							astar.startingPosition = new Point16((int)NPC.Center.X / 16, (int)NPC.Center.Y / 16);
 							if (astar.AStarTiles(new Point16((int)P.Center.X / 16, (int)P.Center.Y / 16), 1))
                             {
-								npc.ai[0] = Main.rand.Next(-50, 50);
-								npc.netUpdate = true;
+								NPC.ai[0] = Main.rand.Next(-50, 50);
+								NPC.netUpdate = true;
 							}
 						}
 
 					}
 					else
 					{
-						npc.ai[1] += 1;
+						NPC.ai[1] += 1;
 
-						if (npc.ai[1] == 250)
+						if (NPC.ai[1] == 250)
                         {
 							//make portal thing
 							for (int i = 160; i < 320; i += 8)
@@ -182,13 +183,13 @@ namespace SGAmod.NPCs
 								Vector2 checkhere = P.MountedCenter+(Vector2.UnitX.RotatedBy(Main.rand.NextFloat(0f,MathHelper.TwoPi))*i);
 								if (Collision.CanHitLine(P.MountedCenter, 1, 1, checkhere, 1, 1))
 								{
-									npc.Center = checkhere;
-									npc.netUpdate = true;
+									NPC.Center = checkhere;
+									NPC.netUpdate = true;
 								}
 							}
                         }
 
-						if (npc.ai[1] > 300 && Path.Count < 5)
+						if (NPC.ai[1] > 300 && Path.Count < 5)
 						{
 							astar.state = (int)PathState.Ready;
 						}
@@ -202,13 +203,13 @@ namespace SGAmod.NPCs
 			//{
 				if (Path.Count > 0)
 				{
-					if (npc.localAI[0] % 1 == 0)
+					if (NPC.localAI[0] % 1 == 0)
 					{
 						Vector2 gothere = Path[0].location.ToVector2() * 16;
 
-						if (npc.Distance(gothere) > 16)
+						if (NPC.Distance(gothere) > 16)
 						{
-							npc.velocity = Vector2.Normalize(gothere - npc.Center) * (buffed==2 ? 16 : 4);
+							NPC.velocity = Vector2.Normalize(gothere - NPC.Center) * (buffed==2 ? 16 : 4);
 						}
 						else
 						{
@@ -222,13 +223,13 @@ namespace SGAmod.NPCs
 				}
 			//}
 
-			npc.velocity *= (buffed == 2 ? 0.72f : 0.92f);
+			NPC.velocity *= (buffed == 2 ? 0.72f : 0.92f);
 
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			DrawResonantWisp(npc,npc.Center,npc.localAI[0], spriteBatch, lightColor);
+			DrawResonantWisp(NPC,NPC.Center,NPC.localAI[0], spriteBatch, lightColor);
 			return false;
 		}
 

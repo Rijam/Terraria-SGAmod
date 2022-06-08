@@ -14,29 +14,29 @@ namespace SGAmod.Projectiles.Pets
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Acidic Spiderling");
-			Main.projFrames[projectile.type] = 11;
-			Main.projPet[projectile.type] = true;
+			Main.projFrames[Projectile.type] = 11;
+			Main.projPet[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.VenomSpider); //a little buggy because its a minion and not a pet
-			projectile.width = 18;
-			projectile.height = 18;
-			projectile.penetrate = -1;
-			projectile.netImportant = true;
-			projectile.friendly = true;
-			projectile.ignoreWater = false;
-			projectile.tileCollide = true;
-			//aiType = ProjectileID.VenomSpider;
-			aiType = 0;
+			Projectile.width = 18;
+			Projectile.height = 18;
+			Projectile.penetrate = -1;
+			Projectile.netImportant = true;
+			Projectile.friendly = true;
+			Projectile.ignoreWater = false;
+			Projectile.tileCollide = true;
+			//AIType = ProjectileID.VenomSpider;
+			AIType = 0;
 			//drawOriginOffsetY -= 6;
 		}
 
 		public override bool PreAI()
 		{
-			Player player = Main.player[projectile.owner];
-			//player.petFlagDD2Gato = false; // Relic from aiType
+			Player player = Main.player[Projectile.owner];
+			//player.petFlagDD2Gato = false; // Relic from AIType
 			//player.spiderMinion = false;
 			//player.numMinions -= 1;
 			return true;
@@ -51,10 +51,10 @@ namespace SGAmod.Projectiles.Pets
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			if (player.HasBuff(ModContent.BuffType<Buffs.Pets.AcidicSpiderlingBuff>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 
 
@@ -65,9 +65,9 @@ namespace SGAmod.Projectiles.Pets
 			//	doesn't teleport to the player when they are too far away.
 			//	Doesn't start flying to stay near the play if the player is far away vertically (seems to happen with the spider summons too)
 			//	Faces right when then player is idle and facing the left (only on floor)
-			if (!Main.player[projectile.owner].active)
+			if (!Main.player[Projectile.owner].active)
 			{
-				projectile.active = false;
+				Projectile.active = false;
 				return;
 			}
 			bool flag1 = false;
@@ -76,23 +76,23 @@ namespace SGAmod.Projectiles.Pets
 			bool flag4ProjectileInSolidTile = false;
 			int num;
 			num = 10;
-			int num2 = 40 * (projectile.minionPos + 1) * Main.player[projectile.owner].direction;
-			if (Main.player[projectile.owner].position.X + (float)(Main.player[projectile.owner].width / 2) < projectile.position.X + (float)(projectile.width / 2) - (float)num + (float)num2)
+			int num2 = 40 * (Projectile.minionPos + 1) * Main.player[Projectile.owner].direction;
+			if (Main.player[Projectile.owner].position.X + (float)(Main.player[Projectile.owner].width / 2) < Projectile.position.X + (float)(Projectile.width / 2) - (float)num + (float)num2)
 			{
 				flag1 = true;
 			}
-			else if (Main.player[projectile.owner].position.X + (float)(Main.player[projectile.owner].width / 2) > projectile.position.X + (float)(projectile.width / 2) + (float)num + (float)num2)
+			else if (Main.player[Projectile.owner].position.X + (float)(Main.player[Projectile.owner].width / 2) > Projectile.position.X + (float)(Projectile.width / 2) + (float)num + (float)num2)
 			{
 				flag2 = true;
 			}
-			if (projectile.ai[0] != 0f)
+			if (Projectile.ai[0] != 0f)
 			{
 				float num40 = 0.2f;
 				int num41 = 200;
-				projectile.tileCollide = false;
-				Vector2 vector7 = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
-				float num42 = Main.player[projectile.owner].position.X + (float)(Main.player[projectile.owner].width / 2) - vector7.X;
-				num42 -= (float)(40 * Main.player[projectile.owner].direction);
+				Projectile.tileCollide = false;
+				Vector2 vector7 = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
+				float num42 = Main.player[Projectile.owner].position.X + (float)(Main.player[Projectile.owner].width / 2) - vector7.X;
+				num42 -= (float)(40 * Main.player[Projectile.owner].direction);
 				bool flag6ChaseNPC = false;
 				int num44 = -1;
 				//For chasing other NPCs to attack
@@ -116,27 +116,27 @@ namespace SGAmod.Projectiles.Pets
 				}*/
 				if (!flag6ChaseNPC)
 				{
-					num42 -= (float)(40 * projectile.minionPos * Main.player[projectile.owner].direction);
+					num42 -= (float)(40 * Projectile.minionPos * Main.player[Projectile.owner].direction);
 				}
 				if (flag6ChaseNPC && num44 >= 0)
 				{
-					projectile.ai[0] = 0f;
+					Projectile.ai[0] = 0f;
 				}
-				float num47 = Main.player[projectile.owner].position.Y + (float)(Main.player[projectile.owner].height / 2) - vector7.Y;
+				float num47 = Main.player[Projectile.owner].position.Y + (float)(Main.player[Projectile.owner].height / 2) - vector7.Y;
 				float num48 = (float)Math.Sqrt(num42 * num42 + num47 * num47);
 				float num49 = 10f;
-				if (num48 < (float)num41 && Main.player[projectile.owner].velocity.Y == 0f && projectile.position.Y + (float)projectile.height <= Main.player[projectile.owner].position.Y + (float)Main.player[projectile.owner].height && !Collision.SolidCollision(projectile.position, projectile.width, projectile.height))
+				if (num48 < (float)num41 && Main.player[Projectile.owner].velocity.Y == 0f && Projectile.position.Y + (float)Projectile.height <= Main.player[Projectile.owner].position.Y + (float)Main.player[Projectile.owner].height && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
 				{
-					projectile.ai[0] = 0f;
-					if (projectile.velocity.Y < -6f)
+					Projectile.ai[0] = 0f;
+					if (Projectile.velocity.Y < -6f)
 					{
-						projectile.velocity.Y = -6f;
+						Projectile.velocity.Y = -6f;
 					}
 				}
 				if (num48 < 60f)
 				{
-					num42 = projectile.velocity.X;
-					num47 = projectile.velocity.Y;
+					num42 = Projectile.velocity.X;
+					num47 = Projectile.velocity.Y;
 				}
 				else
 				{
@@ -144,84 +144,84 @@ namespace SGAmod.Projectiles.Pets
 					num42 *= num48;
 					num47 *= num48;
 				}
-				if (projectile.velocity.X < num42)
+				if (Projectile.velocity.X < num42)
 				{
-					projectile.velocity.X += num40;
-					if (projectile.velocity.X < 0f)
+					Projectile.velocity.X += num40;
+					if (Projectile.velocity.X < 0f)
 					{
-						projectile.velocity.X += num40 * 1.5f;
+						Projectile.velocity.X += num40 * 1.5f;
 					}
 				}
-				if (projectile.velocity.X > num42)
+				if (Projectile.velocity.X > num42)
 				{
-					projectile.velocity.X -= num40;
-					if (projectile.velocity.X > 0f)
+					Projectile.velocity.X -= num40;
+					if (Projectile.velocity.X > 0f)
 					{
-						projectile.velocity.X -= num40 * 1.5f;
+						Projectile.velocity.X -= num40 * 1.5f;
 					}
 				}
-				if (projectile.velocity.Y < num47)
+				if (Projectile.velocity.Y < num47)
 				{
-					projectile.velocity.Y += num40;
-					if (projectile.velocity.Y < 0f)
+					Projectile.velocity.Y += num40;
+					if (Projectile.velocity.Y < 0f)
 					{
-						projectile.velocity.Y += num40 * 1.5f;
+						Projectile.velocity.Y += num40 * 1.5f;
 					}
 				}
-				if (projectile.velocity.Y > num47)
+				if (Projectile.velocity.Y > num47)
 				{
-					projectile.velocity.Y -= num40;
-					if (projectile.velocity.Y > 0f)
+					Projectile.velocity.Y -= num40;
+					if (Projectile.velocity.Y > 0f)
 					{
-						projectile.velocity.Y -= num40 * 1.5f;
+						Projectile.velocity.Y -= num40 * 1.5f;
 					}
 				}
 				// set sprite direction
-				if ((double)projectile.velocity.X > 0.5)
+				if ((double)Projectile.velocity.X > 0.5)
 				{
-					projectile.spriteDirection = -1;
+					Projectile.spriteDirection = -1;
 				}
-				else if ((double)projectile.velocity.X < -0.5)
+				else if ((double)Projectile.velocity.X < -0.5)
 				{
-					projectile.spriteDirection = 1;
+					Projectile.spriteDirection = 1;
 				}
-				int num51 = (int)(projectile.Center.X / 16f);
-				int num52 = (int)(projectile.Center.Y / 16f);
-				if (Main.tile[num51, num52] != null && Main.tile[num51, num52].wall > 0)
+				int num51 = (int)(Projectile.Center.X / 16f);
+				int num52 = (int)(Projectile.Center.Y / 16f);
+				if (Main.tile[num51, num52] != null && Main.tile[num51, num52].WallType > 0)
 				{
-					projectile.rotation = projectile.velocity.ToRotation() + (float)Math.PI / 2f;
-					projectile.frameCounter += (int)(Math.Abs(projectile.velocity.X) + Math.Abs(projectile.velocity.Y));
-					if (projectile.frameCounter > 5)
+					Projectile.rotation = Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
+					Projectile.frameCounter += (int)(Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y));
+					if (Projectile.frameCounter > 5)
 					{
-						projectile.frame++;
-						projectile.frameCounter = 0;
+						Projectile.frame++;
+						Projectile.frameCounter = 0;
 					}
-					if (projectile.frame > 7)
+					if (Projectile.frame > 7)
 					{
-						projectile.frame = 4;
+						Projectile.frame = 4;
 					}
-					if (projectile.frame < 4)
+					if (Projectile.frame < 4)
 					{
-						projectile.frame = 7;
+						Projectile.frame = 7;
 					}
 				}
 				else
 				{
-					projectile.frameCounter++;
-					if (projectile.frameCounter > 2)
+					Projectile.frameCounter++;
+					if (Projectile.frameCounter > 2)
 					{
-						projectile.frame++;
-						projectile.frameCounter = 0;
+						Projectile.frame++;
+						Projectile.frameCounter = 0;
 					}
-					if (projectile.frame < 8 || projectile.frame > 10)
+					if (Projectile.frame < 8 || Projectile.frame > 10)
 					{
-						projectile.frame = 8;
+						Projectile.frame = 8;
 					}
-					projectile.rotation = projectile.velocity.X * 0.1f;
+					Projectile.rotation = Projectile.velocity.X * 0.1f;
 				}
 				//The Spiders don't usually have this dust, but I think its cool.
 
-				int num55 = Dust.NewDust(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 4f, projectile.position.Y + (float)(projectile.height / 2) - 4f) - projectile.velocity, 8, 8, 163, (0f - projectile.velocity.X) * 0.5f, projectile.velocity.Y * 0.5f, 50, default(Color), 1.7f); //DustID.PoionStaff
+				int num55 = Dust.NewDust(new Vector2(Projectile.position.X + (float)(Projectile.width / 2) - 4f, Projectile.position.Y + (float)(Projectile.height / 2) - 4f) - Projectile.velocity, 8, 8, 163, (0f - Projectile.velocity.X) * 0.5f, Projectile.velocity.Y * 0.5f, 50, default(Color), 1.7f); //DustID.PoionStaff
 				Main.dust[num55].velocity.X = Main.dust[num55].velocity.X * 0.2f;
 				Main.dust[num55].velocity.Y = Main.dust[num55].velocity.Y * 0.2f;
 				Main.dust[num55].noGravity = true;
@@ -235,19 +235,19 @@ namespace SGAmod.Projectiles.Pets
 			//The position behind the player. "40 * projectile.minionPos;" in vanilla
 			float num80 = 60;
 			int num81 = 60;
-			projectile.localAI[0] -= 1f;
-			if (projectile.localAI[0] < 0f)
+			Projectile.localAI[0] -= 1f;
+			if (Projectile.localAI[0] < 0f)
 			{
-				projectile.localAI[0] = 0f;
+				Projectile.localAI[0] = 0f;
 			}
-			if (projectile.ai[1] > 0f)
+			if (Projectile.ai[1] > 0f)
 			{
-				projectile.ai[1] -= 1f;
+				Projectile.ai[1] -= 1f;
 			}
 			else
 			{
-				float num82 = projectile.position.X;
-				float num83 = projectile.position.Y;
+				float num82 = Projectile.position.X;
+				float num83 = Projectile.position.Y;
 				float num84 = 100000f;
 				float num85 = num84;
 				int num86 = -1;
@@ -304,9 +304,9 @@ namespace SGAmod.Projectiles.Pets
 						}
 					}
 				}*/
-				if (!Collision.SolidCollision(projectile.position, projectile.width, projectile.height))
+				if (!Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
 				{
-					projectile.tileCollide = true;
+					Projectile.tileCollide = true;
 				}
 				if (num86 == -1 && num85 < num84)
 				{
@@ -315,17 +315,17 @@ namespace SGAmod.Projectiles.Pets
 				else if (num86 >= 0)
 				{
 					flag7 = true;
-					vector9 = new Vector2(num82, num83) - projectile.Center;
-					if (Main.npc[num86].position.Y > projectile.position.Y + (float)projectile.height)
+					vector9 = new Vector2(num82, num83) - Projectile.Center;
+					if (Main.npc[num86].position.Y > Projectile.position.Y + (float)Projectile.height)
 					{
-						int num91 = (int)(projectile.Center.X / 16f);
-						int num92 = (int)((projectile.position.Y + (float)projectile.height + 1f) / 16f);
-						if (Main.tile[num91, num92] != null && Main.tile[num91, num92].active() && TileID.Sets.Platforms[Main.tile[num91, num92].type])
+						int num91 = (int)(Projectile.Center.X / 16f);
+						int num92 = (int)((Projectile.position.Y + (float)Projectile.height + 1f) / 16f);
+						if (Main.tile[num91, num92] != null && Main.tile[num91, num92].HasTile && TileID.Sets.Platforms[Main.tile[num91, num92].TileType])
 						{
-							projectile.tileCollide = false;
+							Projectile.tileCollide = false;
 						}
 					}
-					Rectangle rectangle = new Rectangle((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height);
+					Rectangle rectangle = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
 					Rectangle value = new Rectangle((int)Main.npc[num86].position.X, (int)Main.npc[num86].position.Y, Main.npc[num86].width, Main.npc[num86].height);
 					int num93 = 10;
 					value.X -= num93;
@@ -335,53 +335,53 @@ namespace SGAmod.Projectiles.Pets
 					if (rectangle.Intersects(value))
 					{
 						flag8IsOnWall = true;
-						Vector2 vector10 = Main.npc[num86].Center - projectile.Center;
-						if (projectile.velocity.Y > 0f && vector10.Y < 0f)
+						Vector2 vector10 = Main.npc[num86].Center - Projectile.Center;
+						if (Projectile.velocity.Y > 0f && vector10.Y < 0f)
 						{
-							projectile.velocity.Y *= 0.5f;
+							Projectile.velocity.Y *= 0.5f;
 						}
-						if (projectile.velocity.Y < 0f && vector10.Y > 0f)
+						if (Projectile.velocity.Y < 0f && vector10.Y > 0f)
 						{
-							projectile.velocity.Y *= 0.5f;
+							Projectile.velocity.Y *= 0.5f;
 						}
-						if (projectile.velocity.X > 0f && vector10.X < 0f)
+						if (Projectile.velocity.X > 0f && vector10.X < 0f)
 						{
-							projectile.velocity.X *= 0.5f;
+							Projectile.velocity.X *= 0.5f;
 						}
-						if (projectile.velocity.X < 0f && vector10.X > 0f)
+						if (Projectile.velocity.X < 0f && vector10.X > 0f)
 						{
-							projectile.velocity.X *= 0.5f;
+							Projectile.velocity.X *= 0.5f;
 						}
 						if (vector10.Length() > 14f)
 						{
 							vector10.Normalize();
 							vector10 *= 14f;
 						}
-						projectile.rotation = (projectile.rotation * 5f + vector10.ToRotation() + (float)Math.PI / 2f) / 6f;
-						projectile.velocity = (projectile.velocity * 9f + vector10) / 10f;
+						Projectile.rotation = (Projectile.rotation * 5f + vector10.ToRotation() + (float)Math.PI / 2f) / 6f;
+						Projectile.velocity = (Projectile.velocity * 9f + vector10) / 10f;
 						for (int n = 0; n < 1000; n++)
 						{
-							if (projectile.whoAmI != n && projectile.owner == Main.projectile[n].owner && (Main.projectile[n].type >= 390 && Main.projectile[n].type <= 392 || true) && (Main.projectile[n].Center - projectile.Center).Length() < 15f)
+							if (Projectile.whoAmI != n && Projectile.owner == Main.projectile[n].owner && (Main.projectile[n].type >= 390 && Main.projectile[n].type <= 392 || true) && (Main.projectile[n].Center - Projectile.Center).Length() < 15f)
 							{
 								float num94 = 0.5f;
-								if (projectile.Center.Y > Main.projectile[n].Center.Y)
+								if (Projectile.Center.Y > Main.projectile[n].Center.Y)
 								{
 									Main.projectile[n].velocity.Y -= num94;
-									projectile.velocity.Y += num94;
+									Projectile.velocity.Y += num94;
 								}
 								else
 								{
 									Main.projectile[n].velocity.Y += num94;
-									projectile.velocity.Y -= num94;
+									Projectile.velocity.Y -= num94;
 								}
-								if (projectile.Center.X > Main.projectile[n].Center.X)
+								if (Projectile.Center.X > Main.projectile[n].Center.X)
 								{
-									projectile.velocity.X += num94;
+									Projectile.velocity.X += num94;
 									Main.projectile[n].velocity.X -= num94;
 								}
 								else
 								{
-									projectile.velocity.X -= num94;
+									Projectile.velocity.X -= num94;
 									Main.projectile[n].velocity.Y += num94;
 								}
 							}
@@ -390,13 +390,13 @@ namespace SGAmod.Projectiles.Pets
 				}
 				float num95;
 				num95 = 500f;
-				if ((double)projectile.position.Y > Main.worldSurface * 16.0)
+				if ((double)Projectile.position.Y > Main.worldSurface * 16.0)
 				{
 					num95 = 250f;
 				}
 				if (num84 < num95 + num80 && num86 == -1)
 				{
-					float num96 = num82 - (projectile.position.X + (float)(projectile.width / 2));
+					float num96 = num82 - (Projectile.position.X + (float)(Projectile.width / 2));
 					if (num96 < -5f)
 					{
 						flag1 = true;
@@ -409,16 +409,16 @@ namespace SGAmod.Projectiles.Pets
 					}
 				}
 				bool flag9 = false;
-				if (projectile.localAI[1] > 0f)
+				if (Projectile.localAI[1] > 0f)
 				{
 					flag9 = true;
-					projectile.localAI[1] -= 1f;
+					Projectile.localAI[1] -= 1f;
 				}
 				if (num86 >= 0 && num84 < 800f + num80)
 				{
-					projectile.friendly = true;
-					projectile.localAI[0] = num81;
-					float num97 = num82 - (projectile.position.X + (float)(projectile.width / 2));
+					Projectile.friendly = true;
+					Projectile.localAI[0] = num81;
+					float num97 = num82 - (Projectile.position.X + (float)(Projectile.width / 2));
 					if (num97 < -10f)
 					{
 						flag1 = true;
@@ -429,38 +429,38 @@ namespace SGAmod.Projectiles.Pets
 						flag2 = true;
 						flag1 = false;
 					}
-					if (num83 < projectile.Center.Y - 100f && num97 > -50f && num97 < 50f && projectile.velocity.Y == 0f)
+					if (num83 < Projectile.Center.Y - 100f && num97 > -50f && num97 < 50f && Projectile.velocity.Y == 0f)
 					{
-						float num98 = Math.Abs(num83 - projectile.Center.Y);
+						float num98 = Math.Abs(num83 - Projectile.Center.Y);
 						if (num98 < 120f)
 						{
-							projectile.velocity.Y = -10f;
+							Projectile.velocity.Y = -10f;
 						}
 						else if (num98 < 210f)
 						{
-							projectile.velocity.Y = -13f;
+							Projectile.velocity.Y = -13f;
 						}
 						else if (num98 < 270f)
 						{
-							projectile.velocity.Y = -15f;
+							Projectile.velocity.Y = -15f;
 						}
 						else if (num98 < 310f)
 						{
-							projectile.velocity.Y = -17f;
+							Projectile.velocity.Y = -17f;
 						}
 						else if (num98 < 380f)
 						{
-							projectile.velocity.Y = -18f;
+							Projectile.velocity.Y = -18f;
 						}
 					}
 					if (flag9)
 					{
-						projectile.friendly = false;
-						if (projectile.velocity.X < 0f)
+						Projectile.friendly = false;
+						if (Projectile.velocity.X < 0f)
 						{
 							flag1 = true;
 						}
-						else if (projectile.velocity.X > 0f)
+						else if (Projectile.velocity.X > 0f)
 						{
 							flag2 = true;
 						}
@@ -468,71 +468,71 @@ namespace SGAmod.Projectiles.Pets
 				}
 				else
 				{
-					projectile.friendly = false;
+					Projectile.friendly = false;
 				}
 			}
-			if (projectile.ai[1] != 0f)
+			if (Projectile.ai[1] != 0f)
 			{
 				flag1 = false;
 				flag2 = false;
 			}
 			else if (true)
 			{
-				int num99 = (int)(projectile.Center.X / 16f);
-				int num100 = (int)(projectile.Center.Y / 16f);
-				if (Main.tile[num99, num100] != null && Main.tile[num99, num100].wall > 0)
+				int num99 = (int)(Projectile.Center.X / 16f);
+				int num100 = (int)(Projectile.Center.Y / 16f);
+				if (Main.tile[num99, num100] != null && Main.tile[num99, num100].WallType > 0)
 				{
 					flag1 = (flag2 = false);
 				}
 			}
 			if (!flag8IsOnWall)
 			{
-				projectile.rotation = 0f;
+				Projectile.rotation = 0f;
 			}
 			float num101;
 			float num102;
 			num102 = 6f;
 			num101 = 0.2f;
-			if (num102 < Math.Abs(Main.player[projectile.owner].velocity.X) + Math.Abs(Main.player[projectile.owner].velocity.Y))
+			if (num102 < Math.Abs(Main.player[Projectile.owner].velocity.X) + Math.Abs(Main.player[Projectile.owner].velocity.Y))
 			{
-				num102 = Math.Abs(Main.player[projectile.owner].velocity.X) + Math.Abs(Main.player[projectile.owner].velocity.Y);
+				num102 = Math.Abs(Main.player[Projectile.owner].velocity.X) + Math.Abs(Main.player[Projectile.owner].velocity.Y);
 				num101 = 0.3f;
 			}
 			num101 *= 2f;
 			if (flag1)
 			{
-				if ((double)projectile.velocity.X > -3.5)
+				if ((double)Projectile.velocity.X > -3.5)
 				{
-					projectile.velocity.X -= num101;
+					Projectile.velocity.X -= num101;
 				}
 				else
 				{
-					projectile.velocity.X -= num101 * 0.25f;
+					Projectile.velocity.X -= num101 * 0.25f;
 				}
 			}
 			else if (flag2)
 			{
-				if ((double)projectile.velocity.X < 3.5)
+				if ((double)Projectile.velocity.X < 3.5)
 				{
-					projectile.velocity.X += num101;
+					Projectile.velocity.X += num101;
 				}
 				else
 				{
-					projectile.velocity.X += num101 * 0.25f;
+					Projectile.velocity.X += num101 * 0.25f;
 				}
 			}
 			else
 			{
-				projectile.velocity.X *= 0.9f;
-				if (projectile.velocity.X >= 0f - num101 && projectile.velocity.X <= num101)
+				Projectile.velocity.X *= 0.9f;
+				if (Projectile.velocity.X >= 0f - num101 && Projectile.velocity.X <= num101)
 				{
-					projectile.velocity.X = 0f;
+					Projectile.velocity.X = 0f;
 				}
 			}
 			if (flag1 || flag2)
 			{
-				int num103 = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-				int j2 = (int)(projectile.position.Y + (float)(projectile.height / 2)) / 16;
+				int num103 = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+				int j2 = (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16;
 				if (flag1)
 				{
 					num103--;
@@ -541,23 +541,23 @@ namespace SGAmod.Projectiles.Pets
 				{
 					num103++;
 				}
-				num103 += (int)projectile.velocity.X;
+				num103 += (int)Projectile.velocity.X;
 				if (WorldGen.SolidTile(num103, j2))
 				{
 					flag4ProjectileInSolidTile = true;
 				}
 			}
-			if (Main.player[projectile.owner].position.Y + (float)Main.player[projectile.owner].height - 8f > projectile.position.Y + (float)projectile.height)
+			if (Main.player[Projectile.owner].position.Y + (float)Main.player[Projectile.owner].height - 8f > Projectile.position.Y + (float)Projectile.height)
 			{
 				flag3PlayerAboveProjectile = true;
 			}
-			Collision.StepUp(ref projectile.position, ref projectile.velocity, projectile.width, projectile.height, ref projectile.stepSpeed, ref projectile.gfxOffY);
-			if (projectile.velocity.Y == 0f)
+			Collision.StepUp(ref Projectile.position, ref Projectile.velocity, Projectile.width, Projectile.height, ref Projectile.stepSpeed, ref Projectile.gfxOffY);
+			if (Projectile.velocity.Y == 0f)
 			{
-				if (!flag3PlayerAboveProjectile && (projectile.velocity.X < 0f || projectile.velocity.X > 0f))
+				if (!flag3PlayerAboveProjectile && (Projectile.velocity.X < 0f || Projectile.velocity.X > 0f))
 				{
-					int num104 = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-					int j3 = (int)(projectile.position.Y + (float)(projectile.height / 2)) / 16 + 1;
+					int num104 = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+					int j3 = (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16 + 1;
 					if (flag1)
 					{
 						num104--;
@@ -570,14 +570,14 @@ namespace SGAmod.Projectiles.Pets
 				}
 				if (flag4ProjectileInSolidTile)
 				{
-					int num105 = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-					int num106 = (int)(projectile.position.Y + (float)projectile.height) / 16 + 1;
-					if (WorldGen.SolidTile(num105, num106) || Main.tile[num105, num106].halfBrick() || Main.tile[num105, num106].slope() > 0)
+					int num105 = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+					int num106 = (int)(Projectile.position.Y + (float)Projectile.height) / 16 + 1;
+					if (WorldGen.SolidTile(num105, num106) || Main.tile[num105, num106].IsHalfBlock || Main.tile[num105, num106].slope() > 0)
 					{
 						try
 						{
-							num105 = (int)(projectile.position.X + (float)(projectile.width / 2)) / 16;
-							num106 = (int)(projectile.position.Y + (float)(projectile.height / 2)) / 16;
+							num105 = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+							num106 = (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16;
 							if (flag1)
 							{
 								num105--;
@@ -586,151 +586,151 @@ namespace SGAmod.Projectiles.Pets
 							{
 								num105++;
 							}
-							num105 += (int)projectile.velocity.X;
+							num105 += (int)Projectile.velocity.X;
 							if (!WorldGen.SolidTile(num105, num106 - 1) && !WorldGen.SolidTile(num105, num106 - 2))
 							{
-								projectile.velocity.Y = -5.1f;
+								Projectile.velocity.Y = -5.1f;
 							}
 							else if (!WorldGen.SolidTile(num105, num106 - 2))
 							{
-								projectile.velocity.Y = -7.1f;
+								Projectile.velocity.Y = -7.1f;
 							}
 							else if (WorldGen.SolidTile(num105, num106 - 5))
 							{
-								projectile.velocity.Y = -11.1f;
+								Projectile.velocity.Y = -11.1f;
 							}
 							else if (WorldGen.SolidTile(num105, num106 - 4))
 							{
-								projectile.velocity.Y = -10.1f;
+								Projectile.velocity.Y = -10.1f;
 							}
 							else
 							{
-								projectile.velocity.Y = -9.1f;
+								Projectile.velocity.Y = -9.1f;
 							}
 						}
 						catch
 						{
-							projectile.velocity.Y = -9.1f;
+							Projectile.velocity.Y = -9.1f;
 						}
 					}
 				}
 			}
-			if (projectile.velocity.X > num102)
+			if (Projectile.velocity.X > num102)
 			{
-				projectile.velocity.X = num102;
+				Projectile.velocity.X = num102;
 			}
-			if (projectile.velocity.X < 0f - num102)
+			if (Projectile.velocity.X < 0f - num102)
 			{
-				projectile.velocity.X = 0f - num102;
+				Projectile.velocity.X = 0f - num102;
 			}
-			if (projectile.velocity.X < 0f)
+			if (Projectile.velocity.X < 0f)
 			{
-				projectile.direction = -1;
+				Projectile.direction = -1;
 			}
-			if (projectile.velocity.X > 0f)
+			if (Projectile.velocity.X > 0f)
 			{
-				projectile.direction = 1;
+				Projectile.direction = 1;
 			}
-			if (projectile.velocity.X > num101 && flag2)
+			if (Projectile.velocity.X > num101 && flag2)
 			{
-				projectile.direction = 1;
+				Projectile.direction = 1;
 			}
-			if (projectile.velocity.X < 0f - num101 && flag1)
+			if (Projectile.velocity.X < 0f - num101 && flag1)
 			{
-				projectile.direction = -1;
+				Projectile.direction = -1;
 			}
-			if (projectile.direction == -1)
+			if (Projectile.direction == -1)
 			{
-				projectile.spriteDirection = 1;
+				Projectile.spriteDirection = 1;
 			}
-			if (projectile.direction == 1)
+			if (Projectile.direction == 1)
 			{
-				projectile.spriteDirection = -1;
+				Projectile.spriteDirection = -1;
 			}
-			int num118 = (int)(projectile.Center.X / 16f);
-			int num119 = (int)(projectile.Center.Y / 16f);
-			if (Main.tile[num118, num119] != null && Main.tile[num118, num119].wall > 0)
+			int num118 = (int)(Projectile.Center.X / 16f);
+			int num119 = (int)(Projectile.Center.Y / 16f);
+			if (Main.tile[num118, num119] != null && Main.tile[num118, num119].WallType > 0)
 			{
-				projectile.position.Y += projectile.height;
-				projectile.height = 34;
-				projectile.position.Y -= projectile.height;
-				projectile.position.X += projectile.width / 2;
-				projectile.width = 34;
-				projectile.position.X -= projectile.width / 2;
+				Projectile.position.Y += Projectile.height;
+				Projectile.height = 34;
+				Projectile.position.Y -= Projectile.height;
+				Projectile.position.X += Projectile.width / 2;
+				Projectile.width = 34;
+				Projectile.position.X -= Projectile.width / 2;
 				float num120 = 9f;
-				float num121 = 40 * (projectile.minionPos + 1);
-				Vector2 vector12 = Main.player[projectile.owner].Center - projectile.Center;
+				float num121 = 40 * (Projectile.minionPos + 1);
+				Vector2 vector12 = Main.player[Projectile.owner].Center - Projectile.Center;
 				if (flag7)
 				{
 					vector12 = vector9;
 					num121 = 10f;
 				}
-				else if (!Collision.CanHitLine(projectile.Center, 1, 1, Main.player[projectile.owner].Center, 1, 1))
+				else if (!Collision.CanHitLine(Projectile.Center, 1, 1, Main.player[Projectile.owner].Center, 1, 1))
 				{
-					projectile.ai[0] = 1f;
+					Projectile.ai[0] = 1f;
 				}
 				if (vector12.Length() < num121)
 				{
-					projectile.velocity *= 0.9f;
-					if ((double)(Math.Abs(projectile.velocity.X) + Math.Abs(projectile.velocity.Y)) < 0.1)
+					Projectile.velocity *= 0.9f;
+					if ((double)(Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) < 0.1)
 					{
-						projectile.velocity *= 0f;
+						Projectile.velocity *= 0f;
 					}
 				}
 				else if (vector12.Length() < 800f || !flag7)
 				{
-					projectile.velocity = (projectile.velocity * 9f + Vector2.Normalize(vector12) * num120) / 10f;
+					Projectile.velocity = (Projectile.velocity * 9f + Vector2.Normalize(vector12) * num120) / 10f;
 				}
 				if (vector12.Length() >= num121)
 				{
-					projectile.spriteDirection = projectile.direction;
-					projectile.rotation = projectile.velocity.ToRotation() + (float)Math.PI / 2f;
+					Projectile.spriteDirection = Projectile.direction;
+					Projectile.rotation = Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
 				}
 				else
 				{
-					projectile.rotation = vector12.ToRotation() + (float)Math.PI / 2f;
+					Projectile.rotation = vector12.ToRotation() + (float)Math.PI / 2f;
 				}
-				projectile.frameCounter += (int)(Math.Abs(projectile.velocity.X) + Math.Abs(projectile.velocity.Y));
-				if (projectile.frameCounter > 5)
+				Projectile.frameCounter += (int)(Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y));
+				if (Projectile.frameCounter > 5)
 				{
-					projectile.frame++;
-					projectile.frameCounter = 0;
+					Projectile.frame++;
+					Projectile.frameCounter = 0;
 				}
-				if (projectile.frame > 7)
+				if (Projectile.frame > 7)
 				{
-					projectile.frame = 4;
+					Projectile.frame = 4;
 				}
-				if (projectile.frame < 4)
+				if (Projectile.frame < 4)
 				{
-					projectile.frame = 7;
+					Projectile.frame = 7;
 				}
 				return;
 			}
 			if (!flag8IsOnWall)
 			{
-				projectile.rotation = 0f;
+				Projectile.rotation = 0f;
 			}
-			if (projectile.direction == -1)
+			if (Projectile.direction == -1)
 			{
-				projectile.spriteDirection = 1;
+				Projectile.spriteDirection = 1;
 			}
-			if (projectile.direction == 1)
+			if (Projectile.direction == 1)
 			{
-				projectile.spriteDirection = -1;
+				Projectile.spriteDirection = -1;
 			}
-			projectile.position.Y += projectile.height;
-			projectile.height = 30;
-			projectile.position.Y -= projectile.height;
-			projectile.position.X += projectile.width / 2;
-			projectile.width = 30;
-			projectile.position.X -= projectile.width / 2;
-			if (!flag7 && !Collision.CanHitLine(projectile.Center, 1, 1, Main.player[projectile.owner].Center, 1, 1))
+			Projectile.position.Y += Projectile.height;
+			Projectile.height = 30;
+			Projectile.position.Y -= Projectile.height;
+			Projectile.position.X += Projectile.width / 2;
+			Projectile.width = 30;
+			Projectile.position.X -= Projectile.width / 2;
+			if (!flag7 && !Collision.CanHitLine(Projectile.Center, 1, 1, Main.player[Projectile.owner].Center, 1, 1))
 			{
-				projectile.ai[0] = 1f;
+				Projectile.ai[0] = 1f;
 			}
-			if (!flag8IsOnWall && projectile.frame >= 4 && projectile.frame <= 7)
+			if (!flag8IsOnWall && Projectile.frame >= 4 && Projectile.frame <= 7)
 			{
-				Vector2 vector13 = Main.player[projectile.owner].Center - projectile.Center;
+				Vector2 vector13 = Main.player[Projectile.owner].Center - Projectile.Center;
 				if (flag7)
 				{
 					vector13 = vector9;
@@ -740,79 +740,79 @@ namespace SGAmod.Projectiles.Pets
 				{
 					if (num122 < 120f)
 					{
-						projectile.velocity.Y = -10f;
+						Projectile.velocity.Y = -10f;
 					}
 					else if (num122 < 210f)
 					{
-						projectile.velocity.Y = -13f;
+						Projectile.velocity.Y = -13f;
 					}
 					else if (num122 < 270f)
 					{
-						projectile.velocity.Y = -15f;
+						Projectile.velocity.Y = -15f;
 					}
 					else if (num122 < 310f)
 					{
-						projectile.velocity.Y = -17f;
+						Projectile.velocity.Y = -17f;
 					}
 					else if (num122 < 380f)
 					{
-						projectile.velocity.Y = -18f;
+						Projectile.velocity.Y = -18f;
 					}
 				}
 			}
 			if (flag8IsOnWall)
 			{
-				projectile.frameCounter++;
-				if (projectile.frameCounter > 3)
+				Projectile.frameCounter++;
+				if (Projectile.frameCounter > 3)
 				{
-					projectile.frame++;
-					projectile.frameCounter = 0;
+					Projectile.frame++;
+					Projectile.frameCounter = 0;
 				}
-				if (projectile.frame >= 8)
+				if (Projectile.frame >= 8)
 				{
-					projectile.frame = 4;
+					Projectile.frame = 4;
 				}
-				if (projectile.frame <= 3)
+				if (Projectile.frame <= 3)
 				{
-					projectile.frame = 7;
+					Projectile.frame = 7;
 				}
 			}
-			else if (projectile.velocity.Y >= 0f && (double)projectile.velocity.Y <= 0.8)
+			else if (Projectile.velocity.Y >= 0f && (double)Projectile.velocity.Y <= 0.8)
 			{
-				if (projectile.velocity.X == 0f)
+				if (Projectile.velocity.X == 0f)
 				{
-					projectile.frame = 0;
-					projectile.frameCounter = 0;
+					Projectile.frame = 0;
+					Projectile.frameCounter = 0;
 				}
-				else if ((double)projectile.velocity.X < -0.8 || (double)projectile.velocity.X > 0.8)
+				else if ((double)Projectile.velocity.X < -0.8 || (double)Projectile.velocity.X > 0.8)
 				{
-					projectile.frameCounter += (int)Math.Abs(projectile.velocity.X);
-					projectile.frameCounter++;
-					if (projectile.frameCounter > 5)
+					Projectile.frameCounter += (int)Math.Abs(Projectile.velocity.X);
+					Projectile.frameCounter++;
+					if (Projectile.frameCounter > 5)
 					{
-						projectile.frame++;
-						projectile.frameCounter = 0;
+						Projectile.frame++;
+						Projectile.frameCounter = 0;
 					}
-					if (projectile.frame > 2)
+					if (Projectile.frame > 2)
 					{
-						projectile.frame = 0;
+						Projectile.frame = 0;
 					}
 				}
 				else
 				{
-					projectile.frame = 0;
-					projectile.frameCounter = 0;
+					Projectile.frame = 0;
+					Projectile.frameCounter = 0;
 				}
 			}
 			else
 			{
-				projectile.frameCounter = 0;
-				projectile.frame = 3;
+				Projectile.frameCounter = 0;
+				Projectile.frame = 3;
 			}
-			projectile.velocity.Y += 0.4f;
-			if (projectile.velocity.Y > 10f)
+			Projectile.velocity.Y += 0.4f;
+			if (Projectile.velocity.Y > 10f)
 			{
-				projectile.velocity.Y = 10f;
+				Projectile.velocity.Y = 10f;
 			}
 		}
 	}

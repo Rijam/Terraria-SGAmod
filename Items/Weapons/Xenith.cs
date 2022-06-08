@@ -9,6 +9,7 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -37,10 +38,6 @@ namespace SGAmod.Items.Weapons
 
 			}
         }
-        public override bool Autoload(ref string name)
-        {
-			return true;
-        }
 
 		public override void SetStaticDefaults()
 		{
@@ -50,23 +47,23 @@ namespace SGAmod.Items.Weapons
 		
 		public override void SetDefaults()
 		{
-			item.damage = 100;
-			item.ranged = true;
-			item.width = 32;
-			item.height = 62;
-			item.useTime = 15;
-			item.useAnimation = 20;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 4;
-			item.value = 50000;
-			item.rare = ItemRarityID.Purple;
-			item.UseSound = SoundID.Item17;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<XenithCharging>();
-			item.channel = true;
-			item.shootSpeed = 50f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 100;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 32;
+			Item.height = 62;
+			Item.useTime = 15;
+			Item.useAnimation = 20;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 4;
+			Item.value = 50000;
+			Item.rare = ItemRarityID.Purple;
+			Item.UseSound = SoundID.Item17;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<XenithCharging>();
+			Item.channel = true;
+			Item.shootSpeed = 50f;
+			Item.useAmmo = AmmoID.Arrow;
 			/*if (!Main.dedServ)
 			{
 				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/Shadeflare_Glow");
@@ -77,21 +74,13 @@ namespace SGAmod.Items.Weapons
         {
             if (player.ownedProjectileCounts[ModContent.ProjectileType<XenithBowProj>()] < 1)
             {
-				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<XenithBowProj>(), 1, 1,player.whoAmI);
+				Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<XenithBowProj>(), 1, 1,player.whoAmI);
             }
         }
 
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			foreach (int type in XenithBowTypes)
-			{
-				recipe.AddIngredient(type, 1);
-			}
-			recipe.AddIngredient(ModContent.ItemType<ByteSoul>(), 100);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<ByteSoul>(), 100).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -115,7 +104,7 @@ namespace SGAmod.Items.Weapons
 
 			get
 			{
-				float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+				float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 				float rate = 0.5f;
 
 
@@ -135,25 +124,25 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.ranged = true;
-			aiType = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			AIType = 0;
 		}
 
 		public override void ChargeUpEffects()
 		{
-			foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == projectile.owner && testby.type == ModContent.ProjectileType<XenithBowProj>()))
+			foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == Projectile.owner && testby.type == ModContent.ProjectileType<XenithBowProj>()))
 			{
-				proj.damage = projectile.damage;
-				XenithBowProj proj2 = proj.modProjectile as XenithBowProj;
-				proj.rotation = projectile.velocity.ToRotation();
-				proj2.projectile.ai[0] = 5;
-				proj2.projectile.netUpdate = true;
+				proj.damage = Projectile.damage;
+				XenithBowProj proj2 = proj.ModProjectile as XenithBowProj;
+				proj.rotation = Projectile.velocity.ToRotation();
+				proj2.Projectile.ai[0] = 5;
+				proj2.Projectile.netUpdate = true;
 		}
 	}
 
@@ -164,9 +153,9 @@ namespace SGAmod.Items.Weapons
 
 		public override void FireWeapon(Vector2 direction)
 		{
-			float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+			float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 
-			projectile.Kill();
+			Projectile.Kill();
 		}
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -210,7 +199,7 @@ namespace SGAmod.Items.Weapons
 
 				effect.Parameters["Texture"].SetValue(SGAmod.Instance.GetTexture("SmallLaser"));
 				effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.GetTexture(f == 3 ? "SmallLaser" : "Extra_49c"));
-				effect.Parameters["noiseProgress"].SetValue(Main.GlobalTime+f);
+				effect.Parameters["noiseProgress"].SetValue(Main.GlobalTimeWrappedHourly+f);
 				effect.Parameters["textureProgress"].SetValue(0);
 				effect.Parameters["noiseBlendPercent"].SetValue(1f);
 				effect.Parameters["strength"].SetValue(MathHelper.Clamp(alpha2*3f,0f,1f));
@@ -235,7 +224,7 @@ namespace SGAmod.Items.Weapons
 
 		public class XenithBowProj : ModProjectile
 	{
-		public Player Owner => Main.player[projectile.owner];
+		public Player Owner => Main.player[Projectile.owner];
 		public int TimeToShootPerBow => 30;
 		public class HoveringBow
         {
@@ -276,7 +265,7 @@ namespace SGAmod.Items.Weapons
 			{
 				swapPositions = Math.Min(swapPositions + 0.05f,1f);
 
-				rotation = rotation.AngleLerp(owner.projectile.rotation,0.20f);
+				rotation = rotation.AngleLerp(owner.Projectile.rotation,0.20f);
 				int timer = (int)(((index / (float)IndexMax)* owner.TimeToShootPerBow) +player.SGAPly().timer);
 
 				if (timer % owner.TimeToShootPerBow == 0)
@@ -288,13 +277,13 @@ namespace SGAmod.Items.Weapons
 						Item item = new Item();
 						item.SetDefaults(BowType);
 
-						Main.PlaySound(item.UseSound,(int)owner.projectile.Center.X,(int)owner.projectile.Center.Y);
+						SoundEngine.PlaySound(item.UseSound,(int)owner.Projectile.Center.X,(int)owner.Projectile.Center.Y);
 
 						int projType = item.shoot;
 
 						bool canShoot = true;
-						int damage = owner.projectile.damage;
-						float knockback = owner.projectile.knockBack;
+						int damage = owner.Projectile.damage;
+						float knockback = owner.Projectile.knockBack;
 						float speed = 32f;
 						if (projType == ProjectileID.WoodenArrowFriendly || projType == 10)
 						{
@@ -358,7 +347,7 @@ namespace SGAmod.Items.Weapons
 							speed *= 0.75f;
 							for (float ff = -1f; ff < 2.1f; ff += 2f)
 							{
-								Projectile proj = Projectile.NewProjectileDirect(Position, rotation.ToRotationVector2().RotatedBy(ff/5f) * speed * player.ArrowSpeed(), projType, damage/2, knockback, owner.projectile.owner);
+								Projectile proj = Projectile.NewProjectileDirect(Position, rotation.ToRotationVector2().RotatedBy(ff/5f) * speed * player.ArrowSpeed(), projType, damage/2, knockback, owner.Projectile.owner);
 								proj.Center = Position;
 								proj.usesIDStaticNPCImmunity = true;
 								proj.idStaticNPCHitCooldown = 15;
@@ -367,7 +356,7 @@ namespace SGAmod.Items.Weapons
 						}
 						else
 						{
-							Projectile proj = Projectile.NewProjectileDirect(Position, rotation.ToRotationVector2() * speed * player.ArrowSpeed(), projType, damage, knockback, owner.projectile.owner);
+							Projectile proj = Projectile.NewProjectileDirect(Position, rotation.ToRotationVector2() * speed * player.ArrowSpeed(), projType, damage, knockback, owner.Projectile.owner);
 							proj.Center = Position;
 							proj.usesIDStaticNPCImmunity = true;
 							proj.idStaticNPCHitCooldown = 15;
@@ -399,24 +388,24 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.light = 0f;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ranged = true;
-			projectile.timeLeft = 22;
-			projectile.extraUpdates = 0;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			projectile.arrow = true;
-			projectile.netImportant = true;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.light = 0f;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.timeLeft = 22;
+			Projectile.extraUpdates = 0;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			Projectile.arrow = true;
+			Projectile.netImportant = true;
 
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
 
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
 		}
 
 		public override string Texture => "Terraria/Projectile_" + ProjectileID.PhantasmArrow;
@@ -428,17 +417,17 @@ namespace SGAmod.Items.Weapons
 
 		public override void AI()
 		{
-			projectile.localAI[0]++;
-			projectile.ai[0] -= 1;
+			Projectile.localAI[0]++;
+			Projectile.ai[0] -= 1;
 
-			projectile.Opacity = MathHelper.Clamp(projectile.timeLeft / 20f, 0f, Math.Min(projectile.localAI[0] / 15f, 1f));
+			Projectile.Opacity = MathHelper.Clamp(Projectile.timeLeft / 20f, 0f, Math.Min(Projectile.localAI[0] / 15f, 1f));
 
 			bool staySummoned = true;
 
-			if (projectile.timeLeft <= 20)
+			if (Projectile.timeLeft <= 20)
 			{
 				staySummoned = false;
-				projectile.velocity *= 0.94f;
+				Projectile.velocity *= 0.94f;
 			}
 
 			if (Owner == null || Owner.dead || Owner.HeldItem.type != ModContent.ItemType<Xenith>())
@@ -451,7 +440,7 @@ namespace SGAmod.Items.Weapons
 				return;
 			}
 
-			if (projectile.localAI[0] == 1)
+			if (Projectile.localAI[0] == 1)
             {
 				for (int i = 0; i < Xenith.XenithBowTypes.Length; i += 1)
 				{
@@ -462,14 +451,14 @@ namespace SGAmod.Items.Weapons
 
 			if (!Main.dedServ)
 			{
-				if (projectile.ai[0] < 1)
+				if (Projectile.ai[0] < 1)
 				{
-					projectile.rotation = (Main.MouseWorld - projectile.Center).ToRotation();
-					projectile.netUpdate = true;
+					Projectile.rotation = (Main.MouseWorld - Projectile.Center).ToRotation();
+					Projectile.netUpdate = true;
 				}
 			}
 
-			float followSpeedRate = projectile.ai[0] > 0 ? 15f : 1f;
+			float followSpeedRate = Projectile.ai[0] > 0 ? 15f : 1f;
 
 
 			foreach (HoveringBow bow in bows)
@@ -481,13 +470,13 @@ namespace SGAmod.Items.Weapons
 
 				float rotangle = (percent * MathHelper.TwoPi) + bow.time / 32f;
 				rotangle %= MathHelper.TwoPi;
-				bow._position = projectile.Center+Vector2.UnitX.RotatedBy(rotangle) * new Vector2(256f, 64f);
+				bow._position = Projectile.Center+Vector2.UnitX.RotatedBy(rotangle) * new Vector2(256f, 64f);
 
-				Matrix transMatrix = Matrix.CreateScale(1f, 3f, 0f) * Matrix.CreateRotationZ(-MathHelper.PiOver2 + (percent * MathHelper.Pi)+ ((percentOne * MathHelper.Pi)*0.5f)) * Matrix.CreateRotationZ(projectile.rotation) * Matrix.CreateTranslation(projectile.Center.X, projectile.Center.Y, 0);
+				Matrix transMatrix = Matrix.CreateScale(1f, 3f, 0f) * Matrix.CreateRotationZ(-MathHelper.PiOver2 + (percent * MathHelper.Pi)+ ((percentOne * MathHelper.Pi)*0.5f)) * Matrix.CreateRotationZ(Projectile.rotation) * Matrix.CreateTranslation(Projectile.Center.X, Projectile.Center.Y, 0);
 
 				bow.bowPosition = Vector2.Transform(Vector2.UnitX*128f,transMatrix);
 
-				if (projectile.ai[0] > 0)
+				if (Projectile.ai[0] > 0)
 				{
 					bow.UpdateShooting();
                 }
@@ -500,47 +489,47 @@ namespace SGAmod.Items.Weapons
 
 			}
 
-			Vector2 gotohere = Owner.MountedCenter + (projectile.ai[0]>0 ? Vector2.Zero : new Vector2(0, -96f));
+			Vector2 gotohere = Owner.MountedCenter + (Projectile.ai[0]>0 ? Vector2.Zero : new Vector2(0, -96f));
 
-			projectile.velocity *= 0.96f;
+			Projectile.velocity *= 0.96f;
 
-			Owner.itemRotation = projectile.rotation;
+			Owner.itemRotation = Projectile.rotation;
 
-			projectile.Center += (gotohere - projectile.Center) / (24f/followSpeedRate);
-			projectile.velocity += (gotohere - projectile.Center)/(320f/ followSpeedRate);
+			Projectile.Center += (gotohere - Projectile.Center) / (24f/followSpeedRate);
+			Projectile.velocity += (gotohere - Projectile.Center)/(320f/ followSpeedRate);
 
-			projectile.timeLeft = 22;
+			Projectile.timeLeft = 22;
 
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 
-			Effects.TrailHelper trail = new Effects.TrailHelper("FadedBasicEffectAlphaPass", mod.GetTexture("SmallLaser"));
+			Effects.TrailHelper trail = new Effects.TrailHelper("FadedBasicEffectAlphaPass", Mod.Assets.Request<Texture2D>("SmallLaser").Value);
 			trail.color = delegate (float percent)
 			{
-				return Main.hslToRgb((percent+Main.GlobalTime/3f)%1f,1f,0.75f);
+				return Main.hslToRgb((percent+Main.GlobalTimeWrappedHourly/3f)%1f,1f,0.75f);
 			};
 
 			trail.projsize = Vector2.Zero;
-			trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
+			trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
 			trail.coordMultiplier = new Vector2(1f, 3f);
 			trail.trailThickness = 16f;
 			trail.trailThicknessIncrease = 0;
 			trail.doFade = false;
 			trail.connectEnds = true;
-			trail.strength = 1f* projectile.Opacity;
+			trail.strength = 1f* Projectile.Opacity;
 
 			List<Vector2> spots = bows.Select(testby => testby.Position).ToList();
 
-			trail.DrawTrail(spots, projectile.Center);
+			trail.DrawTrail(spots, Projectile.Center);
 
-			spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.Black * projectile.Opacity*0.5f, projectile.rotation-MathHelper.PiOver2, tex.Size() / 2f, projectile.scale, projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+			spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.Black * Projectile.Opacity*0.5f, Projectile.rotation-MathHelper.PiOver2, tex.Size() / 2f, Projectile.scale, Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
 
 			foreach (HoveringBow bow in bows.OrderBy(testby => testby.Position.Y))
 			{
-				bow.Draw(spriteBatch, lightColor* projectile.Opacity);
+				bow.Draw(spriteBatch, lightColor* Projectile.Opacity);
 			}
 
 				return false;

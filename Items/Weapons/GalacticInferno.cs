@@ -18,45 +18,37 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Galactic Inferno");
 			Tooltip.SetDefault("Swings dark energy in the direction of the blade rather than at your mouse cursor.");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 200;
-			item.crit = 0;
-			item.melee = true;
-			item.width = 54;
-			item.height = 54;
-			item.useTime = 2;
-			item.useAnimation = 22;
-			item.reuseDelay = 30;
-			item.useStyle = 1;
-			item.knockBack = 5;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.rare = 11;
-			item.UseSound = SoundID.Item45;
-			item.shoot = mod.ProjectileType("SurtCharging");
-			item.shootSpeed = 20f;
-			item.useTurn = false;
-			item.autoReuse = true;
+			Item.damage = 200;
+			Item.crit = 0;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 54;
+			Item.height = 54;
+			Item.useTime = 2;
+			Item.useAnimation = 22;
+			Item.reuseDelay = 30;
+			Item.useStyle = 1;
+			Item.knockBack = 5;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.rare = 11;
+			Item.UseSound = SoundID.Item45;
+			Item.shoot = Mod.Find<ModProjectile>("SurtCharging").Type;
+			Item.shootSpeed = 20f;
+			Item.useTurn = false;
+			Item.autoReuse = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/GalacticInferno_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/GalacticInferno_Glow").Value;
 			}
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new StarMetalRecipes(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedSword"), 1);
-			recipe.AddIngredient(ItemID.DD2SquireDemonSword, 1);
-			recipe.AddIngredient(ItemID.BrokenHeroSword, 1);
-			recipe.AddIngredient(mod.ItemType("IlluminantEssence"), 20);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedSword"), 1).AddIngredient(ItemID.DD2SquireDemonSword, 1).AddIngredient(ItemID.BrokenHeroSword, 1).AddIngredient(mod.ItemType("IlluminantEssence"), 20).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -82,8 +74,8 @@ namespace SGAmod.Items.Weapons
 				perturbedSpeed.RotatedBy(MathHelper.ToRadians(-45));
 				perturbedSpeed *= Main.rand.NextFloat(0.8f, 1.2f);
 				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.DD2DarkMageBolt, (int)((float)damage * 1.00f), knockBack / 3f, player.whoAmI);
-				Main.projectile[proj].melee = true;
-				Main.projectile[proj].magic = false;
+				Main.projectile[proj].DamageType = DamageClass.Melee;
+				// Main.projectile[proj].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 				Main.projectile[proj].hostile = false;
 				Main.projectile[proj].friendly = true;
 				Main.projectile[proj].timeLeft = 180;

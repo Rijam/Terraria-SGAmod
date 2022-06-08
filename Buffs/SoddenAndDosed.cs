@@ -11,7 +11,7 @@ namespace SGAmod.Buffs
 {
 	public class Sodden : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sodden");
 			Description.SetDefault("You are coated in a piss");
@@ -34,7 +34,7 @@ namespace SGAmod.Buffs
 	}
 	public class SoddenSlow : Sodden
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sodden");
 			Description.SetDefault("You are coated in a piss");
@@ -43,11 +43,7 @@ namespace SGAmod.Buffs
 			Main.buffNoSave[Type] = true;
 		}
 
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/Sodden";
-			return true;
-		}
+		public override string Texture => "SGAmod/Buffs/Sodden";
 
 		public override void Update(Player player, ref int buffIndex)
 		{
@@ -62,7 +58,7 @@ namespace SGAmod.Buffs
 	}
 	public class DosedInGas : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Doused In Gas");
 			Description.SetDefault("You are coated in a highly flammable substance");

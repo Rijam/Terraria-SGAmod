@@ -22,19 +22,19 @@ namespace SGAmod.Items.Weapons.Auras
 		{
 			DisplayName.SetDefault("Main-Sequence Staff");
 			Tooltip.SetDefault("Summons a Miniature Sun above the player");//\nThe radiance burns all in the aura\nPlayers recive immunity to burning debuffs\nLights a large area out of the blinding fog");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			base.ModifyTooltips(tooltips);
 			int thetarget = -1;
-			if (Main.LocalPlayer.ownedProjectileCounts[item.shoot] > 0)
+			if (Main.LocalPlayer.ownedProjectileCounts[Item.shoot] > 0)
 			{
 				for (int i = 0; i < Main.maxProjectiles; i += 1)
 				{
-					if (Main.projectile[i].active && Main.projectile[i].type == item.shoot && Main.projectile[i].owner == Main.LocalPlayer.whoAmI)
+					if (Main.projectile[i].active && Main.projectile[i].type == Item.shoot && Main.projectile[i].owner == Main.LocalPlayer.whoAmI)
 					{
 						thetarget = i;
 						break;
@@ -43,59 +43,51 @@ namespace SGAmod.Items.Weapons.Auras
 			}
 
 
-			if (thetarget > -1 && Main.projectile[thetarget].active && Main.projectile[thetarget].type==item.shoot)
+			if (thetarget > -1 && Main.projectile[thetarget].active && Main.projectile[thetarget].type==Item.shoot)
 			{
-				AuraMinionStellar shoot = Main.projectile[thetarget].modProjectile as AuraMinionStellar;
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Power Level: "+ shoot.thepower));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Passive: Protects players against burning Debuffs, depending on minions put in"));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "In this order: Sunburn, OnFire!, Burning, Thermal Blaze, Lava Burn, Severe Lava Burn"));
+				AuraMinionStellar shoot = Main.projectile[thetarget].ModProjectile as AuraMinionStellar;
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Power Level: "+ shoot.thepower));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Passive: Protects players against burning Debuffs, depending on minions put in"));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "In this order: Sunburn, OnFire!, Burning, Thermal Blaze, Lava Burn, Severe Lava Burn"));
 
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Each level scales the damage higher"));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Each level scales a light that clears the fog"));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Each level scales the damage higher"));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Each level scales a light that clears the fog"));
 
 
 				if (shoot.thepower >= 1.0)
-					tooltips.Add(new TooltipLine(mod, "Bonuses", "Lv1: THEY WILL BURN!"));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", "Lv1: THEY WILL BURN!"));
 				if (shoot.thepower >= 2.0)
-					tooltips.Add(new TooltipLine(mod, "Bonuses", "Lv2: Applies Lava Burn to enemies"));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", "Lv2: Applies Lava Burn to enemies"));
 				if (shoot.thepower >= 3.0)
-					tooltips.Add(new TooltipLine(mod, "Bonuses", "Lv3: Applies Daybroken to enemies"));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", "Lv3: Applies Daybroken to enemies"));
 
 			}
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 100;
-			item.knockBack = 2f;
-			item.mana = 15;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 36;
-			item.useAnimation = 36;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.buyPrice(0, 0, 50, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.UseSound = SoundID.Item44;
+			Item.damage = 100;
+			Item.knockBack = 2f;
+			Item.mana = 15;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 36;
+			Item.useAnimation = 36;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.value = Item.buyPrice(0, 0, 50, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.UseSound = SoundID.Item44;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = ModContent.BuffType<AuraStellarBuff>();
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = ModContent.BuffType<AuraStellarBuff>();
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = ModContent.ProjectileType<AuraMinionStellar>();
+			Item.shoot = ModContent.ProjectileType<AuraMinionStellar>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.FieryShard>(), 20);
-			recipe.AddIngredient(ModContent.ItemType<StygianCore>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 20);
-			recipe.AddIngredient(ModContent.ItemType<HeliosFocusCrystal>(), 1);
-			recipe.AddIngredient(ItemID.FragmentSolar, 10);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<HavocGear.Items.FieryShard>(), 20).AddIngredient(ModContent.ItemType<StygianCore>(), 1).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 20).AddIngredient(ModContent.ItemType<HeliosFocusCrystal>(), 1).AddIngredient(ItemID.FragmentSolar, 10).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -115,42 +107,42 @@ namespace SGAmod.Items.Weapons.Auras
 
 		public override float CalcAuraPower(Player player)
 		{
-			float temp = 1f + (player.minionDamage * (projectile.minionSlots / 4f));
+			float temp = 1f + (player.GetDamage(DamageClass.Summon) * (Projectile.minionSlots / 4f));
 			return temp;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Stellar Sun");
-			Main.projFrames[projectile.type] = 1;
+			Main.projFrames[Projectile.type] = 1;
 
 			// These below are needed for a minion
 			// Denotes that this projectile is a pet or minion
-			Main.projPet[projectile.type] = true;
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			Main.projPet[Projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.tileCollide = false;
-			projectile.friendly = false;
-			projectile.minion = true;
-			projectile.minionSlots = 1f;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
-			projectile.hide = true;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.tileCollide = false;
+			Projectile.friendly = false;
+			Projectile.minion = true;
+			Projectile.minionSlots = 1f;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
+			Projectile.hide = true;
 		}
 
 		public override void AuraAI(Player player)
 		{
 			SGAmod.PostDraw.Add(new PostDrawCollection(new Vector3(SunOffset.X - Main.screenPosition.X, SunOffset.Y - Main.screenPosition.Y, 640)));
-			Lighting.AddLight(projectile.Center, Color.Orange.ToVector3() * 1f);
+			Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3() * 1f);
 		}
-		Player player => Main.player[projectile.whoAmI];
-		Vector2 SunOffset => projectile.Center - new Vector2(0, player.gravDir * 128f);
+		Player player => Main.player[Projectile.whoAmI];
+		Vector2 SunOffset => Projectile.Center - new Vector2(0, player.gravDir * 128f);
 		Color SequenceColor => Color.Lerp(Color.Lerp(Color.Red, Color.Yellow, MathHelper.Clamp((timeLeftScale - 1f) / 2f, 0f, 1f)), Color.CornflowerBlue, MathHelper.Clamp((timeLeftScale - 2.5f) / 2f, 0f, 1f));
 
 
@@ -160,7 +152,7 @@ namespace SGAmod.Items.Weapons.Auras
 			{
 				float powerf = CalcAuraPowerReal(player);
 				NPC himas = (type as NPC);
-				himas.SGANPCs().impaled += (int)(projectile.damage * powerf*(himas.realLife>=0 ? 0.75f : 1f));
+				himas.SGANPCs().impaled += (int)(Projectile.damage * powerf*(himas.realLife>=0 ? 0.75f : 1f));
 
 				if (!(himas.townNPC || himas.friendly))
 				{
@@ -196,7 +188,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 				foreach (int typeofbuff in typesofdebuffs)
 				{
-					if (index < projectile.minionSlots && alliedplayer.HasBuff(typeofbuff))
+					if (index < Projectile.minionSlots && alliedplayer.HasBuff(typeofbuff))
 						alliedplayer.DelBuff(alliedplayer.FindBuffIndex(typeofbuff));
 
 					index += 1;
@@ -224,7 +216,7 @@ namespace SGAmod.Items.Weapons.Auras
 			{
 				timeLeftScale += (CalcAuraPowerReal(player) - timeLeftScale) / 30f;
 
-				Lighting.AddLight(projectile.Center, SequenceColor.ToVector3() * 0.75f);
+				Lighting.AddLight(Projectile.Center, SequenceColor.ToVector3() * 0.75f);
 
 				for (float i = 0; i < 8f; i += 1f)
 				{
@@ -242,28 +234,28 @@ namespace SGAmod.Items.Weapons.Auras
 				}
 			}
 
-			UnifiedRandom rando = new UnifiedRandom(projectile.whoAmI);
+			UnifiedRandom rando = new UnifiedRandom(Projectile.whoAmI);
 
 			if (type == 1)
 			{
 
-				Texture2D mainTex = mod.GetTexture("Extra_57b");
+				Texture2D mainTex = Mod.Assets.Request<Texture2D>("Extra_57b").Value;
 				Vector2 halfsize = mainTex.Size() / 2f;
 
 				Effect RadialEffect = SGAmod.RadialEffect;
 				float scale = 1f;// (1f+ CalcAuraPowerReal(player)*0.25f)*0.50f;
 
-				Texture2D texture = ModContent.GetTexture("SGAmod/Stain");
-				Texture2D texture2 = ModContent.GetTexture("SGAmod/Voronoi");
-				Texture2D texture3 = ModContent.GetTexture("SGAmod/TiledPerlin");
+				Texture2D texture = ModContent.Request<Texture2D>("SGAmod/Stain");
+				Texture2D texture2 = ModContent.Request<Texture2D>("SGAmod/Voronoi");
+				Texture2D texture3 = ModContent.Request<Texture2D>("SGAmod/TiledPerlin");
 
 				for (float scalaa = 0.2f; scalaa <= 1; scalaa += 0.50f)
 				{
 					for (float f = -1; f < 2; f += 2)
 					{
-						RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("Stain"));
+						RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Stain").Value);
 						RadialEffect.Parameters["alpha"].SetValue(MathHelper.Clamp(timeLeftScale / 2f,0f,1f));
-						RadialEffect.Parameters["texOffset"].SetValue(new Vector2(Main.GlobalTime * 0.250f * f, -Main.GlobalTime * 0.575f));
+						RadialEffect.Parameters["texOffset"].SetValue(new Vector2(Main.GlobalTimeWrappedHourly * 0.250f * f, -Main.GlobalTimeWrappedHourly * 0.575f));
 						RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(5f, 0.5f));
 						RadialEffect.Parameters["ringScale"].SetValue(0.40f* scalaa);
 						RadialEffect.Parameters["ringOffset"].SetValue(0.22f);
@@ -276,9 +268,9 @@ namespace SGAmod.Items.Weapons.Auras
 					}
 				}
 
-				RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("Stain"));
+				RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Stain").Value);
 				RadialEffect.Parameters["alpha"].SetValue(MathHelper.Clamp(timeLeftScale / 2f, 0f, 2f));
-				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(0, -Main.GlobalTime * 0.575f));
+				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(0, -Main.GlobalTimeWrappedHourly * 0.575f));
 				RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(3f, 0.75f));
 				RadialEffect.Parameters["ringScale"].SetValue(0.14f);
 				RadialEffect.Parameters["ringOffset"].SetValue(0.36f);
@@ -292,7 +284,7 @@ namespace SGAmod.Items.Weapons.Auras
 				SGAmod.SphereMapEffect.Parameters["colorBlend"].SetValue(SequenceColor.ToVector4() * timeLeftScale);
 				SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(texture);
 				SGAmod.SphereMapEffect.Parameters["mappedTextureMultiplier"].SetValue(new Vector2(1f, 1f));
-				SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(-Main.GlobalTime/2f,0));
+				SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly/2f,0));
 				SGAmod.SphereMapEffect.Parameters["softEdge"].SetValue(2f);
 
 				SGAmod.SphereMapEffect.CurrentTechnique.Passes["SphereMap"].Apply();
@@ -302,7 +294,7 @@ namespace SGAmod.Items.Weapons.Auras
 				SGAmod.SphereMapEffect.Parameters["colorBlend"].SetValue(SequenceColor.ToVector4() * timeLeftScale * 0.950f);
 				SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(texture3);
 				SGAmod.SphereMapEffect.Parameters["mappedTextureMultiplier"].SetValue(new Vector2(1f, 1f));
-				SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(-Main.GlobalTime / 2.5f,0));
+				SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly / 2.5f,0));
 				SGAmod.SphereMapEffect.Parameters["softEdge"].SetValue(2f);
 
 				SGAmod.SphereMapEffect.CurrentTechnique.Passes["SphereMapAlpha"].Apply();
@@ -312,7 +304,7 @@ namespace SGAmod.Items.Weapons.Auras
 				SGAmod.SphereMapEffect.Parameters["colorBlend"].SetValue(SequenceColor.ToVector4() * timeLeftScale * 0.500f);
 				SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(texture2);
 				SGAmod.SphereMapEffect.Parameters["mappedTextureMultiplier"].SetValue(new Vector2(1f,1f));
-				SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(-Main.GlobalTime / 3.5f, 0));
+				SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly / 3.5f, 0));
 				SGAmod.SphereMapEffect.Parameters["softEdge"].SetValue(2f);
 
 				SGAmod.SphereMapEffect.CurrentTechnique.Passes["SphereMapAlpha"].Apply();
@@ -327,9 +319,9 @@ namespace SGAmod.Items.Weapons.Auras
 				for (float ff = 0; ff < 1f; ff += 1 / 5f)
 				{
 
-					RadialEffect.Parameters["overlayTexture"].SetValue(ModContent.GetTexture("SGAmod/TrailEffectSideways"));//SGAmod.PearlIceBackground
+					RadialEffect.Parameters["overlayTexture"].SetValue(ModContent.Request<Texture2D>("SGAmod/TrailEffectSideways"));//SGAmod.PearlIceBackground
 					RadialEffect.Parameters["alpha"].SetValue(1f);
-					RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, ff+(Main.GlobalTime * 0.1f)));
+					RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, ff+(Main.GlobalTimeWrappedHourly * 0.1f)));
 					RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(5f, 5f));
 					RadialEffect.Parameters["ringScale"].SetValue(0.025f);
 					RadialEffect.Parameters["ringOffset"].SetValue(0.50f);
@@ -339,14 +331,14 @@ namespace SGAmod.Items.Weapons.Auras
 
 					RadialEffect.CurrentTechnique.Passes["RadialAlpha"].Apply();
 
-					Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.White, 0, halfsize, (new Vector2(thesize, thesize) / (halfsize * 1.5f)) * MathHelper.Pi, default, 0);
+					Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.White, 0, halfsize, (new Vector2(thesize, thesize) / (halfsize * 1.5f)) * MathHelper.Pi, default, 0);
 
-					RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, ((ff + Main.GlobalTime) * -0.1f)));
+					RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, ((ff + Main.GlobalTimeWrappedHourly) * -0.1f)));
 					RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(4f, 5f));
 					RadialEffect.Parameters["ringScale"].SetValue(0.010f);
 					RadialEffect.CurrentTechnique.Passes["RadialAlpha"].Apply();
 
-					Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.LightGray, 0, halfsize, ((new Vector2(thesize, thesize) + new Vector2(8f, 8f)) / (halfsize * 1.5f)) * MathHelper.Pi, default, 0);
+					Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.LightGray, 0, halfsize, ((new Vector2(thesize, thesize) + new Vector2(8f, 8f)) / (halfsize * 1.5f)) * MathHelper.Pi, default, 0);
 
 				}
 
@@ -358,7 +350,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			AuraEffects(Main.player[projectile.owner], 1);
+			AuraEffects(Main.player[Projectile.owner], 1);
 			//Texture2D tex = ModContent.GetTexture("SGAmod/Items/Weapons/Auras/StoneGolem");
 			//spriteBatch.Draw(tex, projectile.Center+new Vector2(0,-32+(float)Math.Sin(projectile.localAI[0]/30f)*4f)-Main.screenPosition, null, lightColor, 0, new Vector2(tex.Width, tex.Height)/2f, projectile.scale, Main.player[projectile.owner].direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 			return false;
@@ -368,7 +360,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 	public class AuraStellarBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Main-Sequence Aura");
 			Description.SetDefault("Pure hydrogen plasma radiance burns everything around you");

@@ -17,6 +17,7 @@ using SGAmod.Effects;
 using Microsoft.Xna.Framework.Audio;
 using SGAmod.Items.Weapons.Technical;
 using Terraria.ModLoader.IO;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons.Technical
 {
@@ -57,30 +58,30 @@ namespace SGAmod.Items.Weapons.Technical
 		{
 			DisplayName.SetDefault("Laser Marker");
 			Tooltip.SetDefault("Laser Pointer, aim at your enemies to mark them, increasing damage they take by 10%\nCan be held out like a torch and used normally by holding shift\nCan also be thrown like a " + Terraria.Localization.Language.GetTextValue("ItemName.Glowstick"));
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 12;
-			item.useTime = 20;
-			item.useAnimation = 21;
-			item.reuseDelay = 100;
-			item.useStyle = 1;
-			item.knockBack = 5;
-			item.noUseGraphic = true;
-			item.value = Item.buyPrice(0, 0, 0, 80);
-			item.rare = 2;
-			item.UseSound = SoundID.Item7;
-			item.consumable = true;
-			item.maxStack = 30;
-			item.shootSpeed = 10f;
-			item.useTurn = false;
-			item.autoReuse = false;
-			item.noMelee = true;
+			Item.width = 32;
+			Item.height = 12;
+			Item.useTime = 20;
+			Item.useAnimation = 21;
+			Item.reuseDelay = 100;
+			Item.useStyle = 1;
+			Item.knockBack = 5;
+			Item.noUseGraphic = true;
+			Item.value = Item.buyPrice(0, 0, 0, 80);
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item7;
+			Item.consumable = true;
+			Item.maxStack = 30;
+			Item.shootSpeed = 10f;
+			Item.useTurn = false;
+			Item.autoReuse = false;
+			Item.noMelee = true;
 
-			item.shoot = ModContent.ProjectileType<LaserMarkerThrownProj>();
+			Item.shoot = ModContent.ProjectileType<LaserMarkerThrownProj>();
 		}
 
 		public override bool ConsumeItem(Player player)
@@ -97,28 +98,14 @@ namespace SGAmod.Items.Weapons.Technical
 		{
 			SGAmod.GemColors.TryGetValue(gemType, out Color color);
 
-			tooltips.Add(new TooltipLine(mod, "LaserColor", Idglib.ColorText(color, "Gem Colored Lens")));
+			tooltips.Add(new TooltipLine(Mod, "LaserColor", Idglib.ColorText(color, "Gem Colored Lens")));
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe;
-			foreach (int itemtype in SGAmod.GemColors.Keys)
-			{
-				recipe = new ModRecipe(mod);
-				recipe.AddIngredient(itemtype, 1);
-				recipe.AddRecipeGroup("SGAmod:Tier1Bars", 1);
-				recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 1);
-				recipe.AddIngredient(ItemID.Glass, 5);
-				recipe.AddIngredient(ItemID.Lens, 1);
-				recipe.AddIngredient(ItemID.Glowstick, 3);
-				recipe.AddTile(TileID.WorkBenches);
-				recipe.SetResult(this, 5);
-				recipe.AddRecipe();
-			}
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			return true;
 		}
@@ -139,7 +126,7 @@ namespace SGAmod.Items.Weapons.Technical
 			if (proj != null)
 			{
 				SGAmod.GemColors.TryGetValue(gemType, out Color color);
-				((LaserMarkerProj)proj.modProjectile).gemColor = color;
+				((LaserMarkerProj)proj.ModProjectile).gemColor = color;
 			}
 
 			return false;
@@ -173,15 +160,15 @@ namespace SGAmod.Items.Weapons.Technical
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.timeLeft = 10;
-			projectile.hostile = false;
-			projectile.penetrate = 10;
-			projectile.light = 0.35f;
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.tileCollide = false;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.timeLeft = 10;
+			Projectile.hostile = false;
+			Projectile.penetrate = 10;
+			Projectile.light = 0.35f;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.tileCollide = false;
 			drawHeldProjInFrontOfHeldItemAndArms = true;
 		}
 
@@ -198,37 +185,37 @@ namespace SGAmod.Items.Weapons.Technical
 		public override void AI()
 		{
 
-			Player player = Main.player[projectile.owner];
-			bool heldone = player.HeldItem.type != mod.ItemType(ItemName);
-			if (projectile.ai[0] > 0 || (player.HeldItem == null || heldone) || player.itemAnimation > 0 || player.dead)
+			Player player = Main.player[Projectile.owner];
+			bool heldone = player.HeldItem.type != Mod.Find<ModItem>(ItemName).Type;
+			if (Projectile.ai[0] > 0 || (player.HeldItem == null || heldone) || player.itemAnimation > 0 || player.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
 			else
 			{
-				if (projectile.timeLeft < 3)
-					projectile.timeLeft = 3;
+				if (Projectile.timeLeft < 3)
+					Projectile.timeLeft = 3;
 				Vector2 mousePos = Main.MouseWorld;
 
-				if (projectile.owner == Main.myPlayer)
+				if (Projectile.owner == Main.myPlayer)
 				{
 					Vector2 diff = mousePos - player.Center;
-					projectile.velocity = diff;
-					projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-					projectile.netUpdate = true;
-					projectile.Center = mousePos;
+					Projectile.velocity = diff;
+					Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+					Projectile.netUpdate = true;
+					Projectile.Center = mousePos;
 				}
-				int dir = projectile.direction;
+				int dir = Projectile.direction;
 				player.ChangeDir(dir);
 
-				Vector2 direction = (projectile.velocity);
+				Vector2 direction = (Projectile.velocity);
 				Vector2 directionmeasure = direction;
 
-				player.heldProj = projectile.whoAmI;
+				player.heldProj = Projectile.whoAmI;
 
-				projectile.velocity.Normalize();
-				projectile.rotation = projectile.velocity.ToRotation();
+				Projectile.velocity.Normalize();
+				Projectile.rotation = Projectile.velocity.ToRotation();
 
 				player.bodyFrame.Y = player.bodyFrame.Height * 3;
 				if (directionmeasure.Y - Math.Abs(directionmeasure.X) > 25)
@@ -239,10 +226,10 @@ namespace SGAmod.Items.Weapons.Technical
 					player.bodyFrame.Y = player.bodyFrame.Height * 5;
 				player.direction = (directionmeasure.X > 0).ToDirectionInt();
 
-				projectile.Center = player.Center + (projectile.velocity * 10f);
-				projectile.velocity *= 8f;
+				Projectile.Center = player.Center + (Projectile.velocity * 10f);
+				Projectile.velocity *= 8f;
 
-				MyLaser = Projectile.NewProjectile(projectile.Center + projectile.rotation.ToRotationVector2() * 12f, projectile.rotation.ToRotationVector2() * 2f, ModContent.ProjectileType<LaserMarkerLaserProj>(), 0, 0, player.whoAmI, ai1: (int)projectile.whoAmI);
+				MyLaser = Projectile.NewProjectile(Projectile.Center + Projectile.rotation.ToRotationVector2() * 12f, Projectile.rotation.ToRotationVector2() * 2f, ModContent.ProjectileType<LaserMarkerLaserProj>(), 0, 0, player.whoAmI, ai1: (int)Projectile.whoAmI);
 				Main.projectile[MyLaser].localAI[0] = Main.rgbToHsl(gemColor).X;
 
 			}
@@ -257,14 +244,14 @@ namespace SGAmod.Items.Weapons.Technical
 		public void DoDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 			Vector2 origin = new Vector2(16, 1);
-			Vector2 start = projectile.Center + projectile.rotation.ToRotationVector2() * 12f;
+			Vector2 start = Projectile.Center + Projectile.rotation.ToRotationVector2() * 12f;
 
 			Vector2 diff = (EndPoint - start);
 			float length = diff.Length();
 
-			Texture2D endpointtex = ModContent.GetTexture("SGAmod/Extra_49c");
+			Texture2D endpointtex = ModContent.Request<Texture2D>("SGAmod/Extra_49c");
 
-			Main.spriteBatch.Draw(ModContent.GetTexture("SGAmod/LaserBeam"), start - Main.screenPosition, new Rectangle(0, 0, 32, 1), gemColor * 0.50f, diff.ToRotation() + MathHelper.PiOver2, origin, new Vector2(0.25f, length), SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(ModContent.Request<Texture2D>("SGAmod/LaserBeam"), start - Main.screenPosition, new Rectangle(0, 0, 32, 1), gemColor * 0.50f, diff.ToRotation() + MathHelper.PiOver2, origin, new Vector2(0.25f, length), SpriteEffects.None, 0);
 			//Main.spriteBatch.Draw(endpointtex, EndPoint - Main.screenPosition, null, gemColor * 0.50f, 0, endpointtex.Size()/2f, 0.5f, SpriteEffects.None, 0);
 
 		}
@@ -272,11 +259,11 @@ namespace SGAmod.Items.Weapons.Technical
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 
-			bool facingleft = projectile.velocity.X > 0;
+			bool facingleft = Projectile.velocity.X > 0;
 			Microsoft.Xna.Framework.Graphics.SpriteEffects effect = SpriteEffects.None;
-			Texture2D texture = Main.projectileTexture[projectile.type];
+			Texture2D texture = Main.projectileTexture[Projectile.type];
 			Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
-			Main.spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, new Rectangle?(), drawColor * projectile.Opacity, projectile.rotation + (facingleft ? 0 : MathHelper.Pi), origin, projectile.scale, facingleft ? effect : SpriteEffects.FlipHorizontally, 0);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, new Rectangle?(), drawColor * Projectile.Opacity, Projectile.rotation + (facingleft ? 0 : MathHelper.Pi), origin, Projectile.scale, facingleft ? effect : SpriteEffects.FlipHorizontally, 0);
 
 			return false;
 		}
@@ -286,7 +273,7 @@ namespace SGAmod.Items.Weapons.Technical
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-			Texture2D endpointtex = ModContent.GetTexture("SGAmod/Glow");
+			Texture2D endpointtex = ModContent.Request<Texture2D>("SGAmod/Glow");
 			Main.spriteBatch.Draw(endpointtex, EndPoint - Main.screenPosition, null, gemColor * 1f, 0, endpointtex.Size() / 2f, 1f, SpriteEffects.None, 0);
 			Main.spriteBatch.Draw(endpointtex, EndPoint - Main.screenPosition, null, Color.White * 1f, 0, endpointtex.Size() / 2f, 0.75f, SpriteEffects.None, 0);
 
@@ -307,12 +294,12 @@ namespace SGAmod.Items.Weapons.Technical
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Glowstick);
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 1800;
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.light = 0.35f;
+			Projectile.CloneDefaults(ProjectileID.Glowstick);
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 1800;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.light = 0.35f;
 		}
 
 		public override string Texture
@@ -324,12 +311,12 @@ namespace SGAmod.Items.Weapons.Technical
 		{
 			for (int i = 0; i < 20; i += 1)
 			{
-				int dust = Dust.NewDust(new Vector2(projectile.Center.X - 4, projectile.Center.Y - 4), 8, 8, 269);
+				int dust = Dust.NewDust(new Vector2(Projectile.Center.X - 4, Projectile.Center.Y - 4), 8, 8, 269);
 				Main.dust[dust].scale = 0.50f;
 				Main.dust[dust].noGravity = false;
 				Main.dust[dust].velocity = Main.rand.NextVector2Circular(6f, 6f);
 			}
-			SoundEffectInstance sound = Main.PlaySound(SoundID.NPCHit, (int)projectile.Center.X, (int)projectile.Center.Y, 53);
+			SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.NPCHit, (int)Projectile.Center.X, (int)Projectile.Center.Y, 53);
 			if (sound != null)
 				sound.Pitch -= 0.5f;
 
@@ -339,8 +326,8 @@ namespace SGAmod.Items.Weapons.Technical
 		public override void AI()
 		{
 			//vanilla
-			Player player = Main.player[projectile.owner];
-			MyLaser = Projectile.NewProjectile(projectile.Center + projectile.rotation.ToRotationVector2() * 12f, projectile.rotation.ToRotationVector2() * 2f, ModContent.ProjectileType<LaserMarkerLaserProj>(), 0, 0, player.whoAmI, ai1: (int)projectile.whoAmI);
+			Player player = Main.player[Projectile.owner];
+			MyLaser = Projectile.NewProjectile(Projectile.Center + Projectile.rotation.ToRotationVector2() * 12f, Projectile.rotation.ToRotationVector2() * 2f, ModContent.ProjectileType<LaserMarkerLaserProj>(), 0, 0, player.whoAmI, ai1: (int)Projectile.whoAmI);
 			Main.projectile[MyLaser].localAI[0] = Main.rgbToHsl(gemColor).X;
 
 		}
@@ -360,16 +347,16 @@ namespace SGAmod.Items.Weapons.Technical
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.timeLeft = 1;
-			projectile.hostile = false;
-			projectile.penetrate = 1;
-			projectile.light = 0.35f;
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.tileCollide = false;
-			projectile.extraUpdates = 0;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.timeLeft = 1;
+			Projectile.hostile = false;
+			Projectile.penetrate = 1;
+			Projectile.light = 0.35f;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.tileCollide = false;
+			Projectile.extraUpdates = 0;
 			drawHeldProjInFrontOfHeldItemAndArms = true;
 		}
 
@@ -385,8 +372,8 @@ namespace SGAmod.Items.Weapons.Technical
 		// By making a property to handle this it makes our life easier, and the accessibility more readable
 		public float Distance
 		{
-			get => projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public override bool CanDamage()
@@ -399,11 +386,11 @@ namespace SGAmod.Items.Weapons.Technical
 
 			//projectile.Center = Main.projectile[(int)projectile.knockBack].Center;
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
 			NPC hitnpc = default;
 
-			Vector3 colorz = Main.hslToRgb(projectile.localAI[0], 1f, 0.75f).ToVector3() * 0.50f;
+			Vector3 colorz = Main.hslToRgb(Projectile.localAI[0], 1f, 0.75f).ToVector3() * 0.50f;
 
 			SetLaserPosition(player, ref hitnpc);
 
@@ -414,9 +401,9 @@ namespace SGAmod.Items.Weapons.Technical
 
 			Lighting.AddLight(EndPoint, colorz * 1.25f);
 
-			Projectile owner = Main.projectile[(int)projectile.ai[1]];
+			Projectile owner = Main.projectile[(int)Projectile.ai[1]];
 
-			if (owner != null && owner.active && owner.modProjectile != null && owner.modProjectile is LaserMarkerProj laser)
+			if (owner != null && owner.active && owner.ModProjectile != null && owner.ModProjectile is LaserMarkerProj laser)
 				laser.EndPoint = EndPoint;
 
 			//Utils.PlotTileLine(projectile.Center, projectile.Center + projectile.velocity * (Distance - MOVE_DISTANCE), 26, new Utils.PerLinePoint(DelegateMethods.CastLight));
@@ -426,13 +413,13 @@ namespace SGAmod.Items.Weapons.Technical
 
 		private void SetLaserPosition(Player player, ref NPC hitnpc)
 		{
-			Color colorz2 = Main.hslToRgb(projectile.localAI[0], 1f, 0.75f);
+			Color colorz2 = Main.hslToRgb(Projectile.localAI[0], 1f, 0.75f);
 
 			float distanceboost = 4f;
 
 			for (Distance = MOVE_DISTANCE; Distance <= 2200f; Distance += distanceboost)
 			{
-				var start = projectile.Center + projectile.velocity * Distance;
+				var start = Projectile.Center + Projectile.velocity * Distance;
 				EndPoint = start;
 
 				Vector3 colorz = colorz2.ToVector3() * Main.rand.NextFloat(0.10f, 0.30f);
@@ -440,7 +427,7 @@ namespace SGAmod.Items.Weapons.Technical
 				//if (Main.rand.Next(0, 10) == 0)
 
 				//projectile.Center + projectile.velocity * (Distance+distanceboost)
-				if (!Collision.CanHit(start, 0, 0, projectile.Center + projectile.velocity * (Distance + distanceboost), 0, 0))
+				if (!Collision.CanHit(start, 0, 0, Projectile.Center + Projectile.velocity * (Distance + distanceboost), 0, 0))
 				{
 					//Point checkthere = ((projectile.Center + projectile.velocity * (Distance + distanceboost))/16).ToPoint();
 

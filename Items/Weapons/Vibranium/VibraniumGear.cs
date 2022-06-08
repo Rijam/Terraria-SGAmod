@@ -12,6 +12,7 @@ using SGAmod.Items.Placeable;
 using SGAmod.Effects;
 using System.Linq;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons.Vibranium
 {
@@ -24,7 +25,7 @@ namespace SGAmod.Items.Weapons.Vibranium
 
 		public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
 		{
-			if (line.mod == "Terraria" && line.Name == "ItemName")
+			if (line.Mod == "Terraria" && line.Name == "ItemName")
 			{
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Main.UIScaleMatrix);
@@ -33,7 +34,7 @@ namespace SGAmod.Items.Weapons.Vibranium
 
 				Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White);
 
-				float percother = 0.50f + (float)Math.Sin(Main.GlobalTime / 0.5f) / 2.5f;
+				float percother = 0.50f + (float)Math.Sin(Main.GlobalTimeWrappedHourly / 0.5f) / 2.5f;
 				Color color = Color.Lerp(Color.Lerp(Color.Red, Color.Blue, percother), Color.Gray, 0.35f);
 
 				hallowed.Parameters["alpha"].SetValue(0.5f);
@@ -41,8 +42,8 @@ namespace SGAmod.Items.Weapons.Vibranium
 				hallowed.Parameters["prismColor"].SetValue(color.ToVector3());
 				hallowed.Parameters["rainbowScale"].SetValue(5f);
 				hallowed.Parameters["overlayScale"].SetValue(new Vector2(2,1));
-				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("SmallLaser"));
-				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTime/4f,0f, Main.GlobalTime * 1f));
+				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaser").Value);
+				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTimeWrappedHourly/4f,0f, Main.GlobalTimeWrappedHourly * 1f));
 				hallowed.Parameters["overlayAlpha"].SetValue(1.50f);
 				hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f, 0f, 0f));
 				hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -74,34 +75,34 @@ namespace SGAmod.Items.Weapons.Vibranium
 
 		public override void SetDefaults()
 		{
-			item.damage = 160;
-			item.crit = 10;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 6;
-			item.useAnimation = 6;
-			item.useStyle = 1;
-			item.knockBack = 5;
-			item.noMelee = true;
-			item.noUseGraphic = true;
-			item.value = 500000;
-			item.rare = ItemRarityID.Cyan;
+			Item.damage = 160;
+			Item.crit = 10;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 6;
+			Item.useAnimation = 6;
+			Item.useStyle = 1;
+			Item.knockBack = 5;
+			Item.noMelee = true;
+			Item.noUseGraphic = true;
+			Item.value = 500000;
+			Item.rare = ItemRarityID.Cyan;
 			//item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.Throwing().thrown = true;
-			item.shoot = ModContent.ProjectileType<GammaBurstProjectileChargeUp>();
-			item.shootSpeed = 10f;
-			item.channel = true;
+			Item.autoReuse = true;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.shoot = ModContent.ProjectileType<GammaBurstProjectileChargeUp>();
+			Item.shootSpeed = 10f;
+			Item.channel = true;
 
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = Main.itemTexture[item.type];
-				item.GetGlobalItem<ItemUseGlow>().GlowColor = delegate (Item item, Player player)
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Main.itemTexture[Item.type];
+				Item.GetGlobalItem<ItemUseGlow>().GlowColor = delegate (Item item, Player player)
 				{
-					return Main.hslToRgb((Main.GlobalTime * -0.5f) % 1f, 0.8f, 0.75f);
+					return Main.hslToRgb((Main.GlobalTimeWrappedHourly * -0.5f) % 1f, 0.8f, 0.75f);
 				};
 
-				item.GetGlobalItem<ItemUseGlow>().CustomDraw = delegate (Item item, PlayerDrawInfo drawInfo, Vector2 position, float angle, Color glowcolor)
+				Item.GetGlobalItem<ItemUseGlow>().CustomDraw = delegate (Item item, PlayerDrawInfo drawInfo, Vector2 position, float angle, Color glowcolor)
 				{
 					if (drawInfo.drawPlayer.ownedProjectileCounts[item.shoot] > 0)
 					{
@@ -109,11 +110,11 @@ namespace SGAmod.Items.Weapons.Vibranium
 						if (myProjectile1 != null && myProjectile1.Count > 0 && drawInfo.drawPlayer.channel)
 						{
 							Projectile myProjectile = myProjectile1[0];
-							GammaBurstProjectileChargeUp chargeUp = myProjectile.modProjectile as GammaBurstProjectileChargeUp;
+							GammaBurstProjectileChargeUp chargeUp = myprojectile.ModProjectile as GammaBurstProjectileChargeUp;
 
 							Texture2D texture = Main.projectileTexture[ModContent.ProjectileType<GammaBurstProjectile>()];
 							Vector2 origin = texture.Size() / 2f;
-							float timeAdvance = Main.GlobalTime * 2;
+							float timeAdvance = Main.GlobalTimeWrappedHourly * 2;
 							angle = drawInfo.drawPlayer.itemRotation + (drawInfo.drawPlayer.direction < 0 ? MathHelper.Pi : 0);
 							Player drawPlayer = drawInfo.drawPlayer;
 
@@ -195,21 +196,14 @@ namespace SGAmod.Items.Weapons.Vibranium
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			//recipe.AddIngredient(ModContent.ItemType<AuroraTearAwoken>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<VibraniumBar>(), 10);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.MangroveShiv>(), 100);
-			recipe.AddIngredient(ItemID.MagicDagger, 1);
-			recipe.AddTile(ModContent.TileType<Tiles.TechTiles.LuminousAlter>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<VibraniumBar>(), 10).AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.MangroveShiv>(), 100).AddIngredient(ItemID.MagicDagger, 1).AddTile(ModContent.TileType<Tiles.TechTiles.LuminousAlter>()).Register();
 		}
 
 	}
 
 	public class GammaBurstProjectileChargeUp : ModProjectile
 	{
-		public Player Player => Main.player[projectile.owner];
+		public Player Player => Main.player[Projectile.owner];
 		public float MaxCharge => 300f;
 		public float MaxKnives => 20f;
 		public override void SetStaticDefaults()
@@ -223,53 +217,53 @@ namespace SGAmod.Items.Weapons.Vibranium
 		}
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.ThrowingKnife);
-			projectile.timeLeft = 15;
-			projectile.penetrate = -1;
-			projectile.aiStyle = -1;
-			projectile.Throwing().thrown = true;
-			projectile.thrown = false;
-			projectile.melee = false;
-			projectile.tileCollide = false;
+			Projectile.CloneDefaults(ProjectileID.ThrowingKnife);
+			Projectile.timeLeft = 15;
+			Projectile.penetrate = -1;
+			Projectile.aiStyle = -1;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			// projectile.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			// projectile.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Projectile.tileCollide = false;
 		}
 		public override void AI()
 		{
 			if (!Player.active || Player.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
 
-			bool channeling = ((Player.channel || (projectile.ai[1] < 5)) && !Player.noItems && !Player.CCed);
-			projectile.localAI[0] += 1;
+			bool channeling = ((Player.channel || (Projectile.ai[1] < 5)) && !Player.noItems && !Player.CCed);
+			Projectile.localAI[0] += 1;
 
-			float chargepercent = projectile.ai[1] / MaxCharge;
+			float chargepercent = Projectile.ai[1] / MaxCharge;
 
 			if (channeling)
 			{
-				projectile.ai[1] = MathHelper.Clamp(projectile.ai[1] + Player.SGAPly().ThrowingSpeed * 3f, 0f, MaxCharge);
+				Projectile.ai[1] = MathHelper.Clamp(Projectile.ai[1] + Player.SGAPly().ThrowingSpeed * 3f, 0f, MaxCharge);
 				if (Main.netMode != NetmodeID.Server)
 				{
-					projectile.velocity = Vector2.Normalize(Main.MouseWorld - Player.MountedCenter) * projectile.velocity.Length();
-					projectile.netUpdate = true;
+					Projectile.velocity = Vector2.Normalize(Main.MouseWorld - Player.MountedCenter) * Projectile.velocity.Length();
+					Projectile.netUpdate = true;
 				}
-				Player.ChangeDir(projectile.velocity.X > 0 ? 1 : -1);
+				Player.ChangeDir(Projectile.velocity.X > 0 ? 1 : -1);
 				Player.itemAnimation = Player.itemAnimationMax;
 				Player.itemTime = Player.itemAnimationMax;
-				projectile.timeLeft = Player.itemAnimationMax;
-				projectile.Center = Player.MountedCenter;
-				if (projectile.localAI[0] % 10 == 0 && projectile.localAI[0] > -1)
+				Projectile.timeLeft = Player.itemAnimationMax;
+				Projectile.Center = Player.MountedCenter;
+				if (Projectile.localAI[0] % 10 == 0 && Projectile.localAI[0] > -1)
 				{
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_WitherBeastAuraPulse, projectile.Center);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_WitherBeastAuraPulse, Projectile.Center);
 					if (sound != null)
 					{
 						sound.Pitch = chargepercent * 0.5f;
 					}
 				}
-				if (projectile.ai[1] == MaxCharge && projectile.localAI[0] > -1)
+				if (Projectile.ai[1] == MaxCharge && Projectile.localAI[0] > -1)
 				{
-					projectile.localAI[0] = -999999;
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_WitherBeastAuraPulse, projectile.Center);
+					Projectile.localAI[0] = -999999;
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_WitherBeastAuraPulse, Projectile.Center);
 					if (sound != null)
 					{
 						sound.Pitch = 0.8f;
@@ -278,16 +272,16 @@ namespace SGAmod.Items.Weapons.Vibranium
 			}
 			else
 			{
-				if (projectile.ai[0] < 1)
+				if (Projectile.ai[0] < 1)
 				{
 					int max = 1 + (int)(chargepercent * MaxKnives);
-					if (projectile.ai[1] == MaxCharge)
+					if (Projectile.ai[1] == MaxCharge)
 					{
-						projectile.ai[0] += 1;
+						Projectile.ai[0] += 1;
 						for (float f = 0; f <= MathHelper.Pi; f += MathHelper.Pi)
-							Projectile.NewProjectile(projectile.Center, projectile.velocity.RotatedBy(f), ModContent.ProjectileType<GammBurstBeam>(), projectile.damage* 1 * (int)MaxKnives, projectile.knockBack * 3f, projectile.owner);
+							Projectile.NewProjectile(Projectile.Center, Projectile.velocity.RotatedBy(f), ModContent.ProjectileType<GammBurstBeam>(), Projectile.damage* 1 * (int)MaxKnives, Projectile.knockBack * 3f, Projectile.owner);
 
-						SoundEffectInstance sound2 = Main.PlaySound(SoundID.DD2_DrakinShot, projectile.Center);
+						SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.DD2_DrakinShot, Projectile.Center);
 						if (sound2 != null)
 						{
 							sound2.Pitch = 0.8f;
@@ -300,22 +294,22 @@ namespace SGAmod.Items.Weapons.Vibranium
 						float angle = (i / (float)(max - 1f)) * (maxAngle);
 						float angleMax = (maxAngle);
 
-						Vector2 velo = projectile.velocity;
+						Vector2 velo = Projectile.velocity;
 						if (max > 1)
-							velo = projectile.velocity.RotatedBy(angle - (angleMax / 2f));
+							velo = Projectile.velocity.RotatedBy(angle - (angleMax / 2f));
 
-						int proj = Projectile.NewProjectile(projectile.Center, velo.RotatedByRandom(MathHelper.Pi / 64f), ModContent.ProjectileType<GammaBurstProjectile>(), projectile.damage, projectile.knockBack, projectile.owner);
+						int proj = Projectile.NewProjectile(Projectile.Center, velo.RotatedByRandom(MathHelper.Pi / 64f), ModContent.ProjectileType<GammaBurstProjectile>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 						Main.projectile[proj].localAI[0] = Main.rand.Next(0, 2);
 					}
 
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_GoblinBomberThrow, projectile.Center);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_GoblinBomberThrow, Projectile.Center);
 					if (sound != null)
 					{
 						sound.Pitch = 0.99f;
 					}
 
 				}
-				projectile.ai[0] += 1;
+				Projectile.ai[0] += 1;
 			}
 
 		}
@@ -331,21 +325,21 @@ namespace SGAmod.Items.Weapons.Vibranium
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Gamma Burst");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 16;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 16;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.ThrowingKnife);
-			projectile.timeLeft = 320;
-			projectile.extraUpdates = 3;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = 30;
-			projectile.penetrate = 10;
-			projectile.Throwing().thrown = true;
-			projectile.thrown = false;
-			projectile.melee = false;
+			Projectile.CloneDefaults(ProjectileID.ThrowingKnife);
+			Projectile.timeLeft = 320;
+			Projectile.extraUpdates = 3;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 30;
+			Projectile.penetrate = 10;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			// projectile.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			// projectile.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 		}
 		public override string Texture => "SGAmod/Projectiles/QuasarKunaiProj";
 
@@ -355,7 +349,7 @@ namespace SGAmod.Items.Weapons.Vibranium
 		}
 		public override bool CanDamage()
 		{
-			return projectile.timeLeft > 20;
+			return Projectile.timeLeft > 20;
 		}
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
@@ -375,20 +369,20 @@ namespace SGAmod.Items.Weapons.Vibranium
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			enemiesHit.Add(new Point(target.whoAmI, 1000000));
-			if (target.SGANPCs().IrradiatedAmmount>0 && projectile.ai[1]<2)
+			if (target.SGANPCs().IrradiatedAmmount>0 && Projectile.ai[1]<2)
 			{
-				projectile.ai[1] += 1;
-				projectile.penetrate += 1;
+				Projectile.ai[1] += 1;
+				Projectile.penetrate += 1;
 			}
 
-			List<NPC> closestnpcs = SGAUtils.ClosestEnemies(projectile.Center, 640, projectile.Center, AddedWeight: enemiesHit, checkCanChase: false);
+			List<NPC> closestnpcs = SGAUtils.ClosestEnemies(Projectile.Center, 640, Projectile.Center, AddedWeight: enemiesHit, checkCanChase: false);
 
 			target.SGANPCs().AddDamageStack((int)(damage * 1.5f), 200);
 
 			for (float num315 = 4; num315 < 16; num315 = num315 + 1f)
 			{
-				Vector2 randomcircle = Vector2.Normalize(projectile.velocity) * num315;
-				int num622 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y), 0, 0, DustID.AncientLight, 0f, 0f, 100, Main.hslToRgb((projectile.whoAmI / 30f) % 1f, 1f, 0.75f), 1.5f);
+				Vector2 randomcircle = Vector2.Normalize(Projectile.velocity) * num315;
+				int num622 = Dust.NewDust(new Vector2(Projectile.Center.X, Projectile.Center.Y), 0, 0, DustID.AncientLight, 0f, 0f, 100, Main.hslToRgb((Projectile.whoAmI / 30f) % 1f, 1f, 0.75f), 1.5f);
 				Main.dust[num622].noGravity = true;
 				Main.dust[num622].velocity = randomcircle;
 				Main.dust[num622].alpha = 100;
@@ -396,10 +390,10 @@ namespace SGAmod.Items.Weapons.Vibranium
 
 			if (closestnpcs != null && closestnpcs.Count > 0)
 			{
-				float speed = projectile.velocity.Length();
-				projectile.velocity = Vector2.Normalize(closestnpcs[0].Center - projectile.Center) * speed;
+				float speed = Projectile.velocity.Length();
+				Projectile.velocity = Vector2.Normalize(closestnpcs[0].Center - Projectile.Center) * speed;
 
-				SoundEffectInstance sound = Main.PlaySound(SoundID.Item7, projectile.Center);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item7, Projectile.Center);
 				if (sound != null)
 				{
 					sound.Pitch = -0.5f;
@@ -409,59 +403,59 @@ namespace SGAmod.Items.Weapons.Vibranium
 		}
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			if (projectile.timeLeft > 20)
-				projectile.timeLeft = 20;
-			projectile.tileCollide = false;
-			projectile.velocity = oldVelocity;
+			if (Projectile.timeLeft > 20)
+				Projectile.timeLeft = 20;
+			Projectile.tileCollide = false;
+			Projectile.velocity = oldVelocity;
 			return false;
 		}
 		public override bool PreAI()
 		{
 			//bool cond = projectile.localAI[1]>240;
 			//if (!cond)
-			if (projectile.timeLeft > 20 && projectile.penetrate < projectile.maxPenetrate - 2)
-				projectile.timeLeft = 20;
+			if (Projectile.timeLeft > 20 && Projectile.penetrate < Projectile.maxPenetrate - 2)
+				Projectile.timeLeft = 20;
 
-			projectile.rotation = projectile.velocity.ToRotation() - MathHelper.PiOver2;
+			Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 			return false;
 		}
 		public override void PostAI()
 		{
-			projectile.localAI[1] += 1;
+			Projectile.localAI[1] += 1;
 			//projectile.position -= projectile.velocity * MathHelper.Clamp(1f - (projectile.localAI[1] / 30f), 0f, 1f);
 			//projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver4;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D inner = Main.projectileTexture[projectile.type];
+			Texture2D inner = Main.projectileTexture[Projectile.type];
 			Vector2 textureOrigin = new Vector2(inner.Width / 2, inner.Height / 2);
-			Color colorx = (projectile.localAI[0] % 2 == 0 ? Color.Red : Color.Blue);
+			Color colorx = (Projectile.localAI[0] % 2 == 0 ? Color.Red : Color.Blue);
 
-			for (int i = 0; i < projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
+			for (int i = 0; i < Projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
 			{
-				if (projectile.oldPos[i] == default)
-					projectile.oldPos[i] = projectile.position;
+				if (Projectile.oldPos[i] == default)
+					Projectile.oldPos[i] = Projectile.position;
 			}
 
-			TrailHelper trail = new TrailHelper("FadedBasicEffectPass", mod.GetTexture("TiledPerlin"));
-			trail.projsize = projectile.Hitbox.Size() / 2f;
-			trail.coordOffset = new Vector2(Main.GlobalTime * -2.5f, 0);
+			TrailHelper trail = new TrailHelper("FadedBasicEffectPass", Mod.Assets.Request<Texture2D>("TiledPerlin").Value);
+			trail.projsize = Projectile.Hitbox.Size() / 2f;
+			trail.coordOffset = new Vector2(Main.GlobalTimeWrappedHourly * -2.5f, 0);
 			trail.trailThickness = 2;
 			trail.trailThicknessIncrease = 4;
-			trail.strength = MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 0.5f);
-			trail.DrawTrail(projectile.oldPos.ToList(), projectile.Center);
+			trail.strength = MathHelper.Clamp(Projectile.timeLeft / 20f, 0f, 0.5f);
+			trail.DrawTrail(Projectile.oldPos.ToList(), Projectile.Center);
 
 			Texture2D tex2 = Main.projectileTexture[ModContent.ProjectileType<SpecterangProj>()];
 
-			for (int i = projectile.oldPos.Length - 1; i > 0; i -= 1)
+			for (int i = Projectile.oldPos.Length - 1; i > 0; i -= 1)
 			{
-				spriteBatch.Draw(tex2, projectile.oldPos[i] + (new Vector2(projectile.width, projectile.height) / 2f) - Main.screenPosition, null, colorx * 0.75f * MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f) * 0.30f * (1f - (i / (float)projectile.oldPos.Length)), projectile.rotation, tex2.Size() / 2f, new Vector2(0.5f, 1f) * projectile.scale, SpriteEffects.FlipVertically, 0);
+				spriteBatch.Draw(tex2, Projectile.oldPos[i] + (new Vector2(Projectile.width, Projectile.height) / 2f) - Main.screenPosition, null, colorx * 0.75f * MathHelper.Clamp(Projectile.timeLeft / 20f, 0f, 1f) * 0.30f * (1f - (i / (float)Projectile.oldPos.Length)), Projectile.rotation, tex2.Size() / 2f, new Vector2(0.5f, 1f) * Projectile.scale, SpriteEffects.FlipVertically, 0);
 			}
 
 
-			spriteBatch.Draw(inner, projectile.Center - Main.screenPosition, null, Color.White * 0.75f * MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f), projectile.rotation, textureOrigin, new Vector2(1f, 1f) * projectile.scale, SpriteEffects.FlipVertically, 0);
-			spriteBatch.Draw(tex2, projectile.Center - Main.screenPosition, null, colorx * 0.75f * MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f) * 0.5f, projectile.rotation, tex2.Size() / 2f, new Vector2(1.5f, 0.75f) * projectile.scale, SpriteEffects.FlipVertically, 0);
+			spriteBatch.Draw(inner, Projectile.Center - Main.screenPosition, null, Color.White * 0.75f * MathHelper.Clamp(Projectile.timeLeft / 20f, 0f, 1f), Projectile.rotation, textureOrigin, new Vector2(1f, 1f) * Projectile.scale, SpriteEffects.FlipVertically, 0);
+			spriteBatch.Draw(tex2, Projectile.Center - Main.screenPosition, null, colorx * 0.75f * MathHelper.Clamp(Projectile.timeLeft / 20f, 0f, 1f) * 0.5f, Projectile.rotation, tex2.Size() / 2f, new Vector2(1.5f, 0.75f) * Projectile.scale, SpriteEffects.FlipVertically, 0);
 			return false;
 		}
 	}
@@ -500,28 +494,28 @@ namespace SGAmod.Items.Weapons.Vibranium
 		List<GammBurstBeamExplosion> boomList = new List<GammBurstBeamExplosion>();
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 400;
-			projectile.light = 0.1f;
-			projectile.extraUpdates = 10;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
-			aiType = -1;
-			Main.projFrames[projectile.type] = 1;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 400;
+			Projectile.light = 0.1f;
+			Projectile.extraUpdates = 10;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
+			AIType = -1;
+			Main.projFrames[Projectile.type] = 1;
 
-			projectile.thrown = false;
-			projectile.melee = false;
+			// projectile.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			// projectile.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 		}
 
 		public override bool CanDamage()
 		{
-			return projectile.timeLeft > 60;
+			return Projectile.timeLeft > 60;
 		}
 
 		public override string Texture
@@ -537,7 +531,7 @@ namespace SGAmod.Items.Weapons.Vibranium
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			//projectile.timeLeft -= 5;
-			projectile.velocity = oldVelocity * 0.9f;
+			Projectile.velocity = oldVelocity * 0.9f;
 			return false;
 		}
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -547,14 +541,14 @@ namespace SGAmod.Items.Weapons.Vibranium
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			target.SGANPCs().IrradiatedAmmount = projectile.damage * 3;
-			target.AddBuff(mod.BuffType("RadioDebuff"), 60 * 20);
+			target.SGANPCs().IrradiatedAmmount = Projectile.damage * 3;
+			target.AddBuff(Mod.Find<ModBuff>("RadioDebuff").Type, 60 * 20);
 			//stuff
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 			List<GammBurstBeamExplosion> explocopy = new List<GammBurstBeamExplosion>(boomList);
 			foreach (GammBurstBeamExplosion explosion in explocopy)
 			{
@@ -564,9 +558,9 @@ namespace SGAmod.Items.Weapons.Vibranium
 				}
 			}
 
-			if (projectile.localAI[0] % 30 == 0)
+			if (Projectile.localAI[0] % 30 == 0)
             {
-				boomList.Add(new GammBurstBeamExplosion(projectile.Center, 200, projectile.velocity.ToRotation(), 24f, 0.15f));
+				boomList.Add(new GammBurstBeamExplosion(Projectile.Center, 200, Projectile.velocity.ToRotation(), 24f, 0.15f));
 			}
 
 			/*int num126 = Dust.NewDust(projectile.Center, 0, 0, 173, projectile.velocity.X, projectile.velocity.Y, 0, default(Color), 3.0f);
@@ -575,21 +569,21 @@ namespace SGAmod.Items.Weapons.Vibranium
 		}
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			if (start == default && player != null)
 				start = player.MountedCenter;
 
 			Effect RadialEffect = SGAmod.RadialEffect;
-			Texture2D mainTex = mod.GetTexture("GreyHeart");//Main.projectileTexture[projectile.type];
+			Texture2D mainTex = Mod.Assets.Request<Texture2D>("GreyHeart").Value;//Main.projectileTexture[projectile.type];
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
 			foreach (GammBurstBeamExplosion explosion in boomList)
 			{
-				RadialEffect.Parameters["overlayTexture"].SetValue(mod.GetTexture("Space"));
-				RadialEffect.Parameters["alpha"].SetValue(MathHelper.Clamp((explosion.timeMax - explosion.time) / 200f, 0f, Math.Min(explosion.time / 60f, 1f)) * MathHelper.Clamp(projectile.timeLeft / 200f, 0f, 1f));
-				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, Main.GlobalTime * 0.275f));
+				RadialEffect.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Space").Value);
+				RadialEffect.Parameters["alpha"].SetValue(MathHelper.Clamp((explosion.timeMax - explosion.time) / 200f, 0f, Math.Min(explosion.time / 60f, 1f)) * MathHelper.Clamp(Projectile.timeLeft / 200f, 0f, 1f));
+				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, Main.GlobalTimeWrappedHourly * 0.275f));
 				RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 1f));
 				RadialEffect.Parameters["ringScale"].SetValue(explosion.ringSize);
 				RadialEffect.Parameters["ringOffset"].SetValue(0.20f+(explosion.time/(float)explosion.timeMax)*0.50f);
@@ -601,38 +595,38 @@ namespace SGAmod.Items.Weapons.Vibranium
 				spriteBatch.Draw(mainTex, explosion.loc - Main.screenPosition, new Rectangle(11,0,11,22), Color.White, explosion.angle, mainTex.Size() / 2f, new Vector2(0.5f, 1f)*explosion.size, default, 0);
 			}
 
-			List<Vector2> places = new List<Vector2>() { start, start + (projectile.Center - start) * 0.5f, projectile.Center };
+			List<Vector2> places = new List<Vector2>() { start, start + (Projectile.Center - start) * 0.5f, Projectile.Center };
 
-			TrailHelper trail = new TrailHelper("FadedBasicEffectPass", mod.GetTexture("Space"));
-			trail.projsize = projectile.Hitbox.Size() / 2f;
-			trail.coordOffset = new Vector2(0, Main.GlobalTime * -3f);
-			trail.coordMultiplier = new Vector2(projectile.velocity.X > 0 ? 1 : -1, 6f);
+			TrailHelper trail = new TrailHelper("FadedBasicEffectPass", Mod.Assets.Request<Texture2D>("Space").Value);
+			trail.projsize = Projectile.Hitbox.Size() / 2f;
+			trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -3f);
+			trail.coordMultiplier = new Vector2(Projectile.velocity.X > 0 ? 1 : -1, 6f);
 			trail.trailThickness = 32;
 			trail.trailThicknessIncrease = 0;
 			trail.doFade = true;
-			trail.strength = MathHelper.Clamp(projectile.timeLeft / 300f, 0f, 1f);
-			trail.DrawTrail(places, projectile.Center);
+			trail.strength = MathHelper.Clamp(Projectile.timeLeft / 300f, 0f, 1f);
+			trail.DrawTrail(places, Projectile.Center);
 
-			places = new List<Vector2>() { start, start + (projectile.Center - start) * 0.95f, projectile.Center };
+			places = new List<Vector2>() { start, start + (Projectile.Center - start) * 0.95f, Projectile.Center };
 
-			trail = new TrailHelper("FadedBasicEffectPass", mod.GetTexture("Stain"));
-			trail.projsize = projectile.Hitbox.Size() / 2f;
-			trail.coordOffset = new Vector2(0, Main.GlobalTime * -12f);
-			trail.coordMultiplier = new Vector2(projectile.velocity.X > 0 ? 1 : -1, 6f);
+			trail = new TrailHelper("FadedBasicEffectPass", Mod.Assets.Request<Texture2D>("Stain").Value);
+			trail.projsize = Projectile.Hitbox.Size() / 2f;
+			trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -12f);
+			trail.coordMultiplier = new Vector2(Projectile.velocity.X > 0 ? 1 : -1, 6f);
 			trail.trailThickness = 4;
 			trail.trailThicknessIncrease = 16;
 			trail.doFade = true;
-			trail.strength = MathHelper.Clamp(projectile.timeLeft / 300f, 0f, 1f);
-			trail.DrawTrail(places, projectile.Center);
+			trail.strength = MathHelper.Clamp(Projectile.timeLeft / 300f, 0f, 1f);
+			trail.DrawTrail(places, Projectile.Center);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
 			foreach (GammBurstBeamExplosion explosion in boomList)
 			{
-				RadialEffect.Parameters["overlayTexture"].SetValue(mod.GetTexture("Space"));
-				RadialEffect.Parameters["alpha"].SetValue(MathHelper.Clamp((explosion.timeMax - explosion.time) / 200f, 0f, Math.Min(explosion.time/60f, 1f)) * MathHelper.Clamp(projectile.timeLeft / 200f, 0f, 1f));
-				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, Main.GlobalTime * 0.275f));
+				RadialEffect.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Space").Value);
+				RadialEffect.Parameters["alpha"].SetValue(MathHelper.Clamp((explosion.timeMax - explosion.time) / 200f, 0f, Math.Min(explosion.time/60f, 1f)) * MathHelper.Clamp(Projectile.timeLeft / 200f, 0f, 1f));
+				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, Main.GlobalTimeWrappedHourly * 0.275f));
 				RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 1f));
 				RadialEffect.Parameters["ringScale"].SetValue(explosion.ringSize);
                 RadialEffect.Parameters["ringOffset"].SetValue(0.20f + (explosion.time / (float)explosion.timeMax) * 0.50f);

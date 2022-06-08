@@ -17,11 +17,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 24;
-			item.height = 24;
-			item.value = 0;
-			item.rare = 10;
+			Item.maxStack = 999;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = 0;
+			Item.rare = 10;
 		}
 	}
 
@@ -44,12 +44,12 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 24;
-			item.height = 24;
-			item.value = 0;
-			item.rare = 10;
-			item.expert = true;
+			Item.maxStack = 999;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = 0;
+			Item.rare = 10;
+			Item.expert = true;
 		}
 	}
 

@@ -11,14 +11,14 @@ namespace SGAmod.Buffs
 {
 	public class DragonsMight : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Dragon's Might");
 			Description.SetDefault("30% increase to all damage types except Summon damage, which gets 50%");
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
 			Main.debuff[Type] = true;
-			canBeCleared = false;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -26,7 +26,7 @@ namespace SGAmod.Buffs
 			if (player.buffTime[buffIndex] > 5)
 			{
 				player.BoostAllDamage(0.30f);
-				player.minionDamage += 0.20f;
+				player.GetDamage(DamageClass.Summon) += 0.20f;
 			}
 			if (player.buffTime[buffIndex] < 20)
 			{
@@ -36,7 +36,7 @@ namespace SGAmod.Buffs
 	}
 	public class ToxicityPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Toxicity");
 			Description.SetDefault("Grants various buffs based around Stinky for the player\n'Things die by just by being around you when you smell, rude!'");
@@ -54,7 +54,7 @@ namespace SGAmod.Buffs
 	}
 	public class IntimacyPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Intimacy");
 			Description.SetDefault("Grants various buffs based around Lovestruct for the player\n'Enemies willing hand over their life essences to your alluring ensare'\n'Meanwhile, friends gain!'");
@@ -71,7 +71,7 @@ namespace SGAmod.Buffs
 	}
 	public class TriggerFingerPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Trigger Finger");
 			Description.SetDefault("Non-autofire guns fire 25% faster");
@@ -86,7 +86,7 @@ namespace SGAmod.Buffs
 	}		
 	public class TrueStrikePotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("True Strike");
 			Description.SetDefault("True Melee weapons do 20% more damage");
@@ -101,7 +101,7 @@ namespace SGAmod.Buffs
 	}	
 	public class ClarityPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Clarity");
 			Description.SetDefault("3% reduced mana costs, 10% reduced mana costs while you are Mana sick");
@@ -119,7 +119,7 @@ namespace SGAmod.Buffs
 	}
 	public class TooltimePotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Tooltime!");
 			Description.SetDefault("Your tools have greatly increased knockback!");
@@ -134,7 +134,7 @@ namespace SGAmod.Buffs
 	}
 	public class TinkerPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Tinker");
 			Description.SetDefault("Your uncrafting net less is reduced");
@@ -150,7 +150,7 @@ namespace SGAmod.Buffs
 	public class RagnarokBrewBuff : ModBuff
 	{
 		double Boost(Player player) => Math.Max(Math.Min(4.00 - (((double) player.statLife / (double) player.statLifeMax2) * 4.00), 4.00),1.00);
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ragnarok's Brew");
 			Description.SetDefault("Grants increased Apocalyptical Chance for your equiped weapon damage type as your HP drops");
@@ -171,17 +171,17 @@ namespace SGAmod.Buffs
 			{
 				SGAPlayer sgaply = player.SGAPly();
 				player.SGAPly().apocalypticalStrength += gg*0.25f;
-				if (player.HeldItem.melee) 
+				if (player.HeldItem.DamageType == DamageClass.Melee) 
 				{
 					sgaply.apocalypticalChance[0] += gg;
 					return;
 				}
-				if (player.HeldItem.ranged) 
+				if (player.HeldItem.DamageType == DamageClass.Ranged) 
 				{
 					sgaply.apocalypticalChance[1] += gg;
 					return;
 				}
-				if (player.HeldItem.magic) 
+				if (player.HeldItem.DamageType == DamageClass.Magic) 
 				{
 					sgaply.apocalypticalChance[2] += gg;
 					return;
@@ -193,7 +193,7 @@ namespace SGAmod.Buffs
 	}
 	public class CondenserPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Condenser");
 			Description.SetDefault("1 free Action Cooldown Stack, 15% longer cooldown times");
@@ -210,7 +210,7 @@ namespace SGAmod.Buffs
 	}
 	public class EnergyPotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Energy");
 			Description.SetDefault("25% increased passive Electric Charge Rate, Recharge delay is halved");
@@ -229,22 +229,18 @@ namespace SGAmod.Buffs
 
 	public class PhalanxPotionBuff : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			return true;
-		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Phalanx Potion");
 			Description.SetDefault("Shield block angle is improved!\n+8 defense per nearby player holding a shield");
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			canBeCleared = false;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			foreach(Player player2 in Main.player.Where(testby => testby.active && !testby.dead && (testby.Center-player.Center).LengthSquared()<600*600 && testby.HeldItem != null && testby.HeldItem.modItem != null && testby.HeldItem.modItem is IShieldItem))
+			foreach(Player player2 in Main.player.Where(testby => testby.active && !testby.dead && (testby.Center-player.Center).LengthSquared()<600*600 && testby.HeldItem != null && testby.HeldItem.ModItem != null && testby.HeldItem.ModItem is IShieldItem))
 			{
 				player.statDefense += 8;
             }
@@ -254,18 +250,14 @@ namespace SGAmod.Buffs
 
 	public class FuryPotionBuff : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/BuffTemplate";
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "SGAmod/Buffs/BuffTemplate";
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Fury Potion");
 			Description.SetDefault("20% increased critical damage, only 10% with rage/wrath");
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			canBeCleared = false;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -276,18 +268,13 @@ namespace SGAmod.Buffs
 
 	public class ReflexPotionBuff : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			//texture = "Terraria/Buff_" + BuffID.PaladinsShield;
-			return true;
-		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Reflex Potion");
 			Description.SetDefault("React for longer with your shield to Just Block!");
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			canBeCleared = false;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -299,7 +286,7 @@ namespace SGAmod.Buffs
 	public class ConsumeHellBuff : ModBuff
 	{
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Consumed Hell");
 			Description.SetDefault("Seems like the Underworld can access the rest of the world via your mouth");
@@ -314,7 +301,7 @@ namespace SGAmod.Buffs
 	}
 	public class IceFirePotionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Fridgeflame Concoction");
 			Description.SetDefault("Reduced Damage over time at a cost of losing immunities");
@@ -341,19 +328,14 @@ namespace SGAmod.Buffs
 	}
 	public class InvincibleBuff : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			//texture = "Terraria/Buff_" + BuffID.ShadowDodge;
-			return true;
-		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Invincible");
 			Description.SetDefault("Damage is currently completely prevented\n'that one time you aren't defeated during a cutscene!'");
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
 			Main.debuff[Type] = true;
-			canBeCleared = false;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 		public override void Update(Player player, ref int buffIndex)
 		{
@@ -364,19 +346,15 @@ namespace SGAmod.Buffs
 	}
 	public class ManaRegenFakeBuff : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "Terraria/Buff_"+BuffID.ManaRegeneration;
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "Terraria/Images/Buff_" +BuffID.ManaRegeneration;
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mana Regen");
 			Description.SetDefault("Mana Regeneration is greatly improved!");
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
 			Main.debuff[Type] = true;
-			canBeCleared = false;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 
 		public override void Update(Player player, ref int buffIndex)

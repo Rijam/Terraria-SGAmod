@@ -10,7 +10,7 @@ namespace SGAmod.Tiles
 {
     public class BarTile : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             TileID.Sets.Ore[Type] = true;
             if (!drakenite)
@@ -30,7 +30,7 @@ namespace SGAmod.Tiles
         }
 
         bool drakenite = false;
-        int itemID => SGAmod.Instance.ItemType(internalname);
+        int itemID => SGAmod.Instance.Find<ModItem>(internalname).Type;
         string internalname;
         string barname;
         Color color;
@@ -50,7 +50,7 @@ namespace SGAmod.Tiles
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            if (Main.tile[i,j].type == mod.TileType("DrakeniteBarTile"))
+            if (Main.tile[i,j].TileType == Mod.Find<ModTile>("DrakeniteBarTile").Type)
             Dimensions.Tiles.Fabric.DrawStatic(this, i, j, spriteBatch,drakenite: true);
         }
 

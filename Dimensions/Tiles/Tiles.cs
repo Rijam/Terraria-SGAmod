@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Terraria.GameContent.Generation;
 using SubworldLibrary;
 using SGAmod;
@@ -18,12 +18,13 @@ using Terraria.DataStructures;
 using System.Linq;
 using SGAmod.Items.Tools;
 using SGAmod.Tiles.DankWoodFurniture;
+using Terraria.Audio;
 
 namespace SGAmod.Dimensions.Tiles
 {
 	class WatcherOre : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSolid[Type] = true;
@@ -46,7 +47,7 @@ namespace SGAmod.Dimensions.Tiles
 			Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 			Vector2 location = (new Vector2(i, j) * 16) + zerooroffset;
 
-			spriteBatch.Draw(Main.tileTexture[Main.tile[i, j].type], location - Main.screenPosition, new Rectangle(Main.tile[i, j].frameX, Main.tile[i, j].frameY, 16, 16), Lighting.GetColor(i, j), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.tileTexture[Main.tile[i, j].TileType], location - Main.screenPosition, new Rectangle(Main.tile[i, j].TileFrameX, Main.tile[i, j].TileFrameY, 16, 16), Lighting.GetColor(i, j), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
 
 			return true;
@@ -54,7 +55,7 @@ namespace SGAmod.Dimensions.Tiles
 
 		public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
-			if (Main.tile[x, y].type == base.Type)
+			if (Main.tile[x, y].TileType == base.Type)
 			{
 				if (nextSpecialDrawIndex < Main.specX.Length)
 				{
@@ -68,7 +69,7 @@ namespace SGAmod.Dimensions.Tiles
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
 
 				NoiseGenerator Noisegen = new NoiseGenerator(WorldGen._lastSeed);
@@ -78,7 +79,7 @@ namespace SGAmod.Dimensions.Tiles
 				//spriteBatch.Draw(texture, drawPos, null, drawColor, 0f, textureOrigin, Main.inventoryScale * 2f, SpriteEffects.None, 0f);
 				Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 				Vector2 location = (new Vector2(i, j) * 16) + new Vector2(8, 8) + zerooroffset;
-				Texture2D tex = ModContent.GetTexture("SGAmod/Items/WatchersOfNull");
+				Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Items/WatchersOfNull");
 				int framesize = (int)(tex.Height / 13f);
 				Rectangle Frame = new Rectangle(0, framesize * 4, tex.Width, framesize);
 				Vector2 offset = new Vector2(tex.Width / 2f, (tex.Height / 13f) / 2f);
@@ -90,7 +91,7 @@ namespace SGAmod.Dimensions.Tiles
 
 				spriteBatch.Draw(LimboDim.staticeffects[Main.rand.Next(0, LimboDim.staticeffects.Length)], drawOffset2, Color.Black);
 
-				Color color = Color.White * MathHelper.Clamp(0.50f + (float)Noisegen.Noise(i + (int)(Main.GlobalTime * 10.00), j+(int)(Main.GlobalTime * -5.00)) / 2f, 0f, 1f);
+				Color color = Color.White * MathHelper.Clamp(0.50f + (float)Noisegen.Noise(i + (int)(Main.GlobalTimeWrappedHourly * 10.00), j+(int)(Main.GlobalTimeWrappedHourly * -5.00)) / 2f, 0f, 1f);
 
 				spriteBatch.Draw(tex, location + offset2 - Main.screenPosition, Frame, color, 0f, offset, 0.5f, SpriteEffects.None, 0f);
 
@@ -100,39 +101,39 @@ namespace SGAmod.Dimensions.Tiles
 
 	public class Spacerock : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("Spacerock")][(ushort)mod.TileType("Spacerock2")] = true;
-			Main.tileMerge[(ushort)mod.TileType("Spacerock2")][(ushort)mod.TileType("Spacerock")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock").Type][(ushort)Mod.Find<ModTile>("Spacerock2").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock2").Type][(ushort)Mod.Find<ModTile>("Spacerock").Type] = true;
 
-			Main.tileMerge[TileID.Meteorite][(ushort)mod.TileType("Spacerock")] = true;
-			Main.tileMerge[(ushort)mod.TileType("Spacerock")][TileID.Meteorite] = true;
+			Main.tileMerge[TileID.Meteorite][(ushort)Mod.Find<ModTile>("Spacerock").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock").Type][TileID.Meteorite] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("Spacerock2")][TileID.Meteorite] = true;
-			Main.tileMerge[TileID.Meteorite][(ushort)mod.TileType("Spacerock2")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock2").Type][TileID.Meteorite] = true;
+			Main.tileMerge[TileID.Meteorite][(ushort)Mod.Find<ModTile>("Spacerock2").Type] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("AstrialLuminite")][(ushort)mod.TileType("Spacerock2")] = true;
-			Main.tileMerge[(ushort)mod.TileType("Spacerock2")][(ushort)mod.TileType("AstrialLuminite")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("AstrialLuminite").Type][(ushort)Mod.Find<ModTile>("Spacerock2").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock2").Type][(ushort)Mod.Find<ModTile>("AstrialLuminite").Type] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("AstrialLuminite")][(ushort)mod.TileType("Spacerock")] = true;
-			Main.tileMerge[(ushort)mod.TileType("Spacerock")][(ushort)mod.TileType("AstrialLuminite")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("AstrialLuminite").Type][(ushort)Mod.Find<ModTile>("Spacerock").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock").Type][(ushort)Mod.Find<ModTile>("AstrialLuminite").Type] = true;
 
-			Main.tileMerge[TileID.Meteorite][(ushort)mod.TileType("AstrialLuminite")] = true;
-			Main.tileMerge[(ushort)mod.TileType("AstrialLuminite")][TileID.Meteorite] = true;
+			Main.tileMerge[TileID.Meteorite][(ushort)Mod.Find<ModTile>("AstrialLuminite").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("AstrialLuminite").Type][TileID.Meteorite] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("VibraniumCrystalTile")][(ushort)mod.TileType("Spacerock")] = true;
-			Main.tileMerge[(ushort)mod.TileType("Spacerock")][(ushort)mod.TileType("VibraniumCrystalTile")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("VibraniumCrystalTile").Type][(ushort)Mod.Find<ModTile>("Spacerock").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock").Type][(ushort)Mod.Find<ModTile>("VibraniumCrystalTile").Type] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("VibraniumCrystalTile")][(ushort)mod.TileType("Spacerock2")] = true;
-			Main.tileMerge[(ushort)mod.TileType("Spacerock2")][(ushort)mod.TileType("VibraniumCrystalTile")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("VibraniumCrystalTile").Type][(ushort)Mod.Find<ModTile>("Spacerock2").Type] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("Spacerock2").Type][(ushort)Mod.Find<ModTile>("VibraniumCrystalTile").Type] = true;
 
-			Main.tileMerge[(ushort)mod.TileType("VibraniumCrystalTile")][TileID.Meteorite] = true;
-			Main.tileMerge[TileID.Meteorite][(ushort)mod.TileType("VibraniumCrystalTile")] = true;
+			Main.tileMerge[(ushort)Mod.Find<ModTile>("VibraniumCrystalTile").Type][TileID.Meteorite] = true;
+			Main.tileMerge[TileID.Meteorite][(ushort)Mod.Find<ModTile>("VibraniumCrystalTile").Type] = true;
 
 			int[] oreType = { TileID.LunarBlockNebula, TileID.LunarBlockSolar, TileID.LunarBlockStardust, TileID.LunarBlockVortex };
 			foreach (int typeofore in oreType)
@@ -180,7 +181,7 @@ namespace SGAmod.Dimensions.Tiles
 			texture = "Terraria/Tiles_" + TileID.LunarOre;
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSolid[Type] = true;
@@ -223,7 +224,7 @@ namespace SGAmod.Dimensions.Tiles
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
-			if (Main.tile[i, j].active())
+			if (Main.tile[i, j].HasTile)
 			{
 				r = Color.PaleTurquoise.R * 0.02f;
 				g = Color.PaleTurquoise.G * 0.02f;
@@ -263,7 +264,7 @@ namespace SGAmod.Dimensions.Tiles
 			texture = "Terraria/Tiles_" + TileID.CopperPlating;
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			TileID.Sets.ChecksForMerge[Type] = true;
@@ -310,7 +311,7 @@ namespace SGAmod.Dimensions.Tiles
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
-			if (Main.tile[i, j].active())
+			if (Main.tile[i, j].HasTile)
 			{
 				r = Color.Silver.R * 0.012f;
 				g = Color.Silver.G * 0.012f;
@@ -342,7 +343,7 @@ namespace SGAmod.Dimensions.Tiles
 
 			Tile tile = Framing.GetTileSafely(i, j);
 
-			spriteBatch.Draw(Type == ModContent.TileType<UnbreakableMeteoriteBrick>() ? Main.glowMaskTexture[111] : Main.glowMaskTexture[94], drawOffset-Main.screenPosition, new Rectangle(tile.frameX, tile.frameY, 16, 16), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Type == ModContent.TileType<UnbreakableMeteoriteBrick>() ? Main.glowMaskTexture[111] : Main.glowMaskTexture[94], drawOffset-Main.screenPosition, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 		}
     }
 
@@ -385,7 +386,7 @@ namespace SGAmod.Dimensions.Tiles
 
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
-			var snd = Main.PlaySound(SoundID.NPCHit, (int)i * 16, (int)j * 16, 43);
+			var snd = SoundEngine.PlaySound(SoundID.NPCHit, (int)i * 16, (int)j * 16, 43);
 			if (snd != null)
             {
 				snd.Pitch = 0.75f;
@@ -418,13 +419,13 @@ namespace SGAmod.Dimensions.Tiles
 			Tile tile2 = Framing.GetTileSafely(i, j+1);
 			Tile tile3 = Framing.GetTileSafely(i, j+2);
 
-			if (tile2.type != Type && tile3.type != Type)
+			if (tile2.TileType != Type && tile3.TileType != Type)
 			{
 
 				List<float> layeredThings = new List<float>();
 				for(float ff = 0; ff < MathHelper.TwoPi; ff += MathHelper.TwoPi / 4f)
                 {
-					layeredThings.Add(ff + (Main.GlobalTime * 2f));
+					layeredThings.Add(ff + (Main.GlobalTimeWrappedHourly * 2f));
 				}
 
 				layeredThings = layeredThings.OrderBy(testby => (float)-Math.Sin(testby)).ToList();
@@ -459,9 +460,9 @@ namespace SGAmod.Dimensions.Tiles
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("Fabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("AnicentFabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("EntrophicOre")] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("Fabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("AnicentFabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("EntrophicOre").Type] = true;
 			TileID.Sets.ChecksForMerge[Type] = true;
 			minPick = 100;
 			soundType = SoundID.NPCHit;
@@ -477,7 +478,7 @@ namespace SGAmod.Dimensions.Tiles
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
-			if (Main.tile[i, j].active())
+			if (Main.tile[i, j].HasTile)
 			{
 				r = Color.Goldenrod.R * 0.02f;
 				g = Color.Goldenrod.G * 0.02f;
@@ -499,10 +500,10 @@ namespace SGAmod.Dimensions.Tiles
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("Fabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("AnicentFabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HopeOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HardenedFabric")] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("Fabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("AnicentFabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HopeOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HardenedFabric").Type] = true;
 			TileID.Sets.ChecksForMerge[Type] = true;
 			minPick = 200;
 			soundType = 7;
@@ -531,10 +532,10 @@ namespace SGAmod.Dimensions.Tiles
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("Fabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("EntrophicOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HopeOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("AnicentFabric")] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("Fabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("EntrophicOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HopeOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("AnicentFabric").Type] = true;
 			TileID.Sets.ChecksForMerge[Type] = true;
 			minPick = 240;
 			soundType = 7;
@@ -569,10 +570,10 @@ namespace SGAmod.Dimensions.Tiles
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("Fabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HopeOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("EntrophicOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HardenedFabric")] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("Fabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HopeOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("EntrophicOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HardenedFabric").Type] = true;
 			TileID.Sets.ChecksForMerge[Type] = true;
 			minPick = 240;
 			soundType = 7;
@@ -608,15 +609,15 @@ namespace SGAmod.Dimensions.Tiles
 
 	public class Fabric : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("AncientFabric")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("EntrophicOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HopeOre")] = true;
-			Main.tileMerge[Type][(ushort)mod.TileType("HardenedFabric")] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("AncientFabric").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("EntrophicOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HopeOre").Type] = true;
+			Main.tileMerge[Type][(ushort)Mod.Find<ModTile>("HardenedFabric").Type] = true;
 			TileID.Sets.ChecksForMerge[Type] = true;
 			minPick = 0;
 			soundType = 7;
@@ -680,7 +681,7 @@ namespace SGAmod.Dimensions.Tiles
 			}
 			if (drakenite)
 			{
-				basecolor = Main.hslToRgb(((x/22f)+(y/16f)+Main.GlobalTime/2f) %1f,1f,0.50f);
+				basecolor = Main.hslToRgb(((x/22f)+(y/16f)+Main.GlobalTimeWrappedHourly/2f) %1f,1f,0.50f);
 				basealpha = 2f;
 				chance = 0;
 				alphamin = 1f;

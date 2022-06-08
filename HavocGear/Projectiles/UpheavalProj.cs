@@ -12,23 +12,23 @@ namespace SGAmod.HavocGear.Projectiles
     	public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Upheaval");
-			ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 4.5f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 320f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 16f;
+			ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 4.5f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 320f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 16f;
 		}
        
 	    public override void SetDefaults()
         {
         	Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-			projectile.extraUpdates = 0;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = 99;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.scale = 1f;
+			Projectile.extraUpdates = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = 99;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.scale = 1f;
         }
         
         public override void AI()
@@ -36,18 +36,18 @@ namespace SGAmod.HavocGear.Projectiles
 
         int dust;
         for (int i = 0; i < 3; i++){
-        dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"));
+        dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type);
         Main.dust[dust].scale = 0.8f;
         Main.dust[dust].noGravity = true;
-        Main.dust[dust].velocity = projectile.velocity*(float)(Main.rand.Next(20,100+(i*40))*0.005f);
+        Main.dust[dust].velocity = Projectile.velocity*(float)(Main.rand.Next(20,100+(i*40))*0.005f);
     	}
 
-        dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"));
+        dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type);
         Main.dust[dust].scale = 1.4f;
         Main.dust[dust].noGravity = true;
-        Main.dust[dust].velocity = projectile.velocity*(float)(Main.rand.Next(20,100)*0.002f);
+        Main.dust[dust].velocity = Projectile.velocity*(float)(Main.rand.Next(20,100)*0.002f);
 
-		Lighting.AddLight(projectile.position, 0.6f, 0.5f, 0f);
+		Lighting.AddLight(Projectile.position, 0.6f, 0.5f, 0f);
 
             int[] array = new int[20];
 			int num428 = 0;
@@ -55,12 +55,12 @@ namespace SGAmod.HavocGear.Projectiles
 			bool flag14 = false;
 			for (int num430 = 0; num430 < 200; num430++)
 			{
-				if (Main.npc[num430].CanBeChasedBy(projectile, false))
+				if (Main.npc[num430].CanBeChasedBy(Projectile, false))
 				{
 					float num431 = Main.npc[num430].position.X + (float)(Main.npc[num430].width / 2);
 					float num432 = Main.npc[num430].position.Y + (float)(Main.npc[num430].height / 2);
-					float num433 = Math.Abs(projectile.position.X + (float)(projectile.width / 2) - num431) + Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - num432);
-					if (num433 < num429 && Collision.CanHitLine(projectile.Center, 1, 1, Main.npc[num430].Center, 1, 1))
+					float num433 = Math.Abs(Projectile.position.X + (float)(Projectile.width / 2) - num431) + Math.Abs(Projectile.position.Y + (float)(Projectile.height / 2) - num432);
+					if (num433 < num429 && Collision.CanHitLine(Projectile.Center, 1, 1, Main.npc[num430].Center, 1, 1))
 					{
 						if (num428 < 20)
 						{
@@ -77,20 +77,20 @@ namespace SGAmod.HavocGear.Projectiles
 				num434 = array[num434];
 				float num435 = Main.npc[num434].position.X + (float)(Main.npc[num434].width / 2);
 				float num436 = Main.npc[num434].position.Y + (float)(Main.npc[num434].height / 2);
-				projectile.localAI[0] += 1f;
-				if (projectile.localAI[0] > 64f)
+				Projectile.localAI[0] += 1f;
+				if (Projectile.localAI[0] > 64f)
 				{
-					projectile.localAI[0] = 0f;
+					Projectile.localAI[0] = 0f;
 					float num437 = 6f;
-					Vector2 value10 = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
-					value10 += projectile.velocity * 4f;
+					Vector2 value10 = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
+					value10 += Projectile.velocity * 4f;
 					float num438 = num435 - value10.X;
 					float num439 = num436 - value10.Y;
 					float num440 = (float)Math.Sqrt((double)(num438 * num438 + num439 * num439));
 					num440 = num437 / num440;
 					num438 *= num440;
 					num439 *= num440;
-					int theproj=Projectile.NewProjectile(value10.X, value10.Y, num438, num439, mod.ProjectileType("HotBoulder"), (int)((double)projectile.damage * 0.5f), projectile.knockBack, projectile.owner, 0f, 0f);
+					int theproj=Projectile.NewProjectile(value10.X, value10.Y, num438, num439, Mod.Find<ModProjectile>("HotBoulder").Type, (int)((double)Projectile.damage * 0.5f), Projectile.knockBack, Projectile.owner, 0f, 0f);
 					Main.projectile[theproj].timeLeft=60;
 					return;
 				}

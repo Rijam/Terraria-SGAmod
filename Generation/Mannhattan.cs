@@ -10,7 +10,7 @@ using Terraria.GameContent.Generation;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace SGAmod.Generation
 {
@@ -97,13 +97,13 @@ int smoothitoutcounter=0;
             int z=0;
 for (z=0; z < smoothitout; z++){ 
 Tile tile = Framing.GetTileSafely(x,z);
-tile.active(false);
+tile.HasTile;
 WorldGen.KillWall(x,z);
 
 }
 Tile tile2 = Framing.GetTileSafely(x,z);
-tile2.type=TileID.PlatinumBrick;
-tile2.active(true);
+tile2.TileType=TileID.PlatinumBrick;
+tile2.HasTile;
 
 smoothitoutcounter-=1;
 if (smoothitoutcounter<1){
@@ -116,13 +116,13 @@ smoothitout=smoothitout+(3-WorldGen.genRand.Next(0, 6));
             {
             int y=0;
             int safetynet=Main.maxTilesY+7;
-            while (!Main.tile[x,y].active() && safetynet>0){y=y+1; safetynet=safetynet-1;}
+            while (!Main.tile[x,y].HasTile && safetynet>0){y=y+1; safetynet=safetynet-1;}
 
     for (int z=0; z < WorldGen.genRand.Next(20, 25); z++){ 
 safetynet=safetynet-1;
 Tile tile = Framing.GetTileSafely(x,y+1);
-tile.type=TileID.GoldBrick;
-tile.active(true);
+tile.TileType=TileID.GoldBrick;
+tile.HasTile;
 y=y+1;
 }
 }
@@ -148,10 +148,10 @@ if (phase==1){
                     continue;
                     }
 
-                    while(!Main.tile[x,y].active()){y=y+1;}
+                    while(!Main.tile[x,y].HasTile){y=y+1;}
 
 
-                    if (Main.tile[x,y].active()){
+                    if (Main.tile[x,y].HasTile){
                         success=true;
                     for (int width = -120; width < 121; width++)
                     {
@@ -159,8 +159,8 @@ if (phase==1){
                     {
                         if (WorldGen.InWorld(x+width,y+height,5)){
                     Tile tile = Framing.GetTileSafely(x+width,y+height);
-                    tile.type=TileID.PlatinumBrick;
-                    tile.active(true);
+                    tile.TileType=TileID.PlatinumBrick;
+                    tile.HasTile;
                     }}}}
 
 

@@ -14,47 +14,47 @@ namespace SGAmod.NPCs.DeeperDungeons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Armed Skeleton");
-            Main.npcFrameCount[npc.type] = 7;
+            Main.npcFrameCount[NPC.type] = 7;
         }
 
         public override void SetDefaults()
         {
-            npc.width = 24;
-            npc.height = 48;
-            npc.damage = 50;
-            npc.defense = 7;
-            npc.lifeMax = 80;
-            npc.value = 100f;
-            npc.aiStyle = 3;
-            npc.knockBackResist = 0.5f;
-            aiType = NPCID.ArmedZombie;
-            animationType = NPCID.ArmedZombie;
-            npc.HitSound = SoundID.NPCHit2;
-            npc.DeathSound = SoundID.NPCDeath2;
-            npc.buffImmune[BuffID.Confused] = false;
+            NPC.width = 24;
+            NPC.height = 48;
+            NPC.damage = 50;
+            NPC.defense = 7;
+            NPC.lifeMax = 80;
+            NPC.value = 100f;
+            NPC.aiStyle = 3;
+            NPC.knockBackResist = 0.5f;
+            AIType = NPCID.ArmedZombie;
+            AnimationType = NPCID.ArmedZombie;
+            NPC.HitSound = SoundID.NPCHit2;
+            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.buffImmune[BuffID.Confused] = false;
             banner = Item.NPCtoBanner(NPCID.Skeleton);
             bannerItem = Item.BannerToItem(banner);
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 16, 0), npc.velocity, 42, 1f); //Skeleton head gore
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * -16, 0), npc.velocity, 43, 1f); //Skeleton arm gore
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 8, 0), npc.velocity, 43, 1f); //Skeleton arm gore
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 8, 0), npc.velocity, 44, 1f); //Skeleton leg gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 16, 0), NPC.velocity, 42, 1f); //Skeleton head gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * -16, 0), NPC.velocity, 43, 1f); //Skeleton arm gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 8, 0), NPC.velocity, 43, 1f); //Skeleton arm gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 8, 0), NPC.velocity, 44, 1f); //Skeleton leg gore
             }
         }
         //For some reason, cloning the Armed Zombie doesn't include the extra melee reach. Copied from vanilla.
         public override void AI()
         {
             //Main.NewText("npc.ai[2] " + npc.ai[2]);
-            Rectangle npcRect = npc.Hitbox;
-            if (npc.ai[2] > 5f)
+            Rectangle npcRect = NPC.Hitbox;
+            if (NPC.ai[2] > 5f)
             {
                 int num = 34;
-                if (npc.spriteDirection < 0)
+                if (NPC.spriteDirection < 0)
                 {
                     npcRect.X -= num;
                     npcRect.Width += num;
@@ -91,7 +91,7 @@ namespace SGAmod.NPCs.DeeperDungeons
         {
             if (Main.rand.Next(25) == 0) //4% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Hook);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.Hook);
             }
             //if (Main.rand.Next(150) == 0) //0.67% chance
             //{
@@ -99,19 +99,19 @@ namespace SGAmod.NPCs.DeeperDungeons
             //}
             if (Main.rand.Next(100) == 0) //1% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.AncientIronHelmet);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.AncientIronHelmet);
             }
             if (Main.rand.Next(200) == 0) //0.5% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.AncientGoldHelmet);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.AncientGoldHelmet);
             }
             if (Main.rand.Next(201) == 0) //0.49% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.BoneSword);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.BoneSword);
             }
             if (Main.rand.Next(500) == 0) //0.2% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Skull);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.Skull);
             }
         }
     }

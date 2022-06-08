@@ -15,13 +15,13 @@ namespace SGAmod.HavocGear.Items
 		public override void SetDefaults()
 		{
 
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 24;
-			item.height = 24;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 24;
+			Item.height = 24;
 
-			item.rare = 9;
-			item.expert = true;
+			Item.rare = 9;
+			Item.expert = true;
 		}
 
 		public override void SetStaticDefaults()
@@ -34,7 +34,7 @@ namespace SGAmod.HavocGear.Items
 		{
 			get
 			{
-				return mod.NPCType("Murk");
+				return Mod.Find<ModNPC>("Murk").Type;
 			}
 		}
 
@@ -93,12 +93,12 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 24;
-			item.height = 24;
-			item.rare = 11;
-			item.expert = true;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = 11;
+			Item.expert = true;
 		}
 
 		public override bool CanRightClick()
@@ -110,7 +110,7 @@ namespace SGAmod.HavocGear.Items
 		{
 			get
 			{
-				return mod.NPCType("SharkvernHead");
+				return Mod.Find<ModNPC>("SharkvernHead").Type;
 			}
 		}
 
@@ -134,25 +134,25 @@ namespace SGAmod.HavocGear.Items
 
 			player.TryGettingDevArmor();
 			int lLoot = (Main.rand.Next(0, 4));
-			player.QuickSpawnItem(mod.ItemType("SerratedTooth"));
+			player.QuickSpawnItem(Mod.Find<ModItem>("SerratedTooth").Type);
 			if (lLoot == 0)
 			{
-				player.QuickSpawnItem(mod.ItemType("SkytoothStorm"));
+				player.QuickSpawnItem(Mod.Find<ModItem>("SkytoothStorm").Type);
 			}
 			if (lLoot == 1)
 			{
-				player.QuickSpawnItem(mod.ItemType("Jaws"));
+				player.QuickSpawnItem(Mod.Find<ModItem>("Jaws").Type);
 			}
 			if (lLoot == 2)
 			{
-				player.QuickSpawnItem(mod.ItemType("SnappyShark"));
-				player.QuickSpawnItem(mod.ItemType("SharkTooth"), 150);
+				player.QuickSpawnItem(Mod.Find<ModItem>("SnappyShark").Type);
+				player.QuickSpawnItem(Mod.Find<ModItem>("SharkTooth").Type, 150);
 			}
 			if (lLoot == 3)
 			{
-				player.QuickSpawnItem(mod.ItemType("SharkBait"), Main.rand.Next(60, 150));
+				player.QuickSpawnItem(Mod.Find<ModItem>("SharkBait").Type, Main.rand.Next(60, 150));
 			}
-			player.QuickSpawnItem(mod.ItemType("SharkTooth"), Main.rand.Next(100, 200));
+			player.QuickSpawnItem(Mod.Find<ModItem>("SharkTooth").Type, Main.rand.Next(100, 200));
 			if (Main.rand.Next(7) == 0)
 			{
 				player.QuickSpawnItem(ModContent.ItemType<SharkvernMask>());
@@ -173,12 +173,12 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 32;
-			item.height = 32;
-			item.expert = true;
-			item.rare = -12;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 32;
+			Item.height = 32;
+			Item.expert = true;
+			Item.rare = -12;
 		}
 
 		public override int BossBagNPC
@@ -208,19 +208,19 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 32;
-			item.height = 32;
-			item.expert = true;
-			item.rare = -12;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 32;
+			Item.height = 32;
+			Item.expert = true;
+			Item.rare = -12;
 		}
 
 		public override int BossBagNPC
 		{
 			get
 			{
-				return mod.NPCType("SpiderQueen");
+				return Mod.Find<ModNPC>("SpiderQueen").Type;
 			}
 		}
 
@@ -230,12 +230,12 @@ namespace SGAmod.Items
 		}
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(mod.ItemType("VialofAcid"), Main.rand.Next(35, 60));
-			player.QuickSpawnItem(mod.ItemType("AlkalescentHeart"), 1);
+			player.QuickSpawnItem(Mod.Find<ModItem>("VialofAcid").Type, Main.rand.Next(35, 60));
+			player.QuickSpawnItem(Mod.Find<ModItem>("AlkalescentHeart").Type, 1);
 			if (Main.rand.Next(0, 3) == 0)
-				player.QuickSpawnItem(mod.ItemType("CorrodedShield"), 1);
+				player.QuickSpawnItem(Mod.Find<ModItem>("CorrodedShield").Type, 1);
 			if (Main.rand.Next(0, 3) == 0)
-			player.QuickSpawnItem(mod.ItemType("AmberGlowSkull"), 1);
+			player.QuickSpawnItem(Mod.Find<ModItem>("AmberGlowSkull").Type, 1);
 			if (Main.rand.Next(7) == 0)
 			{
 				player.QuickSpawnItem(ModContent.ItemType<SpiderQueenMask>());
@@ -252,19 +252,19 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 32;
-			item.height = 32;
-			item.expert = true;
-			item.rare = -12;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 32;
+			Item.height = 32;
+			Item.expert = true;
+			Item.rare = -12;
 		}
 
 		public override int BossBagNPC
 		{
 			get
 			{
-				return mod.NPCType("Cirno");
+				return Mod.Find<ModNPC>("Cirno").Type;
 			}
 		}
 
@@ -278,11 +278,11 @@ namespace SGAmod.Items
 		player.TryGettingDevArmor();
 
 			string[] dropitems = { "Starburster", "Snowfall", "IceScepter", "RubiedBlade", "IcicleFall", "RodOfTheMistyLake", "Magishield"};
-			player.QuickSpawnItem(mod.ItemType(dropitems[Main.rand.Next(dropitems.Length)]));
-			player.QuickSpawnItem(mod.ItemType("CryostalBar"),Main.rand.Next(25, 40));
-			player.QuickSpawnItem(mod.ItemType("CirnoWings"), 1);
+			player.QuickSpawnItem(Mod.Find<ModItem>(dropitems[Main.rand.Next(dropitems.Length)]).Type);
+			player.QuickSpawnItem(Mod.Find<ModItem>("CryostalBar").Type,Main.rand.Next(25, 40));
+			player.QuickSpawnItem(Mod.Find<ModItem>("CirnoWings").Type, 1);
 			if (Main.rand.Next(3) == 0)
-				player.QuickSpawnItem(mod.ItemType("GlacialStone"), 1);
+				player.QuickSpawnItem(Mod.Find<ModItem>("GlacialStone").Type, 1);
 			if (Main.rand.Next(7) == 0)
 			{
 				player.QuickSpawnItem(ModContent.ItemType<CirnoMask>());
@@ -299,19 +299,19 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 32;
-			item.height = 32;
-			item.expert = true;
-			item.rare = -12;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 32;
+			Item.height = 32;
+			Item.expert = true;
+			Item.rare = -12;
 		}
 
 		public override int BossBagNPC
 		{
 			get
 			{
-				return mod.NPCType("SPinky");
+				return Mod.Find<ModNPC>("SPinky").Type;
 			}
 		}
 
@@ -322,10 +322,10 @@ namespace SGAmod.Items
 		public override void OpenBossBag(Player player)
 		{
 			player.TryGettingDevArmor();
-				player.QuickSpawnItem(mod.ItemType("LunarRoyalGel"), Main.rand.Next(40, 60));
+				player.QuickSpawnItem(Mod.Find<ModItem>("LunarRoyalGel").Type, Main.rand.Next(40, 60));
 			Armors.Illuminant.IlluminantHelmet.IlluminantArmorDrop(2, player.Center);
 			//Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LunarRoyalGel"));
-			player.QuickSpawnItem(mod.ItemType("LunarSlimeHeart"));
+			player.QuickSpawnItem(Mod.Find<ModItem>("LunarSlimeHeart").Type);
 			if (Main.rand.Next(7) == 0)
 			{
 				player.QuickSpawnItem(ModContent.ItemType<SupremePinkyMask>());

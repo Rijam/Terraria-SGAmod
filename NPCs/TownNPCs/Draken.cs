@@ -22,44 +22,44 @@ namespace SGAmod.NPCs.TownNPCs
 
 		float walkframe = 0f;
 		int confort = 0;
-		public int PartyVictum => BirthdayParty.CelebratingNPCs.FirstOrDefault(type => type == npc.whoAmI);
+		public int PartyVictum => BirthdayParty.CelebratingNPCs.FirstOrDefault(type => type == NPC.whoAmI);
 
 		public override bool Autoload(ref string name)
 		{
 			name = "Dergon";
-			return mod.Properties.Autoload;
+			return Mod.Properties.Autoload;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			// DisplayName automatically assigned from .lang files, but the commented line below is the normal approach.
 			// DisplayName.SetDefault("Example Person");
-			Main.npcFrameCount[npc.type] = 25;
-			NPCID.Sets.ExtraFramesCount[npc.type] = 9;
-			NPCID.Sets.AttackFrameCount[npc.type] = 4;
-			NPCID.Sets.DangerDetectRange[npc.type] = 700;
-			NPCID.Sets.AttackType[npc.type] = 0;
-			NPCID.Sets.AttackTime[npc.type] = 90;
-			NPCID.Sets.AttackAverageChance[npc.type] = 30;
-			NPCID.Sets.HatOffsetY[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 25;
+			NPCID.Sets.ExtraFramesCount[NPC.type] = 9;
+			NPCID.Sets.AttackFrameCount[NPC.type] = 4;
+			NPCID.Sets.DangerDetectRange[NPC.type] = 700;
+			NPCID.Sets.AttackType[NPC.type] = 0;
+			NPCID.Sets.AttackTime[NPC.type] = 90;
+			NPCID.Sets.AttackAverageChance[NPC.type] = 30;
+			NPCID.Sets.HatOffsetY[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.townNPC = true;
-			npc.friendly = true;
-			npc.width = 32;
-			npc.height = 40;
-			npc.aiStyle = 7;
-			npc.damage = 10;
-			npc.defense = 15;
-			npc.lifeMax = 1000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0.5f;
-			animationType = NPCID.Guide;
-			npc.homeless = true;
-			Color c = Main.hslToRgb((float)(Main.GlobalTime / 2) % 1f, 0.5f, 0.35f);
+			NPC.townNPC = true;
+			NPC.friendly = true;
+			NPC.width = 32;
+			NPC.height = 40;
+			NPC.aiStyle = 7;
+			NPC.damage = 10;
+			NPC.defense = 15;
+			NPC.lifeMax = 1000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0.5f;
+			AnimationType = NPCID.Guide;
+			NPC.homeless = true;
+			Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 2) % 1f, 0.5f, 0.35f);
 
 		}
 
@@ -75,15 +75,15 @@ namespace SGAmod.NPCs.TownNPCs
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
+			if (NPC.life <= 0)
 			{
 				for (int i = 0; i < 2; i++)
 				{
-					Gore.NewGore(npc.Center, npc.velocity, mod.GetGoreSlot("Gores/Draken_wing_gib"), 1f);
-					Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * -6f, 3f), npc.velocity, mod.GetGoreSlot("Gores/Draken_leg_gib"), 1f);
+					Gore.NewGore(NPC.Center, NPC.velocity, Mod.GetGoreSlot("Gores/Draken_wing_gib"), 1f);
+					Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * -6f, 3f), NPC.velocity, Mod.GetGoreSlot("Gores/Draken_leg_gib"), 1f);
 				}
 
-				Gore.NewGore(npc.Center+new Vector2(npc.spriteDirection*8f,-2f), npc.velocity, mod.GetGoreSlot("Gores/Draken_head_gib"), 1f);
+				Gore.NewGore(NPC.Center+new Vector2(NPC.spriteDirection*8f,-2f), NPC.velocity, Mod.GetGoreSlot("Gores/Draken_head_gib"), 1f);
 
 			}
 		}
@@ -120,16 +120,16 @@ namespace SGAmod.NPCs.TownNPCs
 		{
 
 
-			if (Math.Abs(npc.velocity.Y) < 1)
+			if (Math.Abs(NPC.velocity.Y) < 1)
 			{
-				Texture2D tex = Main.npcTexture[npc.type];
+				Texture2D tex = Main.npcTexture[NPC.type];
 				Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 7) / 2f;
-				Vector2 drawPos = ((npc.Center - Main.screenPosition)) + new Vector2(0f, -12f);
+				Vector2 drawPos = ((NPC.Center - Main.screenPosition)) + new Vector2(0f, -12f);
 				Color color = drawColor;
 				int timing = (int)(walkframe);
 				timing %= 6;
 
-				if (Math.Abs(npc.velocity.X) < 0.25f)
+				if (Math.Abs(NPC.velocity.X) < 0.25f)
 				{
 					timing = 0;
 					//drawPos.Y += 2f;
@@ -142,17 +142,17 @@ namespace SGAmod.NPCs.TownNPCs
 				}
 
 				timing *= ((tex.Height) / 7);
-				spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 7), color, 0, drawOrigin, npc.scale, npc.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+				spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 7), color, 0, drawOrigin, NPC.scale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 
 
 			}
 			else
 			{
-				Texture2D tex = ModContent.GetTexture("SGAmod/NPCs/TownNPCs/DrakenFly");
+				Texture2D tex = ModContent.Request<Texture2D>("SGAmod/NPCs/TownNPCs/DrakenFly");
 				Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-				Vector2 drawPos = ((npc.Center - Main.screenPosition)) + new Vector2(0f, -12f);
+				Vector2 drawPos = ((NPC.Center - Main.screenPosition)) + new Vector2(0f, -12f);
 				Color color = drawColor;
-				int timing = (int)(Main.GlobalTime * 10f);
+				int timing = (int)(Main.GlobalTimeWrappedHourly * 10f);
 				timing %= 4;
 
 				if (timing == 0)
@@ -161,7 +161,7 @@ namespace SGAmod.NPCs.TownNPCs
 				}
 
 				timing *= ((tex.Height) / 4);
-				spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), color, 0, drawOrigin, npc.scale, npc.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+				spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), color, 0, drawOrigin, NPC.scale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 
 
 
@@ -185,10 +185,10 @@ namespace SGAmod.NPCs.TownNPCs
 
 		public override void AI()
 		{
-			if (Math.Abs(npc.velocity.X) < 0.25f)
+			if (Math.Abs(NPC.velocity.X) < 0.25f)
 				walkframe = 0f;
 			else
-				walkframe += Math.Abs(npc.velocity.X) * 0.15f;
+				walkframe += Math.Abs(NPC.velocity.X) * 0.15f;
 		}
 
 		// Consider using this alternate approach to choosing a random thing. Very useful for a variety of use cases.
@@ -221,7 +221,7 @@ namespace SGAmod.NPCs.TownNPCs
 			}
 
 
-			if (npc.life < npc.lifeMax * 0.5)
+			if (NPC.life < NPC.lifeMax * 0.5)
 			{
 				chat.Add("Please help! I don't want to die!", 15.0);
 				chat.Add("It hurts, so much...", 15.0);
@@ -246,7 +246,7 @@ namespace SGAmod.NPCs.TownNPCs
 					chat.Add("I feel aside from you, " + Main.npc[Tnpc1].GivenName + " is the only one who cares about me.");
 					chat.Add("There's a growing connection between " + Main.npc[Tnpc1].GivenName + " and I, she understands me better than the others and it gives me comfort.");
 				}
-				int Tnpc2 = NPC.FindFirstNPC(mod.NPCType("ContrabandMerchant"));
+				int Tnpc2 = NPC.FindFirstNPC(Mod.Find<ModNPC>("ContrabandMerchant").Type);
 				if (Tnpc2 >= 0)
 				{
 					chat.Add("There's a strange man hanging around here, he's creeping me out.");
@@ -368,7 +368,7 @@ namespace SGAmod.NPCs.TownNPCs
 
 
 				}
-				if (!npc.homeless)
+				if (!NPC.homeless)
 				{
 					chat.Add("The dwelling you made is far better than being forced to sleep outside.");
 					chat.Add("I wondered away from the last group of people and suddenly I'm here, and you have a house for me too.");
@@ -494,7 +494,7 @@ namespace SGAmod.NPCs.TownNPCs
 				{
 					if (!Main.LocalPlayer.GetModPlayer<SGAPlayer>().gothellion && Main.expertMode)
 					{
-						Main.LocalPlayer.QuickSpawnItem(mod.ItemType("HellionSummon"));
+						Main.LocalPlayer.QuickSpawnItem(Mod.Find<ModItem>("HellionSummon").Type);
 						Main.LocalPlayer.GetModPlayer<SGAPlayer>().gothellion = true;
 						return Main.LocalPlayer.name + "! Something bad happened! Something REALLY bad! She found us! I was in my place when suddenly this appeared... This is just what I saw manifest itself outside planets before they burned." + "\n" + Main.LocalPlayer.name +
 							" you need to stop her! You need to stop Hellion before she destroys you all and enslaves me again!";
@@ -585,7 +585,7 @@ namespace SGAmod.NPCs.TownNPCs
 							Main.npcChatText = "I think I will now... Thank you so much for helping me overcome my paranoia "+Main.LocalPlayer.name;
                             confort = 7;
 							Main.LocalPlayer.SGAPly().dragonFriend = true;
-							npc.AddBuff(BuffID.Lovestruck, 120);
+							NPC.AddBuff(BuffID.Lovestruck, 120);
 							break;
 					}
 					return;
@@ -606,7 +606,7 @@ namespace SGAmod.NPCs.TownNPCs
 						him2 = new NPC();
 						if (modplayer.ExpertisePointsFromBossesModded[0] != "")
 						{
-							him2.SetDefaults(mod.NPCType(modplayer.ExpertisePointsFromBossesModded[0]));
+							him2.SetDefaults(Mod.Find<ModNPC>(modplayer.ExpertisePointsFromBossesModded[0]).Type);
 						}
                         else
 						{
@@ -645,14 +645,14 @@ namespace SGAmod.NPCs.TownNPCs
 				{
 					if (Main.LocalPlayer.SGAPly().dragonFriend)
 					{
-						if (!npc.HasBuff(BuffID.RapidHealing))
+						if (!NPC.HasBuff(BuffID.RapidHealing))
 						{
 							Main.npcChatText = "Rawr! <3 Thank you, (wing hugs you back)";
 							Main.LocalPlayer.AddBuff(BuffID.Lovestruck, 60 * 2);
 							Main.LocalPlayer.AddBuff(BuffID.SoulDrain, 60 * 100, false);
 
-							npc.AddBuff(BuffID.Lovestruck, 60 * 2);
-							npc.AddBuff(BuffID.RapidHealing, 60 * 300, false);
+							NPC.AddBuff(BuffID.Lovestruck, 60 * 2);
+							NPC.AddBuff(BuffID.RapidHealing, 60 * 300, false);
                         }
                         else
                         {
@@ -669,68 +669,68 @@ namespace SGAmod.NPCs.TownNPCs
 
 				if (SGAWorld.downedHellion<2 && SGAWorld.downedSPinky && SGAWorld.downedWraiths>3 && SGAWorld.downedCratrosityPML && Main.LocalPlayer.SGAPly().gothellion)
 				{
-					chat = "What are you doing right now!? use the [i:" + mod.ItemType("HellionSummon") + "] and stop Hellion!";
+					chat = "What are you doing right now!? use the [i:" + Mod.Find<ModItem>("HellionSummon") .Type+ "] and stop Hellion!";
 					if (Main.rand.Next(0,2)==0)
-						chat = "They're going to recapture me and force me into slavery, you need to use the [i:" + mod.ItemType("HellionSummon") + "] and stop them!";
+						chat = "They're going to recapture me and force me into slavery, you need to use the [i:" + Mod.Find<ModItem>("HellionSummon") .Type+ "] and stop them!";
 				}
 
 				if (!SGAWorld.downedSPinky && SGAWorld.downedWraiths > 3)
 				{
-					chat = "That pinky slime is mad, like REALLY mad and it distresses and worries me, I cannot imagine what would happen if you made it made it envious too, such as something like a  [i:" + mod.ItemType("Prettygel") + "]";
+					chat = "That pinky slime is mad, like REALLY mad and it distresses and worries me, I cannot imagine what would happen if you made it made it envious too, such as something like a  [i:" + Mod.Find<ModItem>("Prettygel") .Type+ "]";
 				}
 
 				if (!SGAWorld.downedCratrosityPML && SGAWorld.downedWraiths > 3)
 				{
-					chat = "That being calling itself Cthulhu's brother dropped... a [i:" + mod.ItemType("SalvagedCrate") + "]? It mentions a special kind of key, the same key used to enter the Temple it seems, at nighttime...";
+					chat = "That being calling itself Cthulhu's brother dropped... a [i:" + Mod.Find<ModItem>("SalvagedCrate") .Type+ "]? It mentions a special kind of key, the same key used to enter the Temple it seems, at nighttime...";
 				}
 
 				if (SGAWorld.downedWraiths < 4 && NPC.downedAncientCultist)
-					chat = "Yet Another creature has stolen knowledge from you, this time the Ancient Manipulator AND made you lose your knowledge to craft Luminite Bars, yes I know this is getting old but this is the last one, you can fight it by using a [i:" + mod.ItemType("WraithCoreFragment3") + "] made with lunar fragments and the previous summoning item. Rematch will unlock Luminite bars but require defeating Moon Lord first.";
+					chat = "Yet Another creature has stolen knowledge from you, this time the Ancient Manipulator AND made you lose your knowledge to craft Luminite Bars, yes I know this is getting old but this is the last one, you can fight it by using a [i:" + Mod.Find<ModItem>("WraithCoreFragment3") .Type+ "] made with lunar fragments and the previous summoning item. Rematch will unlock Luminite bars but require defeating Moon Lord first.";
 
 				if (!SGAWorld.downedHarbinger && NPC.downedGolemBoss)
 				{
 					chat = "We're being watched, I don't know by what, but I do know the dungeon isn't occupied by anyone, despite what everyone else is talking about. Maybe those alien-like Probes and those Etheria monsters are behind this?";
 					if (DD2Event.DownedInvasionT3 && NPC.downedMartians)
-						chat = "After dispatching those previous foes I figured it out: we're being watched, by something from outside this world and I think I know how to get rid of it. I think you could mix some ectoplasm with one of those bloody eyes to create a [i:" + mod.ItemType("TruelySusEye") + "] and see what happens";
+						chat = "After dispatching those previous foes I figured it out: we're being watched, by something from outside this world and I think I know how to get rid of it. I think you could mix some ectoplasm with one of those bloody eyes to create a [i:" + Mod.Find<ModItem>("TruelySusEye") .Type+ "] and see what happens";
 				}
 
 				if (!SGAWorld.downedTPD && NPC.downedGolemBoss)
-					chat = "In the night skies I sense those mechanical creations again, but worse... I have only seen a glimpse of their appearance and the best I could describe them as is a [i:" + mod.ItemType("Mechacluskerf") + "]";
+					chat = "In the night skies I sense those mechanical creations again, but worse... I have only seen a glimpse of their appearance and the best I could describe them as is a [i:" + Mod.Find<ModItem>("Mechacluskerf") .Type+ "]";
 
 				if (!SGAWorld.downedCratrosity && NPC.downedPlantBoss)
 				{
 					if (SGAWorld.tf2cratedrops)
 					{
-						chat = "The town seems obsessed with these [i:" + mod.ItemType("TerrariacoCrateBase") + "] of late every night. It is written on them to not use other keys, but maybe if you tried to use those golden keys on it, what would happen?";
+						chat = "The town seems obsessed with these [i:" + Mod.Find<ModItem>("TerrariacoCrateBase") .Type+ "] of late every night. It is written on them to not use other keys, but maybe if you tried to use those golden keys on it, what would happen?";
 					}
 					if (SGAWorld.tf2cratedrops)
 					{
 						if (NPC.CountNPCS(NPCID.Merchant) > 0)
-							chat = Main.npc[NPC.FindFirstNPC(NPCID.Merchant)].GivenName + "is selling something... Fishy, a [i:" + mod.ItemType("PremiumUpgrade") + "]?, maybe should check it out I don't like the sound of it.";
+							chat = Main.npc[NPC.FindFirstNPC(NPCID.Merchant)].GivenName + "is selling something... Fishy, a [i:" + Mod.Find<ModItem>("PremiumUpgrade") .Type+ "]?, maybe should check it out I don't like the sound of it.";
 						else
-							chat = "I heard of something called a [i:" + mod.ItemType("PremiumUpgrade") + "] but the merchant is no where to be found";
+							chat = "I heard of something called a [i:" + Mod.Find<ModItem>("PremiumUpgrade") .Type+ "] but the merchant is no where to be found";
 					}
 				}
 
 				if (!SGAWorld.downedSharkvern && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
-					chat = "The skies above the oceans have been more turbulent than usual lately from my flights over them as if, something had recently been roused from its slumber. Go there and check it out, You'd need something to sound it from the depths, something like a [i:" + mod.ItemType("ConchHorn") + "] made with sea materials and that new green stuff in the underground jungle";
+					chat = "The skies above the oceans have been more turbulent than usual lately from my flights over them as if, something had recently been roused from its slumber. Go there and check it out, You'd need something to sound it from the depths, something like a [i:" + Mod.Find<ModItem>("ConchHorn") .Type+ "] made with sea materials and that new green stuff in the underground jungle";
 
 				if (SGAWorld.downedWraiths == 1 && Main.hardMode)
-					chat = "Hmmm... Another strange creation has done something worse this time, they have stolen your knowledge to make a hardmode anvil, you can fight it by using a [i:" + mod.ItemType("WraithCoreFragment2") + "] which is as made from tier 1 hardmode ores and the previous summoning item";
+					chat = "Hmmm... Another strange creation has done something worse this time, they have stolen your knowledge to make a hardmode anvil, you can fight it by using a [i:" + Mod.Find<ModItem>("WraithCoreFragment2") .Type+ "] which is as made from tier 1 hardmode ores and the previous summoning item";
 				if (!SGAWorld.GennedVirulent && Main.rand.Next(0, 2) == 0 && Main.hardMode)
-					chat = "Murk has returned, more powerful than ever, but at the same time that very power is seeping out of his gelatin body. Perhaps it could be released into the jungle... Take a [i:" + mod.ItemType("RoilingSludge") + "] to the jungle and find out";
+					chat = "Murk has returned, more powerful than ever, but at the same time that very power is seeping out of his gelatin body. Perhaps it could be released into the jungle... Take a [i:" + Mod.Find<ModItem>("RoilingSludge") .Type+ "] to the jungle and find out";
 				if (!SGAWorld.downedCirno && Main.rand.Next(0, 2) == 0 && Main.hardMode)
-					chat = "The snowy lands are colder than usually and I can feel ice flakes forming on my own wings, let alone yours, a strong being of ice is hampering our ability to fly, craft a core of its power, a [i:" + mod.ItemType("Nineball") + "] with Ice Fairy dusts and souls and take it to the frosty plains during the day";
+					chat = "The snowy lands are colder than usually and I can feel ice flakes forming on my own wings, let alone yours, a strong being of ice is hampering our ability to fly, craft a core of its power, a [i:" + Mod.Find<ModItem>("Nineball") .Type+ "] with Ice Fairy dusts and souls and take it to the frosty plains during the day";
 
 				if (SGAWorld.downedMurk<2)
-					chat = "The dank structures' walls are protected by a strong, fly swarming, roiling creature in the jungle, perhaps a [i:" + mod.ItemType("RoilingSludge") + "] may attract its fly swamps, and its wrath";
+					chat = "The dank structures' walls are protected by a strong, fly swarming, roiling creature in the jungle, perhaps a [i:" + Mod.Find<ModItem>("RoilingSludge") .Type+ "] may attract its fly swamps, and its wrath";
 				if (!SGAWorld.downedSpiderQueen)
-					chat = "A highly voracious creature lurks below the surface, I fear it might eat a small dragon like me whole, go and find it please, I think an [i:" + mod.ItemType("AcidicEgg") + "] will lure it from its feasting to confront you";
+					chat = "A highly voracious creature lurks below the surface, I fear it might eat a small dragon like me whole, go and find it please, I think an [i:" + Mod.Find<ModItem>("AcidicEgg") .Type+ "] will lure it from its feasting to confront you";
 				if (SGAWorld.downedCaliburnGuardians<3 && Main.rand.Next(0,3)==0 && Main.LocalPlayer.SGAPly().ExpertiseCollectedTotal>=300)
-					chat = "I've noticed 3 structures below the surface that warrant investigation, I have found a [i: " + mod.ItemType("CaliburnCompess") + "] that may help you with that.";
+					chat = "I've noticed 3 structures below the surface that warrant investigation, I have found a [i: " + Mod.Find<ModItem>("CaliburnCompess") .Type+ "] that may help you with that.";
 
 				if (SGAWorld.downedWraiths == 0)
-					chat = "I'd be careful using the furnace if I were you, something is watching... Perhaps you can lure it out beforehand with a [i:" + mod.ItemType("WraithCoreFragment") + "] before it catches you off guard, I heard these can be made with copper/tin ore and fallen stars";
+					chat = "I'd be careful using the furnace if I were you, something is watching... Perhaps you can lure it out beforehand with a [i:" + Mod.Find<ModItem>("WraithCoreFragment") .Type+ "] before it catches you off guard, I heard these can be made with copper/tin ore and fallen stars";
 
 				if (SGAWorld.downedHellion > 1)
 					chat = "You've done it, thank you [i: " + ItemID.Heart + "]!";
@@ -815,63 +815,63 @@ namespace SGAmod.NPCs.TownNPCs
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
-			shop.item[nextSlot].SetDefaults(mod.ItemType("BossHints"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("BossHints").Type);
 			shop.item[nextSlot].shopCustomPrice = 1;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
 			if (modplayer.Drakenshopunlock)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("IDGStartBag"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("IDGStartBag").Type);
 				shop.item[nextSlot].shopCustomPrice = 10;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 50)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("EmptyCharm"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("EmptyCharm").Type);
 				shop.item[nextSlot].shopCustomPrice = 10;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 200)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("AssemblyStar"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AssemblyStar").Type);
 				shop.item[nextSlot].shopCustomPrice = 15;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}		
 			if (modplayer.ExpertiseCollectedTotal >= 250 && NPC.CountNPCS(NPCID.Angler)>0)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("UniversalBait"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("UniversalBait").Type);
 				shop.item[nextSlot].shopCustomPrice = 3;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}				
 			if (modplayer.ExpertiseCollectedTotal >= 300)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("CaliburnCompess"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("CaliburnCompess").Type);
 				shop.item[nextSlot].shopCustomPrice = 30;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 400)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("GrippingGloves"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("GrippingGloves").Type);
 				shop.item[nextSlot].shopCustomPrice = 30;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 500)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("RedManaStar"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("RedManaStar").Type);
 				shop.item[nextSlot].shopCustomPrice = 50;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}		
 			if (modplayer.ExpertiseCollectedTotal >= 750)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("ThievesThrow"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("ThievesThrow").Type);
 				shop.item[nextSlot].shopCustomPrice = 30;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
@@ -885,7 +885,7 @@ namespace SGAmod.NPCs.TownNPCs
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 1250)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("SoulJar"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("SoulJar").Type);
 				shop.item[nextSlot].shopCustomPrice = 25;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
@@ -899,35 +899,35 @@ namespace SGAmod.NPCs.TownNPCs
 			}
 			if (modplayer.dragonFriend)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("Fieryheart"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("Fieryheart").Type);
 				shop.item[nextSlot].shopCustomPrice = 125;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 2500)
 			{
-				shop.item[nextSlot].SetDefaults(Main.dayTime ? mod.ItemType("Gong") : mod.ItemType("BoneBucket"));
+				shop.item[nextSlot].SetDefaults(Main.dayTime ? Mod.Find<ModItem>("Gong") .Type: Mod.Find<ModItem>("BoneBucket").Type);
 				shop.item[nextSlot].shopCustomPrice = 150;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}			
 			if (modplayer.ExpertiseCollectedTotal >= 5000)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("PrimordialSkull"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("PrimordialSkull").Type);
 				shop.item[nextSlot].shopCustomPrice = 100;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 5000 && SGAWorld.downedCratrosity)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("SOATT"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("SOATT").Type);
 				shop.item[nextSlot].shopCustomPrice = 125;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 6000)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("MVMUpgrade"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("MVMUpgrade").Type);
 				shop.item[nextSlot].shopCustomPrice = 150;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
@@ -941,14 +941,14 @@ namespace SGAmod.NPCs.TownNPCs
 			}
 			if (modplayer.ExpertiseCollectedTotal >= 12000 && SGAWorld.downedHellion>1 && Main.LocalPlayer.HasItem(ModContent.ItemType<Items.CosmicFragment>()))
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("DragonCommanderStaff"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("DragonCommanderStaff").Type);
 				shop.item[nextSlot].shopCustomPrice = 500;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
 			}
 			if (!Main.expertMode && NPC.downedMoonlord)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("VenerableCatharsis"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("VenerableCatharsis").Type);
 				shop.item[nextSlot].shopCustomPrice = 500;
 				shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 				nextSlot++;
@@ -989,7 +989,7 @@ namespace SGAmod.NPCs.TownNPCs
 	{
 		private float effect = 0;
 		public static ModItem instance;
-		public Func<float,int,int,float> colorgen = (dist,x,y) => ((-Main.GlobalTime + ((float)(dist) / 10f)) / 3f);
+		public Func<float,int,int,float> colorgen = (dist,x,y) => ((-Main.GlobalTimeWrappedHourly + ((float)(dist) / 10f)) / 3f);
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Hellion's Gift");
@@ -1007,35 +1007,35 @@ namespace SGAmod.NPCs.TownNPCs
 			{
 				if (Main.expertMode)
 				{
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "'I have provided you with one of my chromatic mirrors, and it will keep returning to your hand as you keep returning to " + Main.worldName + "'"));
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "You just might go far " + SGAmod.HellionUserName + ", just might..."));
-					tooltips.Add(new TooltipLine(mod, "Nmxx", Idglib.ColorText(Color.OrangeRed, "By being granted this item your character is in Nightmare Mode, which does the following:")));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "'I have provided you with one of my chromatic mirrors, and it will keep returning to your hand as you keep returning to " + Main.worldName + "'"));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "You just might go far " + SGAmod.HellionUserName + ", just might..."));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", Idglib.ColorText(Color.OrangeRed, "By being granted this item your character is in Nightmare Mode, which does the following:")));
 
-					tooltips.Add(new TooltipLine(mod, "Nm1", Idglib.ColorText(Color.Red, "Enemies have 20% more HP")));
-					tooltips.Add(new TooltipLine(mod, "Nm1", Idglib.ColorText(Color.Red, "Your health is tripled, however you take triple damage")));
-					tooltips.Add(new TooltipLine(mod, "Nm1", Idglib.ColorText(Color.Red, "Life regen is completely disabled during bosses")));
-					tooltips.Add(new TooltipLine(mod, "Nm1", Idglib.ColorText(Color.Red, "Nurse's service is outside your paycheck during bosses")));
-					tooltips.Add(new TooltipLine(mod, "Nm1", Idglib.ColorText(Color.Red, "Some SGAmod bosses gain new abilities")));
-					tooltips.Add(new TooltipLine(mod, "Nm1", Idglib.ColorText(Color.Red, "Many optional SGAmod config settings are forced on")));
+					tooltips.Add(new TooltipLine(Mod, "Nm1", Idglib.ColorText(Color.Red, "Enemies have 20% more HP")));
+					tooltips.Add(new TooltipLine(Mod, "Nm1", Idglib.ColorText(Color.Red, "Your health is tripled, however you take triple damage")));
+					tooltips.Add(new TooltipLine(Mod, "Nm1", Idglib.ColorText(Color.Red, "Life regen is completely disabled during bosses")));
+					tooltips.Add(new TooltipLine(Mod, "Nm1", Idglib.ColorText(Color.Red, "Nurse's service is outside your paycheck during bosses")));
+					tooltips.Add(new TooltipLine(Mod, "Nm1", Idglib.ColorText(Color.Red, "Some SGAmod bosses gain new abilities")));
+					tooltips.Add(new TooltipLine(Mod, "Nm1", Idglib.ColorText(Color.Red, "Many optional SGAmod config settings are forced on")));
 
-					tooltips.Add(new TooltipLine(mod, "Nm2", Idglib.ColorText(Color.Lime, "Your Expertise gain is increased by 25%")));
-					tooltips.Add(new TooltipLine(mod, "Nm2", Idglib.ColorText(Color.Lime, "Enemy money dropped is increased by 50%")));
-					tooltips.Add(new TooltipLine(mod, "Nm2", Idglib.ColorText(Color.Lime, "There is a 20% chance for enemies to drop double loot")));
-					tooltips.Add(new TooltipLine(mod, "Nm2", Idglib.ColorText(Color.DimGray, "Does not properly support online play, yet")));
+					tooltips.Add(new TooltipLine(Mod, "Nm2", Idglib.ColorText(Color.Lime, "Your Expertise gain is increased by 25%")));
+					tooltips.Add(new TooltipLine(Mod, "Nm2", Idglib.ColorText(Color.Lime, "Enemy money dropped is increased by 50%")));
+					tooltips.Add(new TooltipLine(Mod, "Nm2", Idglib.ColorText(Color.Lime, "There is a 20% chance for enemies to drop double loot")));
+					tooltips.Add(new TooltipLine(Mod, "Nm2", Idglib.ColorText(Color.DimGray, "Does not properly support online play, yet")));
 					//tooltips.Add(new TooltipLine(mod, "Nm1", "Using this item will enable Nightmare Hardcore, which ups the challenge even further for more Expertise"));
 
 
 					foreach (TooltipLine line in tooltips)
 					{
-						if (line.mod == "Terraria" && line.Name == "ItemName")
+						if (line.Mod == "Terraria" && line.Name == "ItemName")
 						{
-							line.overrideColor = Main.hslToRgb((Main.GlobalTime / 3f) % 1f, 0.50f, 0.3f);
+							line.OverrideColor = Main.hslToRgb((Main.GlobalTimeWrappedHourly / 3f) % 1f, 0.50f, 0.3f);
 						}
 					}
 				}
 				else
 				{
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "You're not on an expert mode world Nub! Nightmare Mode NOT enabled"));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "You're not on an expert mode world Nub! Nightmare Mode NOT enabled"));
 
 				}
 			}
@@ -1044,18 +1044,18 @@ namespace SGAmod.NPCs.TownNPCs
 
 		public override void SetDefaults()
 		{
-			item.rare = 12;
-			item.maxStack = 1;
-			item.consumable = false;
-			item.width = 24;
-			item.height = 24;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = 12;
-			item.UseSound = SoundID.Item8;
+			Item.rare = 12;
+			Item.maxStack = 1;
+			Item.consumable = false;
+			Item.width = 24;
+			Item.height = 24;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = 12;
+			Item.UseSound = SoundID.Item8;
 		}
 
 		public override string Texture
@@ -1085,7 +1085,7 @@ namespace SGAmod.NPCs.TownNPCs
 					float dist = (new Vector2(x, y) - new Vector2(width / 2, height / 2)).Length();
 					if (dist < width / 3)
 					{
-						//float alg = ((-Main.GlobalTime + ((float)(dist) / 10f)) / 3f);
+						//float alg = ((-Main.GlobalTimeWrappedHourly + ((float)(dist) / 10f)) / 3f);
 						float alg = color2(dist,x,y);
 						dataColors[x + y * width] = Main.hslToRgb(alg%1f, 0.75f, 0.5f);
 					}
@@ -1105,7 +1105,7 @@ namespace SGAmod.NPCs.TownNPCs
 
 			for (int i = 0; i < 360; i += 360 / 12)
 			{
-				Double Azngle = MathHelper.ToRadians(i) + Main.GlobalTime;
+				Double Azngle = MathHelper.ToRadians(i) + Main.GlobalTimeWrappedHourly;
 				Vector2 here = new Vector2((float)Math.Cos(Azngle), (float)Math.Sin(Azngle));
 
 				Main.spriteBatch.End();
@@ -1134,7 +1134,7 @@ namespace SGAmod.NPCs.TownNPCs
 		{
 
 
-			drawit(item.Center- Main.screenPosition, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI, Main.GameViewMatrix.ZoomMatrix, colorgen);
+			drawit(Item.Center- Main.screenPosition, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI, Main.GameViewMatrix.ZoomMatrix, colorgen);
 			return false;
 		}
 

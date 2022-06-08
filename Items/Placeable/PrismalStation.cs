@@ -11,19 +11,19 @@ namespace SGAmod.Items.Placeable
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = 0;
-			item.rare = 10;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.createTile = mod.TileType("PrismalStation");
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = 0;
+			Item.rare = 10;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("PrismalStation").Type;
 		}
 	}
 }

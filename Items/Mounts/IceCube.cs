@@ -123,7 +123,7 @@ namespace SGAmod.Items.Mounts
 				IceCubeSpecificData iceCubes = (IceCubeSpecificData)drawPlayer.mount._mountSpecificData;
 				//int timer = DateTime.Now.Millisecond % 800 / 200;
 				Texture2D balloonTexture = Main.itemTexture[ItemID.FrozenSlimeBlock];
-				Texture2D iceBlock = mod.GetTexture("Items/Mounts/GiantIceCubePlatform");
+				Texture2D iceBlock = Mod.Assets.Request<Texture2D>("Items/Mounts/GiantIceCubePlatform").Value;
 				Vector2 orig = balloonTexture.Size() / 2f;
 
 				/*foreach (Vector2 icespot in iceCubes.iceCubes)
@@ -146,22 +146,22 @@ namespace SGAmod.Items.Mounts
 		}
 
         public override void SetDefaults() {
-			item.width = 20;
-			item.height = 30;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = 1;
-			item.value = 30000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item79;
-			item.noMelee = true;
-			item.mountType = MountType<IceCubeMount>();
+			Item.width = 20;
+			Item.height = 30;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = 1;
+			Item.value = 30000;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item79;
+			Item.noMelee = true;
+			Item.mountType = MountType<IceCubeMount>();
 		}
 	}
 
 	public class IceCubeMountBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Slide Cube");
 			Description.SetDefault("At least you won't lose your footing! Where your going is another story");

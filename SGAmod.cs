@@ -262,14 +262,14 @@ namespace SGAmod
 
 		public static (Texture2D, Texture2D) oldLogo;
 
-		public static MusicStreamingOGGPlus musicTest;
+		//public static MusicStreamingOGGPlus musicTest;
 
 		public static readonly BindingFlags UniversalBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
 		public static string HellionUserName => SGAConfigClient.Instance.HellionPrivacy ? Main.LocalPlayer.name : userName;
 
 		public static int hellionMusicGrabState = 0;
-		public static MusicStreamingOGGPlus hellionTheme = default;
+		//public static MusicStreamingOGGPlus hellionTheme = default;
 
 		protected static float _screenShake = 0;
 
@@ -711,7 +711,7 @@ namespace SGAmod
 
 			}
 
-			AddItem("Nightmare", NPCs.TownNPCs.Nightmare.instance);
+			//AddItem("Nightmare", NPCs.TownNPCs.Nightmare.instance);
 
 			bool failedToMakeDirectoy = false;
 			bool safefailsafe = false;
@@ -816,7 +816,7 @@ namespace SGAmod
 				TrippyRainbowEffect = SGAmod.Instance.Assets.Request<Effect>("Effects/ScreenTrippy").Value;
 				TrippyRainbowEffect.Parameters["uColor"].SetValue(new Vector3(0.02f, 0.02f, 0f));
 				TrippyRainbowEffect.Parameters["uOpacity"].SetValue(1f);
-				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTimeWrappedHourlyWrappedHourly * 0.1f));
+				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTimeWrappedHourly * 0.1f));
 				TrippyRainbowEffect.Parameters["uIntensity"].SetValue(1f);
 				TrippyRainbowEffect.Parameters["uProgress"].SetValue(0f);
 
@@ -1388,7 +1388,7 @@ namespace SGAmod
 			{
 				int index = RecipeGroup.recipeGroupIDs["IronBar"];
 				group = RecipeGroup.recipeGroups[index];
-				group.ValidItems.Add(ItemType("UnmanedBar"));
+				//group.ValidItems.Add(ItemType("UnmanedBar"));
 			}
 
 		}

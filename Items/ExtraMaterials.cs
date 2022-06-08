@@ -17,18 +17,18 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 14;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.sellPrice(0, 12, 0, 0);
-			item.rare = 10;
-			item.createTile = mod.TileType("BrokenAlter");
+			Item.width = 28;
+			Item.height = 14;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.sellPrice(0, 12, 0, 0);
+			Item.rare = 10;
+			Item.createTile = Mod.Find<ModTile>("BrokenAlter").Type;
 		}
 		public override string Texture
         {

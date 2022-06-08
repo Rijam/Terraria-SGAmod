@@ -10,7 +10,7 @@ using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using SGAmod.Tiles;
 using Idglibrary;
 using SGAmod.Items.Accessories;
@@ -60,7 +60,7 @@ namespace SGAmod.Generation
                     for (ybuffer = -buffersizey; ybuffer < buffersizey; ybuffer++)
                     {
                         Tile tile = Framing.GetTileSafely((int)here.X + xbuffer, (int)here.Y + ybuffer);
-                        if (stoneTypes.Any(iii => iii == tile.type))
+                        if (stoneTypes.Any(iii => iii == tile.TileType))
                         {
                             foundspot2 = false;
                             goto startover;
@@ -154,8 +154,8 @@ namespace SGAmod.Generation
 
                     Tile tile = Framing.GetTileSafely((int)(placementspot + edge * 2f).X, (int)(placementspot + edge * 2f).Y);
 
-                    if (tile.type != TileID.GoldBrick && tile.type != TileID.SilverBrick && tile.type != TileID.CopperBrick && tile.type != SGAmod.Instance.TileType("MoistStone")
-                        && tile.type != TileID.LihzahrdBrick && tile.type != TileID.BlueDungeonBrick && tile.type != TileID.GreenDungeonBrick && tile.type != TileID.PinkDungeonBrick)
+                    if (tile.TileType != TileID.GoldBrick && tile.TileType != TileID.SilverBrick && tile.TileType != TileID.CopperBrick && tile.TileType != SGAmod.Instance.Find<ModTile>("MoistStone")
+.Type                        && tile.TileType != TileID.LihzahrdBrick && tile.TileType != TileID.BlueDungeonBrick && tile.TileType != TileID.GreenDungeonBrick && tile.TileType != TileID.PinkDungeonBrick)
                         PlaceCaiburnHallway(placementspot + edge, width2, height2, there, ref deways, generation + 2, tiletype, walltype);
 
                 }
@@ -198,15 +198,15 @@ namespace SGAmod.Generation
                 {
                     Point loc = new Point((int)placementspot.X + (int)xbuffer, (int)placementspot.Y + (int)ybuffer);
                     Tile tile = Framing.GetTileSafely(loc.X, loc.Y);
-                    IDGWorldGen.PlaceMulti(placementspot + new Vector2(xbuffer, ybuffer), SGAmod.Instance.TileType("MoistStone"), 4, SGAmod.Instance.WallType("SwampWall"));
+                    IDGWorldGen.PlaceMulti(placementspot + new Vector2(xbuffer, ybuffer), SGAmod.Instance.Find<ModTile>("MoistStone").Type, 4, SGAmod.Instance.Find<ModWall>("SwampWall").Type);
                     dewaysMainroom.Add(new Vector2(loc.X, loc.Y));
                     allDankWater.Add(loc);
                 }
 
             }
 
-            int t1 = SGAmod.Instance.TileType("MoistStone");
-            int t2 = SGAmod.Instance.WallType("SwampWall");
+            int t1 = SGAmod.Instance.Find<ModTile>("MoistStone").Type;
+            int t2 = SGAmod.Instance.Find<ModWall>("SwampWall").Type;
 
             PlaceCaiburnHallway(placementspot + new Vector2(buffersizex * 1, 0), 12, 6, 0, ref deways, 0, t1, t2);
             PlaceCaiburnHallway(placementspot + new Vector2(-buffersizex * 1, 0), 12, 6, 2, ref deways, 0, t1, t2);
@@ -221,7 +221,7 @@ namespace SGAmod.Generation
                     lowestTile = (int)deways[aaa].Y;
 
                 Tile tile = Framing.GetTileSafely((int)deways[aaa].X, (int)deways[aaa].Y);
-                tile.active(false);
+                tile.HasTile;
 
             }
 
@@ -256,8 +256,8 @@ namespace SGAmod.Generation
             foreach (Point16 point2 in removes)
             {
                 Tile tile = Framing.GetTileSafely(point2.X, point2.Y);
-                if (tile.type == ModContent.TileType<MoistStone>())
-                tile.type = (ushort)ModContent.TileType<Biomass>();
+                if (tile.TileType == ModContent.TileType<MoistStone>())
+                tile.TileType = (ushort)ModContent.TileType<Biomass>();
             }
 
 
@@ -271,10 +271,10 @@ namespace SGAmod.Generation
                 if (WorldGen.genRand.Next(0, 100) <20)
                 {
                     Tile tile = Framing.GetTileSafely((int)deways[aaa].X, (int)deways[aaa].Y + 1);
-                    if (tile.active())
+                    if (tile.HasTile)
                     {
                         string[] onts = new string[] { "SwampGrassGrow", "SwampGrassGrow2", "SwampGrassGrow3" };
-                        WorldGen.PlaceObject((int)deways[aaa].X, (int)deways[aaa].Y, SGAmod.Instance.TileType(onts[WorldGen.genRand.Next(onts.Length)]), true);
+                        WorldGen.PlaceObject((int)deways[aaa].X, (int)deways[aaa].Y, SGAmod.Instance.Find<ModTile>(onts[WorldGen.genRand.Next(onts.Length)]).Type, true);
                     }
 
                 }
@@ -282,14 +282,14 @@ namespace SGAmod.Generation
                 if (WorldGen.genRand.Next(0, 100) < 5)
                 {
                     Tile tile = Framing.GetTileSafely((int)deways[aaa].X, (int)deways[aaa].Y - 1);
-                    if (tile.active())
+                    if (tile.HasTile)
                         WorldGen.PlaceObject((int)deways[aaa].X, (int)deways[aaa].Y, TileID.HangingLanterns, false, 16);
 
                 }
                 if (WorldGen.genRand.Next(0, 100) < 5)
                 {
                     Tile tile = Framing.GetTileSafely((int)deways[aaa].X, (int)deways[aaa].Y + 1);
-                    if (tile.active())
+                    if (tile.HasTile)
                         WorldGen.placeTrap((int)deways[aaa].X, (int)deways[aaa].Y, 0);
 
                 }
@@ -304,7 +304,7 @@ namespace SGAmod.Generation
 
                     findone = dewaysMainroom.Find(location => new Rectangle((int)location.X - 1, (int)location.Y - 1, 3, 3).Intersects(new Rectangle((int)deways[aaa].X - 1, (int)deways[aaa].Y - 1, 3, 3)));
 
-                    if (tile1.active() && tile2.active() && !tile3.active() && !tile4.active() && findone == Vector2.Zero)
+                    if (tile1.HasTile && tile2.HasTile && !tile3.HasTile && !tile4.HasTile && findone == Vector2.Zero)
                     {
                         Point loc = new Point((int)deways[aaa].X, (int)deways[aaa].Y);
                         int thechest = WorldGen.PlaceChest(loc.X, loc.Y, 21, false, 12);
@@ -323,9 +323,9 @@ namespace SGAmod.Generation
 
                             List<int> loot = new List<int> { 2344, 2345, 2346, 2347, 2348, 2349, 2350, 2351, 2352, 2353, 2354, 2355, 2356, 2359, 301, 302, 303, 304, 305, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 226, 188, 189, 110, 28 };
 
-                            List<int> lootmain = new List<int> { SGAWorld.WorldIsNovus ? SGAmod.Instance.ItemType("UnmanedOre") : SGAmod.Instance.ItemType("NoviteOre"), SGAmod.Instance.ItemType("DankWood"), SGAmod.Instance.ItemType("DankWood"), SGAmod.Instance.ItemType("Biomass"), SGAmod.Instance.ItemType("DankWood"), ItemID.SilverCoin, ItemID.LesserManaPotion };
-                            List<int> lootrare = new List<int> { SGAmod.Instance.ItemType("DankCore"), SGAmod.Instance.ItemType("DankCore") };
-                            List<int> dankrare = new List<int> { SGAmod.Instance.ItemType("DankWoodShield"), SGAmod.Instance.ItemType("MurkyCharm") };
+                            List<int> lootmain = new List<int> { SGAWorld.WorldIsNovus ? SGAmod.Instance.Find<ModItem>("UnmanedOre") .Type: SGAmod.Instance.Find<ModItem>("NoviteOre").Type, SGAmod.Instance.Find<ModItem>("DankWood").Type, SGAmod.Instance.Find<ModItem>("DankWood").Type, SGAmod.Instance.Find<ModItem>("Biomass").Type, SGAmod.Instance.Find<ModItem>("DankWood").Type, ItemID.SilverCoin, ItemID.LesserManaPotion };
+                            List<int> lootrare = new List<int> { SGAmod.Instance.Find<ModItem>("DankCore").Type, SGAmod.Instance.Find<ModItem>("DankCore") .Type};
+                            List<int> dankrare = new List<int> { SGAmod.Instance.Find<ModItem>("DankWoodShield").Type, SGAmod.Instance.Find<ModItem>("MurkyCharm") .Type};
                            int e = 0;
 
                             for (int kk = 0; kk < 2 + (Main.expertMode ? 1 : 0); kk += 1)
@@ -381,40 +381,40 @@ namespace SGAmod.Generation
                 Tile tile = Framing.GetTileSafely((int)dewaysMainroom[aaa].X, (int)dewaysMainroom[aaa].Y);
                 //Chest.DestroyChest((int)deways[aaa].X, (int)deways[aaa].Y);
                 WorldGen.KillTile((int)deways[aaa].X, (int)deways[aaa].Y);
-                tile.active(false);
+                tile.HasTile;
             }
 
 
             //Place Sword
             for (int kk = 3; kk < 6; kk += 1)
             {
-                Main.tile[(int)placementspot.X, (int)placementspot.Y + buffersizey - kk].active(false);
+                Main.tile[(int)placementspot.X, (int)placementspot.Y + buffersizey - kk].HasTile;
                 for (int xx = 0; xx < 6; xx += 1)
                 {
-                    Main.tile[(int)placementspot.X - xx, (int)placementspot.Y + buffersizey - kk].active(false);
-                    Main.tile[(int)placementspot.X + xx, (int)placementspot.Y + buffersizey - kk].active(false);
+                    Main.tile[(int)placementspot.X - xx, (int)placementspot.Y + buffersizey - kk].HasTile;
+                    Main.tile[(int)placementspot.X + xx, (int)placementspot.Y + buffersizey - kk].HasTile;
                 }
             }
-            Main.tile[(int)placementspot.X, (int)placementspot.Y + buffersizey - 1].active(true);
+            Main.tile[(int)placementspot.X, (int)placementspot.Y + buffersizey - 1].HasTile;
             WorldGen.SlopeTile((int)placementspot.X, (int)placementspot.Y + buffersizey - 1, 0);
 
             for (int xx = 0; xx < 4; xx += 1)
             {
-                Main.tile[(int)placementspot.X - xx, (int)placementspot.Y + buffersizey - 1].active(true);
-                Main.tile[(int)placementspot.X + xx, (int)placementspot.Y + buffersizey - 1].active(true);
+                Main.tile[(int)placementspot.X - xx, (int)placementspot.Y + buffersizey - 1].HasTile;
+                Main.tile[(int)placementspot.X + xx, (int)placementspot.Y + buffersizey - 1].HasTile;
                 WorldGen.SlopeTile((int)placementspot.X - xx, (int)placementspot.Y + buffersizey - 1, 0);
                 WorldGen.SlopeTile((int)placementspot.X + xx, (int)placementspot.Y + buffersizey - 1, 0);
 
             }
 
-            Main.tile[(int)placementspot.X - 2, (int)placementspot.Y + buffersizey - 2].active(true); WorldGen.SlopeTile((int)placementspot.X - 2, (int)placementspot.Y + buffersizey - 2, 0);
-            Main.tile[(int)placementspot.X - 1, (int)placementspot.Y + buffersizey - 2].active(true); WorldGen.SlopeTile((int)placementspot.X - 1, (int)placementspot.Y + buffersizey - 2, 0);
-            Main.tile[(int)placementspot.X, (int)placementspot.Y + buffersizey - 2].active(true); WorldGen.SlopeTile((int)placementspot.X, (int)placementspot.Y + buffersizey - 2, 0);
-            Main.tile[(int)placementspot.X + 1, (int)placementspot.Y + buffersizey - 2].active(true); WorldGen.SlopeTile((int)placementspot.X + 1, (int)placementspot.Y + buffersizey - 2, 0);
-            Main.tile[(int)placementspot.X + 2, (int)placementspot.Y + buffersizey - 2].active(true); WorldGen.SlopeTile((int)placementspot.X + 2, (int)placementspot.Y + buffersizey - 2, 0);
+            Main.tile[(int)placementspot.X - 2, (int)placementspot.Y + buffersizey - 2].HasTile; WorldGen.SlopeTile((int)placementspot.X - 2, (int)placementspot.Y + buffersizey - 2, 0);
+            Main.tile[(int)placementspot.X - 1, (int)placementspot.Y + buffersizey - 2].HasTile; WorldGen.SlopeTile((int)placementspot.X - 1, (int)placementspot.Y + buffersizey - 2, 0);
+            Main.tile[(int)placementspot.X, (int)placementspot.Y + buffersizey - 2].HasTile; WorldGen.SlopeTile((int)placementspot.X, (int)placementspot.Y + buffersizey - 2, 0);
+            Main.tile[(int)placementspot.X + 1, (int)placementspot.Y + buffersizey - 2].HasTile; WorldGen.SlopeTile((int)placementspot.X + 1, (int)placementspot.Y + buffersizey - 2, 0);
+            Main.tile[(int)placementspot.X + 2, (int)placementspot.Y + buffersizey - 2].HasTile; WorldGen.SlopeTile((int)placementspot.X + 2, (int)placementspot.Y + buffersizey - 2, 0);
 
             Point offset = new Point(0, -3);
-            int altertype = type == 0 ? SGAmod.Instance.TileType("CaliburnAltar") : (type == 1 ? SGAmod.Instance.TileType("CaliburnAltarB") : SGAmod.Instance.TileType("CaliburnAltarC"));
+            int altertype = type == 0 ? SGAmod.Instance.Find<ModTile>("CaliburnAltar") .Type: (type == 1 ? SGAmod.Instance.Find<ModTile>("CaliburnAltarB") .Type: SGAmod.Instance.Find<ModTile>("CaliburnAltarC").Type);
             WorldGen.PlaceObject((int)placementspot.X + offset.X, (int)placementspot.Y + buffersizey + offset.Y, altertype, false, 0);
             SGAWorld.CaliburnAlterCoordsX[type] = (int)placementspot.X * 16;
             SGAWorld.CaliburnAlterCoordsY[type] = (int)placementspot.Y * 16;
@@ -485,7 +485,7 @@ namespace SGAmod.Generation
                         if (tileAbove.liquid > 250)
                         {
                             Tile tile = Framing.GetTileSafely(floodedTilePoint.X, floodedTilePoint.Y);
-                            if (!tile.active() || Main.tileCut[tile.type])
+                            if (!tile.HasTile || Main.tileCut[tile.TileType])
                             WorldGen.PlaceTile(floodedTilePoint.X, floodedTilePoint.Y, ModContent.TileType<MoistSand>(), false, true);
                         }
                     }
@@ -508,7 +508,7 @@ namespace SGAmod.Generation
                 for (int y = 0; y < Main.maxTilesY; y++)
                 {
                     Tile tile = Framing.GetTileSafely(x, y);
-                    if (Main.tile[x, y].type == TileID.LihzahrdBrick)
+                    if (Main.tile[x, y].TileType == TileID.LihzahrdBrick)
                     {
                         templecord[0] = Math.Min(templecord[0], x);
                         templecord[1] = Math.Min(templecord[1], y);
@@ -544,7 +544,7 @@ namespace SGAmod.Generation
                     {
                         for (ybuffer = -buffersizey; ybuffer < buffersizey; ybuffer++)
                         {
-                            if (Main.tile[x + xbuffer, y + ybuffer].type != TileID.LihzahrdBrick || !Main.tile[x + xbuffer, y + ybuffer].active())
+                            if (Main.tile[x + xbuffer, y + ybuffer].TileType != TileID.LihzahrdBrick || !Main.tile[x + xbuffer, y + ybuffer].HasTile)
                             {
                                 thisplacegood = false;
                                 break;
@@ -568,13 +568,13 @@ namespace SGAmod.Generation
                     {
                         for (int yfiller = -buffersizey + 3; yfiller < buffersizey - 3; yfiller++)
                         {
-                            Tile tileroomout = Framing.GetTileSafely(theplace[0] + xfiller, theplace[1] + yfiller); tileroomout.active(false);
+                            Tile tileroomout = Framing.GetTileSafely(theplace[0] + xfiller, theplace[1] + yfiller); tileroomout.HasTile;
 
                         }
                     }
                     if (firstone == false)
                     {
-                        WorldGen.PlaceObject(theplace[0], theplace[1] + buffersizey - 4, SGAmod.Instance.TileType("PrismalStation"), true, 0);
+                        WorldGen.PlaceObject(theplace[0], theplace[1] + buffersizey - 4, SGAmod.Instance.Find<ModTile>("PrismalStation").Type, true, 0);
                         firstone = true;
                     }
                     else

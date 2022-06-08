@@ -23,9 +23,9 @@ using Terraria.GameContent.UI;
 using Idglibrary;
 using System.IO;
 using System.Diagnostics;
-using CalamityMod;
-using CalamityMod.CalPlayer;
-using CalamityMod.World;
+//using CalamityMod;
+//using CalamityMod.CalPlayer;
+//using CalamityMod.World;
 using SGAmod.Items.Weapons.SeriousSam;
 using ReLogic.Graphics;
 using Terraria.Utilities;
@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Threading;
 using SGAmod.Buffs;
 using SGAmod.Items.Weapons.Ammo;
+using Terraria.GameContent;
 #if Dimensions
 using SGAmod.Dimensions;
 #endif
@@ -128,13 +129,13 @@ namespace SGAmod
 				state = (int)PathState.Calculating;
 				int seed2 = seed;
 				if (seed == -1)
-					seed2 = (int)Main.GlobalTime * 7894;
+					seed2 = (int)Main.GlobalTimeWrappedHourly * 7894;
 
 				UnifiedRandom uniRand = new UnifiedRandom(seed2);
 				EndPoint = (EndPoint.ToVector2() / stepSize).ToPoint16() * new Point16(stepSize);
 				Point16 StartPoint = (startingPosition.ToVector2() / stepSize).ToPoint16() * new Point16(stepSize);
 
-				if (Main.tile[StartPoint.X, StartPoint.Y].active() || Main.tile[EndPoint.X, EndPoint.Y].active())
+				if (Main.tile[StartPoint.X, StartPoint.Y].HasTile || Main.tile[EndPoint.X, EndPoint.Y].HasTile)
 					return;
 
 				List<PathNode> openCells = new List<PathNode>();
@@ -182,7 +183,7 @@ namespace SGAmod
 					Point16 newPoint = checkCell.location + pointcheck;
 
 					Tile tile = Main.tile[newPoint.X, newPoint.Y];
-					bool solidWall = tile.active() && Main.tileSolid[tile.type];
+					bool solidWall = tile.HasTile && Main.tileSolid[tile.TileType];
 					int extraCost = solidWall ? wallsWeight : 0;
 
 
@@ -315,7 +316,13 @@ namespace SGAmod
 			List<Point> items = new List<Point>();
 			if (!item.IsAir)
 			{
-				RecipeFinder finder = new RecipeFinder();
+				//jacobwroper — 04/20/2022
+				//Also, the Intermediate Recipes guide covers modifying vanilla recipes, but the RecipeFinder and RecipeEditor methods don't seem to be right. What were those replaced with?
+				//
+				//jopojelly — 04/20/2022
+				//you just have to loop through the Main.recipes now I think
+				
+				/*RecipeFinder finder = new RecipeFinder();
 				finder.SetResult(item.type);
 				List<Recipe> reclist = finder.SearchRecipes();
 
@@ -325,7 +332,7 @@ namespace SGAmod
 
 					stackSize = recipe.createItem.stack;
 
-					if (stackSize <= item.stack && BlackListedItems.FirstOrDefault(search => search == item.type) == default && recipe.requiredItem[2].type != SGAmod.Instance.ItemType("AlterCraft_Time"))
+					if (stackSize <= item.stack && BlackListedItems.FirstOrDefault(search => search == item.type) == default && recipe.requiredItem[2].type != SGAmod.Instance.Find<ModItem>("AlterCraft_Time").Type)
 					{
 
 						List<List<int>> isGroup = new List<List<int>>();
@@ -366,7 +373,7 @@ namespace SGAmod
 						}
 					}
 
-				}
+				}*/
 			}
 			return items;
 		}
@@ -383,7 +390,7 @@ namespace SGAmod
 					ammount = Main.rand.Next((int)(item.Y * (uncraftChance / 100f)), item.Y + 1);
 
 				if (Main.rand.Next(0, 100) < uncraftChance)
-					player.QuickSpawnItem(item.X, ammount);
+					player.QuickSpawnItem(null, item.X, ammount);
 			}
 			targetitem.stack -= stackSize;
 			if (targetitem.stack < 1)
@@ -393,7 +400,7 @@ namespace SGAmod
 
 		public static void DrawItem(SpriteBatch spriteBatch,int itemType,Vector2 position,int stackNumber=0)
         {
-			Texture2D tex = Main.itemTexture[itemType];
+			Texture2D tex = Terraria.GameContent.TextureAssets.Item[itemType].Value;
 
 			DrawAnimation anim = Main.itemAnimations[itemType];
 			int frame = 0;
@@ -410,12 +417,12 @@ namespace SGAmod
 			Item anitem = new Item();
 			anitem.SetDefaults(itemType);
 
-			spriteBatch.Draw(tex, position, new Rectangle(0, height * frame, tex.Width, height), anitem.modItem?.GetAlpha(Color.White) ?? Color.White, 0f, size, 1f, SpriteEffects.None, 0);
+			spriteBatch.Draw(tex, position, new Rectangle(0, height * frame, tex.Width, height), anitem.ModItem?.GetAlpha(Color.White) ?? Color.White, 0f, size, 1f, SpriteEffects.None, 0);
 			if (stackNumber > 0)
 			{
 				string str = stackNumber.ToString();
-				Vector2 size2 = Main.fontDeathText.MeasureString(str);
-				spriteBatch.DrawString(Main.fontMouseText, str, position + new Vector2(4, 4), Color.White);
+				//Vector2 size2 = Main.fontDeathText.MeasureString(str); //idk try FontAssets.MouseText
+				//spriteBatch.DrawString(Main.fontMouseText, str, position + new Vector2(4, 4), Color.White);
 			}
 
 		}
@@ -572,7 +579,7 @@ namespace SGAmod
 
 				foreach ((int, int) itemthis in set.itemPairs)
 				{
-					Item.NewItem(where, itemthis.Item1, itemthis.Item2);
+					Item.NewItem(null, where, itemthis.Item1, itemthis.Item2);
 				}
 
 				if (uniqueOnly)
@@ -608,7 +615,7 @@ namespace SGAmod
 				for (int i = 0; i < itemtypes2.Length; i += 1)
 				{
 					if (itemtypes2[i] > 0)
-						Item.NewItem(position, itemtypes[i], itemtypes2[i]);
+						Item.NewItem(null, position, itemtypes[i], itemtypes2[i]);
 				}
 			}
 			else
@@ -616,7 +623,7 @@ namespace SGAmod
 				for (int i = 0; i < itemtypes2.Length; i += 1)
 				{
 					if (itemtypes2[i] > 0)
-						player.QuickSpawnItem(itemtypes[i], itemtypes2[i]);
+						player.QuickSpawnItem(null, itemtypes[i], itemtypes2[i]);
 				}
 			}
 		}
@@ -684,7 +691,7 @@ namespace SGAmod
 					{
 						Main.recipe[j] = Main.recipe[j + 1];
 					}
-					Main.recipe[Recipe.numRecipes - 1] = new Recipe();
+					//Main.recipe[Recipe.numRecipes - 1] = new Recipe();
 					Recipe.numRecipes--;
 					return true;
 				}
@@ -738,15 +745,15 @@ namespace SGAmod
 		{
 			UThrowingPlayer thrownPlayer = player.Throwing();
 
-			player.meleeDamage += damage;
-			player.rangedDamage += damage;
-			player.magicDamage += damage;
-			player.minionDamage += damage;
+			player.GetDamage(DamageClass.Melee) += damage;
+			player.GetDamage(DamageClass.Ranged) += damage;
+			player.GetDamage(DamageClass.Magic) += damage;
+			player.GetDamage(DamageClass.Summon) += damage;
 			thrownPlayer.thrownDamage += damage;
 
-			player.meleeCrit += crit; if (player.meleeCrit < 0) player.meleeCrit = 0;
-			player.rangedCrit += crit; if (player.rangedCrit < 0) player.rangedCrit = 0;
-			player.magicCrit += crit; if (player.magicCrit < 0) player.magicCrit = 0;
+			player.GetCritChance(DamageClass.Melee) += crit; if (player.GetCritChance(DamageClass.Melee) < 0) player.GetCritChance(DamageClass.Melee) = 0;
+			player.GetCritChance(DamageClass.Ranged) += crit; if (player.GetCritChance(DamageClass.Ranged) < 0) player.GetCritChance(DamageClass.Ranged) = 0;
+			player.GetCritChance(DamageClass.Magic) += crit; if (player.GetCritChance(DamageClass.Magic) < 0) player.GetCritChance(DamageClass.Magic) = 0;
 			thrownPlayer.thrownCrit += crit; if (thrownPlayer.thrownCrit < 0) thrownPlayer.thrownCrit = 0;
 			SGAmod.BoostModdedDamage(player, damage, crit);
 		}
@@ -931,7 +938,7 @@ namespace SGAmod
 
 		public static bool NoInvasion(NPCSpawnInfo spawnInfo)
 		{
-			return !spawnInfo.invasion && ((!Main.pumpkinMoon && !Main.snowMoon) || spawnInfo.spawnTileY > Main.worldSurface || Main.dayTime) && (!Main.eclipse || spawnInfo.spawnTileY > Main.worldSurface || !Main.dayTime);
+			return !spawnInfo.Invasion && ((!Main.pumpkinMoon && !Main.snowMoon) || spawnInfo.SpawnTileY > Main.worldSurface || Main.dayTime) && (!Main.eclipse || spawnInfo.SpawnTileY > Main.worldSurface || !Main.dayTime);
 		}
 
 		public static bool BlackListedBuffs(this Player player,int index)
@@ -963,7 +970,7 @@ namespace SGAmod
 
 		public static bool IsConsumablePickup(this Item item)
 		{
-			bool iConsumablePickup = item.modItem != null && item.modItem is IConsumablePickup;
+			bool iConsumablePickup = item.ModItem != null && item.ModItem is IConsumablePickup;
 			return item.type == ItemID.Heart || item.type == ItemID.Star || item.type == ItemID.CandyApple || item.type == ItemID.SoulCake || item.type == ItemID.CandyCane || item.type == ItemID.SugarPlum || item.type == ItemID.NebulaPickup1 || item.type == ItemID.NebulaPickup2 || item.type == ItemID.NebulaPickup3 || iConsumablePickup;
 		}
 
@@ -981,7 +988,7 @@ namespace SGAmod
 				if (ammount >= 1000000)
 					subanditem = new int[] { ItemID.PlatinumCoin, 1000000 };
 
-				int item = Item.NewItem(where, Vector2.Zero, subanditem[0]);
+				int item = Item.NewItem(null, where, Vector2.Zero, subanditem[0]);
 				Main.item[item].velocity = new Vector2(Main.rand.NextFloat(-2f, 2f) * explodespeed, Main.rand.NextFloat(-0.75f, 0.75f) * explodespeed);
 				ammount -= subanditem[1];
 			}
@@ -1037,7 +1044,7 @@ namespace SGAmod
 				{
 					T = 1f;
 				}
-				return PrivateBezierCurve(ControlPoints, 1f - T) + (wind ? new Vector2(T * Main.windSpeed * 128f * Main.maxRaining, 0) : Vector2.Zero);
+				return PrivateBezierCurve(ControlPoints, 1f - T) + (wind ? new Vector2(T * Main.windSpeedCurrent * 128f * Main.maxRaining, 0) : Vector2.Zero);
 			}
 
 			private Vector2 PrivateBezierCurve(Vector2[] bezierPoints, float bezierProgress)
@@ -1065,7 +1072,7 @@ namespace SGAmod
 
 			if (!Main.dayTime)
             {
-				int num23 = (int)(Main.time / 32400.0 * (double)(Main.screenWidth + Main.moonTexture[0].Width * 2)) - Main.moonTexture[0].Width;
+				int num23 = /*(int)(Main.time / 32400.0 * (double)(Main.screenWidth + TextureAssets.Moon[0].Width * 2)) - TextureAssets.Moon[0].Width*/ 0;
 				int num24 = 0;
 
 				if (Main.time < 16200.0)
@@ -1083,9 +1090,9 @@ namespace SGAmod
 
 			}
 
-			float rotation3 = (float)(Main.GlobalTime / 54000.0) * 2f - 7.3f;
+			float rotation3 = (float)(Main.GlobalTimeWrappedHourly / 54000.0) * 2f - 7.3f;
 
-			int num151 = (int)(Main.time / 54000.0 * (double)(Main.screenWidth + Main.sunTexture.Width * 2)) - Main.sunTexture.Width;
+			int num151 = /*(int)(Main.time / 54000.0 * (double)(Main.screenWidth + TextureAssets.Sun.Width * 2)) - TextureAssets.Sun.Width*/ 0;
 			int num150 = 0;
 
 			double num144;
@@ -1163,23 +1170,23 @@ namespace SGAmod
 				{
 					for (int num173 = num171 - num169; num173 <= num171 + num169; num173++)
 					{
-						if (Main.rand.Next(4) != 0 || !(new Vector2(num170 - num172, num171 - num173).Length() < (float)num169) || num172 <= 0 || num172 >= Main.maxTilesX - 1 || num173 <= 0 || num173 >= Main.maxTilesY - 1 || Main.tile[num172, num173] == null || !Main.tile[num172, num173].active())
+						if (Main.rand.Next(4) != 0 || !(new Vector2(num170 - num172, num171 - num173).Length() < (float)num169) || num172 <= 0 || num172 >= Main.maxTilesX - 1 || num173 <= 0 || num173 >= Main.maxTilesY - 1 || Main.tile[num172, num173] == null || !Main.tile[num172, num173].HasTile)
 						{
 							continue;
 						}
 						bool flag3 = false;
-						if (Main.tile[num172, num173].type == 185 && Main.tile[num172, num173].frameY == 18)
+						if (Main.tile[num172, num173].TileType == 185 && Main.tile[num172, num173].TileFrameY == 18)
 						{
-							if (Main.tile[num172, num173].frameX >= 576 && Main.tile[num172, num173].frameX <= 882)
+							if (Main.tile[num172, num173].TileFrameX >= 576 && Main.tile[num172, num173].TileFrameX <= 882)
 							{
 								flag3 = true;
 							}
 						}
-						else if (Main.tile[num172, num173].type == 186 && Main.tile[num172, num173].frameX >= 864 && Main.tile[num172, num173].frameX <= 1170)
+						else if (Main.tile[num172, num173].TileType == 186 && Main.tile[num172, num173].TileFrameX >= 864 && Main.tile[num172, num173].TileFrameX <= 1170)
 						{
 							flag3 = true;
 						}
-						if (flag3 || Main.tileSpelunker[Main.tile[num172, num173].type] || (Main.tileAlch[Main.tile[num172, num173].type] && Main.tile[num172, num173].type != 82))
+						if (flag3 || Main.tileSpelunker[Main.tile[num172, num173].TileType] || (Main.tileAlch[Main.tile[num172, num173].TileType] && Main.tile[num172, num173].TileType != 82))
 						{
 							int num174 = Dust.NewDust(new Vector2(num172 * 16, num173 * 16), 16, 16, 204, 0f, 0f, 150, default(Color), 0.3f);
 							Main.dust[num174].fadeIn = 0.75f;
@@ -1290,7 +1297,8 @@ namespace SGAmod
 					rotation2 = (float)Math.Atan2((double)projPosY, (double)projPosX) - 1.57f;
 					Microsoft.Xna.Framework.Color color2 = Lighting.GetColor((int)value.X / 16, (int)(value.Y / 16f), Color.AliceBlue);
 
-					Main.spriteBatch.Draw(Main.fishingLineTexture, new Vector2(value.X - Main.screenPosition.X + (float)Main.fishingLineTexture.Width * 0.5f, value.Y - Main.screenPosition.Y + (float)Main.fishingLineTexture.Height * 0.5f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, Main.fishingLineTexture.Width, (int)num)), color2, rotation2, new Vector2((float)Main.fishingLineTexture.Width * 0.5f, 0f), 1f, SpriteEffects.None, 0f);
+					//Idk why the Width and Height just don't work
+					//Main.spriteBatch.Draw(TextureAssets.FishingLine, new Vector2(value.X - Main.screenPosition.X + (float)TextureAssets.FishingLine.Width * 0.5f, value.Y - Main.screenPosition.Y + (float)TextureAssets.FishingLine.Height * 0.5f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, TextureAssets.FishingLine.Width, (int)num)), color2, rotation2, new Vector2((float)TextureAssets.FishingLine.Width * 0.5f, 0f), 1f, SpriteEffects.None, 0f);
 				}
 			}
 
@@ -1497,8 +1505,8 @@ namespace SGAmod
 
 
 			float angleoffset = MathHelper.PiOver2;
-			Texture2D armTex = Main.extraTexture[15];
-			Texture2D TestTex = Main.extraTexture[19];
+			Texture2D armTex = TextureAssets.Extra[15].Value;
+			Texture2D TestTex = TextureAssets.Extra[19].Value;
 
 			Vector2 origin = new Vector2(armTex.Width / 2f, armTex.Height);
 
@@ -1682,7 +1690,7 @@ namespace SGAmod
 			}
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor) //Warning for all PreDraw! Spritebatch was removed as a parameter
 		{
 			return false;
 		}
@@ -1711,11 +1719,11 @@ namespace SGAmod
 			{
 				if (!Filters.Scene["SGAmod:Shockwave"].IsActive() || important)
 				{
-					int prog = Projectile.NewProjectile(position2, Vector2.Zero, SGAmod.Instance.ProjectileType("RippleBoom"), 0, 0f);
+					int prog = Projectile.NewProjectile(null, position2, Vector2.Zero, SGAmod.Instance.Find<ModProjectile>("RippleBoom").Type, 0, 0f);
 					Projectile proj = Main.projectile[prog];
 					if (proj != null && proj.active)
 					{
-						RippleBoom modproj = proj.modProjectile as RippleBoom;
+						RippleBoom modproj = proj.ModProjectile as RippleBoom;
 						modproj.rippleSize = rippleSize;
 						modproj.rippleCount = rippleCount;
 						modproj.expandRate = expandRate;
@@ -1737,22 +1745,22 @@ namespace SGAmod
 
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.friendly = true;
-			projectile.alpha = 0;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 200;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.friendly = true;
+			Projectile.alpha = 0;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 200;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
 		}
 
 		public override void AI()
 		{
 			//float progress = (maxtime - (float)projectile.timeLeft);
-			float progress = ((maxtime - (float)base.projectile.timeLeft) / 60f) * size;
-			Filters.Scene["SGAmod:Shockwave"].GetShader().UseProgress(progress).UseOpacity(100f * ((float)base.projectile.timeLeft / (float)maxtime));
-			projectile.localAI[1] += 1f;
+			float progress = ((maxtime - (float)base.Projectile.timeLeft) / 60f) * size;
+			Filters.Scene["SGAmod:Shockwave"].GetShader().UseProgress(progress).UseOpacity(100f * ((float)base.Projectile.timeLeft / (float)maxtime));
+			Projectile.localAI[1] += 1f;
 		}
 
 		public override void Kill(int timeLeft)

@@ -9,7 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +32,7 @@ using SGAmod.Dimensions.NPCs;
 using SGAmod.NPCs;
 using SGAmod.NPCs.Sharkvern;
 using SGAmod.NPCs.Wraiths;
+using Terraria.Audio;
 
 namespace SGAmod.Dimensions
 {
@@ -55,8 +56,8 @@ namespace SGAmod.Dimensions
         public override void UpdateBiomeVisuals()
         {
             //TheProgrammer
-            player.ManageSpecialBiomeVisuals("SGAmod:LimboSky", (SGAPocketDim.WhereAmI == typeof(LimboDim) || SGAPocketDim.WhereAmI == typeof(Limborinth)) ? true : false, player.Center);
-            player.ManageSpecialBiomeVisuals("SGAmod:SpaceSky", (SGAPocketDim.WhereAmI == typeof(SpaceDim)) ? true : false, player.Center);
+            Player.ManageSpecialBiomeVisuals("SGAmod:LimboSky", (SGAPocketDim.WhereAmI == typeof(LimboDim) || SGAPocketDim.WhereAmI == typeof(Limborinth)) ? true : false, Player.Center);
+            Player.ManageSpecialBiomeVisuals("SGAmod:SpaceSky", (SGAPocketDim.WhereAmI == typeof(SpaceDim)) ? true : false, Player.Center);
         }
  
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
@@ -83,36 +84,36 @@ namespace SGAmod.Dimensions
         {
             int count = 0;
             if (SGAPocketDim.WhereAmI == typeof(LimboDim))
-                count = (int)(player.CountItem(ModContent.ItemType<Entrophite>(), 1000) / 15f);
+                count = (int)(Player.CountItem(ModContent.ItemType<Entrophite>(), 1000) / 15f);
             heartBeat += count;
 
-            if (heartBeat > 10000 && !player.dead)
+            if (heartBeat > 10000 && !Player.dead)
             {
                 if (SGAPocketDim.WhereAmI == typeof(LimboDim))
                 {
                     LimboDim.PlayWarning();
                 }
 
-                SoundEffectInstance sound = Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Heartbeat").WithVolume(Math.Min(0.25f + (count / 250f), 1f)).WithPitchVariance(.05f), player.Center);
+                SoundEffectInstance sound = SoundEngine.PlaySound(Mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Heartbeat").WithVolume(Math.Min(0.25f + (count / 250f), 1f)).WithPitchVariance(.05f), Player.Center);
                 if (sound != null)
                 {
                     sound.Pitch = -0.75f + (float)Math.Min(Math.Atan(count / 25f), 1.7f);
                 }
 
-                NullWatcher.DoAwarenessChecks(600 + count * 5, false, true, player.Center);
+                NullWatcher.DoAwarenessChecks(600 + count * 5, false, true, Player.Center);
                 heartBeat = 0;
                 staticHeartBeat = 30;
                 staticHeartRate = Math.Min(count / 500f, 0.04f);
             }
-            if (!Main.dedServ && Main.LocalPlayer == player)
+            if (!Main.dedServ && Main.LocalPlayer == Player)
             {
                 staticHeartBeat -= 1;
             }
 
             noLight = false;
             noLightGrow = Math.Max(noLightGrow - 1, 0);
-            if (!(player.HasBuff(BuffID.Darkness) || player.HasBuff(BuffID.Blackout)))
-                lightSize = Math.Min(lightSize + (noLightGrow > 0 ? 0 : lightGrowRate), 3000);// 2000+(int)(Math.Sin(Main.GlobalTime/2f)*1000);
+            if (!(Player.HasBuff(BuffID.Darkness) || Player.HasBuff(BuffID.Blackout)))
+                lightSize = Math.Min(lightSize + (noLightGrow > 0 ? 0 : lightGrowRate), 3000);// 2000+(int)(Math.Sin(Main.GlobalTimeWrappedHourly/2f)*1000);
             lightGrowRate = 5;
         }
 
@@ -137,11 +138,11 @@ namespace SGAmod.Dimensions
                 wasDead = false;
                 if (Items.TheWholeExperience.CheckHigherTier(true))
                 {
-                    player.Center = player.lastDeathPostion;
+                    Player.Center = Player.lastDeathPostion;
                 }
             }
             if (!noLight)
-                SGAmod.PostDraw.Add(new PostDrawCollection(new Vector3(player.Center.X, player.Center.Y, lightSize)));
+                SGAmod.PostDraw.Add(new PostDrawCollection(new Vector3(Player.Center.X, Player.Center.Y, lightSize)));
         }
 
         public static bool Spacey => SGAPocketDim.WhereAmI != null && SGAPocketDim.WhereAmI == typeof(SpaceDim);
@@ -151,7 +152,7 @@ namespace SGAmod.Dimensions
             //if (SGAWorld.CutsceneActive)
             if (SpaceBoss.film.IsActive || CaliburnGuardianHardmode.film.IsActive)
             {
-                player.AddBuff(ModContent.BuffType<Buffs.InvincibleBuff>(), 2);
+                Player.AddBuff(ModContent.BuffType<Buffs.InvincibleBuff>(), 2);
             }
 
 
@@ -163,11 +164,11 @@ namespace SGAmod.Dimensions
 
                 SGAmod.anysubworld = SGAPocketDim.WhereAmI != null;
 
-                if (Main.netMode != NetmodeID.Server && !Main.dedServ && Main.LocalPlayer == player)
+                if (Main.netMode != NetmodeID.Server && !Main.dedServ && Main.LocalPlayer == Player)
                 {
-                    Projectile.NewProjectile(Main.screenPosition + new Vector2(Main.screenWidth, Main.screenHeight) / 2, Vector2.Zero, mod.ProjectileType("DrawOverride"), 0, 0f);
+                    Projectile.NewProjectile(Main.screenPosition + new Vector2(Main.screenWidth, Main.screenHeight) / 2, Vector2.Zero, Mod.Find<ModProjectile>("DrawOverride").Type, 0, 0f);
                     if (spacey)
-                    Projectile.NewProjectile(Main.screenPosition + new Vector2(Main.screenWidth, Main.screenHeight) / 2, Vector2.Zero, mod.ProjectileType("AsteriodDraw"), 0, 0f);
+                    Projectile.NewProjectile(Main.screenPosition + new Vector2(Main.screenWidth, Main.screenHeight) / 2, Vector2.Zero, Mod.Find<ModProjectile>("AsteriodDraw").Type, 0, 0f);
                 }
 
                 if (SGAPocketDim.WhereAmI != null)
@@ -179,21 +180,21 @@ namespace SGAmod.Dimensions
                         int limit = sub.LimitPlayers;
                         if (limit % 16 == 0 && limit > 0)
                         {
-                            player.AddBuff(BuffID.NoBuilding, 2);
+                            Player.AddBuff(BuffID.NoBuilding, 2);
                         }
-                        player.GetModPlayer<SGAPlayer>().noModTeleport = true;
+                        Player.GetModPlayer<SGAPlayer>().noModTeleport = true;
 
                         if (sub.GetType() == typeof(SpaceDim))
                         {
-                            Point loc = new Point((int)(player.Center.X) >> 4, (int)(player.Center.Y) >> 4 );
+                            Point loc = new Point((int)(Player.Center.X) >> 4, (int)(Player.Center.Y) >> 4 );
                             if (WorldGen.InWorld(loc.X, loc.Y))
                             {
                                 Tile tilez = Framing.GetTileSafely(loc.X, loc.Y);
                                 if (tilez != null)
                                 {
-                                    if (tilez.wall >= 0)
+                                    if (tilez.WallType >= 0)
                                     {
-                                        ModWall wallz = WallLoader.GetWall(tilez.wall);
+                                        ModWall wallz = WallLoader.GetWall(tilez.WallType);
                                         if (wallz != null && wallz is IBreathableWallType)
                                         {
                                             goto movingOn;
@@ -201,7 +202,7 @@ namespace SGAmod.Dimensions
                                     }
                                 }
                             }
-                            player.AddBuff(ModContent.BuffType<SharkvernDrown>(), 3);
+                            Player.AddBuff(ModContent.BuffType<SharkvernDrown>(), 3);
                         }
                     }
 
@@ -210,29 +211,29 @@ namespace SGAmod.Dimensions
                     if (spacey)
                     {
                         SLWorld.noReturn = true;
-                        player.gravity = 0.12f;
+                        Player.gravity = 0.12f;
                         if (spacevar < 1)//Arriving in Space now
                         {
-                            player.velocity = new Vector2(0, -16);
-                            player.Center = new Vector2(spaceX * (Main.maxTilesX * 16f), (Main.maxTilesY * 16f) - (16 * 50));
+                            Player.velocity = new Vector2(0, -16);
+                            Player.Center = new Vector2(spaceX * (Main.maxTilesX * 16f), (Main.maxTilesY * 16f) - (16 * 50));
                         }
-                        if (player.velocity.Y > 0 && player.Center.Y > (Main.maxTilesY * 16f) - (16 * 50) && spacevar == 1)
+                        if (Player.velocity.Y > 0 && Player.Center.Y > (Main.maxTilesY * 16f) - (16 * 50) && spacevar == 1)
                         {
                             //SGAPocketDim.EnterSubworld(mod.GetType().Name + "_SpaceDim");
                             SGAPocketDim.Exit();
                         }
                         targetedAsteriod = null;
 
-                        if (player.HeldItem.pick > 0)
+                        if (Player.HeldItem.pick > 0)
                         {
-                            List<Projectile> allAsteriods2 = Main.projectile.Where(testby => testby.active && testby?.modProjectile is IMineableAsteriod).ToList();
+                            List<Projectile> allAsteriods2 = Main.projectile.Where(testby => testby.active && testby?.ModProjectile is IMineableAsteriod).ToList();
                             List<Projectile> allAsteriods = new List<Projectile>();
                             if (allAsteriods2.Count > 0)
                             {
                                 foreach (Projectile proj in allAsteriods2)
                                 {
-                                    double length3 = Math.Sqrt((Math.Abs(proj.Center.X - player.Center.X) * Math.Abs(proj.Center.X - player.Center.X)) + (Math.Abs(proj.Center.Y - player.Center.Y) * Math.Abs(proj.Center.Y - player.Center.Y)));
-                                    if (length3 < (Math.Sqrt(Player.tileRangeX * Player.tileRangeY) + player.blockRange) * 48)
+                                    double length3 = Math.Sqrt((Math.Abs(proj.Center.X - Player.Center.X) * Math.Abs(proj.Center.X - Player.Center.X)) + (Math.Abs(proj.Center.Y - Player.Center.Y) * Math.Abs(proj.Center.Y - Player.Center.Y)));
+                                    if (length3 < (Math.Sqrt(Player.tileRangeX * Player.tileRangeY) + Player.blockRange) * 48)
                                     {
                                         allAsteriods.Add(proj);
                                     }
@@ -241,7 +242,7 @@ namespace SGAmod.Dimensions
                                 Vector2 from = Main.MouseWorld;
 
                                 if (Main.SmartCursorEnabled)
-                                    from = player.MountedCenter+Vector2.Normalize(from)*16f;
+                                    from = Player.MountedCenter+Vector2.Normalize(from)*16f;
 
                                 //Main.NewText(allAsteriods.Count);
                                 allAsteriods = allAsteriods.OrderBy(testby => ((Math.Abs(from.X - testby.Center.X) * Math.Abs(from.X - testby.Center.X)) + (Math.Abs(from.Y - testby.Center.Y) * Math.Abs(from.Y - testby.Center.Y)))
@@ -251,7 +252,7 @@ namespace SGAmod.Dimensions
                                 if (allAsteriods.Count > 0)
                                 {
 
-                                    MineableAsteriod targetedasteriod = allAsteriods[0].modProjectile as MineableAsteriod;
+                                    MineableAsteriod targetedasteriod = allAsteriods[0].ModProjectile as MineableAsteriod;
 
                                     //double length2 = Math.Sqrt(Math.Abs(targetedasteriod.projectile.Center.X - player.Center.X) * Math.Abs(targetedasteriod.projectile.Center.Y - player.Center.Y));
 
@@ -275,36 +276,36 @@ namespace SGAmod.Dimensions
                 {
                     if (spacevar > 0)//dropping out of Space
                     {
-                        player.Center = new Vector2(spaceX * (Main.maxTilesX * 16f), 48);
-                        player.velocity = new Vector2(0, 16);
+                        Player.Center = new Vector2(spaceX * (Main.maxTilesX * 16f), 48);
+                        Player.velocity = new Vector2(0, 16);
                     }
 
-                    if (player.wings > 0 && player.velocity.Y < 0 && player.Center.Y < (16*50) && spacevar == 0 && player.controlJump && !IdgNPC.bossAlive)
+                    if (Player.wings > 0 && Player.velocity.Y < 0 && Player.Center.Y < (16*50) && spacevar == 0 && Player.controlJump && !IdgNPC.bossAlive)
                     {
                         SpaceDim.postMoonLord = NPC.downedMoonlord;
-                        SGAPocketDim.EnterSubworld(mod.GetType().Name + "_SpaceDim");
+                        SGAPocketDim.EnterSubworld(Mod.GetType().Name + "_SpaceDim");
                     }
                     spacevar = 0;
                 }
 
-                spaceX = player.Center.X / (Main.maxTilesX * 16f);
+                spaceX = Player.Center.X / (Main.maxTilesX * 16f);
 
                 if (SGAPocketDim.WhereAmI == typeof(LimboDim))
                 {
-                    player.AddBuff(Idglib.Instance.BuffType("LimboFading"), 1);
+                    Player.AddBuff(Idglib.Instance.Find<ModBuff>("LimboFading").Type, 1);
                     if (enterlimbo > 0)
                     {
                         enterlimbo = -6;
                     }
                     if (enterlimbo == -5)
                     {
-                        Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/crack"), new Vector2(-1, -1));
-                        player.Center = new Vector2(Main.rand.Next(200, Main.maxTilesX - 400) * 16, 64);
+                        SoundEngine.PlaySound(Mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/crack"), new Vector2(-1, -1));
+                        Player.Center = new Vector2(Main.rand.Next(200, Main.maxTilesX - 400) * 16, 64);
                     }
                     if (enterlimbo > -2)
                     {
                         enterlimbo = -2;
-                        if (Framing.GetTileSafely((int)(player.Center.X / 16f), (int)(player.Center.Y / 16f)).wall == mod.WallType("NullWall") && DimDingeonsWorld.ancientLockedFabric)
+                        if (Framing.GetTileSafely((int)(Player.Center.X / 16f), (int)(Player.Center.Y / 16f)).WallType == Mod.Find<ModWall>("NullWall") .Type&& DimDingeonsWorld.ancientLockedFabric)
                         {
                             enterlimbo = -6;
 
@@ -313,20 +314,20 @@ namespace SGAmod.Dimensions
                 }
                 if (SGAPocketDim.WhereAmI == typeof(Limborinth))
                 {
-                    if (Framing.GetTileSafely((int)(player.Center.X / 16f), (int)(player.Center.Y / 16f)).wall == mod.WallType("NullWallBossArena"))
+                    if (Framing.GetTileSafely((int)(Player.Center.X / 16f), (int)(Player.Center.Y / 16f)).WallType == Mod.Find<ModWall>("NullWallBossArena").Type)
                     {
                         if (NullBossArenaSpot == default)
                         {
                             Idglib.Chat("There's no turning back now...", 120, 15, 15);
                         }
-                        NullBossArenaSpot = player.Center;
+                        NullBossArenaSpot = Player.Center;
                     }
                     else
                     {
                         if (NullBossArenaSpot != default)
                         {
-                            player.velocity = Vector2.Normalize(NullBossArenaSpot - player.Center)*12f;
-                            player.Center = NullBossArenaSpot;
+                            Player.velocity = Vector2.Normalize(NullBossArenaSpot - Player.Center)*12f;
+                            Player.Center = NullBossArenaSpot;
                         }
                     }
                 }
@@ -487,7 +488,7 @@ namespace SGAmod.Dimensions
             //base.Update(item, ref gravity, ref maxFallSpeed);
         }
 
-        public override bool UseItem(Item item, Player player)
+        public override bool? UseItem(Item item, Player player)
         {
             if (item.pick > 0 && player.itemAnimation == (int)(player.itemAnimationMax*0.75))
             {
@@ -639,7 +640,7 @@ namespace SGAmod.Dimensions
 
         public virtual bool IsSpike(int it,int type = 0)
         {
-            bool match = (it == SGAmod.Instance.TileType("UnmanedBarTile") || it == SGAmod.Instance.TileType("NoviteBarTile") || it == SGAmod.Instance.TileType("BiomassBarTile") || it == SGAmod.Instance.TileType("VirulentBarTile"));
+            bool match = (it == SGAmod.Instance.Find<ModTile>("UnmanedBarTile") .Type|| it == SGAmod.Instance.Find<ModTile>("NoviteBarTile") .Type|| it == SGAmod.Instance.Find<ModTile>("BiomassBarTile") .Type|| it == SGAmod.Instance.Find<ModTile>("VirulentBarTile").Type);
             return ((it == TileID.Spikes || it == TileID.WoodenSpikes) && type == 1) || it == TileID.Cobweb || it == TileID.CorruptThorns || it == TileID.CrimtaneThorns || it == TileID.JungleThorns || it == TileID.BreakableIce || it == TileID.MagicalIceBlock || it == TileID.WaterCandle || it == TileID.Torches || it == TileID.LargePiles || it == TileID.MagicalIceBlock || it == TileID.MetalBars || match;
         }
 
@@ -743,7 +744,7 @@ namespace SGAmod.Dimensions
                 {
                     if (InsideMap(x, y))
                     {
-                        if (Main.tile[x, y].active())
+                        if (Main.tile[x, y].HasTile)
                         {
                             tilecount += 1;
                         }
@@ -798,7 +799,7 @@ namespace SGAmod.Dimensions
             Vector2 size = new Vector2(60, 60);
             foreach (DarkSector sector in DimDingeonsWorld.darkSectors)
             {
-                sector.Draw(size, ModContent.GetTexture("SGAmod/Glow"));
+                sector.Draw(size, ModContent.Request<Texture2D>("SGAmod/Glow"));
             }
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, null, Main.GameViewMatrix.ZoomMatrix);
@@ -924,9 +925,9 @@ namespace SGAmod.Dimensions
                         SpaceBoss boss = null;
 
                         if (bossg.Length > 0)
-                            boss = (SpaceBoss)(bossg[0].modNPC);
+                            boss = (SpaceBoss)(bossg[0].ModNPC);
 
-                        if (boss != null && boss.npc.ai[3] > 1)
+                        if (boss != null && boss.NPC.ai[3] > 1)
                         {
                             Player locply = Main.LocalPlayer;
                             spriteBatch.End();

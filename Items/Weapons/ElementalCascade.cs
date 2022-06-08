@@ -9,6 +9,7 @@ using SGAmod.Items.Tools;
 using Idglibrary;
 using SGAmod.Buffs;
 using SGAmod.NPCs.Hellion;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -19,47 +20,39 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Elemental Cascade");
 			Tooltip.SetDefault("Unleashes 4 elemental beams in cardinal directions towards the mouse cursor, swapping elements with each fire\nThe beams bounce off walls and are non solid until they stop moving, and deal different debuffs to enemies");
-			Item.staff[item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
+			Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 50;
-			item.magic = true;
-			item.mana = 15;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 45;
-			item.useAnimation = 45;
-			item.useStyle = 5;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = 6;
-			item.UseSound = SoundID.Item78;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("UnmanedBolt");
-			item.shootSpeed = 4f;
+			Item.damage = 50;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 15;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 45;
+			Item.useAnimation = 45;
+			Item.useStyle = 5;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = 6;
+			Item.UseSound = SoundID.Item78;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("UnmanedBolt").Type;
+			Item.shootSpeed = 4f;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 5);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 5);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 5);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 5);
-			recipe.AddIngredient(ItemID.SpellTome, 1);
-			recipe.AddTile(TileID.Bookcases);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Fridgeflame"), 5).AddIngredient(mod.ItemType("CryostalBar"), 5).AddIngredient(mod.ItemType("VirulentBar"), 5).AddIngredient(mod.ItemType("OmniSoul"), 5).AddIngredient(ItemID.SpellTome, 1).AddTile(TileID.Bookcases).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			projectiletype += 1;
 			projectiletype = projectiletype % 4;
-			type = mod.ProjectileType("ElementalCascadeShot");
+			type = Mod.Find<ModProjectile>("ElementalCascadeShot").Type;
 
 			for (int i = 0; i < 4; i += 1)
 			{
@@ -97,46 +90,39 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Lunar Cascade");
 			Tooltip.SetDefault("Unleashes several beams in a complete circle around the player that travel far and effectively melt enemies\nThe beams bounce off walls and are non solid until they stop moving\nBeams deal different powerful debuffs to enemies");
-			Item.staff[item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
+			Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 60;
-			item.magic = true;
-			item.mana = 30;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 5;
-			item.useAnimation = 50;
-			item.useStyle = 5;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = 10;
-			item.UseSound = SoundID.Item78;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("UnmanedBolt");
-			item.shootSpeed = 8f;
+			Item.damage = 60;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 30;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 5;
+			Item.useAnimation = 50;
+			Item.useStyle = 5;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = 10;
+			Item.UseSound = SoundID.Item78;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("UnmanedBolt").Type;
+			Item.shootSpeed = 8f;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("ElementalCascade"), 1);
-			recipe.AddRecipeGroup("Fragment", 6);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 8);
-			recipe.AddIngredient(ItemID.LunarBar, 6);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ElementalCascade"), 1).AddRecipeGroup("Fragment", 6).AddIngredient(mod.ItemType("PrismalBar"), 8).AddIngredient(ItemID.LunarBar, 6).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			projectiletype += 1;
 			projectiletype = projectiletype % 4;
-			type = mod.ProjectileType("LunarCascadeShot");
+			type = Mod.Find<ModProjectile>("LunarCascadeShot").Type;
 
 			Vector2 speez = new Vector2(speedX, speedY);
 			speez = speez.RotatedBy(MathHelper.ToRadians((float)player.itemAnimation * (360f / player.itemAnimationMax)));
@@ -170,40 +156,32 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Hellion's Cascade");
 			Tooltip.SetDefault("Unleashes several beams in a complete spiral around the player that travel far, absolutely melting enemies\nThe beams pass through walls and are non solid until they stop moving\nBeams deal different very powerful debuffs to enemies");
-			Item.staff[item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
+			Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 500;
-			item.magic = true;
-			item.mana = 100;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 90;
-			item.useAnimation = 90;
-			item.useStyle = 5;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = 11;
-			item.UseSound = SoundID.Item84;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("HellionCascadeShotPlayer");
-			item.shootSpeed = 9f;
+			Item.damage = 500;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 100;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 90;
+			Item.useAnimation = 90;
+			Item.useStyle = 5;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = 11;
+			Item.UseSound = SoundID.Item84;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("HellionCascadeShotPlayer").Type;
+			Item.shootSpeed = 9f;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new HellionItems(mod);
-			recipe.AddIngredient(mod.ItemType("LunarCascade"), 1);
-			recipe.AddRecipeGroup("Fragment", 10);
-			recipe.AddIngredient(mod.ItemType("ByteSoul"), 100);
-			//recipe.AddIngredient(mod.ItemType("HellionSummon"), 1);
-			recipe.AddIngredient(mod.ItemType("DrakeniteBar"), 10);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("LunarCascade"), 1).AddRecipeGroup("Fragment", 10).AddIngredient(mod.ItemType("ByteSoul"), 100).AddIngredient(mod.ItemType("DrakeniteBar"), 10).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -250,21 +228,21 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0.25f;
-			projectile.width = 24;
-			projectile.timeLeft = 400;
-			projectile.height = 24;
-			projectile.extraUpdates = 1;
-			projectile.magic = true;
-			projectile.tileCollide = true;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = 10;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0.25f;
+			Projectile.width = 24;
+			Projectile.timeLeft = 400;
+			Projectile.height = 24;
+			Projectile.extraUpdates = 1;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.tileCollide = true;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 10;
 			//buffs = new int[4] { BuffID.Daybreak, mod.BuffType("EverlastingSuffering"), mod.BuffType("AcidBurn"), mod.BuffType("MoonLightCurse") };
 			colors = new Color[4] { Color.Orange, Color.Purple, Color.LimeGreen, Color.Yellow };
-			buffs = new int[4] { mod.BuffType("ThermalBlaze"), BuffID.ShadowFlame, BuffID.CursedInferno, BuffID.Ichor};
+			buffs = new int[4] { Mod.Find<ModBuff>("ThermalBlaze").Type, BuffID.ShadowFlame, BuffID.CursedInferno, BuffID.Ichor};
 		}
 
 	}
@@ -285,34 +263,34 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0.25f;
-			projectile.width = 24;
-			projectile.timeLeft = 1000;
-			projectile.height = 24;
-			projectile.extraUpdates = 3;
-			projectile.magic = true;
-			projectile.tileCollide = false;
-			projectile.usesIDStaticNPCImmunity = true;
-			projectile.idStaticNPCHitCooldown = 10;
-			buffs = new int[4] { BuffID.Daybreak, mod.BuffType("EverlastingSuffering"), mod.BuffType("AcidBurn"), mod.BuffType("MoonLightCurse") };
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0.25f;
+			Projectile.width = 24;
+			Projectile.timeLeft = 1000;
+			Projectile.height = 24;
+			Projectile.extraUpdates = 3;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.tileCollide = false;
+			Projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 10;
+			buffs = new int[4] { BuffID.Daybreak, Mod.Find<ModBuff>("EverlastingSuffering").Type, Mod.Find<ModBuff>("AcidBurn").Type, Mod.Find<ModBuff>("MoonLightCurse") .Type};
 		}
 
 		public override void AI()
 		{
-			if (projectile.velocity.Length() > 0)
+			if (Projectile.velocity.Length() > 0)
 			{
 				if (whereat == null)
 				{
-					whereat = Main.player[projectile.owner].Center;
+					whereat = Main.player[Projectile.owner].Center;
 				}
-				projectile.ai[1] *= 0.990f;
-				float ogspeed = projectile.velocity.Length();
-				projectile.velocity=projectile.velocity.RotatedBy(MathHelper.ToRadians(projectile.ai[1]), whereat);
-				projectile.velocity.Normalize();
-				projectile.velocity *= ogspeed;
+				Projectile.ai[1] *= 0.990f;
+				float ogspeed = Projectile.velocity.Length();
+				Projectile.velocity=Projectile.velocity.RotatedBy(MathHelper.ToRadians(Projectile.ai[1]), whereat);
+				Projectile.velocity.Normalize();
+				Projectile.velocity *= ogspeed;
 			}
 			base.AI();
 		}
@@ -336,15 +314,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 1000;
-			projectile.light = 0.25f;
-			projectile.width = 24;
-			projectile.timeLeft = 60 * 3;
-			projectile.height = 24;
-			projectile.magic = true;
-			projectile.tileCollide = true;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 1000;
+			Projectile.light = 0.25f;
+			Projectile.width = 24;
+			Projectile.timeLeft = 60 * 3;
+			Projectile.height = 24;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.tileCollide = true;
 		}
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -363,7 +341,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			target.AddBuff(buffs[(int)projectile.ai[0]],bufftime);
+			target.AddBuff(buffs[(int)Projectile.ai[0]],bufftime);
 			/*if (this.GetType() == typeof(LunarCascadeShot))
 			{
 				target.immune[projectile.owner] -= 5;
@@ -372,20 +350,20 @@ namespace SGAmod.Items.Weapons
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
 		{
-			target.AddBuff(buffs[(int)projectile.ai[0]],bufftime);
+			target.AddBuff(buffs[(int)Projectile.ai[0]],bufftime);
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			Texture2D texture = SGAmod.ExtraTextures[96];
-			float fadin = MathHelper.Clamp(1f-((float)projectile.timeLeft-stopmoving) / fadeinouttime, 0.1f,0.75f);
-			if (projectile.timeLeft<(int)fadeinouttime)
-				fadin = ((float)projectile.timeLeft/ fadeinouttime) *0.75f;
+			float fadin = MathHelper.Clamp(1f-((float)Projectile.timeLeft-stopmoving) / fadeinouttime, 0.1f,0.75f);
+			if (Projectile.timeLeft<(int)fadeinouttime)
+				fadin = ((float)Projectile.timeLeft/ fadeinouttime) *0.75f;
 			for (int i = 0; i < oldPos.Count; i += 1)
 			{
-				Color thecolor = colors[(int)projectile.ai[0]];
+				Color thecolor = colors[(int)Projectile.ai[0]];
 			if (GetType()==typeof(HellionCascadeShot) || GetType() == typeof(HellionCascadeShot2) || GetType() == typeof(HellionCascadeShotPlayer))
-				thecolor = Main.hslToRgb((((i+ projectile.ai[0]*26f)/80f) + (-Main.GlobalTime / 0.6f))% 1f, 0.85f,0.7f);
+				thecolor = Main.hslToRgb((((i+ Projectile.ai[0]*26f)/80f) + (-Main.GlobalTimeWrappedHourly / 0.6f))% 1f, 0.85f,0.7f);
 				Vector2 drawPos = oldPos[i] - Main.screenPosition;
 				spriteBatch.Draw(texture, drawPos, null, Color.Lerp(lightColor, thecolor, 0.75f)* fadin, 1, new Vector2(texture.Width / 2f, texture.Height / 2f), new Vector2(0.4f, 0.4f), SpriteEffects.None, 0f);
 			}
@@ -394,14 +372,14 @@ namespace SGAmod.Items.Weapons
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.velocity.Length() > 0f || projectile.timeLeft < fadeinouttime)
+			if (Projectile.velocity.Length() > 0f || Projectile.timeLeft < fadeinouttime)
 				return false;
 			return base.CanHitNPC(target);
 		}
 
 		public override bool CanHitPlayer(Player target)
 		{
-			if (projectile.velocity.Length()>0f || projectile.timeLeft < fadeinouttime)
+			if (Projectile.velocity.Length()>0f || Projectile.timeLeft < fadeinouttime)
 			return false;
 			return base.CanHitPlayer(target);
 		}
@@ -415,14 +393,14 @@ namespace SGAmod.Items.Weapons
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			{
-				Main.PlaySound(SoundID.Item10, projectile.Center);
-				if (projectile.velocity.X != oldVelocity.X)
+				SoundEngine.PlaySound(SoundID.Item10, Projectile.Center);
+				if (Projectile.velocity.X != oldVelocity.X)
 				{
-					projectile.velocity.X = -oldVelocity.X;
+					Projectile.velocity.X = -oldVelocity.X;
 				}
-				if (projectile.velocity.Y != oldVelocity.Y)
+				if (Projectile.velocity.Y != oldVelocity.Y)
 				{
-					projectile.velocity.Y = -oldVelocity.Y;
+					Projectile.velocity.Y = -oldVelocity.Y;
 				}
 			}
 			return false;
@@ -430,13 +408,13 @@ namespace SGAmod.Items.Weapons
 
 		public override void AI()
 		{
-			if (projectile.timeLeft < stopmoving+ (fadeinouttime/2))
+			if (Projectile.timeLeft < stopmoving+ (fadeinouttime/2))
 			{
-				projectile.velocity = default(Vector2);
+				Projectile.velocity = default(Vector2);
 			}
 			else
 			{
-				oldPos.Add(projectile.Center);
+				oldPos.Add(Projectile.Center);
 			}
 
 

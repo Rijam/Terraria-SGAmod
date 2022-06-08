@@ -12,19 +12,19 @@ namespace SGAmod.Projectiles
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sunbringer Flare");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 		public override void SetDefaults()
 		{
-            projectile.CloneDefaults(163);
+            Projectile.CloneDefaults(163);
 			//projectile.width = 30;
 			//projectile.height = 30;
 			//projectile.aiStyle = 1;
 			//projectile.friendly = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 400;
+			Projectile.timeLeft = 400;
 		}
        // public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
        // {
@@ -32,7 +32,7 @@ namespace SGAmod.Projectiles
         //}
 			public override void OnHitNPC(NPC n, int damage, float knockback, bool crit)
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 			n.AddBuff(189, 4*60);
 		}
 

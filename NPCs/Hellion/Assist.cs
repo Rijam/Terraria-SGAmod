@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.Utilities;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Terraria.ModLoader;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
@@ -56,7 +56,7 @@ namespace SGAmod.NPCs.Hellion
 					{
 						for (int j = num2 - 20; j < num2 + 20; j++)
 						{
-							if (Main.tile[i, j].active() && Main.tile[i, j].type == 237 && Main.tile[i, j].frameX == 18 && Main.tile[i, j].frameY == 0)
+							if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == 237 && Main.tile[i, j].TileFrameX == 18 && Main.tile[i, j].TileFrameY == 0)
 							{
 								num3 = i;
 								num4 = j;
@@ -170,20 +170,20 @@ namespace SGAmod.NPCs.Hellion
 						{
 							int num20 = Main.rand.Next(num11, num12);
 							int num21 = Main.rand.Next(num13, num14);
-							if (Main.tile[num20, num21].nactive() && Main.tileSolid[(int)Main.tile[num20, num21].type])
+							if (Main.tile[num20, num21].HasUnactuatedTile && Main.tileSolid[(int)Main.tile[num20, num21].TileType])
 							{
 								goto IL_730;
 							}
-							if ((!Main.wallHouse[(int)Main.tile[num20, num21].wall] || n >= 999) && (Type != 50 || n >= 500 || Main.tile[num21, num21].wall <= 0))
+							if ((!Main.wallHouse[(int)Main.tile[num20, num21].WallType] || n >= 999) && (Type != 50 || n >= 500 || Main.tile[num21, num21].WallType <= 0))
 							{
 								int num22 = num21;
 								while (num22 < Main.maxTilesY)
 								{
-									if (Main.tile[num20, num22].nactive() && Main.tileSolid[(int)Main.tile[num20, num22].type])
+									if (Main.tile[num20, num22].HasUnactuatedTile && Main.tileSolid[(int)Main.tile[num20, num22].TileType])
 									{
 										if (num20 < num15 || num20 > num16 || num22 < num17 || num22 > num18 || n == 999)
 										{
-											ushort num23 = Main.tile[num20, num22].type;
+											ushort num23 = Main.tile[num20, num22].TileType;
 											num9 = num20;
 											num10 = num22;
 											flag = true;
@@ -236,7 +236,7 @@ namespace SGAmod.NPCs.Hellion
 									{
 										for (int num30 = num27; num30 < num28; num30++)
 										{
-											if (Main.tile[num29, num30].nactive() && Main.tileSolid[(int)Main.tile[num29, num30].type])
+											if (Main.tile[num29, num30].HasUnactuatedTile && Main.tileSolid[(int)Main.tile[num29, num30].TileType])
 											{
 												flag = false;
 												break;

@@ -22,13 +22,13 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Servent of Microtransactions");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 		public override void NPCLoot()
 		{
 			if (Main.rand.Next(0, 4) < 1 || cratetype > 2999)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, CrateIndex);
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, CrateIndex);
 			}
 		}
 		public override string Texture
@@ -37,47 +37,47 @@ namespace SGAmod.NPCs.Cratrosity
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 24;
-			npc.height = 24;
-			npc.damage = 40;
-			npc.defense = 0;
-			npc.lifeMax = 7500;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath43;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			aiType = -1;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = 40000f;
-			npc.SGANPCs().treatAsNight = true;
+			NPC.width = 24;
+			NPC.height = 24;
+			NPC.damage = 40;
+			NPC.defense = 0;
+			NPC.lifeMax = 7500;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath43;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			AIType = -1;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = 40000f;
+			NPC.SGANPCs().treatAsNight = true;
 		}
 		public override void AI()
 		{
-			npc.timeLeft = 900;
+			NPC.timeLeft = 900;
 			realcounter += 1;
 			if (apointzz == new Vector2(0, 0))
 			{
 				apointzz = new Vector2(Main.rand.Next(-100, 100), Main.rand.Next(-100, 100));
 			}
 			counter = counter + Main.rand.Next(-3, 15);
-			int npctype = mod.NPCType("Cratrosity");
-			int npctype2 = mod.NPCType("Cratrogeddon");
-			int npctype3 = mod.NPCType("Hellion");
-			if (NPC.CountNPCS(npctype2) > 0) { npctype = mod.NPCType("Cratrogeddon"); }
-			if (Hellion.Hellion.GetHellion() != null) { npctype = Hellion.Hellion.GetHellion().npc.type; }
+			int npctype = Mod.Find<ModNPC>("Cratrosity").Type;
+			int npctype2 = Mod.Find<ModNPC>("Cratrogeddon").Type;
+			int npctype3 = Mod.Find<ModNPC>("Hellion").Type;
+			if (NPC.CountNPCS(npctype2) > 0) { npctype = Mod.Find<ModNPC>("Cratrogeddon").Type; }
+			if (Hellion.Hellion.GetHellion() != null) { npctype = Hellion.Hellion.GetHellion().NPC.type; }
 			if (NPC.CountNPCS(npctype) > 0)
 			{
 				NPC myowner = Main.npc[NPC.FindFirstNPC(npctype)];
 				if (counter % 600 < 450)
 				{
-					npc.velocity = (npc.velocity + ((myowner.Center + apointzz - (npc.position)) * 0.02f) * 0.035f) * 0.99f;
+					NPC.velocity = (NPC.velocity + ((myowner.Center + apointzz - (NPC.position)) * 0.02f) * 0.035f) * 0.99f;
 				}
 
 			}
-			else { npc.active = false; }
+			else { NPC.active = false; }
 
 		}
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
@@ -87,18 +87,18 @@ namespace SGAmod.NPCs.Cratrosity
 
         public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			player.AddBuff(mod.BuffType("Microtransactions"), 200, true);
+			player.AddBuff(Mod.Find<ModBuff>("Microtransactions").Type, 200, true);
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 			Texture2D mainTex = Main.itemTexture[CrateIndex];
 			if (GetType() == typeof(CratrosityCrateOfSlowing) || GetType().IsSubclassOf(typeof(CratrosityCrateOfSlowing)))
-				mainTex = Main.npcTexture[npc.type];
+				mainTex = Main.npcTexture[NPC.type];
 			//if (GetType() == typeof(CratrosityCrateDankCrate))
 			//mainTex = ModContent.GetTexture(Texture);
 
-			Main.spriteBatch.Draw(mainTex, npc.Center - Main.screenPosition, null, drawColor, 0, mainTex.Size()/2f, npc.scale, default, 0);
+			Main.spriteBatch.Draw(mainTex, NPC.Center - Main.screenPosition, null, drawColor, 0, mainTex.Size()/2f, NPC.scale, default, 0);
 			return false;
 		}
 

@@ -30,27 +30,27 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		{
             DisplayName.SetDefault("Beam Gun");
             Tooltip.SetDefault("Fires a beam that rebounds off walls and enemies to other enemies, up to 5 times\nThese rebounds do not crit");
-			SGAmod.UsesPlasma.Add(SGAmod.Instance.ItemType("BeamGun"), 1000);
+			SGAmod.UsesPlasma.Add(SGAmod.Instance.Find<ModItem>("BeamGun").Type, 1000);
 		}
 
         public override void SetDefaults()
         {
-            item.damage = 80;
-            item.magic = true;
-            item.width = 48;
-            item.height = 28;
-            item.useTime = 5;
-            item.useAnimation = 5;
-            item.useStyle = 5;
-            item.noMelee = true;
-            item.knockBack = 0;
-            item.value = 1000000;
-			item.rare = 9;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<BeamGunHolding>();
-            item.shootSpeed = 1f;
-			item.channel = true;
-			item.noUseGraphic = true;
+            Item.damage = 80;
+            Item.DamageType = DamageClass.Magic;
+            Item.width = 48;
+            Item.height = 28;
+            Item.useTime = 5;
+            Item.useAnimation = 5;
+            Item.useStyle = 5;
+            Item.noMelee = true;
+            Item.knockBack = 0;
+            Item.value = 1000000;
+			Item.rare = 9;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<BeamGunHolding>();
+            Item.shootSpeed = 1f;
+			Item.channel = true;
+			Item.noUseGraphic = true;
         }
 
 		public override bool CanUseItem(Player player)
@@ -68,16 +68,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "CryostalBar", 15);
-			recipe.AddIngredient(null, "PlasmaCell", 6);
-			recipe.AddIngredient(null, "PrismalBar", 12);
-			recipe.AddIngredient(null, "AdvancedPlating", 15);
-			recipe.AddIngredient(ItemID.HeatRay, 1);
-			recipe.AddIngredient(mod.ItemType("OmegaSigil"), 1);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-            recipe.SetResult(this);
-      		recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "CryostalBar", 15).AddIngredient(null, "PlasmaCell", 6).AddIngredient(null, "PrismalBar", 12).AddIngredient(null, "AdvancedPlating", 15).AddIngredient(ItemID.HeatRay, 1).AddIngredient(mod.ItemType("OmegaSigil"), 1).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
         }
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -124,17 +115,17 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			projectile.timeLeft = 3;
-			projectile.penetrate = -1;
-			aiType = ProjectileID.WoodenArrowFriendly;
-			projectile.damage = 0;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 3;
+			Projectile.penetrate = -1;
+			AIType = ProjectileID.WoodenArrowFriendly;
+			Projectile.damage = 0;
 		}
 
 		public override string Texture
@@ -144,69 +135,69 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override void AI()
 		{
-			projectile.localAI[0] += 1f;
+			Projectile.localAI[0] += 1f;
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
 			if (player != null && player.active)
 			{
 
 				SGAPlayer modply = player.GetModPlayer<SGAPlayer>();
 
-				if (projectile.ai[0] > 0 || !player.channel || player.dead || modply.plasmaLeftInClip<1)
+				if (Projectile.ai[0] > 0 || !player.channel || player.dead || modply.plasmaLeftInClip<1)
 				{
 					if (modply.plasmaLeftInClip < 1)
 					{
 						player.itemTime = 120;
 						player.itemAnimation = 120;
 					}
-					projectile.Kill();
+					Projectile.Kill();
 				}
 				else
 				{
 
 					Vector2 mousePos = Main.MouseWorld;
 
-					if (projectile.owner == Main.myPlayer)
+					if (Projectile.owner == Main.myPlayer)
 					{
 						Vector2 diff = mousePos - player.Center;
 						diff.Normalize();
-						projectile.velocity = diff;
-						projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-						projectile.netUpdate = true;
+						Projectile.velocity = diff;
+						Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+						Projectile.netUpdate = true;
 					}
 
-					int dir = projectile.direction;
+					int dir = Projectile.direction;
 					player.ChangeDir(dir);
-					projectile.direction = dir;
+					Projectile.direction = dir;
 
-					player.heldProj = projectile.whoAmI;
-					player.itemRotation = (float)Math.Atan2(projectile.velocity.Y * dir, projectile.velocity.X * dir);
-					projectile.rotation = player.itemRotation-MathHelper.ToRadians(90);
-					projectile.Center = (player.Center+new Vector2(dir*6, 0))+ (projectile.velocity*10f);
+					player.heldProj = Projectile.whoAmI;
+					player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * dir, Projectile.velocity.X * dir);
+					Projectile.rotation = player.itemRotation-MathHelper.ToRadians(90);
+					Projectile.Center = (player.Center+new Vector2(dir*6, 0))+ (Projectile.velocity*10f);
 
-					modply.plasmaLeftInClip -= (projectile.localAI[0] % 2 == 0) ? 2 : 1;
+					modply.plasmaLeftInClip -= (Projectile.localAI[0] % 2 == 0) ? 2 : 1;
 
 
-					projectile.position -= projectile.velocity;
-					projectile.timeLeft = 3;
+					Projectile.position -= Projectile.velocity;
+					Projectile.timeLeft = 3;
 					player.itemAnimation = 3;
 					player.itemTime = 3;
-					Vector2 position = projectile.Center;
-					Vector2 offset = new Vector2(projectile.velocity.X, projectile.velocity.Y);
+					Vector2 position = Projectile.Center;
+					Vector2 offset = new Vector2(Projectile.velocity.X, Projectile.velocity.Y);
 					offset.Normalize();
 					offset *= 16f;
 
-					Vector2 perturbedSpeed = projectile.velocity.RotatedByRandom(MathHelper.ToRadians(0));
+					Vector2 perturbedSpeed = Projectile.velocity.RotatedByRandom(MathHelper.ToRadians(0));
 					float scale = 1f;// - (Main.rand.NextFloat() * .2f);
 					perturbedSpeed = perturbedSpeed * scale;
-					int prog = Projectile.NewProjectile(position.X + offset.X, position.Y + offset.Y, perturbedSpeed.X, perturbedSpeed.Y, ModContent.ProjectileType<BeamGunProjectile>(), projectile.damage, projectile.knockBack, player.whoAmI);
+					int prog = Projectile.NewProjectile(position.X + offset.X, position.Y + offset.Y, perturbedSpeed.X, perturbedSpeed.Y, ModContent.ProjectileType<BeamGunProjectile>(), Projectile.damage, Projectile.knockBack, player.whoAmI);
 					//IdgProjectile.Sync(prog);
 				}
 			}
 			else
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 
 		}
@@ -215,17 +206,17 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		{
 
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/Items/Weapons/SeriousSam/BeamGunProj");
-			Texture2D texGlow = ModContent.GetTexture("SGAmod/Items/GlowMasks/BeamGunProjGlow");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Items/Weapons/SeriousSam/BeamGunProj");
+			Texture2D texGlow = ModContent.Request<Texture2D>("SGAmod/Items/GlowMasks/BeamGunProjGlow");
 			SpriteEffects effects = SpriteEffects.FlipHorizontally;
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 2) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
-			Color color = projectile.GetAlpha(lightColor) * 1f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-			int timing = (int)(projectile.localAI[0] / 3f);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
+			Color color = Projectile.GetAlpha(lightColor) * 1f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+			int timing = (int)(Projectile.localAI[0] / 3f);
 			timing %= 2;
 			timing *= ((tex.Height) / 2);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 2), color, projectile.rotation, drawOrigin, projectile.scale, projectile.direction<1 ? effects : (SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally), 0f);
-			spriteBatch.Draw(texGlow, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 2), Color.White, projectile.rotation, drawOrigin, projectile.scale, projectile.direction < 1 ? effects : (SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally), 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 2), color, Projectile.rotation, drawOrigin, Projectile.scale, Projectile.direction<1 ? effects : (SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally), 0f);
+			spriteBatch.Draw(texGlow, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 2), Color.White, Projectile.rotation, drawOrigin, Projectile.scale, Projectile.direction < 1 ? effects : (SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally), 0f);
 
 			return false;
 		}
@@ -301,18 +292,18 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.magic = true;
-			projectile.timeLeft = 1000;
-			projectile.penetrate = 2;
-			aiType = ProjectileID.WoodenArrowFriendly;
-			projectile.scale = 0.5f;
-			projectile.extraUpdates = 1000;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 1000;
+			Projectile.penetrate = 2;
+			AIType = ProjectileID.WoodenArrowFriendly;
+			Projectile.scale = 0.5f;
+			Projectile.extraUpdates = 1000;
 		}
 
 		public override string Texture
@@ -322,7 +313,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.timeLeft < 2)
+			if (Projectile.timeLeft < 2)
 				return false;
 
 			return base.CanHitNPC(target);
@@ -330,7 +321,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override bool CanHitPlayer(Player target)
 		{
-			if (projectile.timeLeft < 2)
+			if (Projectile.timeLeft < 2)
 				return false;
 				
 				return base.CanHitPlayer(target);
@@ -338,10 +329,10 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			lasthit = projectile.Center;
-			target.immune[projectile.owner] = 5;
+			lasthit = Projectile.Center;
+			target.immune[Projectile.owner] = 5;
 			bouncetargets.Add(target.whoAmI);
-			projectile.Kill();
+			Projectile.Kill();
 		}
 
 
@@ -349,8 +340,8 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			lasthit = projectile.Center;
-			projectile.Kill();
+			lasthit = Projectile.Center;
+			Projectile.Kill();
 			return false;
 		}
 
@@ -360,16 +351,16 @@ namespace SGAmod.Items.Weapons.SeriousSam
 			if (!onlyonce)
 			return false;
 
-			int prog = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, mod.ProjectileType("BeamGunProjectileVisual"), 0, 0, Main.player[projectile.owner].whoAmI);
-			Main.projectile[prog].ai[0] = projectile.localAI[0];
-			Main.projectile[prog].ai[1] = projectile.localAI[1];
+			int prog = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, Mod.Find<ModProjectile>("BeamGunProjectileVisual").Type, 0, 0, Main.player[Projectile.owner].whoAmI);
+			Main.projectile[prog].ai[0] = Projectile.localAI[0];
+			Main.projectile[prog].ai[1] = Projectile.localAI[1];
 			Main.projectile[prog].netUpdate = true;
 
 			//List<int> them = GetAllActive();
 
 			if (lasthit!=null) {
-			projectile.Center = lasthit;
-			Vector2 lastpos = projectile.Center;
+			Projectile.Center = lasthit;
+			Vector2 lastpos = Projectile.Center;
 
 				for (int i = 0; i < 5; i += 1)
 				{
@@ -384,16 +375,16 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 					if (him != null)
 					{
-						int prog2 = Projectile.NewProjectile(him.Center.X, him.Center.Y, 0, 0, mod.ProjectileType("BeamGunProjectileVisual"), 0, 0, Main.player[projectile.owner].whoAmI);
+						int prog2 = Projectile.NewProjectile(him.Center.X, him.Center.Y, 0, 0, Mod.Find<ModProjectile>("BeamGunProjectileVisual").Type, 0, 0, Main.player[Projectile.owner].whoAmI);
 						Main.projectile[prog2].ai[0] = lastpos.X;
 						Main.projectile[prog2].ai[1] = lastpos.Y;
 						Main.projectile[prog2].netUpdate = true;
-						if (him.immune[projectile.owner] < 1)
+						if (him.immune[Projectile.owner] < 1)
 						{
-							int daxmage = Main.DamageVar((float)projectile.damage);
-							Main.player[projectile.owner].ApplyDamageToNPC(him, daxmage, projectile.knockBack, him.Center.X > lastpos.X ? 1 : -1, false);
+							int daxmage = Main.DamageVar((float)Projectile.damage);
+							Main.player[Projectile.owner].ApplyDamageToNPC(him, daxmage, Projectile.knockBack, him.Center.X > lastpos.X ? 1 : -1, false);
 							//him.StrikeNPC(projectile.damage, projectile.knockBack, (him.Center.X > lastpos.X ? 1 : -1));
-							him.immune[projectile.owner] = 8;
+							him.immune[Projectile.owner] = 8;
 							if (Main.netMode != 0)
 							{
 								NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, him.whoAmI, (float)daxmage, 16f, (float)1, 0, 0, 0);
@@ -413,11 +404,11 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void AI()
 		{
 
-			if (projectile.localAI[1] == 0)
+			if (Projectile.localAI[1] == 0)
 			{
 				//HalfVector2 half = new HalfVector2(projectile.Center.X, projectile.Center.Y);
-				projectile.localAI[0] = projectile.Center.X;
-				projectile.localAI[1] = projectile.Center.Y;
+				Projectile.localAI[0] = Projectile.Center.X;
+				Projectile.localAI[1] = Projectile.Center.Y;
 			}
 
 
@@ -455,17 +446,17 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			projectile.timeLeft = 2;
-			projectile.penetrate = -1;
-			aiType = ProjectileID.WoodenArrowFriendly;
-			projectile.damage = 0;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 2;
+			Projectile.penetrate = -1;
+			AIType = ProjectileID.WoodenArrowFriendly;
+			Projectile.damage = 0;
 		}
 
 		public override string Texture
@@ -476,7 +467,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Vector2 basepoint = new Vector2(projectile.ai[0], projectile.ai[1]);
+			Vector2 basepoint = new Vector2(Projectile.ai[0], Projectile.ai[1]);
 
 			int width = 32;int height = 1000;
 
@@ -493,8 +484,8 @@ namespace SGAmod.Items.Weapons.SeriousSam
 				{
 					float offset2 = MathHelper.ToRadians((x/5f)*360f) + (y * 0.1f);
 					float adder = (x * 9f)+ (y*3f);
-					float beamvar = width / 4f+(((float)Math.Sin((Main.GlobalTime*23f)+ adder))*2f);
-					int output = (width/2)+(int)(Math.Sin((Main.GlobalTime*-32.25f)+(offset2))*((float)beamvar));
+					float beamvar = width / 4f+(((float)Math.Sin((Main.GlobalTimeWrappedHourly*23f)+ adder))*2f);
+					int output = (width/2)+(int)(Math.Sin((Main.GlobalTimeWrappedHourly*-32.25f)+(offset2))*((float)beamvar));
 					//output += 6;
 					//Main.NewText(output);
 
@@ -523,7 +514,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 			int timing = 0;
 			timing *= ((tex.Height) / 5);
 			float alpha = 1f;
-			Idglib.DrawTether(beam, basepoint, projectile.Center,alpha, 1,1,Color.White);
+			Idglib.DrawTether(beam, basepoint, Projectile.Center,alpha, 1,1,Color.White);
 			//spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), color* alpha,0f, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();

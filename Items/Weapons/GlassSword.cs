@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics.PackedVector;
 using SGAmod.Projectiles;
 using Idglibrary;
 using SGAmod.Buffs;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -19,29 +20,29 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Glass Sword");
 			Tooltip.SetDefault("Shatters on the first hit, throwing out several glass shards\nEnemies hit with the broken edge afterwords are cut deep with gourged\nThis weapon ignores enemy defense");
-			Item.staff[item.type] = true; 
+			Item.staff[Item.type] = true; 
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 6;
-			item.maxStack = 99;
-			item.crit = 0;
-			item.melee = true;
-			item.width = 54;
-			item.height = 54;
-			item.useTime = 2;
-			item.useAnimation = 22;
-			item.reuseDelay = 30;
-			item.consumable = true;
-			item.useStyle = 1;
-			item.knockBack = 2;
-			item.noUseGraphic = true;
-			item.value = Item.sellPrice(0, 0, 0, 5);
-			item.rare = 0;
-			item.UseSound = SoundID.Item1;
-			item.useTurn = false;
-			item.autoReuse = true;
+			Item.damage = 6;
+			Item.maxStack = 99;
+			Item.crit = 0;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 54;
+			Item.height = 54;
+			Item.useTime = 2;
+			Item.useAnimation = 22;
+			Item.reuseDelay = 30;
+			Item.consumable = true;
+			Item.useStyle = 1;
+			Item.knockBack = 2;
+			Item.noUseGraphic = true;
+			Item.value = Item.sellPrice(0, 0, 0, 5);
+			Item.rare = 0;
+			Item.UseSound = SoundID.Item1;
+			Item.useTurn = false;
+			Item.autoReuse = true;
 		}
 
 		public override bool ConsumeItem(Player player)
@@ -53,13 +54,13 @@ namespace SGAmod.Items.Weapons
 		{
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/Weapons/GlassSword");
-				Main.itemTexture[item.type] = mod.GetTexture("Items/Weapons/GlassSword");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/Weapons/GlassSword").Value;
+				Main.itemTexture[Item.type] = Mod.Assets.Request<Texture2D>("Items/Weapons/GlassSword").Value;
 			}
-			item.width = 54;
-			item.height = 54;
-			item.knockBack = 2;
-			item.noMelee = false;
+			Item.width = 54;
+			Item.height = 54;
+			Item.knockBack = 2;
+			Item.noMelee = false;
 			return true;
 		}
 
@@ -70,11 +71,11 @@ namespace SGAmod.Items.Weapons
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
 		{
-			if (item.knockBack > 0)
+			if (Item.knockBack > 0)
 			{
 
-				player.ConsumeItem(item.type);
-				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 27, 0.75f, 0f);
+				player.ConsumeItem(Item.type);
+				SoundEngine.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 27, 0.75f, 0f);
 
 				for (float i = 24; i < 80; i += 20)
 				{
@@ -85,13 +86,13 @@ namespace SGAmod.Items.Weapons
 
 					position += eree * i;
 
-					int thisoned = Projectile.NewProjectile(position.X, position.Y, eree.X * Main.rand.NextFloat(2.4f, 5f), eree.X * Main.rand.NextFloat(0.5f, 2f), mod.ProjectileType("BrokenGlass"), damage, 0f, Main.myPlayer);
+					int thisoned = Projectile.NewProjectile(position.X, position.Y, eree.X * Main.rand.NextFloat(2.4f, 5f), eree.X * Main.rand.NextFloat(0.5f, 2f), Mod.Find<ModProjectile>("BrokenGlass").Type, damage, 0f, Main.myPlayer);
 
 				}
 
 				if (!Main.dedServ)
 				{
-					item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/Weapons/GlassSwordBreak");
+					Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/Weapons/GlassSwordBreak").Value;
 				}
 
             }
@@ -104,26 +105,22 @@ namespace SGAmod.Items.Weapons
 
 			if (!Main.dedServ)
 			{
-				Main.itemTexture[item.type] = mod.GetTexture("Items/Weapons/GlassSwordBreakSmol");
-				item.width = Main.itemTexture[item.type].Height;
-				item.height = Main.itemTexture[item.type].Width;
+				Main.itemTexture[Item.type] = Mod.Assets.Request<Texture2D>("Items/Weapons/GlassSwordBreakSmol").Value;
+				Item.width = Main.itemTexture[Item.type].Height;
+				Item.height = Main.itemTexture[Item.type].Width;
 			}
 
 
 
-			item.width = 24;
-			item.height = 24;
+			Item.width = 24;
+			Item.height = 24;
 
-			item.knockBack = 0;
+			Item.knockBack = 0;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Glass, 4);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 20);
-			recipe.AddRecipe();
+			CreateRecipe(20).AddIngredient(ItemID.Glass, 4).AddTile(TileID.WorkBenches).Register();
 		}
 	
 	}
@@ -143,14 +140,14 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 12;
-			projectile.height = 12;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.melee = true;
-			aiType = ProjectileID.WoodenArrowFriendly;
+			Projectile.width = 12;
+			Projectile.height = 12;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Melee;
+			AIType = ProjectileID.WoodenArrowFriendly;
 		}
 
 		public override string Texture
@@ -161,26 +158,26 @@ namespace SGAmod.Items.Weapons
 		public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
 		{
 			//HairShaderData shader = GameShaders.Hair.GetShaderFromItemId(ItemID.LeinforsAccessory);
-			bool facingleft = projectile.velocity.X > 0;
+			bool facingleft = Projectile.velocity.X > 0;
 			Microsoft.Xna.Framework.Graphics.SpriteEffects effect = SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically;
 			Texture2D texture = Main.itemTexture[ItemID.GlassBowl];
 			Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
-			Main.spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, new Rectangle?(), drawColor * trans, projectile.rotation + (facingleft ? (float)(1f * Math.PI) : 0f), origin, projectile.scale, facingleft ? effect : SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, new Rectangle?(), drawColor * trans, Projectile.rotation + (facingleft ? (float)(1f * Math.PI) : 0f), origin, Projectile.scale, facingleft ? effect : SpriteEffects.None, 0);
 			return false;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 50, 0.50f, 0f);
-			projectile.type = ProjectileID.Fireball;
-			Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 50, 0.50f, 0f);
+			Projectile.type = ProjectileID.Fireball;
+			SoundEngine.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 			for (int num315 = 0; num315 < 40; num315 = num315 + 1)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 				randomcircle *= Main.rand.NextFloat(0f, 3f);
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X - 1, projectile.position.Y), projectile.width, projectile.height, DustID.Ice, 0, 0, 50, Color.Gray, projectile.scale * 0.5f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X - 1, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Ice, 0, 0, 50, Color.Gray, Projectile.scale * 0.5f);
 				Main.dust[num316].noGravity = false;
-				Main.dust[num316].velocity = new Vector2(randomcircle.X, randomcircle.Y)+projectile.velocity;
+				Main.dust[num316].velocity = new Vector2(randomcircle.X, randomcircle.Y)+Projectile.velocity;
 			}
 
 			return true;
@@ -193,9 +190,9 @@ namespace SGAmod.Items.Weapons
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.velocity.Y < 0 && hitwhilefalling)
+			if (Projectile.velocity.Y < 0 && hitwhilefalling)
 				return false;
-			if (projectile.ai[1] < 5)
+			if (Projectile.ai[1] < 5)
 				return false;
 			return base.CanHitNPC(target);
 		}
@@ -203,17 +200,17 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 
-			Tile tile = Main.tile[(int)projectile.Center.X / 16, (int)projectile.Center.Y / 16];
+			Tile tile = Main.tile[(int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16];
 			if (tile != null)
 				if (tile.liquid > 64)
-					projectile.Kill();
+					Projectile.Kill();
 
 			//projectile.scale = ((float)projectile.width / 14f);
 
-			projectile.velocity.Y += 0.1f;
-			projectile.rotation += projectile.velocity.X * 0.1f;
+			Projectile.velocity.Y += 0.1f;
+			Projectile.rotation += Projectile.velocity.X * 0.1f;
 
-			projectile.ai[1] += 1;
+			Projectile.ai[1] += 1;
 		}
 
 

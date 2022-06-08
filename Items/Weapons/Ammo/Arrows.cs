@@ -22,29 +22,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 9;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 10;
-			item.rare = 1;
-			item.shoot = mod.ProjectileType("UnmanedArrow");   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 2.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
+			Item.damage = 9;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 10;
+			Item.rare = 1;
+			Item.shoot = Mod.Find<ModProjectile>("UnmanedArrow").Type;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 2.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WoodenArrow, 50);
-			recipe.AddIngredient(mod.ItemType("CopperWraithNotch"), 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(ItemID.WoodenArrow, 50).AddIngredient(mod.ItemType("CopperWraithNotch"), 1).AddIngredient(mod.ItemType("UnmanedBar"), 1).AddTile(TileID.Anvils).Register();
 		}
 	}
 	public class UnmanedArrow2 : ModItem
@@ -60,28 +54,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 12;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 2f;
-			item.value = 25;
-			item.rare = 3;
-			item.shoot = mod.ProjectileType("UnmanedArrow2");   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 3.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
+			Item.damage = 12;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 2f;
+			Item.value = 25;
+			Item.rare = 3;
+			Item.shoot = Mod.Find<ModProjectile>("UnmanedArrow2").Type;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 3.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedArrow"), 50);
-			recipe.AddIngredient(mod.ItemType("CobaltWraithNotch"), 2);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(mod.ItemType("UnmanedArrow"), 50).AddIngredient(mod.ItemType("CobaltWraithNotch"), 2).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 
@@ -98,29 +87,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 10;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 2f;
-			item.value = 25;
-			item.rare = 3;
-			item.shoot = mod.ProjectileType("PitchArrow");   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 3.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
+			Item.damage = 10;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 2f;
+			Item.value = 25;
+			Item.rare = 3;
+			Item.shoot = Mod.Find<ModProjectile>("PitchArrow").Type;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 3.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WoodenArrow, 50);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 1);
-			recipe.AddIngredient(mod.ItemType("MurkyGel"), 3);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(ItemID.WoodenArrow, 50).AddIngredient(mod.ItemType("BottledMud"), 1).AddIngredient(mod.ItemType("MurkyGel"), 3).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -137,30 +120,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 20;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 4f;
-			item.value = 500;
-			item.rare = 7;
-			item.shoot = mod.ProjectileType("DosedArrow");   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 12f;                  //The speed of the projectile
-			item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
+			Item.damage = 20;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 4f;
+			Item.value = 500;
+			Item.rare = 7;
+			Item.shoot = Mod.Find<ModProjectile>("DosedArrow").Type;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 12f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PitchArrow"), 100);
-			recipe.AddIngredient(mod.ItemType("UnmanedArrow2"), 100);
-			recipe.AddIngredient(mod.ItemType("GasPasser"), 1);
-			recipe.AddIngredient(mod.ItemType("LuminiteWraithNotch"), 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 200);
-			recipe.AddRecipe();
+			CreateRecipe(200).AddIngredient(mod.ItemType("PitchArrow"), 100).AddIngredient(mod.ItemType("UnmanedArrow2"), 100).AddIngredient(mod.ItemType("GasPasser"), 1).AddIngredient(mod.ItemType("LuminiteWraithNotch"), 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -177,31 +153,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 15;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 4f;
-			item.value = 500;
-			item.rare = ItemRarityID.Lime;
-			item.shoot = mod.ProjectileType("WraithArrow");   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 18f;                  //The speed of the projectile
-			item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
+			Item.damage = 15;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 4f;
+			Item.value = 500;
+			Item.rare = ItemRarityID.Lime;
+			Item.shoot = Mod.Find<ModProjectile>("WraithArrow").Type;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 18f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ShadowJavelinRecipe(mod);
-			recipe.AddIngredient(ItemID.HellfireArrow, 250);
-			recipe.AddIngredient(ItemID.WrathPotion, 1);
-			recipe.AddIngredient(ItemID.DefenderMedal, 5);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 2);
-			recipe.AddIngredient(mod.ItemType("OmegaSigil"), 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddIngredient(ItemID.HellfireArrow, 250).AddIngredient(ItemID.WrathPotion, 1).AddIngredient(ItemID.DefenderMedal, 5).AddIngredient(mod.ItemType("StarMetalBar"), 2).AddIngredient(mod.ItemType("OmegaSigil"), 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 	public class DankArrow : ModItem,IDankSlowText
@@ -213,28 +181,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 5;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 0f;
-			item.value = 50;
-			item.rare = 1;
-			item.shoot = mod.ProjectileType("DankArrow");   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
+			Item.damage = 5;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 0f;
+			Item.value = 50;
+			Item.rare = 1;
+			Item.shoot = Mod.Find<ModProjectile>("DankArrow").Type;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Arrow;              //The ammo class this ammo belongs to.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("DankWood"), 25);
-			recipe.AddIngredient(mod.ItemType("DankCore"), 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddIngredient(mod.ItemType("DankWood"), 25).AddIngredient(mod.ItemType("DankCore"), 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 	public class PrismicArrow : PrismicBullet
@@ -250,29 +213,20 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.WoodenArrow);
-			item.damage = 2;
-			item.ranged = true;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.value = 100;
-			item.rare = 5;
-			item.shoot = ProjectileID.WoodenArrowFriendly;   //The projectile shoot when your weapon using this ammo
-			item.ammo = AmmoID.Arrow;
+			Item.CloneDefaults(ItemID.WoodenArrow);
+			Item.damage = 2;
+			Item.DamageType = DamageClass.Ranged;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.value = 100;
+			Item.rare = 5;
+			Item.shoot = ProjectileID.WoodenArrowFriendly;   //The projectile shoot when your weapon using this ammo
+			Item.ammo = AmmoID.Arrow;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:Tier1Bars", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier2Bars", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier3Bars", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier4Bars", 1);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 2);
-			recipe.AddIngredient(ItemID.WoodenArrow, 250);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddRecipeGroup("SGAmod:Tier1Bars", 1).AddRecipeGroup("SGAmod:Tier2Bars", 1).AddRecipeGroup("SGAmod:Tier3Bars", 1).AddRecipeGroup("SGAmod:Tier4Bars", 1).AddIngredient(mod.ItemType("WraithFragment3"), 2).AddIngredient(ItemID.WoodenArrow, 250).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 
@@ -289,24 +243,19 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.WoodenArrow);
-			item.damage = 18;
-			item.ranged = true;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.value = 1000;
-			item.rare = 10;
-			item.shoot = ProjectileID.WoodenArrowFriendly;   //The projectile shoot when your weapon using this ammo
-			item.ammo = AmmoID.Arrow;
+			Item.CloneDefaults(ItemID.WoodenArrow);
+			Item.damage = 18;
+			Item.DamageType = DamageClass.Ranged;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.value = 1000;
+			Item.rare = 10;
+			Item.shoot = ProjectileID.WoodenArrowFriendly;   //The projectile shoot when your weapon using this ammo
+			Item.ammo = AmmoID.Arrow;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismicArrow"), 250);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddIngredient(mod.ItemType("PrismalBar"), 1).AddIngredient(mod.ItemType("PrismicArrow"), 250).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 }

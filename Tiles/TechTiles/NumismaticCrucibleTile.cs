@@ -17,6 +17,7 @@ using Terraria.ModLoader.IO;
 using SGAmod.Items.Placeable.TechPlaceable;
 using SGAmod.Items.Consumables;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Tiles.TechTiles
 {
@@ -25,8 +26,8 @@ namespace SGAmod.Tiles.TechTiles
         public static NumismaticCrucibleTE FindNumismaticCrucibleTE(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int left = i - tile.frameX / 18;
-            int top = j - tile.frameY / 18;
+            int left = i - tile.TileFrameX / 18;
+            int top = j - tile.TileFrameY / 18;
 
             int index = ModContent.GetInstance<NumismaticCrucibleTE>().Find(left, top);
             if (index == -1)
@@ -38,7 +39,7 @@ namespace SGAmod.Tiles.TechTiles
 
         }
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
@@ -67,7 +68,7 @@ namespace SGAmod.Tiles.TechTiles
             //nil
         }
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             /*int dust = Dust.NewDust(new Vector2(i, j) * 16, 0, 0, DustID.PurpleCrystalShard);
             Main.dust[dust].scale = 3f;
@@ -123,11 +124,11 @@ namespace SGAmod.Tiles.TechTiles
         {
             Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
             Tile tile = Framing.GetTileSafely(i, j);
-            Texture2D tex = Main.tileTexture[tile.type];
-            if (Main.tile[i, j].type == base.Type)
+            Texture2D tex = Main.tileTexture[tile.TileType];
+            if (Main.tile[i, j].TileType == base.Type)
             {
                 Vector2 offset = zerooroffset + (new Vector2(i, j) * 16);
-                spriteBatch.Draw(tex, offset - Main.screenPosition, new Rectangle((tile.frameX / 18) * 18, (tile.frameY / 18) * 18, 18, 18), Color.White.MultiplyRGBA(Lighting.GetColor(i, j)), 0, Vector2.Zero, new Vector2(1f, 1f), SpriteEffects.None, 0f);
+                spriteBatch.Draw(tex, offset - Main.screenPosition, new Rectangle((tile.TileFrameX / 18) * 18, (tile.TileFrameY / 18) * 18, 18, 18), Color.White.MultiplyRGBA(Lighting.GetColor(i, j)), 0, Vector2.Zero, new Vector2(1f, 1f), SpriteEffects.None, 0f);
             }
             return true;
         }
@@ -135,9 +136,9 @@ namespace SGAmod.Tiles.TechTiles
         public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
         {
             Tile tilehere = Main.tile[x, y];
-            if (tilehere.type == base.Type)
+            if (tilehere.TileType == base.Type)
             {
-                if (tilehere.frameX == 0 && tilehere.frameY == 0)
+                if (tilehere.TileFrameX == 0 && tilehere.TileFrameY == 0)
                 {
                     if (nextSpecialDrawIndex < Main.specX.Length)
                     {
@@ -153,9 +154,9 @@ namespace SGAmod.Tiles.TechTiles
         {
             Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
             Tile tile = Framing.GetTileSafely(i, j);
-            if (Main.tile[i, j].type == base.Type)
+            if (Main.tile[i, j].TileType == base.Type)
             {
-                if (tile.frameX == 0 && tile.frameY == 0)
+                if (tile.TileFrameX == 0 && tile.TileFrameY == 0)
                 {
                     NumismaticCrucibleTE crucibleTE = FindNumismaticCrucibleTE(i, j);
                     if (crucibleTE != null)
@@ -165,13 +166,13 @@ namespace SGAmod.Tiles.TechTiles
 
                         if (!crucibleTE.heldItem.IsAir)
                         {
-                            int npctype = ((SoulJar)crucibleTE.heldItem.modItem).npcTypeToUse;
+                            int npctype = ((SoulJar)crucibleTE.heldItem.ModItem).npcTypeToUse;
                             if (npctype >= 0)
                             {
 
                                 Texture2D npctex = Main.npcTexture[npctype];
                                 if (npctex == null && npctype<Main.maxNPCTypes)
-                                    npctex = ModContent.GetTexture("Terraria/NPC_" + npctype);
+                                    npctex = ModContent.Request<Texture2D>("Terraria/NPC_" + npctype);
 
 
                                 if (npctex != null)
@@ -181,7 +182,7 @@ namespace SGAmod.Tiles.TechTiles
 
                                     Vector2 framesize = new Vector2(npctex.Width, count);
 
-                                    spriteBatch.Draw(npctex, offset - new Vector2(16, 16) - Main.screenPosition, new Rectangle(0, (int)framesize.Y * (int)((Main.GlobalTime * 10) % Main.npcFrameCount[npctype]), (int)framesize.X, (int)framesize.Y), Color.White.MultiplyRGBA(Lighting.GetColor(i, j)), Main.GlobalTime / 2f, framesize / 2f, 32f / framesize.Y, SpriteEffects.None, 0f);
+                                    spriteBatch.Draw(npctex, offset - new Vector2(16, 16) - Main.screenPosition, new Rectangle(0, (int)framesize.Y * (int)((Main.GlobalTimeWrappedHourly * 10) % Main.npcFrameCount[npctype]), (int)framesize.X, (int)framesize.Y), Color.White.MultiplyRGBA(Lighting.GetColor(i, j)), Main.GlobalTimeWrappedHourly / 2f, framesize / 2f, 32f / framesize.Y, SpriteEffects.None, 0f);
                                 }
                             }
                         }
@@ -220,7 +221,7 @@ namespace SGAmod.Tiles.TechTiles
         {
             get
             {
-                SoulJar heldjar = heldItem.modItem as SoulJar;
+                SoulJar heldjar = heldItem.ModItem as SoulJar;
                 if (heldjar != null)
                 {
                     NPC npc = new NPC();
@@ -283,11 +284,11 @@ namespace SGAmod.Tiles.TechTiles
 
             bool jar = item.type == ModContent.ItemType<SoulJarFull>();
 
-            if (item != null && (money || (jar && item.modItem is SoulJar)))
+            if (item != null && (money || (jar && item.ModItem is SoulJar)))
             {
                 if (jar)
                 {
-                    SoulJar jaris = item.modItem as SoulJar;
+                    SoulJar jaris = item.ModItem as SoulJar;
                     NPC npc = new NPC();
                     npc.SetDefaults(jaris.npcTypeToUse);
                     if (npc.value < 1)
@@ -322,7 +323,7 @@ namespace SGAmod.Tiles.TechTiles
                 if (money)
                 {
                     storedMoney += (int)((playerItem.value * playerItem.stack)*0.20);
-                    SoundEffectInstance sound = Main.PlaySound(SoundID.CoinPickup, Position.X * 16, Position.Y * 16);
+                    SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.CoinPickup, Position.X * 16, Position.Y * 16);
                     if (sound != null)
                         sound.Pitch += 0.50f;
                 }
@@ -331,7 +332,7 @@ namespace SGAmod.Tiles.TechTiles
                     heldItem = playerItem.Clone();
                     npcValue = 0;
                     chargingProcess = 0;
-                    SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_CrystalCartImpact, Position.X * 16, Position.Y * 16);
+                    SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact, Position.X * 16, Position.Y * 16);
                     if (sound != null)
                         sound.Pitch += 0.50f;
                 }
@@ -386,7 +387,7 @@ namespace SGAmod.Tiles.TechTiles
         public override bool TileCheck(int i, int j)
         {
             Tile tile = Framing.GetTileSafely(i, j);
-            bool valid = tile.active() && tile.frameX == 0 && tile.frameY == 0 && tile.type == ModContent.TileType<NumismaticCrucibleTile>();
+            bool valid = tile.HasTile && tile.TileFrameX == 0 && tile.TileFrameY == 0 && tile.TileType == ModContent.TileType<NumismaticCrucibleTile>();
             if (!valid)
             {
                 DebugText("Deleted");
@@ -437,7 +438,7 @@ namespace SGAmod.Tiles.TechTiles
 
                 foreach ((int,Item) itemtodroporHopper in itemsToSpawn)
                 {
-                    if (ModContent.GetModTile(modtile.type) is ModTile modTile)
+                    if (ModContent.GetModTile(modtile.TileType) is ModTile modTile)
                     {
                         if (modTile != null && modTile is IHopperInterface)
                         {

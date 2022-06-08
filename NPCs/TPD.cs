@@ -37,30 +37,30 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Twin Prime Destroyers");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 96;
-			npc.height = 96;
-			npc.damage = 0;
-			npc.defense = 10;
-			npc.lifeMax = 30000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = 0;
-			npc.boss = true;
-			//aiType = NPCID.BlueSlime;
-			//animationType = NPCID.BlueSlime;
-			npc.noTileCollide = false;
-			npc.noGravity = false;
+			NPC.width = 96;
+			NPC.height = 96;
+			NPC.damage = 0;
+			NPC.defense = 10;
+			NPC.lifeMax = 30000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = 0;
+			NPC.boss = true;
+			//AIType = NPCID.BlueSlime;
+			//AnimationType = NPCID.BlueSlime;
+			NPC.noTileCollide = false;
+			NPC.noGravity = false;
 			music = MusicID.Boss3;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			bossBag = mod.ItemType("SPinkyBag");
-			npc.value = Item.buyPrice(0, 60, 0, 0);
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			bossBag = Mod.Find<ModItem>("SPinkyBag").Type;
+			NPC.value = Item.buyPrice(0, 60, 0, 0);
 		}
 
 		public override void BossLoot(ref string name, ref int potionType)
@@ -72,23 +72,23 @@ namespace SGAmod.NPCs
 		{
 			if (Main.netMode != NetmodeID.SinglePlayer || !SGAmod.SpaceBossActive)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<StarMetalMold>());
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<StarMetalMold>());
 				//Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType <Glowrock>(),(int)(Main.rand.Next(60,100)*(Main.expertMode ? 0.6 : 1)));
 				//Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType <OverseenCrystal>(), (int)(Main.rand.Next(25, 60) * (Main.expertMode ? 0.6 : 1)));
 			}
 
 			if (Main.expertMode)
-			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TPDCPU"));
+			Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("TPDCPU").Type);
 			if (Main.rand.Next(7) == 0)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Armors.Vanity.TPDMask>());
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<Items.Armors.Vanity.TPDMask>());
 			}
 
 			List<int> types = new List<int>();
 			types.Insert(types.Count, ItemID.Ectoplasm);
 			types.Insert(types.Count, ItemID.ShroomiteBar); types.Insert(types.Count, ItemID.ChlorophyteBar); types.Insert(types.Count, ItemID.SpectreBar);
 
-			DropHelper.DropFixedItemQuanity(types.ToArray(), Main.expertMode ? 100 : 50, npc.Center);
+			DropHelper.DropFixedItemQuanity(types.ToArray(), Main.expertMode ? 100 : 50, NPC.Center);
 
 			/*
 			for (int f = 0; f < (Main.expertMode ? 100 : 50); f = f + 1)
@@ -109,70 +109,70 @@ namespace SGAmod.NPCs
 		{
 			get
 			{
-				return (int)npc.ai[0];
+				return (int)NPC.ai[0];
 			}
 			set
 			{
-				npc.ai[0] = value;
+				NPC.ai[0] = value;
 			}
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 		public override void AI()
 		{
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active || Main.dayTime)
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active || Main.dayTime)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead || Main.dayTime)
 				{
 					float speed = ((-10f));
-					npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-					npc.active = false;
+					NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+					NPC.active = false;
 				}
 
 			}
 			else
 			{
-				npc.netUpdate = true;
-				npc.timeLeft = 99999;
-				if (npc.ai[0] == 0)
-					npc.position = P.position + new Vector2(0, 500f);
-				npc.ai[0] = npc.ai[0] + 1;
-				if (npc.ai[0] == 2)
+				NPC.netUpdate = true;
+				NPC.timeLeft = 99999;
+				if (NPC.ai[0] == 0)
+					NPC.position = P.position + new Vector2(0, 500f);
+				NPC.ai[0] = NPC.ai[0] + 1;
+				if (NPC.ai[0] == 2)
 				{
-					normhp = npc.life;
-					bosses[0] = NPC.NewNPC((int)npc.Center.X + 900, (int)npc.Center.Y - 32, NPCID.Spazmatism);
+					normhp = NPC.life;
+					bosses[0] = NPC.NewNPC((int)NPC.Center.X + 900, (int)NPC.Center.Y - 32, NPCID.Spazmatism);
 					Main.npc[bosses[0]].boss = false;
 					Main.npc[bosses[0]].timeLeft = 99999;
 					bossattach[0] = -1;
-					bosses[1] = NPC.NewNPC((int)npc.Center.X + 900, (int)npc.Center.Y - 32, NPCID.SkeletronPrime);
+					bosses[1] = NPC.NewNPC((int)NPC.Center.X + 900, (int)NPC.Center.Y - 32, NPCID.SkeletronPrime);
 					Main.npc[bosses[1]].boss = false;
 					Main.npc[bosses[1]].timeLeft = 99999;
 					Main.npc[bosses[1]].defDefense = 5000;
 					Main.npc[bosses[1]].defense = 5000;
 					bossattach[1] = bosses[0];
-					bosses[2] = NPC.NewNPC((int)npc.Center.X - 900, (int)npc.Center.Y - 32, NPCID.Retinazer);
+					bosses[2] = NPC.NewNPC((int)NPC.Center.X - 900, (int)NPC.Center.Y - 32, NPCID.Retinazer);
 					Main.npc[bosses[2]].boss = false;
 					Main.npc[bosses[2]].timeLeft = 99999;
 					bossattach[2] = -1;
-					bosses[3] = NPC.NewNPC((int)npc.Center.X - 900, (int)npc.Center.Y - 32, NPCID.SkeletronPrime);
+					bosses[3] = NPC.NewNPC((int)NPC.Center.X - 900, (int)NPC.Center.Y - 32, NPCID.SkeletronPrime);
 					Main.npc[bosses[3]].boss = false;
 					Main.npc[bosses[3]].timeLeft = 99999;
 					Main.npc[bosses[3]].defDefense = 5000;
 					Main.npc[bosses[3]].defense = 5000;
 					bossattach[3] = bosses[2];
-					bosses[4] = NPC.NewNPC((int)npc.Center.X + 900, (int)npc.Center.Y - 32, NPCID.TheDestroyer);
+					bosses[4] = NPC.NewNPC((int)NPC.Center.X + 900, (int)NPC.Center.Y - 32, NPCID.TheDestroyer);
 					Main.npc[bosses[4]].boss = false;
 					Main.npc[bosses[4]].timeLeft = 99999;
 					//Main.npc[bosses[4]].active=false;
 					bossattach[4] = bosses[1];
-					bosses[5] = NPC.NewNPC((int)npc.Center.X - 900, (int)npc.Center.Y - 32, NPCID.TheDestroyer);
+					bosses[5] = NPC.NewNPC((int)NPC.Center.X - 900, (int)NPC.Center.Y - 32, NPCID.TheDestroyer);
 					Main.npc[bosses[5]].boss = false;
 					Main.npc[bosses[5]].timeLeft = 99999;
 					bossattach[5] = bosses[3];
@@ -180,19 +180,19 @@ namespace SGAmod.NPCs
 
 
 
-					npc.life = npc.life + Main.npc[bosses[0]].life;
-					npc.life = npc.life + Main.npc[bosses[1]].life;
-					npc.life = npc.life + Main.npc[bosses[2]].life;
-					npc.life = npc.life + Main.npc[bosses[3]].life;
-					npc.life = npc.life + Main.npc[bosses[4]].life;
-					npc.life = npc.life + Main.npc[bosses[5]].life;
+					NPC.life = NPC.life + Main.npc[bosses[0]].life;
+					NPC.life = NPC.life + Main.npc[bosses[1]].life;
+					NPC.life = NPC.life + Main.npc[bosses[2]].life;
+					NPC.life = NPC.life + Main.npc[bosses[3]].life;
+					NPC.life = NPC.life + Main.npc[bosses[4]].life;
+					NPC.life = NPC.life + Main.npc[bosses[5]].life;
 
-					npc.lifeMax = npc.life;
+					NPC.lifeMax = NPC.life;
 				}
-				if (npc.ai[0] > 2)
+				if (NPC.ai[0] > 2)
 				{
 
-					if (npc.ai[0] == 3)
+					if (NPC.ai[0] == 3)
 					{
 
 						for (int i = 0; i <= 5; i++)
@@ -200,9 +200,9 @@ namespace SGAmod.NPCs
 							NPC thisboss = Main.npc[bosses[i]];
 							if (thisboss == null || thisboss.active == false)
 							{
-								npc.Center = P.Center - new Vector2(0, 128);
-								npc.active = false;
-								Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Mechacluskerf"));
+								NPC.Center = P.Center - new Vector2(0, 128);
+								NPC.active = false;
+								Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("Mechacluskerf").Type);
 
 								for (int z = 0; z <= Main.maxNPCs; z++)
 								{
@@ -228,18 +228,18 @@ namespace SGAmod.NPCs
 
 					if (phase < 60)
 					{
-						npc.life = normhp;
+						NPC.life = normhp;
 					}
-					Vector2 averagevec = npc.Center;
+					Vector2 averagevec = NPC.Center;
 					int divider = 1;
 
 					for (int i = 0; i <= 5; i++)
 					{
 						NPC thisboss = Main.npc[bosses[i]];
-						if (bosses[i] > -1 || npc.ai[0] < 30)
+						if (bosses[i] > -1 || NPC.ai[0] < 30)
 						{
 							thisboss.boss = false;
-							if (thisboss.life < 1 && npc.ai[0] > 30)
+							if (thisboss.life < 1 && NPC.ai[0] > 30)
 							{
 								bossactive[i] = 0;
 								if (i == 0)
@@ -263,7 +263,7 @@ namespace SGAmod.NPCs
 							else
 							{
 								if (phase < 1)
-									npc.life = npc.life + thisboss.life;
+									NPC.life = NPC.life + thisboss.life;
 							}
 						}
 
@@ -303,7 +303,7 @@ namespace SGAmod.NPCs
 										for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.Pi / 10f)
 										{
 											float angle = (shooting / 60f) + f;
-											int proj = Projectile.NewProjectile(npc.Center, angle.ToRotationVector2() * 24f, mod.ProjectileType("HellionBolt"), 30, 15f);
+											int proj = Projectile.NewProjectile(NPC.Center, angle.ToRotationVector2() * 24f, Mod.Find<ModProjectile>("HellionBolt").Type, 30, 15f);
 											Main.projectile[proj].timeLeft = 200;
 											Main.projectile[proj].netUpdate = true;
 											//Idglib.Shattershots(npc.position, P.position + P.velocity * (1f + (shooting - 120 % 160) / 150f), new Vector2(P.width, P.height), 88, 25, 8, 0, 1, true, 0, false, 450);
@@ -321,7 +321,7 @@ namespace SGAmod.NPCs
 										for (float f = -1; f < 2; f += 2f)
 										{
 											float angle = (shooting / 20f) * f;
-											int proj = Projectile.NewProjectile(npc.Center, angle.ToRotationVector2() * 18f, mod.ProjectileType("HellionBolt"), 30, 15f);
+											int proj = Projectile.NewProjectile(NPC.Center, angle.ToRotationVector2() * 18f, Mod.Find<ModProjectile>("HellionBolt").Type, 30, 15f);
 											Main.projectile[proj].timeLeft = 200;
 											Main.projectile[proj].netUpdate = true;
 										}
@@ -373,8 +373,8 @@ namespace SGAmod.NPCs
 
 						}
 						averagevec = averagevec / divider;
-						Vector2 lastpos = npc.position;
-						npc.position = npc.position + ((averagevec - npc.position) / 15);
+						Vector2 lastpos = NPC.position;
+						NPC.position = NPC.position + ((averagevec - NPC.position) / 15);
 						rotatationsensation = (int)(rotatationsensation + (5));
 					}
 					else
@@ -394,26 +394,26 @@ namespace SGAmod.NPCs
 							{
 								expert = 1;
 							}
-							if (shooting % ((int)(30 + (npc.life / 5000))) == 0)
+							if (shooting % ((int)(30 + (NPC.life / 5000))) == 0)
 							{
-								Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), 100, 25, 12, 60, 2 + expert, true, 0, true, 300);
+								Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), 100, 25, 12, 60, 2 + expert, true, 0, true, 300);
 							}
 
 							if (shooting % (int)(60) < 30 && shooting % 3 == 0)
 							{
-								Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), 83, 20, 3 + expert, 0, 1, true, (float)shooting / 22, false, 300);
+								Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), 83, 20, 3 + expert, 0, 1, true, (float)shooting / 22, false, 300);
 							}
 							if ((shooting - 30) % (int)(60) < 30 && shooting % 3 == 0)
 							{
-								Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), 83, 20, 3 + expert, 0, 1, true, -(float)shooting / 22, false, 300);
+								Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), 83, 20, 3 + expert, 0, 1, true, -(float)shooting / 22, false, 300);
 							}
 							if (phase < 240)
 							{
-								npc.velocity = new Vector2(((P.position.X - 500) - npc.position.X) / 32, ((P.position.Y - 150) - npc.position.Y) / 16);
+								NPC.velocity = new Vector2(((P.position.X - 500) - NPC.position.X) / 32, ((P.position.Y - 150) - NPC.position.Y) / 16);
 							}
 							else
 							{
-								npc.velocity = new Vector2(((P.position.X + 500) - npc.position.X) / 32, ((P.position.Y - 150) - npc.position.Y) / 16);
+								NPC.velocity = new Vector2(((P.position.X + 500) - NPC.position.X) / 32, ((P.position.Y - 150) - NPC.position.Y) / 16);
 								if (phase > 420)
 								{
 									phase = 60;
@@ -438,15 +438,15 @@ namespace SGAmod.NPCs
 
 			//int dust = Dust.NewDust(npc.Center, 0, 0, 178, 0, 5, 0, new Color=Main.hslToRgb((float)(npc.ai[0]/300)%1, 1f, 0.9f), 1f);
 			int dustType = 43;//Main.rand.Next(139, 143);
-			int dustIndex = Dust.NewDust(npc.Center + new Vector2(-16, -16), 32, 32, dustType);//,0,5,0,new Color=Main.hslToRgb((float)(npc.ai[0]/300)%1, 1f, 0.9f),1f);
+			int dustIndex = Dust.NewDust(NPC.Center + new Vector2(-16, -16), 32, 32, dustType);//,0,5,0,new Color=Main.hslToRgb((float)(npc.ai[0]/300)%1, 1f, 0.9f),1f);
 			Dust dust = Main.dust[dustIndex];
 			dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
 			dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;
 			dust.scale *= 3f + Main.rand.Next(-30, 31) * 0.01f;
 			dust.fadeIn = 0f;
 			dust.noGravity = true;
-			dust.color = Main.hslToRgb((float)(npc.ai[0] / 300) % 1, 1f, 0.9f);
-			npc.spriteDirection = rotatationsensation;
+			dust.color = Main.hslToRgb((float)(NPC.ai[0] / 300) % 1, 1f, 0.9f);
+			NPC.spriteDirection = rotatationsensation;
 
 		}
 
@@ -482,7 +482,7 @@ namespace SGAmod.NPCs
 		public override void FindFrame(int frameHeight)
 		{
 			//npc.spriteDirection = (int)npc.ai[1]*14;
-			npc.frame.Y = 0;
+			NPC.frame.Y = 0;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -500,23 +500,23 @@ namespace SGAmod.NPCs
 
 			var shader = GameShaders.Armor.GetShaderFromItemId(ItemID.StardustDye);
 
-			DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), new Vector2(300f, 300f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 600, 600)), Microsoft.Xna.Framework.Color.White * 1f, npc.rotation, new Vector2(600f, 600f), npc.scale * 1f, SpriteEffects.None, 0);
+			DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), new Vector2(300f, 300f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 600, 600)), Microsoft.Xna.Framework.Color.White * 1f, NPC.rotation, new Vector2(600f, 600f), NPC.scale * 1f, SpriteEffects.None, 0);
 			shader.Apply(null);
 
-			Color glowingcolors1 = Main.hslToRgb((float)(npc.ai[0] / 300) % 1, 1f, 0.9f);
-			Color glowingcolors2 = Main.hslToRgb((float)(-npc.ai[0] / 300) % 1, 1f, 0.9f - (float)Scale / 30);
-			Color glowingcolors3 = Main.hslToRgb((float)(npc.ai[0] / 80) % 1, 1f, 0.9f - (float)Scale / 90);
-			Texture2D texture = mod.GetTexture("NPCs/TPD");
-			Texture2D texture2 = mod.GetTexture("NPCs/TPD1");
-			Texture2D texture3 = mod.GetTexture("NPCs/TPD2");
+			Color glowingcolors1 = Main.hslToRgb((float)(NPC.ai[0] / 300) % 1, 1f, 0.9f);
+			Color glowingcolors2 = Main.hslToRgb((float)(-NPC.ai[0] / 300) % 1, 1f, 0.9f - (float)Scale / 30);
+			Color glowingcolors3 = Main.hslToRgb((float)(NPC.ai[0] / 80) % 1, 1f, 0.9f - (float)Scale / 90);
+			Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/TPD").Value;
+			Texture2D texture2 = Mod.Assets.Request<Texture2D>("NPCs/TPD1").Value;
+			Texture2D texture3 = Mod.Assets.Request<Texture2D>("NPCs/TPD2").Value;
 			//Vector2 drawPos = npc.Center-Main.screenPosition;
-			Vector2 drawPos = npc.Center - Main.screenPosition;
-			spriteBatch.Draw(texture, drawPos, null, lightColor, npc.spriteDirection, new Vector2(16, 16), new Vector2(3, 3), SpriteEffects.None, 0f);
-			spriteBatch.Draw(texture2, drawPos, null, glowingcolors1, npc.spriteDirection, new Vector2(16, 16), new Vector2(3, 3), SpriteEffects.None, 0f);
+			Vector2 drawPos = NPC.Center - Main.screenPosition;
+			spriteBatch.Draw(texture, drawPos, null, lightColor, NPC.spriteDirection, new Vector2(16, 16), new Vector2(3, 3), SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture2, drawPos, null, glowingcolors1, NPC.spriteDirection, new Vector2(16, 16), new Vector2(3, 3), SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
-			spriteBatch.Draw(texture3, drawPos, null, glowingcolors2, npc.spriteDirection, new Vector2(16, 16), new Vector2(3, 3) * (1), SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture3, drawPos, null, glowingcolors2, NPC.spriteDirection, new Vector2(16, 16), new Vector2(3, 3) * (1), SpriteEffects.None, 0f);
 			if (phase > 0)
 			{
 

@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using System.Collections.Generic;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Terraria.GameContent.Generation;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ObjectData;
@@ -16,7 +16,7 @@ namespace SGAmod.Tiles
 {
 	public class MoistStone : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
@@ -44,7 +44,7 @@ namespace SGAmod.Tiles
 
 			for (int xi = 1; xi <= 1; xi += 1)
 			{
-				if (!Main.tile[i, j - xi].active())
+				if (!Main.tile[i, j - xi].HasTile)
 				{
 					//if (Main.rand.Next(6) == 1)
 					//{
@@ -52,7 +52,7 @@ namespace SGAmod.Tiles
 					if (xi<0)
 					onts = new string[] { "SwampGrassGrowTop", "SwampGrassGrowTop2", "SwampGrassGrowTop3" };
 
-					WorldGen.PlaceObject(i, j - xi, mod.TileType(onts[Main.rand.Next(onts.Length)]), true);
+					WorldGen.PlaceObject(i, j - xi, Mod.Find<ModTile>(onts[Main.rand.Next(onts.Length)]).Type, true);
 					//}
 				}
 			}
@@ -61,7 +61,7 @@ namespace SGAmod.Tiles
 	}
 	public class SwampGrassGrow : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileCut[Type] = true;
@@ -79,8 +79,8 @@ namespace SGAmod.Tiles
 
 			TileObjectData.newTile.AnchorValidTiles = new int[]
 			{
-				mod.TileType("MoistStone")
-			};
+Mod.Find<ModTile>("MoistStone")
+.Type			};
 			TileObjectData.addTile(Type);
 		}
 
@@ -98,23 +98,23 @@ namespace SGAmod.Tiles
 
 		public override bool Drop(int i, int j)
 		{
-			int stage = Main.tile[i, j].frameX / 18;
+			int stage = Main.tile[i, j].TileFrameX / 18;
 			if (stage == 2 && Main.rand.Next(5)<1)
 			{
-				Item.NewItem(i * 16, j * 16, 0, 0, mod.ItemType("SwampSeeds"),Main.rand.Next(1,4));
+				Item.NewItem(i * 16, j * 16, 0, 0, Mod.Find<ModItem>("SwampSeeds").Type,Main.rand.Next(1,4));
 			}
 			return false;
 		}
 
 		public override void RandomUpdate(int i, int j)
 		{
-			if (Main.tile[i, j].frameX == 0)
+			if (Main.tile[i, j].TileFrameX == 0)
 			{
-				Main.tile[i, j].frameX += 18;
+				Main.tile[i, j].TileFrameX += 18;
 			}
-			else if (Main.tile[i, j].frameX == 18)
+			else if (Main.tile[i, j].TileFrameX == 18)
 			{
-				Main.tile[i, j].frameX += 18;
+				Main.tile[i, j].TileFrameX += 18;
 			}
 		}
 	}
@@ -145,8 +145,8 @@ namespace SGAmod.Tiles
 
 			TileObjectData.newTile.AnchorValidTiles = new int[]
 			{
-				mod.TileType("MoistStone")
-			};
+Mod.Find<ModTile>("MoistStone")
+.Type			};
 			TileObjectData.addTile(Type);
 		}
 	}
@@ -172,7 +172,7 @@ namespace SGAmod.Tiles
 
 	public class MoistSand : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
@@ -190,7 +190,7 @@ namespace SGAmod.Tiles
 			TileID.Sets.CanBeClearedDuringGeneration[Type] = true;
 			TileID.Sets.Conversion.HardenedSand[Type] = true;
 			TileID.Sets.Mud[Type] = true;
-			drop = mod.ItemType("MoistSand");
+			drop = Mod.Find<ModItem>("MoistSand").Type;
 			AddMapEntry(new Color(140, 160, 100));
 			SetModCactus(new MudCactus());
 		}
@@ -208,7 +208,7 @@ namespace SGAmod.Tiles
 
 		public override Texture2D GetTexture()
 		{
-			return mod.GetTexture("Tiles/MudCactus");
+			return mod.Assets.Request<Texture2D>("Tiles/MudCactus").Value;
 		}
 	}
 }

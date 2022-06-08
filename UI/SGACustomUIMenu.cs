@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using SGAmod.UI;
 using SGAmod.UI.UIClasses;
+using Terraria.Audio;
 
 namespace SGAmod.UI
 {
@@ -145,7 +146,7 @@ namespace SGAmod.UI
 			this.EnchantingCataylstPanel.Top.Set(100, 0f);
 			this.basePanel.Append(this.EnchantingCataylstPanel);
 
-			this.EnchantingCataylstPanel2 = new EnchantingCataylst2Panel(0, 0, ModContent.GetTexture("SGAmod/Items/UnmanedBar"), "Place 5 Novus bars here");
+			this.EnchantingCataylstPanel2 = new EnchantingCataylst2Panel(0, 0, ModContent.Request<Texture2D>("SGAmod/Items/UnmanedBar"), "Place 5 Novus bars here");
 			this.EnchantingCataylstPanel2.Left.Set((EnchantingCataylstPanel.Left.Pixels + EnchantingCataylstPanel.Width.Pixels) + 15f, 0f);
 			this.EnchantingCataylstPanel2.Top.Set(100, 0f);
 			this.basePanel.Append(this.EnchantingCataylstPanel2);
@@ -267,7 +268,7 @@ namespace SGAmod.UI
 				this.EItemPanel.item.damage += 10;
 
 
-				Main.PlaySound(SoundID.Item, -1, -1, 46, 1f, 0.25f);
+				SoundEngine.PlaySound(SoundID.Item, -1, -1, 46, 1f, 0.25f);
 			}
 		}
 

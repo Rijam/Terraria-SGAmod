@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Idglibrary;
 using SGAmod.Dimensions;
 using SGAmod.Dimensions.NPCs;
@@ -16,6 +16,7 @@ using Terraria.Graphics;
 using System.Linq;
 using SGAmod.Effects;
 using Terraria.Utilities;
+using Terraria.Audio;
 
 //To Do, make sword fly into the ground and get stuck, to attack it
 
@@ -51,7 +52,7 @@ namespace SGAmod.NPCs.Wraiths
 			{
 				for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / (float)ammount)
 				{
-					Projectile proj = Main.projectile[Projectile.NewProjectile(boss.npc.Center, (boss.npc.rotation+f+(boss.specialState == (int)StateIds.DashAtAnimedAngle ? MathHelper.PiOver2 : 0) - MathHelper.PiOver4).ToRotationVector2() * projSpeed, projType, damage, 5f)];
+					Projectile proj = Main.projectile[Projectile.NewProjectile(boss.NPC.Center, (boss.NPC.rotation+f+(boss.specialState == (int)StateIds.DashAtAnimedAngle ? MathHelper.PiOver2 : 0) - MathHelper.PiOver4).ToRotationVector2() * projSpeed, projType, damage, 5f)];
 					proj.hostile = true;
 					proj.friendly = false;
 				}
@@ -75,7 +76,7 @@ namespace SGAmod.NPCs.Wraiths
 		{
 			if (boss.SpecialStateTimer % projHowOften == 0)
 			{
-				Projectile proj = Main.projectile[Projectile.NewProjectile(boss.npc.Center, (boss.npc.rotation - MathHelper.PiOver4).ToRotationVector2() * projSpeed, projType, damage, 5f)];
+				Projectile proj = Main.projectile[Projectile.NewProjectile(boss.NPC.Center, (boss.NPC.rotation - MathHelper.PiOver4).ToRotationVector2() * projSpeed, projType, damage, 5f)];
 				proj.hostile = true;
 				proj.friendly = false;
 			}
@@ -162,11 +163,11 @@ namespace SGAmod.NPCs.Wraiths
 
         public override bool CheckDead()
         {
-			if (specialState == 0 && npc.life < 1 && !npc.lavaImmune)
+			if (specialState == 0 && NPC.life < 1 && !NPC.lavaImmune)
 			{
 				ChangeState((int)StateIds.Transform);
-				npc.lifeMax *= 3;
-				npc.life = npc.lifeMax;
+				NPC.lifeMax *= 3;
+				NPC.life = NPC.lifeMax;
 
 
 				camlength = 75;
@@ -191,11 +192,11 @@ namespace SGAmod.NPCs.Wraiths
 				//brothers.Add(this);
 				foreach (CaliburnGuardianHardmode sworder in brothers)
 				{
-					sworder.npc.realLife = -1;
-					sworder.npc.Center = npc.Center;
+					sworder.NPC.realLife = -1;
+					sworder.NPC.Center = NPC.Center;
 					sworder.NPCLoot();
-					sworder.npc.boss = false;
-					sworder.npc.active = false;
+					sworder.NPC.boss = false;
+					sworder.NPC.active = false;
 				}
 			//}
 			//npc.StrikeNPC(npc.lifeMax, 5, 1);
@@ -210,7 +211,7 @@ namespace SGAmod.NPCs.Wraiths
 
 			if (evt.AbsoluteFrame < camlength)
 			{
-				Vector2 diff = npc.Center - (new Vector2(Main.screenWidth, Main.screenHeight) / 2f);
+				Vector2 diff = NPC.Center - (new Vector2(Main.screenWidth, Main.screenHeight) / 2f);
 				scenecamend = Vector3.Lerp(cutscenestartpos, new Vector3(diff.X, diff.Y, 1f), evt.Frame / (float)evt.Duration);
 			}
 
@@ -244,11 +245,11 @@ namespace SGAmod.NPCs.Wraiths
 			if (npcid >= 0)
             {
 				NPC npc = Main.npc[npcid];
-				CaliburnGuardianHardmode brother = npc.modNPC as CaliburnGuardianHardmode;
+				CaliburnGuardianHardmode brother = npc.ModNPC as CaliburnGuardianHardmode;
 				brother.specialState = state;
 				brother.SpecialStateTimer = stateTime;
 				brother.leaderId = leader;
-				npc.realLife = leader.npc.whoAmI;
+				npc.realLife = leader.NPC.whoAmI;
 				npc.ai[2] = npcai2;
 				leader.brothers.Add(brother);
 				brother.brothers.Add(leader);
@@ -264,7 +265,7 @@ namespace SGAmod.NPCs.Wraiths
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Wrath of Caliburn");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 
 		public void AddAttackOrder(bool forceground=false)
@@ -549,7 +550,7 @@ namespace SGAmod.NPCs.Wraiths
 
 		public void PhaseAdvanceState()
 		{
-			npc.dontTakeDamage = true;
+			NPC.dontTakeDamage = true;
 
 			if (SpecialStateTimer < (Leader ? 140 : 160))
 			{
@@ -567,13 +568,13 @@ namespace SGAmod.NPCs.Wraiths
 
 			Vector2 playerPos = P.Center + new Vector2(leftOrRight * (240f* xpos), -240f);
 
-			npc.Center += (playerPos - npc.Center) * MathHelper.SmoothStep(0f, 1f, -5f+(easeIn * 10f));
-			npc.velocity *= 0.950f;
+			NPC.Center += (playerPos - NPC.Center) * MathHelper.SmoothStep(0f, 1f, -5f+(easeIn * 10f));
+			NPC.velocity *= 0.950f;
 
 			float percentSin = ((float)SpecialStateTimer) / timeMax;
-			npc.rotation += (float)Math.Sin(MathHelper.Pi * percentSin) * 0.45f;
+			NPC.rotation += (float)Math.Sin(MathHelper.Pi * percentSin) * 0.45f;
 
-			npc.rotation = npc.rotation.AngleLerp((Vector2.UnitY).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn * 1.25f, 0f, 1f));
+			NPC.rotation = NPC.rotation.AngleLerp((Vector2.UnitY).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn * 1.25f, 0f, 1f));
 
 			if (SpecialStateTimer > timeMax)
 			{
@@ -587,8 +588,8 @@ namespace SGAmod.NPCs.Wraiths
 		public void TransformState()
 		{
 			float timeMax = 300f;
-			npc.dontTakeDamage = true;
-			npc.knockBackResist = 0f;
+			NPC.dontTakeDamage = true;
+			NPC.knockBackResist = 0f;
 
 			float percentSin = ((float)SpecialStateTimer) / timeMax;
 
@@ -600,41 +601,41 @@ namespace SGAmod.NPCs.Wraiths
 
 				if (SpecialStateTimer == 140)
 				{
-					specialStateVar = (P.Center - npc.Center);
-					var bro = SpawnBrother(this, npc.Center, specialState, SpecialStateTimer, -1, (int)((npc.ai[2] + 1)) % 3);
-					bro.npc.velocity = Vector2.Normalize(specialStateVar).RotatedBy(MathHelper.PiOver2) * 12f;
+					specialStateVar = (P.Center - NPC.Center);
+					var bro = SpawnBrother(this, NPC.Center, specialState, SpecialStateTimer, -1, (int)((NPC.ai[2] + 1)) % 3);
+					bro.NPC.velocity = Vector2.Normalize(specialStateVar).RotatedBy(MathHelper.PiOver2) * 12f;
 					bro.globalStateTimer = globalStateTimer;
 				}
 
 				if (SpecialStateTimer == 180)
 				{
-					var bro = SpawnBrother(this, npc.Center, specialState, SpecialStateTimer, 1, (int)((npc.ai[2] + 2)) % 3);
-					bro.npc.velocity = Vector2.Normalize(specialStateVar).RotatedBy(-MathHelper.PiOver2) * 12f;
+					var bro = SpawnBrother(this, NPC.Center, specialState, SpecialStateTimer, 1, (int)((NPC.ai[2] + 2)) % 3);
+					bro.NPC.velocity = Vector2.Normalize(specialStateVar).RotatedBy(-MathHelper.PiOver2) * 12f;
 					bro.globalStateTimer = globalStateTimer;
 				}
 			}
 
 			if (SpecialStateTimer > 150)
 			{
-				npc.spriteDirection = -1;
+				NPC.spriteDirection = -1;
 			}
 
-			npc.velocity *= 0.90f;
+			NPC.velocity *= 0.90f;
 
-			npc.rotation += (float)Math.Sin(MathHelper.Pi * percentSin) * 0.45f;
+			NPC.rotation += (float)Math.Sin(MathHelper.Pi * percentSin) * 0.45f;
 
 			swordFadeOut = MathHelper.Clamp((float)Math.Sin((MathHelper.Pi * percentSin)-(MathHelper.Pi * 0.0025f))*1.50f, 0f, 5f);
 
 			afterGlow = 1f-MathHelper.Clamp((float)Math.Sin((MathHelper.Pi * percentSin)-(MathHelper.Pi * 0.0025f))*1.50f, 0f, 1f);
 
 			if (SpecialStateTimer > 150)
-				npc.rotation.AngleLerp((P.Center - npc.Center).ToRotation() + MathHelper.PiOver4, (SpecialStateTimer - (timeMax - 200f)) / timeMax);
+				NPC.rotation.AngleLerp((P.Center - NPC.Center).ToRotation() + MathHelper.PiOver4, (SpecialStateTimer - (timeMax - 200f)) / timeMax);
 
 			swordFadeOut *= 1f-MathHelper.Clamp((swordFadeOut/(float)(timeMax-30))/30f, 0f, 1f);
 
 			if (SpecialStateTimer > timeMax)
 			{
-				npc.lavaImmune = true;
+				NPC.lavaImmune = true;
 				ChangeState();
 			}
 		}
@@ -647,11 +648,11 @@ namespace SGAmod.NPCs.Wraiths
 
 			specialStateVar.X += easeIn;
 
-			npc.rotation = npc.rotation.AngleLerp((P.Center - npc.Center).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn * 2f, 0f, 1f));
+			NPC.rotation = NPC.rotation.AngleLerp((P.Center - NPC.Center).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn * 2f, 0f, 1f));
 
-			specialStateVar.Y = npc.rotation - MathHelper.PiOver4;
+			specialStateVar.Y = NPC.rotation - MathHelper.PiOver4;
 
-			npc.velocity *= 0.925f;
+			NPC.velocity *= 0.925f;
 
 			if (SpecialStateTimer > timeMax)
 			{
@@ -671,22 +672,22 @@ namespace SGAmod.NPCs.Wraiths
 			if (easeIn2>=1f)
 			nohit = -10;
 
-			specialStateVar.Y = npc.rotation - MathHelper.PiOver4;
+			specialStateVar.Y = NPC.rotation - MathHelper.PiOver4;
 
-			Vector2 differ = npc.Center - leaderId.npc.Center;
+			Vector2 differ = NPC.Center - leaderId.NPC.Center;
 
-			Vector2 toPosition = leaderId.npc.Center + (Vector2.UnitX * (240f * currentAttack.timerVariable2.Y)).RotatedBy(differ.ToRotation());
-			Vector2 toPosition2 = leaderId.npc.Center + (Vector2.UnitX * (32f * currentAttack.timerVariable2.Y)).RotatedBy((leftOrRight * (MathHelper.Pi / 2f)) + (globalStateTimer* currentAttack.spinSpeed) / 2f);
+			Vector2 toPosition = leaderId.NPC.Center + (Vector2.UnitX * (240f * currentAttack.timerVariable2.Y)).RotatedBy(differ.ToRotation());
+			Vector2 toPosition2 = leaderId.NPC.Center + (Vector2.UnitX * (32f * currentAttack.timerVariable2.Y)).RotatedBy((leftOrRight * (MathHelper.Pi / 2f)) + (globalStateTimer* currentAttack.spinSpeed) / 2f);
 
 			Vector2 toPos = Vector2.Lerp(toPosition, toPosition2, easeIn2);
 
-			npc.Center += (toPos - npc.Center) * MathHelper.SmoothStep(0f, 1f, easeIn);
-			npc.velocity *= 0.975f;
+			NPC.Center += (toPos - NPC.Center) * MathHelper.SmoothStep(0f, 1f, easeIn);
+			NPC.velocity *= 0.975f;
 
-			npc.rotation = npc.rotation.AngleLerp((npc.Center- leaderId.npc.Center).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn2 * 1.25f, 0f, 1f));
+			NPC.rotation = NPC.rotation.AngleLerp((NPC.Center- leaderId.NPC.Center).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn2 * 1.25f, 0f, 1f));
 
 			if (leaderId.specialState == (int)StateIds.LookAtPlayer)
-			leaderId.npc.velocity *= 0.85f;
+			leaderId.NPC.velocity *= 0.85f;
 
 			if (SpecialStateTimer > timeMax)
 			{
@@ -704,24 +705,24 @@ namespace SGAmod.NPCs.Wraiths
 
 			specialStateVar.X = currentAttack.timerVariable2.X*0.025f;
 
-			specialStateVar.Y = npc.rotation -MathHelper.PiOver4;
+			specialStateVar.Y = NPC.rotation -MathHelper.PiOver4;
 
-			Vector2 differ = npc.Center- P.Center;
+			Vector2 differ = NPC.Center- P.Center;
 
 			Vector2 toPosition = P.Center + (Vector2.UnitX * (640f * currentAttack.timerVariable2.Y)).RotatedBy(differ.ToRotation());
 			Vector2 toPosition2 = P.Center + (Vector2.UnitX * (640f * currentAttack.timerVariable2.Y)).RotatedBy((leftOrRight*(MathHelper.Pi/1.414213562373f))+((globalStateTimer*currentAttack.spinSpeed)/ 30f));
 
 			Vector2 toPos = Vector2.Lerp(toPosition,toPosition2, easeIn2);
 
-			npc.Center += (toPos-npc.Center) * MathHelper.SmoothStep(0f,1f, easeIn);
-			npc.velocity *= 0.975f;
+			NPC.Center += (toPos-NPC.Center) * MathHelper.SmoothStep(0f,1f, easeIn);
+			NPC.velocity *= 0.975f;
 
-			npc.rotation = npc.rotation.AngleLerp((P.Center - npc.Center).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn2 * 1.25f, 0f, 1f));
+			NPC.rotation = NPC.rotation.AngleLerp((P.Center - NPC.Center).ToRotation() + MathHelper.PiOver4, MathHelper.Clamp(easeIn2 * 1.25f, 0f, 1f));
 
 			if (SpecialStateTimer > timeMax)
 			{
-				(P.Center - npc.Center).ToRotation();
-				specialStateVar.Y = npc.rotation - MathHelper.PiOver4;
+				(P.Center - NPC.Center).ToRotation();
+				specialStateVar.Y = NPC.rotation - MathHelper.PiOver4;
 				ChangeState();
 			}
 		}
@@ -735,7 +736,7 @@ namespace SGAmod.NPCs.Wraiths
 
 			specialStateVar.X = currentAttack.timerVariable2.X * 0.025f;
 
-			specialStateVar.Y = npc.rotation - MathHelper.PiOver4;
+			specialStateVar.Y = NPC.rotation - MathHelper.PiOver4;
 
 			//Vector2 toPosition = P.Center + (Vector2.UnitX.RotatedBy(((MathHelper.TwoPi * (2f / 3f)) * (float)leftOrRight) * (640f* currentAttack.timerVariable2.Y))).RotatedBy(specialStateVar.X* easeIn);
 
@@ -743,15 +744,15 @@ namespace SGAmod.NPCs.Wraiths
 
 			Vector2 toPos = currentAttack.hoverArea;
 
-			npc.Center += (toPos - npc.Center) * MathHelper.SmoothStep(0f, 1f, easeIn);
-			npc.velocity *= 0.975f;
+			NPC.Center += (toPos - NPC.Center) * MathHelper.SmoothStep(0f, 1f, easeIn);
+			NPC.velocity *= 0.975f;
 
-			npc.rotation = npc.rotation.AngleLerp(currentAttack.lookAt + MathHelper.PiOver4, MathHelper.Clamp(easeIn2 * 1.25f, 0f, 1f));
+			NPC.rotation = NPC.rotation.AngleLerp(currentAttack.lookAt + MathHelper.PiOver4, MathHelper.Clamp(easeIn2 * 1.25f, 0f, 1f));
 
 			if (SpecialStateTimer > timeMax)
 			{
-				(P.Center - npc.Center).ToRotation();
-				specialStateVar.Y = npc.rotation - MathHelper.PiOver4;
+				(P.Center - NPC.Center).ToRotation();
+				specialStateVar.Y = NPC.rotation - MathHelper.PiOver4;
 				ChangeState();
 			}
 
@@ -767,7 +768,7 @@ namespace SGAmod.NPCs.Wraiths
 
 			if (SpecialStateTimer == 8)
             {
-				var sound = Main.PlaySound(SoundID.DD2_JavelinThrowersAttack, (int)npc.Center.X, (int)npc.Center.Y);
+				var sound = SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack, (int)NPC.Center.X, (int)NPC.Center.Y);
 				if (sound != null)
 				{
 					sound.Pitch = -0.5f;
@@ -779,9 +780,9 @@ namespace SGAmod.NPCs.Wraiths
 				trailAlpha = MathHelper.Clamp(trailAlpha + 0.22f, 0f, 1.25f);
 			}
 
-			npc.velocity *= 0.96f;
+			NPC.velocity *= 0.96f;
 
-			npc.velocity += specialStateVar.Y.ToRotationVector2() * easeIn * (currentAttack.timerVariable2.X*2f);
+			NPC.velocity += specialStateVar.Y.ToRotationVector2() * easeIn * (currentAttack.timerVariable2.X*2f);
 
 			if (SpecialStateTimer > timeMax)
 			{
@@ -793,21 +794,21 @@ namespace SGAmod.NPCs.Wraiths
 		public void DashIntoTheGroundState()
 		{
 			DashAtAnimedAngleState(false);
-			if (npc.velocity.Length() > 0 && SpecialStateTimer > 10)
+			if (NPC.velocity.Length() > 0 && SpecialStateTimer > 10)
 			{
 				float timeMax = (float)currentAttack.time;
-				Vector2 diff = P.MountedCenter - npc.Center;
+				Vector2 diff = P.MountedCenter - NPC.Center;
 
 				//if (Vector2.Dot(Vector2.Normalize(diff), Vector2.Normalize(npc.velocity)) < 0)
 				//{
 
-					bool collide = Collision.CanHit(npc.Center, 16, 16, npc.Center + npc.velocity/2, 16, 16);
+					bool collide = Collision.CanHit(NPC.Center, 16, 16, NPC.Center + NPC.velocity/2, 16, 16);
 
 					if (!collide && SpecialStateTimer > 10)
 					{
-					while(!Collision.CanHit(npc.Center, 16, 16, npc.Center + Vector2.Normalize(npc.velocity)*32, 16, 16))
+					while(!Collision.CanHit(NPC.Center, 16, 16, NPC.Center + Vector2.Normalize(NPC.velocity)*32, 16, 16))
                     {
-						npc.Center -= Vector2.Normalize(npc.velocity) * 2;
+						NPC.Center -= Vector2.Normalize(NPC.velocity) * 2;
                     }
 
 					ChangeState((int)StateIds.Stuck);
@@ -822,24 +823,24 @@ namespace SGAmod.NPCs.Wraiths
 
 			//npc.behindTiles = true;
 
-			npc.velocity = Vector2.Zero;
+			NPC.velocity = Vector2.Zero;
 
 			if (currentAttack.timerVariable2.Y< 1000)
             {
 				currentAttack.timerVariable2.Y = 1000;
-				SGAmod.AddScreenShake(16f,720, npc.Center);
+				SGAmod.AddScreenShake(16f,720, NPC.Center);
 
 				dontTakeOrders = 420;
 
-				var snd = Main.PlaySound(SoundID.DD2_KoboldIgnite, npc.Center);
+				var snd = SoundEngine.PlaySound(SoundID.DD2_KoboldIgnite, NPC.Center);
 				if (snd != null)
 				{
 					snd.Pitch = -0.500f;
 				}
-				Projectile.NewProjectile(npc.Center, Vector2.UnitY, ProjectileID.DD2OgreSmash, 50, 15);
+				Projectile.NewProjectile(NPC.Center, Vector2.UnitY, ProjectileID.DD2OgreSmash, 50, 15);
 				for (int i = 0; i < 16; i += 1)
 				{
-					int dust = Dust.NewDust(npc.Hitbox.TopLeft(), npc.Hitbox.Width, npc.Hitbox.Height, mod.DustType("NovusSparkle"));
+					int dust = Dust.NewDust(NPC.Hitbox.TopLeft(), NPC.Hitbox.Width, NPC.Hitbox.Height, Mod.Find<ModDust>("NovusSparkle").Type);
 					Main.dust[dust].color = new Color(180, 60, 140);
 					Main.dust[dust].alpha = 181;
 				}
@@ -912,7 +913,7 @@ namespace SGAmod.NPCs.Wraiths
 				currentAttack.Update();
             }
 
-			if (npc.life < (int)(npc.lifeMax * 0.40f) && phase == 1 && Leader)//Advance to Phase 3
+			if (NPC.life < (int)(NPC.lifeMax * 0.40f) && phase == 1 && Leader)//Advance to Phase 3
 			{
 				currentAttack = null;
 				List<CaliburnGuardianHardmode> us = new List<CaliburnGuardianHardmode>(brothers);
@@ -926,7 +927,7 @@ namespace SGAmod.NPCs.Wraiths
 				}
 			}
 
-			if (npc.life < (int)(npc.lifeMax * 0.80f) && phase==0 && Leader)//Advance to Phase 2
+			if (NPC.life < (int)(NPC.lifeMax * 0.80f) && phase==0 && Leader)//Advance to Phase 2
             {
 				currentAttack = null;
 				List<CaliburnGuardianHardmode> us = new List<CaliburnGuardianHardmode>(brothers);
@@ -940,8 +941,8 @@ namespace SGAmod.NPCs.Wraiths
 				}
 			}
 
-			npc.hide = false;
-			npc.behindTiles = false;
+			NPC.hide = false;
+			NPC.behindTiles = false;
 
 			if (specialState == (int)StateIds.Transform)
 				TransformState();
@@ -960,7 +961,7 @@ namespace SGAmod.NPCs.Wraiths
 				HoverState();
 			if (specialState == (int)StateIds.Stuck)
 			{
-				npc.behindTiles = true;
+				NPC.behindTiles = true;
 				StuckState();
             }
 			if (specialState == (int)StateIds.DashIntoTheGround)
@@ -972,17 +973,17 @@ namespace SGAmod.NPCs.Wraiths
 		{
 			trailAlpha = MathHelper.Clamp(trailAlpha - 0.10f, 0f, 2f);
 
-			if (npc.ai[3] < 10 && Leader)
+			if (NPC.ai[3] < 10 && Leader)
 			{
-				npc.ai[2] = Main.rand.Next(0, 3);
-				npc.ai[3] = 10;
-				npc.netUpdate = true;
+				NPC.ai[2] = Main.rand.Next(0, 3);
+				NPC.ai[3] = 10;
+				NPC.netUpdate = true;
 			}
 			if (specialState != 0)
             {
 				globalStateTimer += 1;
 				_specialStateTimer += 1;
-				npc.dontTakeDamage = (!P.GetModPlayer<SGAPlayer>().DankShrineZone && !debugMode);
+				NPC.dontTakeDamage = (!P.GetModPlayer<SGAPlayer>().DankShrineZone && !debugMode);
 
 				StateMachine();
 
@@ -995,7 +996,7 @@ namespace SGAmod.NPCs.Wraiths
 
 		protected override void ExtraDraw(SpriteBatch spriteBatch, Texture2D swordtex, int layer)
 		{
-			Vector2 drawPos = npc.Center;
+			Vector2 drawPos = NPC.Center;
 
 			if (layer == -1)
             {
@@ -1004,12 +1005,12 @@ namespace SGAmod.NPCs.Wraiths
 					Main.spriteBatch.End();
 					Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-					Texture2D glow = ModContent.GetTexture("SGAmod/Glow");
+					Texture2D glow = ModContent.Request<Texture2D>("SGAmod/Glow");
 
 					for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 8f)
 					{
-						Vector2 dist2 = Vector2.UnitX.RotatedBy(f + npc.rotation / 8f) * MathHelper.Clamp(64f - (globalStateTimer / 2f), 6f, 640f);
-						spriteBatch.Draw(glow, (drawPos + dist2) - Main.screenPosition, null, Color.White* MathHelper.Clamp(swordFadeOut*1.25f, 0f, 1f)*1f, npc.rotation+MathHelper.PiOver4, glow.Size() / 2f, new Vector2(0.5f,1f)*(1.5f+(npc.scale*(globalStateTimer/128f)*0.75f)), npc.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+						Vector2 dist2 = Vector2.UnitX.RotatedBy(f + NPC.rotation / 8f) * MathHelper.Clamp(64f - (globalStateTimer / 2f), 6f, 640f);
+						spriteBatch.Draw(glow, (drawPos + dist2) - Main.screenPosition, null, Color.White* MathHelper.Clamp(swordFadeOut*1.25f, 0f, 1f)*1f, NPC.rotation+MathHelper.PiOver4, glow.Size() / 2f, new Vector2(0.5f,1f)*(1.5f+(NPC.scale*(globalStateTimer/128f)*0.75f)), NPC.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 					}
 
 					Main.spriteBatch.End();
@@ -1021,12 +1022,12 @@ namespace SGAmod.NPCs.Wraiths
 
 			if (layer == 0)
 			{
-				Color swordColor = Main.hslToRgb(npc.ai[2] / 3f, 0.35f, 0.75f);
+				Color swordColor = Main.hslToRgb(NPC.ai[2] / 3f, 0.35f, 0.75f);
 				if (trailAlpha >= 0)
 				{
-					TrailHelper trail = new TrailHelper("FadedBasicEffectPass", SGAmod.Instance.GetTexture("SmallLaser"));
+					TrailHelper trail = new TrailHelper("FadedBasicEffectPass", SGAmod.Instance.Assets.Request<Texture2D>("SmallLaser").Value);
 					trail.coordMultiplier = new Vector2(1f, 1f);// projectile.velocity.Length());
-					trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
+					trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
 					trail.trailThickness = 12;
 					trail.strengthPow = 2f;
 					trail.strength = trailAlpha * 2.5f;
@@ -1044,19 +1045,19 @@ namespace SGAmod.NPCs.Wraiths
 						return 4f + (float)Math.Sin(percent + MathHelper.PiOver4) * 3f;
 					};*/
 
-					trail.DrawTrail(oldPos.Select(testby => new Vector3(testby.X, testby.Y, 0)).ToList(), npc.Center);
+					trail.DrawTrail(oldPos.Select(testby => new Vector3(testby.X, testby.Y, 0)).ToList(), NPC.Center);
 
 				}
 
 					float alpha = MathHelper.Clamp((globalStateTimer - 260f) / 60f, 0f, 1f);
 					if (alpha > 0)
 					{
-						float dist = (1f + (float)Math.Sin((Main.GlobalTime) * 0.25f))*4f;
+						float dist = (1f + (float)Math.Sin((Main.GlobalTimeWrappedHourly) * 0.25f))*4f;
 						for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 12f)
 						{
-							Vector2 dist2 = Vector2.UnitX.RotatedBy(f + (npc.rotation / 8f)+ (Main.GlobalTime*4f)) * dist;
-							//float ftta = (0.05f + (float)Math.Sin((Main.GlobalTime + f) * MathHelper.Pi) * 0.025f);
-							spriteBatch.Draw(swordtex, (drawPos + dist2) - Main.screenPosition, null, swordColor * appear * alpha * 0.045f, npc.rotation, swordtex.Size() / 2f, npc.scale, npc.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+							Vector2 dist2 = Vector2.UnitX.RotatedBy(f + (NPC.rotation / 8f)+ (Main.GlobalTimeWrappedHourly*4f)) * dist;
+							//float ftta = (0.05f + (float)Math.Sin((Main.GlobalTimeWrappedHourly + f) * MathHelper.Pi) * 0.025f);
+							spriteBatch.Draw(swordtex, (drawPos + dist2) - Main.screenPosition, null, swordColor * appear * alpha * 0.045f, NPC.rotation, swordtex.Size() / 2f, NPC.scale, NPC.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 						}
 					}
 				
@@ -1082,8 +1083,8 @@ namespace SGAmod.NPCs.Wraiths
 
 					for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 12f)
 					{
-						Vector2 dist2 = Vector2.UnitX.RotatedBy(f + npc.rotation / 8f) * MathHelper.Clamp(64f - (globalStateTimer / 2f), 6f, 640f);
-						spriteBatch.Draw(swordtex, (drawPos+ dist2) - Main.screenPosition, null, Color.White, npc.rotation, swordtex.Size() / 2f, npc.scale, npc.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+						Vector2 dist2 = Vector2.UnitX.RotatedBy(f + NPC.rotation / 8f) * MathHelper.Clamp(64f - (globalStateTimer / 2f), 6f, 640f);
+						spriteBatch.Draw(swordtex, (drawPos+ dist2) - Main.screenPosition, null, Color.White, NPC.rotation, swordtex.Size() / 2f, NPC.scale, NPC.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 					}
 
 					Main.spriteBatch.End();
@@ -1095,20 +1096,20 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void NPCLoot()
 		{
-			int[] types = { mod.ItemType("CaliburnTypeA"), mod.ItemType("CaliburnTypeB"), mod.ItemType("CaliburnTypeC") };
-			npc.DropItemInstanced(npc.Center, new Vector2(npc.width, npc.height), types[(int)npc.ai[2]]);
+			int[] types = { Mod.Find<ModItem>("CaliburnTypeA").Type, Mod.Find<ModItem>("CaliburnTypeB").Type, Mod.Find<ModItem>("CaliburnTypeC") .Type};
+			NPC.DropItemInstanced(NPC.Center, new Vector2(NPC.width, NPC.height), types[(int)NPC.ai[2]]);
 
-			if (npc.SGANPCs().OnlyOnce() && Main.projectile.Where(testby => testby.type == ModContent.ProjectileType<SpookyDarkSectorEye>()).Count()<1)
+			if (NPC.SGANPCs().OnlyOnce() && Main.projectile.Where(testby => testby.type == ModContent.ProjectileType<SpookyDarkSectorEye>()).Count()<1)
 			{
 				SGAWorld.downedCaliburnGuardianHardmode = true;
 
-				if (npc.life < 1 && Main.expertMode)
+				if (NPC.life < 1 && Main.expertMode)
                 {
-					Item.NewItem(npc.Center, ModContent.ItemType<Items.Accessories.UndyingValor>());
+					Item.NewItem(NPC.Center, ModContent.ItemType<Items.Accessories.UndyingValor>());
 				}
 
-				if (!SGAWorld.darknessVision && npc.life<1)
-				SpookyDarkSectorEye.Release(npc.Center, true, new Vector2(20, 20));
+				if (!SGAWorld.darknessVision && NPC.life<1)
+				SpookyDarkSectorEye.Release(NPC.Center, true, new Vector2(20, 20));
 			}
 
 		}
@@ -1126,7 +1127,7 @@ namespace SGAmod.NPCs.Wraiths
 	[AutoloadBossHead]
 	public class CaliburnGuardian : ModNPC, ISGABoss
 	{
-		public string Trophy() => "Caliburn"+ names[(int)npc.ai[2]] +"Trophy";
+		public string Trophy() => "Caliburn"+ names[(int)NPC.ai[2]] +"Trophy";
 		public bool Chance() => true;
 		public string RelicName() => "Caliburn";
 		public void NoHitDrops() { }
@@ -1137,12 +1138,12 @@ namespace SGAmod.NPCs.Wraiths
 
 		public virtual bool CanUseAttack(int type)
         {
-			return type == (int)npc.ai[2];
+			return type == (int)NPC.ai[2];
         }
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Spirit of Caliburn");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 
 		protected float[] oldRot = new float[12];
@@ -1162,7 +1163,7 @@ namespace SGAmod.NPCs.Wraiths
 		public virtual void trailingeffect()
 		{
 
-			Rectangle hitbox = new Rectangle((int)npc.position.X - 10, (int)npc.position.Y - 10, npc.height + 10, npc.width + 10);
+			Rectangle hitbox = new Rectangle((int)NPC.position.X - 10, (int)NPC.position.Y - 10, NPC.height + 10, NPC.width + 10);
 
 			for (int k = oldRot.Length - 1; k > 0; k--)
 			{
@@ -1171,33 +1172,33 @@ namespace SGAmod.NPCs.Wraiths
 
 				if (Main.rand.Next(0, 10) == 1)
 				{
-					int typr = mod.DustType("TornadoDust");
+					int typr = Mod.Find<ModDust>("TornadoDust").Type;
 
 					int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, typr);
-					Main.dust[dust].scale = (0.75f * appear)+(npc.velocity.Length()/50f);
+					Main.dust[dust].scale = (0.75f * appear)+(NPC.velocity.Length()/50f);
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-					Vector2 normvel = npc.velocity;
+					Vector2 normvel = NPC.velocity;
 					normvel.Normalize(); normvel *= 2f;
 
-					Main.dust[dust].velocity = ((randomcircle / 1f) + (-normvel))-npc.velocity;
+					Main.dust[dust].velocity = ((randomcircle / 1f) + (-normvel))-NPC.velocity;
 					Main.dust[dust].noGravity = true;
 
 				}
 
 			}
 
-			oldRot[0] = npc.rotation;
-			oldPos[0] = npc.Center;
+			oldRot[0] = NPC.rotation;
+			oldPos[0] = NPC.Center;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			
-			Texture2D tex = Main.npcTexture[npc.type];
-			if (npc.ai[2] == 1)
-				tex = ModContent.GetTexture("SGAmod/Items/Weapons/Caliburn/CaliburnTypeB");
-			if (npc.ai[2] == 2)
-				tex = ModContent.GetTexture("SGAmod/Items/Weapons/Caliburn/CaliburnTypeC");
+			Texture2D tex = Main.npcTexture[NPC.type];
+			if (NPC.ai[2] == 1)
+				tex = ModContent.Request<Texture2D>("SGAmod/Items/Weapons/Caliburn/CaliburnTypeB");
+			if (NPC.ai[2] == 2)
+				tex = ModContent.Request<Texture2D>("SGAmod/Items/Weapons/Caliburn/CaliburnTypeC");
 
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height) / 2f;
 
@@ -1218,8 +1219,8 @@ namespace SGAmod.NPCs.Wraiths
 					{
 						ExtraDraw(spriteBatch, tex, 0);
 					}
-					Vector2 drawPos = ((oldPos[k] - Main.screenPosition)) + (npc.velocity * xx);
-					spriteBatch.Draw(tex, drawPos, null, ((Color.Lerp(lightColor,Color.White, alphaz2) * alphaz) * (appear)) * 0.2f* afterGlow, oldRot[k], drawOrigin, npc.scale, npc.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+					Vector2 drawPos = ((oldPos[k] - Main.screenPosition)) + (NPC.velocity * xx);
+					spriteBatch.Draw(tex, drawPos, null, ((Color.Lerp(lightColor,Color.White, alphaz2) * alphaz) * (appear)) * 0.2f* afterGlow, oldRot[k], drawOrigin, NPC.scale, NPC.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 				}
 			}
 
@@ -1235,7 +1236,7 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override string BossHeadTexture
 		{
-			get { return ("SGAmod/Items/Weapons/Caliburn/CaliburnType"+(new string[3] { "A", "B", "C"})[(int)npc.ai[2]]); }
+			get { return ("SGAmod/Items/Weapons/Caliburn/CaliburnType"+(new string[3] { "A", "B", "C"})[(int)NPC.ai[2]]); }
 		}
 
 		//public override string BossHeadTexture => "Terraria/UI/PVP_2";
@@ -1245,56 +1246,56 @@ namespace SGAmod.NPCs.Wraiths
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 24;
-			npc.height = 24;
-			npc.damage = 15;
-			npc.defDamage = 15;
-			npc.defense = 5;
-			npc.boss = true;
-			npc.lifeMax = 1000;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath7;
-			npc.value = 15000f;
-			npc.knockBackResist = 0.85f;
-			npc.aiStyle = -1;
-			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Swamp_Remix");
-			aiType = -1;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.netAlways = true;
+			NPC.width = 24;
+			NPC.height = 24;
+			NPC.damage = 15;
+			NPC.defDamage = 15;
+			NPC.defense = 5;
+			NPC.boss = true;
+			NPC.lifeMax = 1000;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath7;
+			NPC.value = 15000f;
+			NPC.knockBackResist = 0.85f;
+			NPC.aiStyle = -1;
+			music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Swamp_Remix");
+			AIType = -1;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.netAlways = true;
 
 			if (caliburnlevel == 1)
 			{
-				npc.ai[3] = 1;
-				npc.lifeMax = 2000;
-				npc.value = 40000f;
-				npc.damage = 20;
-				npc.defDamage = 20;
-				npc.defense = 7;
+				NPC.ai[3] = 1;
+				NPC.lifeMax = 2000;
+				NPC.value = 40000f;
+				NPC.damage = 20;
+				NPC.defDamage = 20;
+				NPC.defense = 7;
 			}
 			if (caliburnlevel == 2)
 			{
-				npc.ai[3] = 2;
-				npc.lifeMax = 3500;
-				npc.value = 100000f;
-				npc.damage = 35;
-				npc.defDamage = 35;
-				npc.defense = 10;
+				NPC.ai[3] = 2;
+				NPC.lifeMax = 3500;
+				NPC.value = 100000f;
+				NPC.damage = 35;
+				NPC.defDamage = 35;
+				NPC.defense = 10;
 			}
 			if (caliburnlevel > 2)
 			{
-				npc.ai[3] = 2;
-				npc.lifeMax = 7500;
-				npc.value = 100000f;
-				npc.damage = 75;
-				npc.defDamage = 75;
-				npc.defense = 30;
+				NPC.ai[3] = 2;
+				NPC.lifeMax = 7500;
+				NPC.value = 100000f;
+				NPC.damage = 75;
+				NPC.defDamage = 75;
+				NPC.defense = 30;
 			}
 		}
 		public override void NPCLoot()
 		{
-			if (npc.SGANPCs().OnlyOnce())
+			if (NPC.SGANPCs().OnlyOnce())
 			{
 				if (SGAWorld.downedMurk < 2 && SGAWorld.downedCaliburnGuardians == 2)
 					Idglib.Chat("The Moist Stone around Dank Shrines has weakened and can be broken.", 75, 225, 75);
@@ -1321,41 +1322,41 @@ namespace SGAmod.NPCs.Wraiths
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 
 		public void DropBolders()
 		{
-			Player P = Main.player[npc.target];
-			Vector2 theside = new Vector2((P.Center.X - npc.Center.X > 0 ? -300f : 300f)*(0.5f+(float)Math.Sin((double)npc.ai[0]/120f)*0.7f), -200);
+			Player P = Main.player[NPC.target];
+			Vector2 theside = new Vector2((P.Center.X - NPC.Center.X > 0 ? -300f : 300f)*(0.5f+(float)Math.Sin((double)NPC.ai[0]/120f)*0.7f), -200);
 
-			Vector2 itt = ((P.Center + theside) - npc.Center);
+			Vector2 itt = ((P.Center + theside) - NPC.Center);
 			float locspeed = 0.25f;
 
-			npc.velocity = npc.velocity * 0.90f;
+			NPC.velocity = NPC.velocity * 0.90f;
 
 			itt.Normalize();
-			npc.velocity = npc.velocity + (itt * locspeed);
+			NPC.velocity = NPC.velocity + (itt * locspeed);
 
-			npc.rotation = ((float)Math.Cos((double)npc.ai[0] / 6f)*1f)+Math.Max(0f,MathHelper.ToRadians(npc.localAI[0]*8f));
+			NPC.rotation = ((float)Math.Cos((double)NPC.ai[0] / 6f)*1f)+Math.Max(0f,MathHelper.ToRadians(NPC.localAI[0]*8f));
 
-			if (npc.localAI[0] > 0)
+			if (NPC.localAI[0] > 0)
 			{
-				npc.ai[0] -= 1;
+				NPC.ai[0] -= 1;
 
-				int typr = mod.DustType("TornadoDust");
-				double angle = npc.rotation+MathHelper.ToRadians(-45);
-				Vector2 here = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle))*new Vector2(npc.spriteDirection < 0 ? 1f : 1f, 1f);
+				int typr = Mod.Find<ModDust>("TornadoDust").Type;
+				double angle = NPC.rotation+MathHelper.ToRadians(-45);
+				Vector2 here = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle))*new Vector2(NPC.spriteDirection < 0 ? 1f : 1f, 1f);
 
-				int dust = Dust.NewDust((npc.Center-new Vector2(6,6)) + here * 8f, 12, 12, typr);
+				int dust = Dust.NewDust((NPC.Center-new Vector2(6,6)) + here * 8f, 12, 12, typr);
 				Main.dust[dust].scale = 0.75f;
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-				Main.dust[dust].velocity = npc.velocity+ here*3f;
+				Main.dust[dust].velocity = NPC.velocity+ here*3f;
 
 			}
 
-			if (npc.ai[0] % 90 == 0 && npc.localAI[0]<1)
+			if (NPC.ai[0] % 90 == 0 && NPC.localAI[0]<1)
 			{
 				if (CanUseAttack(0))
 				{
@@ -1366,13 +1367,13 @@ namespace SGAmod.NPCs.Wraiths
 						{
 							proj.friendly = false;
 							proj.hostile = true;
-							proj.melee = false;
+							// proj.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 							proj.timeLeft = 300;
 						}
 					}
 				}
 
-				Idglib.Shattershots(npc.Center, P.Center + new Vector2((P.Center.X - npc.Center.X) > 0 ? 600 : -600, 0), new Vector2(P.width, P.height), ProjectileID.Boulder, 50, 3, caliburnlevel * 50, 1+ caliburnlevel, true, 0, true, 300);
+				Idglib.Shattershots(NPC.Center, P.Center + new Vector2((P.Center.X - NPC.Center.X) > 0 ? 600 : -600, 0), new Vector2(P.width, P.height), ProjectileID.Boulder, 50, 3, caliburnlevel * 50, 1+ caliburnlevel, true, 0, true, 300);
 			}
 
 
@@ -1381,33 +1382,33 @@ namespace SGAmod.NPCs.Wraiths
 
 		public void DeployTraps()
 		{
-			Player P = Main.player[npc.target];
-			Vector2 theside = new Vector2((P.Center.X - npc.Center.X > 0 ? -300f : 300f) * (0.5f + (float)Math.Sin((double)npc.ai[0] / 120f) * 0.7f), -200);
-			npc.ai[1] += 1;
-			for (int f = 0; f < (npc.ai[1]*(360f/50f))%360; f = f + 1)
+			Player P = Main.player[NPC.target];
+			Vector2 theside = new Vector2((P.Center.X - NPC.Center.X > 0 ? -300f : 300f) * (0.5f + (float)Math.Sin((double)NPC.ai[0] / 120f) * 0.7f), -200);
+			NPC.ai[1] += 1;
+			for (int f = 0; f < (NPC.ai[1]*(360f/50f))%360; f = f + 1)
 			{
-				int typr = mod.DustType("TornadoDust");
+				int typr = Mod.Find<ModDust>("TornadoDust").Type;
 				double angle = MathHelper.ToRadians(f);
 				Vector2 here = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-				int dust = Dust.NewDust(npc.Center + here*24f, 0,0, typr);
-				Main.dust[dust].scale = (0.5f * appear) + (npc.velocity.Length() / 50f);
+				int dust = Dust.NewDust(NPC.Center + here*24f, 0,0, typr);
+				Main.dust[dust].scale = (0.5f * appear) + (NPC.velocity.Length() / 50f);
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 
-				npc.rotation = npc.rotation.AngleLerp((P.Center-npc.Center).ToRotation()-MathHelper.ToRadians(-45f*npc.spriteDirection), 0.1f);
+				NPC.rotation = NPC.rotation.AngleLerp((P.Center-NPC.Center).ToRotation()-MathHelper.ToRadians(-45f*NPC.spriteDirection), 0.1f);
 
 				Main.dust[dust].velocity = (here*3f);
 				Main.dust[dust].noGravity = true;
 			}
 
 
-			if (npc.ai[1] > 300)
+			if (NPC.ai[1] > 300)
 			{
-				npc.ai[0] = 0;
-				npc.ai[1] = 0;
+				NPC.ai[0] = 0;
+				NPC.ai[1] = 0;
 			}
 
-			if (npc.ai[1] % 50 == 49)
+			if (NPC.ai[1] % 50 == 49)
 			{
 				if (CanUseAttack(1))
 				{
@@ -1432,7 +1433,7 @@ namespace SGAmod.NPCs.Wraiths
 				{
 					for (int f = -10; f < 10; f = f + 1)
 					{
-						if (Main.tile[(int)(P.Center.X / 16) + f, (int)(P.Center.Y / 16) + zz].active())
+						if (Main.tile[(int)(P.Center.X / 16) + f, (int)(P.Center.Y / 16) + zz].HasTile)
 						{
 							heremaybe.Add(new Vector2((int)(P.Center.X / 16f) + f, (int)(P.Center.Y / 16f) + 1));
 						}
@@ -1454,7 +1455,7 @@ namespace SGAmod.NPCs.Wraiths
 				}
 			}
 
-			npc.velocity *= 0.85f;
+			NPC.velocity *= 0.85f;
 
 
 
@@ -1465,18 +1466,18 @@ namespace SGAmod.NPCs.Wraiths
         {
 			appear = Math.Max(appear - 0.03f, Math.Min(appear + 0.025f, 0.50f));
 
-			P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead)
 				{
-					npc.active = false;
+					NPC.active = false;
 				}
 			}
 
-			if (npc.lavaImmune)
+			if (NPC.lavaImmune)
 			dontTakeOrders -= 1;
 
 			nohit += 1;
@@ -1488,76 +1489,76 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void AI()
 		{
-			npc.localAI[0] -= 1;
+			NPC.localAI[0] -= 1;
 
-			npc.knockBackResist = 0.85f;
+			NPC.knockBackResist = 0.85f;
 			if (caliburnlevel>2)
-			npc.knockBackResist = 0f;
+			NPC.knockBackResist = 0f;
 
-			P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
 
 			}
 			else
 			{
-				npc.dontTakeDamage = false;
+				NPC.dontTakeDamage = false;
 				if (!P.GetModPlayer<SGAPlayer>().DankShrineZone && !debugMode)
-					npc.dontTakeDamage = true;
+					NPC.dontTakeDamage = true;
 
-				if (npc.ai[1] < 1)
+				if (NPC.ai[1] < 1)
 				{
-					npc.spriteDirection = npc.velocity.X > 0 ? -1 : 1;
-					npc.ai[0] += 1;
+					NPC.spriteDirection = NPC.velocity.X > 0 ? -1 : 1;
+					NPC.ai[0] += 1;
 				}
 
 				float floattime = (90 - (caliburnlevel * 10));
 
-				Vector2 theside = new Vector2(P.Center.X - npc.Center.X > 0 ? -200 : 200, 0);
-				if (npc.ai[0] % 600 < 280 && !(npc.ai[0] % 1150 > 700))
+				Vector2 theside = new Vector2(P.Center.X - NPC.Center.X > 0 ? -200 : 200, 0);
+				if (NPC.ai[0] % 600 < 280 && !(NPC.ai[0] % 1150 > 700))
 				{
-					theside = new Vector2(P.Center.X - npc.Center.X > 0 ? -120 : 120, 0);
-					theside *= 0.5f + (float)Math.Cos(-npc.ai[0] / (floattime / 4f)) * 0.20f;
+					theside = new Vector2(P.Center.X - NPC.Center.X > 0 ? -120 : 120, 0);
+					theside *= 0.5f + (float)Math.Cos(-NPC.ai[0] / (floattime / 4f)) * 0.20f;
 				}
 
-				Vector2 itt = ((P.Center + theside) - npc.Center);
+				Vector2 itt = ((P.Center + theside) - NPC.Center);
 				float locspeed = 0.25f;
 
-				if (npc.ai[1] > 0)
+				if (NPC.ai[1] > 0)
 				{
 					DeployTraps();
 					return;
 				}
 
-				if (npc.ai[0] % 1150 > 800)
+				if (NPC.ai[0] % 1150 > 800)
 				{
 					DropBolders();
 				}
 				else
 				{
-					npc.localAI[0] = 100;
+					NPC.localAI[0] = 100;
 
-					if (npc.ai[0] % 600 > 350)
+					if (NPC.ai[0] % 600 > 350)
 					{
 						nohit = -10;
 						if (Main.expertMode)
-							npc.knockBackResist = 0f;
-						npc.damage = (int)npc.defDamage * 3;
-						itt = itt = (P.Center - npc.Center + new Vector2(0, -8));
-						npc.rotation = npc.rotation + (0.65f * npc.spriteDirection);
+							NPC.knockBackResist = 0f;
+						NPC.damage = (int)NPC.defDamage * 3;
+						itt = itt = (P.Center - NPC.Center + new Vector2(0, -8));
+						NPC.rotation = NPC.rotation + (0.65f * NPC.spriteDirection);
 
-						if (npc.ai[0] % (70) == 0)
+						if (NPC.ai[0] % (70) == 0)
 						{
 							if (CanUseAttack(2))
-								Idglib.Shattershots(npc.Center, npc.Center - npc.velocity * 26f, new Vector2(P.width, P.height), ProjectileID.CrystalShard, 10, 7.5f + caliburnlevel * 1.25f, 180, 8 + caliburnlevel * 8, true, 0, false, 200);
+								Idglib.Shattershots(NPC.Center, NPC.Center - NPC.velocity * 26f, new Vector2(P.width, P.height), ProjectileID.CrystalShard, 10, 7.5f + caliburnlevel * 1.25f, 180, 8 + caliburnlevel * 8, true, 0, false, 200);
 
 							if (caliburnlevel > 0)
-								Idglib.Shattershots(npc.Center, npc.Center + npc.velocity * 26f, new Vector2(P.width, P.height), ProjectileID.EnchantedBeam, 20, 6f, 30, caliburnlevel, true, 0, false, 200);
+								Idglib.Shattershots(NPC.Center, NPC.Center + NPC.velocity * 26f, new Vector2(P.width, P.height), ProjectileID.EnchantedBeam, 20, 6f, 30, caliburnlevel, true, 0, false, 200);
 
-							npc.velocity = npc.velocity * 0.96f;
-							npc.velocity = npc.velocity + (itt * locspeed);
+							NPC.velocity = NPC.velocity * 0.96f;
+							NPC.velocity = NPC.velocity + (itt * locspeed);
 							itt.Normalize();
-							npc.velocity = itt * 24f;
+							NPC.velocity = itt * 24f;
 							appear = 0.9f;
 						}
 						locspeed = 0.15f;
@@ -1565,35 +1566,35 @@ namespace SGAmod.NPCs.Wraiths
 					}
 					else
 					{
-						npc.damage = (int)npc.defDamage;
-						if (npc.ai[0] % 300 < 60)
+						NPC.damage = (int)NPC.defDamage;
+						if (NPC.ai[0] % 300 < 60)
 						{
 							locspeed = 2.5f;
-							npc.velocity = npc.velocity * 0.92f;
+							NPC.velocity = NPC.velocity * 0.92f;
 						}
 						else
 						{
-							if (npc.ai[0] > 1600 && Main.expertMode)
-								npc.ai[1] = 1;
-							npc.velocity = npc.velocity * 0.96f;
+							if (NPC.ai[0] > 1600 && Main.expertMode)
+								NPC.ai[1] = 1;
+							NPC.velocity = NPC.velocity * 0.96f;
 
-							if (npc.ai[0] % 90 - (caliburnlevel * 10) == 0)
-								Idglib.Shattershots(npc.Center, P.Center + new Vector2((P.Center.X - npc.Center.X) > 0 ? 200 : -200, 0), new Vector2(P.width, P.height), ProjectileID.DiamondBolt, 15, 5, caliburnlevel * 5, 1 + caliburnlevel, true, 0, false, 200);
+							if (NPC.ai[0] % 90 - (caliburnlevel * 10) == 0)
+								Idglib.Shattershots(NPC.Center, P.Center + new Vector2((P.Center.X - NPC.Center.X) > 0 ? 200 : -200, 0), new Vector2(P.width, P.height), ProjectileID.DiamondBolt, 15, 5, caliburnlevel * 5, 1 + caliburnlevel, true, 0, false, 200);
 
 
 						}
 
-						npc.rotation = (float)npc.velocity.X * 0.09f;
+						NPC.rotation = (float)NPC.velocity.X * 0.09f;
 						locspeed = 0.5f;
 					}
 
-					if (npc.ai[0] % 600 > 350 && npc.ai[0] % 300 > 60)
+					if (NPC.ai[0] % 600 > 350 && NPC.ai[0] % 300 > 60)
 					{
-						npc.velocity = npc.velocity * 0.96f;
+						NPC.velocity = NPC.velocity * 0.96f;
 					}
 
 					itt.Normalize();
-					npc.velocity = npc.velocity + (itt * locspeed);
+					NPC.velocity = NPC.velocity + (itt * locspeed);
 				}
 
 			}
@@ -1626,7 +1627,7 @@ namespace SGAmod.NPCs.Wraiths
 
 	public class CalburnSwordAttackNonochrome : CalburnSwordAttack
 	{
-        public override Color ColorToDraw => Color.Lerp(Color.DarkGray, Color.White,MathHelper.Clamp(projectile.timeLeft/300f,0f,1f));
+        public override Color ColorToDraw => Color.Lerp(Color.DarkGray, Color.White,MathHelper.Clamp(Projectile.timeLeft/300f,0f,1f));
         public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Holy Swords");

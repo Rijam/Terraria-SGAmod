@@ -123,7 +123,7 @@ namespace SGAmod
 				string bossName = (string)(selectedBoss.GetType().GetField("internalName", SGAmod.UniversalBindingFlags).GetValue(selectedBoss));
 				string bossTex = (string)(selectedBoss.GetType().GetField("pageTexture", SGAmod.UniversalBindingFlags).GetValue(selectedBoss));
 				List<int> bossNPC = (List<int>)(selectedBoss.GetType().GetField("npcIDs", SGAmod.UniversalBindingFlags).GetValue(selectedBoss));
-				Texture2D tex = ModContent.GetTexture(bossTex);
+				Texture2D tex = ModContent.Request<Texture2D>(bossTex);
 
 				bool hidden = maskedColor == Color.Black;
 
@@ -137,7 +137,7 @@ namespace SGAmod
 				Hellion.HellionTeleport(sb, (pageRect.Size() / 2f) + Main.screenPosition, 1.25f, 128f, false, 0.25f);
 				Hellion.HellionTeleport(sb, (pageRect.Size() / 2f) + Main.screenPosition, 1f, 96f, false);
 
-				sb.Draw(tex, Vector2.Zero + (pageRect.Size() / 2f) + new Vector2(0, (float)Math.Sin(Main.GlobalTime) * 16f), null, hidden ? Color.Black : Color.White, 0, tex.Size() / 2f, 1, SpriteEffects.None, 0f);
+				sb.Draw(tex, Vector2.Zero + (pageRect.Size() / 2f) + new Vector2(0, (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 16f), null, hidden ? Color.Black : Color.White, 0, tex.Size() / 2f, 1, SpriteEffects.None, 0f);
 
 				maskedColor = Main.DiscoColor;
 			};
@@ -344,7 +344,7 @@ namespace SGAmod
 
 					Hellion.HellionTeleport(sb, pageRect.Center() + Main.screenPosition, 1f, 96f, false);
 
-					sb.Draw(tex, Vector2.Zero + pageRect.Center()+new Vector2(0,(float)Math.Sin(Main.GlobalTime)*16f), null, hidden ? Color.Black : Main.DiscoColor, 0, tex.Size()/2f, 1, SpriteEffects.None, 0f);
+					sb.Draw(tex, Vector2.Zero + pageRect.Center()+new Vector2(0,(float)Math.Sin(Main.GlobalTimeWrappedHourly)*16f), null, hidden ? Color.Black : Main.DiscoColor, 0, tex.Size()/2f, 1, SpriteEffects.None, 0f);
 
 					maskedColor = Main.DiscoColor;*/
 

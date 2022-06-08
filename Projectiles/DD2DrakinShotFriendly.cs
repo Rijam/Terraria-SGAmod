@@ -16,16 +16,16 @@ namespace SGAmod.Projectiles
 		public override string Texture => "Terraria/Projectile_" + ProjectileID.DD2DrakinShot;
         public override void SetStaticDefaults()
         {
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;    //The length of old position to be recorded
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;        //The recording mode
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;    //The length of old position to be recorded
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;        //The recording mode
 		}
         public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.DD2DrakinShot);
-			projectile.magic = true;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			aiType = ProjectileID.DD2DrakinShot;
+			Projectile.CloneDefaults(ProjectileID.DD2DrakinShot);
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			AIType = ProjectileID.DD2DrakinShot;
 		}
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
@@ -33,30 +33,30 @@ namespace SGAmod.Projectiles
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-			Texture2D texz = Main.projectileTexture[projectile.type];
+			Texture2D texz = Main.projectileTexture[Projectile.type];
 
 				//Redraw the projectile with the color not influenced by light
 				Vector2 drawOrigin = new Vector2(texz.Width * 0.5f, texz.Height * 0.5f);
 
 			ArmorShaderData stardustsshader = GameShaders.Armor.GetShaderFromItemId(ItemID.StardustDye);
 
-			DrawData value8 = new DrawData(texz, new Vector2(Main.GlobalTime*6f, 64f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 96, 48)), Microsoft.Xna.Framework.Color.White, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0);
+			DrawData value8 = new DrawData(texz, new Vector2(Main.GlobalTimeWrappedHourly*6f, 64f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 96, 48)), Microsoft.Xna.Framework.Color.White, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
 			stardustsshader.UseColor(Color.Purple.ToVector3());
 			stardustsshader.UseOpacity(0.5f);
 			stardustsshader.Apply(null, new DrawData?(value8));
 
-			spriteBatch.Draw(texz, projectile.Center, null, projectile.GetAlpha(lightColor), projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texz, Projectile.Center, null, Projectile.GetAlpha(lightColor), Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 
-			for (int k = 0; k < projectile.oldPos.Length; k++)
+			for (int k = 0; k < Projectile.oldPos.Length; k++)
 			{
-				float alpha = ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-				Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-				Color color = projectile.GetAlpha(lightColor) * alpha;
+				float alpha = ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+				Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+				Color color = Projectile.GetAlpha(lightColor) * alpha;
 
 				stardustsshader.UseColor(Color.Purple.ToVector3()* alpha);
 				//stardustsshader.UseOpacity(0.5f);
 
-				spriteBatch.Draw(texz, drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texz, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();
@@ -74,7 +74,7 @@ namespace SGAmod.Projectiles
 			for (int i = 0; i < 30; i++)
 			{
 				int selectRand = Utils.SelectRandom(Main.rand, 27, 27, 62); //27 = Shadowflame, 62 = Purple Torch
-				Dust killDust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, selectRand)];
+				Dust killDust = Main.dust[Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, selectRand)];
 				killDust.noGravity = true;
 				killDust.scale = 1.25f + Main.rand.NextFloat();
 				killDust.fadeIn = 0.25f;
@@ -86,7 +86,7 @@ namespace SGAmod.Projectiles
 		}
 		public override Color? GetAlpha(Color newColor)
 		{
-			return new Color(255, 255, 255, 255) * projectile.Opacity;
+			return new Color(255, 255, 255, 255) * Projectile.Opacity;
 		}
 	}
 }

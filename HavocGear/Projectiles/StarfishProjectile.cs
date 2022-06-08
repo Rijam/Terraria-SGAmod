@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Projectiles
 {
@@ -10,26 +11,26 @@ namespace SGAmod.HavocGear.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.width = 7;
-            projectile.height = 7;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.alpha = 255;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.penetrate = 3;
-            projectile.localNPCHitCooldown = 15;
-            projectile.usesLocalNPCImmunity = true;
-            aiType = ProjectileID.Bullet;
+            Projectile.width = 7;
+            Projectile.height = 7;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.alpha = 255;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 3;
+            Projectile.localNPCHitCooldown = 15;
+            Projectile.usesLocalNPCImmunity = true;
+            AIType = ProjectileID.Bullet;
         }
 
         public override void Kill(int timeLeft)
         {
             for (int i = 0; i < 5; i++)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 190);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 190);
                 Main.dust[dust].scale = 0.7f;
                 Main.dust[dust].noGravity = false;
             }
@@ -37,10 +38,10 @@ namespace SGAmod.HavocGear.Projectiles
 
         public override void AI()
         {
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 190, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100, default(Color), 0.3f);
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 190, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100, default(Color), 0.3f);
             Main.dust[dust].noGravity = true;
             {
-                Lighting.AddLight(projectile.position, 0.2f, 0.1f, 0.05f);
+                Lighting.AddLight(Projectile.position, 0.2f, 0.1f, 0.05f);
             }
         }
 
@@ -48,28 +49,28 @@ namespace SGAmod.HavocGear.Projectiles
         {
             for (int i = 0; i < 3; i++)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 190);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 190);
                 Main.dust[dust].scale = 0.4f;
                 Main.dust[dust].noGravity = false;
             }
 
-            projectile.penetrate--;
-            if (projectile.penetrate <= 0)
+            Projectile.penetrate--;
+            if (Projectile.penetrate <= 0)
             {
-                projectile.Kill();
-                Main.PlaySound(SoundID.Item10, projectile.position);
+                Projectile.Kill();
+                SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
             }
             else
             {
-                if (projectile.velocity.X != oldVelocity.X)
+                if (Projectile.velocity.X != oldVelocity.X)
                 {
-                    projectile.velocity.X = -oldVelocity.X;
+                    Projectile.velocity.X = -oldVelocity.X;
                 }
-                if (projectile.velocity.Y != oldVelocity.Y)
+                if (Projectile.velocity.Y != oldVelocity.Y)
                 {
-                    projectile.velocity.Y = -oldVelocity.Y;
+                    Projectile.velocity.Y = -oldVelocity.Y;
                 }
-                Main.PlaySound(SoundID.Item10, projectile.position);
+                SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
             }
             return false;
         }

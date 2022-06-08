@@ -14,7 +14,7 @@ namespace SGAmod.HavocGear.Items.Tools
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "Faster jungle Item", "25% faster use speed in the jungle biome"));
+			tooltips.Add(new TooltipLine(Mod, "Faster jungle Item", "25% faster use speed in the jungle biome"));
 		}
 
 		public override float UseTimeMultiplier(Player player)
@@ -26,30 +26,24 @@ namespace SGAmod.HavocGear.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 15;
-			item.melee = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 9;
-			item.useAnimation = 20;
-			item.pick = 180;
-			item.useStyle = 1;
-			item.knockBack = 4;
-			item.value = 3000;
-			item.rare = 4;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 15;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 9;
+			Item.useAnimation = 20;
+			Item.pick = 180;
+			Item.useStyle = 1;
+			Item.knockBack = 4;
+			Item.value = 3000;
+			Item.rare = 4;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
         	public override void AddRecipes()
         	{
-			ModRecipe recipe;
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "MangrovePickaxe", 1);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "MangrovePickaxe", 1).AddIngredient(mod.ItemType("VirulentBar"), 5).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 	public class VirulentDrill : VirulentPickaxe
@@ -61,34 +55,30 @@ namespace SGAmod.HavocGear.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 19;
-			item.melee = true;
-			item.width = 56;
-			item.height = 22;
-			item.useTime = 8;
-			item.useAnimation = 25;
-			item.channel = true;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.pick = 180;
-			item.tileBoost += 1;
-			item.useStyle = 5;
-			item.knockBack = 0;
-			item.value = 3000;
-			item.rare = 4;
-			item.UseSound = SoundID.Item23;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("VirulentDrill");
-			item.shootSpeed = 40f;
+			Item.damage = 19;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 56;
+			Item.height = 22;
+			Item.useTime = 8;
+			Item.useAnimation = 25;
+			Item.channel = true;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.pick = 180;
+			Item.tileBoost += 1;
+			Item.useStyle = 5;
+			Item.knockBack = 0;
+			Item.value = 3000;
+			Item.rare = 4;
+			Item.UseSound = SoundID.Item23;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("VirulentDrill").Type;
+			Item.shootSpeed = 40f;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 15);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VirulentBar"), 15).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 	public class VirulentHamaxe : VirulentPickaxe
@@ -100,32 +90,25 @@ namespace SGAmod.HavocGear.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 42;
-			item.melee = true;
-			item.width = 48;
-			item.height = 48;
-			item.useTime = 30;
-			item.useAnimation = 20;
-			item.axe = 17;
-			item.hammer = 85;
-			item.useStyle = 1;
-			item.knockBack = 6;
-			item.value = 3000;
-			item.rare = 4;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 42;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 48;
+			Item.height = 48;
+			Item.useTime = 30;
+			Item.useAnimation = 20;
+			Item.axe = 17;
+			Item.hammer = 85;
+			Item.useStyle = 1;
+			Item.knockBack = 6;
+			Item.value = 3000;
+			Item.rare = 4;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "MangroveHammer", 1);
-			recipe.AddIngredient(null, "MangroveAxe", 1);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "MangroveHammer", 1).AddIngredient(null, "MangroveAxe", 1).AddIngredient(mod.ItemType("VirulentBar"), 5).AddTile(TileID.MythrilAnvil).Register();
 
 		}
 	}
@@ -138,35 +121,31 @@ namespace SGAmod.HavocGear.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 26;
-			item.melee = true;
-			item.width = 56;
-			item.height = 22;
-			item.useTime = 7;
-			item.useAnimation = 25;
-			item.channel = true;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.axe = 17;
-			item.hammer = 85;
-			item.tileBoost++;
-			item.useStyle = 5;
-			item.knockBack = 5;
-			item.value = 3000;
-			item.rare = 4;
-			item.UseSound = SoundID.Item23;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("VirulentJacksaw");
-			item.shootSpeed = 40f;
+			Item.damage = 26;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 56;
+			Item.height = 22;
+			Item.useTime = 7;
+			Item.useAnimation = 25;
+			Item.channel = true;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.axe = 17;
+			Item.hammer = 85;
+			Item.tileBoost++;
+			Item.useStyle = 5;
+			Item.knockBack = 5;
+			Item.value = 3000;
+			Item.rare = 4;
+			Item.UseSound = SoundID.Item23;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("VirulentJacksaw").Type;
+			Item.shootSpeed = 40f;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 15);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VirulentBar"), 15).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 

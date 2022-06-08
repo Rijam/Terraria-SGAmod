@@ -10,39 +10,39 @@ namespace SGAmod.NPCs.Dank
         int counter, counter2 = 0;
 		public override void SetDefaults()
 		{
-			npc.width = 20;
-			npc.height = 20;
-			npc.damage = 0;
-			npc.defense = 100;
-			npc.lifeMax = 25;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.value = 0f;
-            npc.noTileCollide = false;
-			npc.knockBackResist = 0.5f;
-			npc.aiStyle = 66;
-			aiType = NPCID.Worm;
-			animationType = NPCID.Worm;
-            banner = npc.type;
-            bannerItem = mod.ItemType("MaggotBanner");
+			NPC.width = 20;
+			NPC.height = 20;
+			NPC.damage = 0;
+			NPC.defense = 100;
+			NPC.lifeMax = 25;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.value = 0f;
+            NPC.noTileCollide = false;
+			NPC.knockBackResist = 0.5f;
+			NPC.aiStyle = 66;
+			AIType = NPCID.Worm;
+			AnimationType = NPCID.Worm;
+            banner = NPC.type;
+            bannerItem = Mod.Find<ModItem>("MaggotBanner").Type;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Maggot");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.Worm];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.Worm];
         }
 
         public override bool PreAI()
         {
             if (counter++ == 1000)
             {
-                npc.Transform(mod.NPCType("MaggotFly"));
+                NPC.Transform(Mod.Find<ModNPC>("MaggotFly").Type);
                 counter = 0;
             }
             if (counter2++ == 15)
             {
-                npc.scale += 0.01f;
+                NPC.scale += 0.01f;
                 counter2 = 0;
             }
             return true;
@@ -51,7 +51,7 @@ namespace SGAmod.NPCs.Dank
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             int spawn = Main.rand.Next(30);
-            return Main.hardMode && (spawnInfo.spawnTileType==mod.TileType("MoistStone") && spawn<15) ? 1f : 0f;
+            return Main.hardMode && (spawnInfo.spawnTileType==Mod.Find<ModTile>("MoistStone") .Type&& spawn<15) ? 1f : 0f;
         }
     }
 }

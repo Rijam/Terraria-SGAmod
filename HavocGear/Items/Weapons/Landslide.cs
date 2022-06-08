@@ -10,22 +10,22 @@ namespace SGAmod.HavocGear.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			item.damage = 30;
-			item.magic = true;
-			item.mana = 20;
-			item.width = 28;
-			item.height = 30;
-			item.useTime = 40;
-			item.useAnimation = 40;
-			item.useStyle = 4;
-			item.noMelee = true;
-			item.knockBack = 6;
-			item.value = Item.sellPrice(0, 3, 0, 0);
-			item.rare = 1;
-            item.UseSound = SoundID.Item20;
-            item.autoReuse = true;
-			item.shoot = 1;
-            item.shootSpeed = 10f;
+			Item.damage = 30;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 20;
+			Item.width = 28;
+			Item.height = 30;
+			Item.useTime = 40;
+			Item.useAnimation = 40;
+			Item.useStyle = 4;
+			Item.noMelee = true;
+			Item.knockBack = 6;
+			Item.value = Item.sellPrice(0, 3, 0, 0);
+			Item.rare = 1;
+            Item.UseSound = SoundID.Item20;
+            Item.autoReuse = true;
+			Item.shoot = 1;
+            Item.shootSpeed = 10f;
         }
 
         public override void SetStaticDefaults()
@@ -40,7 +40,7 @@ namespace SGAmod.HavocGear.Items.Weapons
             for (int i = 0; i < Main.rand.Next(6, 13); i++)
             {
                 string[] projectileArray = { "Landslide1", "Landslide2", "Landslide3" };
-                Projectile.NewProjectile(Main.MouseWorld.X + (Main.rand.Next(-20, 21)), player.position.Y - 600, Main.rand.Next(-2, 3), Main.rand.Next(12, 16), mod.ProjectileType(projectileArray[Main.rand.Next(projectileArray.Length)]), item.damage, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(Main.MouseWorld.X + (Main.rand.Next(-20, 21)), player.position.Y - 600, Main.rand.Next(-2, 3), Main.rand.Next(12, 16), Mod.Find<ModProjectile>(projectileArray[Main.rand.Next(projectileArray.Length)]).Type, Item.damage, 0f, Main.myPlayer, 0f, 0f);
             }
             return false;
         }

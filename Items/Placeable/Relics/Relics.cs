@@ -23,18 +23,18 @@ namespace SGAmod.Items.Placeable.Relics
 		private string name = "";
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.buyPrice(gold: 1);
-			item.rare = ItemRarityID.Yellow;
-			item.createTile = mod.TileType(tileName);
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(gold: 1);
+			Item.rare = ItemRarityID.Yellow;
+			Item.createTile = Mod.Find<ModTile>(tileName).Type;
 		}
 		public override string Texture => trophySprite;
 		public override bool CloneNewInstances => true;
@@ -51,16 +51,16 @@ namespace SGAmod.Items.Placeable.Relics
 			DisplayName.SetDefault("Relic: " + name);
 		}
 
-		public static Color RelicColor => Color.Lerp(Color.Red, Color.Lerp(Color.Red, Color.White, 0.75f), 0.5f + (float)Math.Sin(Main.GlobalTime));
+		public static Color RelicColor => Color.Lerp(Color.Red, Color.Lerp(Color.Red, Color.White, 0.75f), 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly));
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				line.overrideColor = RelicColor;
+				line.OverrideColor = RelicColor;
 
 			}
-			tooltips.Add(new TooltipLine(mod, "Relic", "Awarded for No-Hitting " + name));
+			tooltips.Add(new TooltipLine(Mod, "Relic", "Awarded for No-Hitting " + name));
 
 		}
 
@@ -79,13 +79,13 @@ namespace SGAmod.Items.Placeable.Relics
 				if (itemtype == "Relic_Item_Caliburn")
 			{
 				itemtype = "Relic_Item_Caliburn_A";
-				if (modnpc.npc.ai[2] == 1)
+				if (modnpc.NPC.ai[2] == 1)
 					itemtype = "Relic_Item_Caliburn_B";
-				if (modnpc.npc.ai[2] == 2)
+				if (modnpc.NPC.ai[2] == 2)
 					itemtype = "Relic_Item_Caliburn_C";
 			}
 
-			Item.NewItem(modnpc.npc.position, modnpc.npc.Hitbox.Size(), SGAmod.Instance.ItemType(itemtype));
+			Item.NewItem(modnpc.NPC.position, modnpc.NPC.Hitbox.Size(), SGAmod.Instance.Find<ModItem>(itemtype).Type);
 		}
 
 		public static void AddRelics()
@@ -167,7 +167,7 @@ namespace SGAmod.Items.Placeable.Relics
 	public class SGARelicTile : ModTile
 	{
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = false;
@@ -187,7 +187,7 @@ namespace SGAmod.Items.Placeable.Relics
 
 		public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
-			if (Main.tile[x, y].type == base.Type)
+			if (Main.tile[x, y].TileType == base.Type)
 			{
 				if (nextSpecialDrawIndex < Main.specX.Length)
 				{
@@ -200,17 +200,17 @@ namespace SGAmod.Items.Placeable.Relics
 
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
 				string texstr = "SGAmod/Items/Placeable/Relics/Tiles/RelicBase";//"SGAmod/Tiles/BiomassBarTile"
 
 
-				Texture2D tex = ModContent.GetTexture(texstr);
+				Texture2D tex = ModContent.Request<Texture2D>(texstr);
 
 				Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 				Vector2 location = (new Vector2(i, j) * 16) + zerooroffset + new Vector2(0, 2);
 
-				if (Main.tile[i, j].frameX == 0 && Main.tile[i, j].frameY == 0)
+				if (Main.tile[i, j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 0)
 				{
 
 					Main.spriteBatch.End();
@@ -221,7 +221,7 @@ namespace SGAmod.Items.Placeable.Relics
 
 					//Action<SpriteBatch, Vector2> drawCode = delegate (SpriteBatch spriteBatch2, Vector2 location2)
 					//{
-					Texture2D star = ModContent.GetTexture("SGAmod/Extra_57b");
+					Texture2D star = ModContent.Request<Texture2D>("SGAmod/Extra_57b");
 
 					Terraria.Utilities.UnifiedRandom rando = new Terraria.Utilities.UnifiedRandom(i + j);
 
@@ -234,10 +234,10 @@ namespace SGAmod.Items.Placeable.Relics
 					for (float ix = 0; ix < 1f; ix += 1/30f)
 					{
 						float shiftOut = -1f + ix * 2f;
-						float timePercent = (Main.GlobalTime + (ix))%1f;
+						float timePercent = (Main.GlobalTimeWrappedHourly + (ix))%1f;
 						Vector2 newLoc = new Vector2(rando.NextFloat(-8f, 8f)+ shiftOut*4f, -rando.NextFloat(6f, 28f)) * timePercent;
 						Vector2 newLoc2 = new Vector2(rando.NextFloat(-12f, 12f)+shiftOut * 8f, 4);
-						float rotation = Main.GlobalTime*(rando.NextFloat(-1f, 1f)*(rando.NextBool() ? 1f : -1f)*0.025f);
+						float rotation = Main.GlobalTimeWrappedHourly*(rando.NextFloat(-1f, 1f)*(rando.NextBool() ? 1f : -1f)*0.025f);
 
 						entries.Add((newLoc+ newLoc2, timePercent, rotation));
 					}
@@ -250,7 +250,7 @@ namespace SGAmod.Items.Placeable.Relics
 					//Main.spriteBatch.End();
 					//Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.CreateScale(1, 1, 1));
 
-					Texture2D tex2 = ModContent.GetTexture("SGAmod/Extra_60b");
+					Texture2D tex2 = ModContent.Request<Texture2D>("SGAmod/Extra_60b");
 					spriteBatch.Draw(tex2, starterloc - Main.screenPosition, null, Color.Goldenrod, 0f, tex2.Size() / 2f, new Vector2(0.80f,1f), SpriteEffects.None, 0f);
 					//};
 
@@ -262,21 +262,21 @@ namespace SGAmod.Items.Placeable.Relics
 					Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(1, 1, 1));
 				}
 
-				spriteBatch.Draw(tex, location - Main.screenPosition, new Rectangle(Main.tile[i, j].frameX, Main.tile[i, j].frameY + 18, 16, 16), Lighting.GetColor(i, j), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, location - Main.screenPosition, new Rectangle(Main.tile[i, j].TileFrameX, Main.tile[i, j].TileFrameY + 18, 16, 16), Lighting.GetColor(i, j), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			}
 			return true;
 		}
 
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
-			if (Main.tile[i, j].type == base.Type && Main.tile[i, j].frameX == 0 && Main.tile[i, j].frameY == 0)
+			if (Main.tile[i, j].TileType == base.Type && Main.tile[i, j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 0)
 			{
 				Tile tile = Main.tile[i, j];
 				string texstr = "SGAmod/Items/Placeable/Relics/Tiles/" + this.Name;
-				Texture2D tex = ModContent.GetTexture(texstr);
+				Texture2D tex = ModContent.Request<Texture2D>(texstr);
 				Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 				Vector2 location = (new Vector2(i, j) * 16) + new Vector2(8, 8) + zerooroffset;
-				float sinwave = (float)Math.Sin((Main.GlobalTime * 2f) + (i / 2.79f) + (j / 1.353f));
+				float sinwave = (float)Math.Sin((Main.GlobalTimeWrappedHourly * 2f) + (i / 2.79f) + (j / 1.353f));
 				Vector2 offset2 = new Vector2(16, -6 + sinwave * 6f);
 
 				Vector2 endloc = location + offset2;
@@ -292,7 +292,7 @@ namespace SGAmod.Items.Placeable.Relics
 				SGAmod.FadeInEffect.CurrentTechnique.Passes["ColorToAlphaPass"].Apply();
 				
 				spriteBatch.Draw(tex, new Vector2((int)endloc.X, (int)endloc.Y) - Main.screenPosition, null, Color.White*1f, 0f, tex.Size() / 2f, 1.00f+ (timer)*0.32f, SpriteEffects.None, 0f);
-				//*MathHelper.Clamp(0.5f+(float)Math.Sin(Main.GlobalTime)*0.75f,0f,1f)*0.20f
+				//*MathHelper.Clamp(0.5f+(float)Math.Sin(Main.GlobalTimeWrappedHourly)*0.75f,0f,1f)*0.20f
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(1, 1, 1));
 
@@ -309,7 +309,7 @@ namespace SGAmod.Items.Placeable.Relics
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-			Item.NewItem(new Vector2(i*16,j*16),new Vector2(16,16), mod.ItemType("Relic_Item_" + (Name.Replace("Relic_Placed_", ""))));
+			Item.NewItem(new Vector2(i*16,j*16),new Vector2(16,16), Mod.Find<ModItem>("Relic_Item_" + (Name.Replace("Relic_Placed_", ""))).Type);
 		}
     }
 

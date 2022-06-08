@@ -20,7 +20,7 @@ namespace SGAmod.Dimensions.NPCs
 		public override bool Autoload(ref string name)
 		{
 			name = "Stranger Portal";
-			return mod.Properties.Autoload;
+			return Mod.Properties.Autoload;
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -32,7 +32,7 @@ namespace SGAmod.Dimensions.NPCs
 		{
 			if (SGAPocketDim.WhereAmI == null)
 			{
-				npc.active = false;
+				NPC.active = false;
 				return;
 			}
 
@@ -42,20 +42,20 @@ namespace SGAmod.Dimensions.NPCs
 			{
 				for (int i = 0; i < 200; i += 1)
 				{
-					Point wearehere = ((npc.Center + new Vector2(0, 96)) / 16).ToPoint();
+					Point wearehere = ((NPC.Center + new Vector2(0, 96)) / 16).ToPoint();
 					if (WorldGen.InWorld(wearehere.X, wearehere.Y))
 					{
 						Tile tile = Framing.GetTileSafely(wearehere.X, wearehere.Y);
 						if (tile != null)
 						{
-							if (tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
+							if (tile.HasTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]))
 							{
 								fallendown = true;
 								return;
 							}
 							else
 							{
-								npc.position.Y += 2;
+								NPC.position.Y += 2;
 							}
 						}
 					}
@@ -70,7 +70,7 @@ namespace SGAmod.Dimensions.NPCs
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			npc.rarity = 1;
+			NPC.rarity = 1;
 		}
 	}
 
@@ -82,7 +82,7 @@ namespace SGAmod.Dimensions.NPCs
 		public override bool Autoload(ref string name)
 		{
 			name = "Strange Portal";
-			return mod.Properties.Autoload;
+			return Mod.Properties.Autoload;
 		}
 
         public override void BossHeadSlot(ref int index)
@@ -96,36 +96,36 @@ namespace SGAmod.Dimensions.NPCs
 		{
 			// DisplayName automatically assigned from .lang files, but the commented line below is the normal approach.
 			// DisplayName.SetDefault("Example Person");
-			Main.npcFrameCount[npc.type] = 1;
-			NPCID.Sets.ExtraFramesCount[npc.type] = 1;
-			NPCID.Sets.AttackFrameCount[npc.type] = 1;
-			NPCID.Sets.DangerDetectRange[npc.type] = 0;
-			NPCID.Sets.AttackType[npc.type] = 0;
-			NPCID.Sets.AttackTime[npc.type] = 90;
-			NPCID.Sets.AttackAverageChance[npc.type] = 30;
-			NPCID.Sets.HatOffsetY[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPCID.Sets.ExtraFramesCount[NPC.type] = 1;
+			NPCID.Sets.AttackFrameCount[NPC.type] = 1;
+			NPCID.Sets.DangerDetectRange[NPC.type] = 0;
+			NPCID.Sets.AttackType[NPC.type] = 0;
+			NPCID.Sets.AttackTime[NPC.type] = 90;
+			NPCID.Sets.AttackAverageChance[NPC.type] = 30;
+			NPCID.Sets.HatOffsetY[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.townNPC = true;
-			npc.friendly = true;
-			npc.width = 32;
-			npc.height = 50;
-			npc.aiStyle = 7;
-			npc.damage = 0;
-			npc.noGravity = true;
-			npc.defense = 15;
-			npc.lifeMax = 1000000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0.5f;
+			NPC.townNPC = true;
+			NPC.friendly = true;
+			NPC.width = 32;
+			NPC.height = 50;
+			NPC.aiStyle = 7;
+			NPC.damage = 0;
+			NPC.noGravity = true;
+			NPC.defense = 15;
+			NPC.lifeMax = 1000000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0.5f;
 			//npc.immortal = true;
-			animationType = NPCID.Guide;
-			npc.homeless = true;
-			npc.SGANPCs().overallResist = 0;
+			AnimationType = NPCID.Guide;
+			NPC.homeless = true;
+			NPC.SGANPCs().overallResist = 0;
 			//npc.rarity = 1;
-			Color c = Main.hslToRgb((float)(Main.GlobalTime / 2) % 1f, 0.5f, 0.35f);
+			Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 2) % 1f, 0.5f, 0.35f);
 
 		}
 
@@ -135,7 +135,7 @@ namespace SGAmod.Dimensions.NPCs
 				return 0;
 
 			//Tile tile = Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY];
-			return !spawnInfo.playerInTown && !NPC.BusyWithAnyInvasionOfSorts() && NPC.downedBoss3 && !spawnInfo.invasion && spawnInfo.player.ZoneDungeon && NPC.CountNPCS(ModContent.NPCType<DungeonPortal>())<1 &&
+			return !spawnInfo.playerInTown && !NPC.BusyWithAnyInvasionOfSorts() && NPC.downedBoss3 && !spawnInfo.invasion && spawnInfo.Player.ZoneDungeon && NPC.CountNPCS(ModContent.NPCType<DungeonPortal>())<1 &&
 				(spawnInfo.spawnTileType==TileID.BlueDungeonBrick || spawnInfo.spawnTileType == TileID.PinkDungeonBrick || spawnInfo.spawnTileType == TileID.GreenDungeonBrick) ? 0.02f : 0f;
 		}
 
@@ -190,9 +190,9 @@ namespace SGAmod.Dimensions.NPCs
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			Texture2D tex = ModContent.GetTexture("SGAmod/Projectiles/FieryRock");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Projectiles/FieryRock");
 				Vector2 drawOrigin = new Vector2(tex.Width, tex.Height) / 2f;
-				Vector2 drawPos = ((npc.Center - Main.screenPosition));
+				Vector2 drawPos = ((NPC.Center - Main.screenPosition));
 				Color color = Color.Lerp(drawColor,Color.White,0.5f);
 
 			Main.spriteBatch.End();
@@ -200,7 +200,7 @@ namespace SGAmod.Dimensions.NPCs
 
 			for (float valez = 34f; valez > 4f; valez -= 0.2f)
 			{
-				spriteBatch.Draw(tex, drawPos, null, color * 0.05f, (((npc.localAI[0]+ valez*0.05f) / 45f) * ((36f - valez)/15f)), drawOrigin, npc.scale * valez,SpriteEffects.FlipHorizontally, 0f);
+				spriteBatch.Draw(tex, drawPos, null, color * 0.05f, (((NPC.localAI[0]+ valez*0.05f) / 45f) * ((36f - valez)/15f)), drawOrigin, NPC.scale * valez,SpriteEffects.FlipHorizontally, 0f);
 			}
 
 			Main.spriteBatch.End();
@@ -208,7 +208,7 @@ namespace SGAmod.Dimensions.NPCs
 
 			for (float valez = 0.1f; valez < 10f; valez += 0.2f)
 			{
-				spriteBatch.Draw(tex, drawPos, null, color*0.05f, (((npc.localAI[0] / 15f)* (6f-valez))+ (valez/3.12612f))/3f, drawOrigin, (npc.scale* valez)*0.75f,SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(tex, drawPos, null, color*0.05f, (((NPC.localAI[0] / 15f)* (6f-valez))+ (valez/3.12612f))/3f, drawOrigin, (NPC.scale* valez)*0.75f,SpriteEffects.FlipVertically, 0f);
 			}
 			//Main.spriteBatch.End();
 			//Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
@@ -216,25 +216,25 @@ namespace SGAmod.Dimensions.NPCs
 			if (BirthdayParty.PartyIsUp)
 			{
 
-				UnifiedRandom rando = new UnifiedRandom(npc.whoAmI);
+				UnifiedRandom rando = new UnifiedRandom(NPC.whoAmI);
 
 				for (int i = 0; i < 5; i += 1)
 				{
 
 					int[] offsets = { 0, 16, 17, 18, 19 };
 
-					float anglz = (Main.GlobalTime* rando.NextFloat(0.25f, 2f)* (rando.NextBool() ? 1f : -1f));
+					float anglz = (Main.GlobalTimeWrappedHourly* rando.NextFloat(0.25f, 2f)* (rando.NextBool() ? 1f : -1f));
 
-					float dist = 24f + rando.NextFloat(0f,72f)+(float)Math.Sin(Main.GlobalTime*(rando.NextFloat(0.25f,1.25f)))* rando.NextFloat(8f, 54f);
+					float dist = 24f + rando.NextFloat(0f,72f)+(float)Math.Sin(Main.GlobalTimeWrappedHourly*(rando.NextFloat(0.25f,1.25f)))* rando.NextFloat(8f, 54f);
 
 					Vector2 angelz = new Vector2((float)Math.Cos(anglz), (float)Math.Sin(anglz)) * dist;
-					float angle = Main.GlobalTime* rando.NextFloat(0.25f, 3f);
+					float angle = Main.GlobalTimeWrappedHourly* rando.NextFloat(0.25f, 3f);
 
 					tex = Main.extraTexture[72];
 
 					int scalehalf = (tex.Width / 20);
 
-					spriteBatch.Draw(tex, npc.Center+ angelz - Main.screenPosition, new Rectangle((int)(scalehalf) * offsets[i], 0, (int)(tex.Width / 20), tex.Height), Color.Gray, angle, new Vector2(scalehalf/2f, tex.Height/2f), new Vector2(1, 1), SpriteEffects.None, 0f);
+					spriteBatch.Draw(tex, NPC.Center+ angelz - Main.screenPosition, new Rectangle((int)(scalehalf) * offsets[i], 0, (int)(tex.Width / 20), tex.Height), Color.Gray, angle, new Vector2(scalehalf/2f, tex.Height/2f), new Vector2(1, 1), SpriteEffects.None, 0f);
 				}
 			}
 
@@ -243,13 +243,13 @@ namespace SGAmod.Dimensions.NPCs
 
 		public override bool PreAI()
 		{
-			npc.dontTakeDamage = true;
-			npc.localAI[0] += 1f;
-			npc.ai[0] = 0;
-			npc.ai[1] = 0;
-			npc.ai[2] = 0;
-			npc.ai[3] = 0;
-			npc.velocity = Vector2.Zero;
+			NPC.dontTakeDamage = true;
+			NPC.localAI[0] += 1f;
+			NPC.ai[0] = 0;
+			NPC.ai[1] = 0;
+			NPC.ai[2] = 0;
+			NPC.ai[3] = 0;
+			NPC.velocity = Vector2.Zero;
 			return true;
 		}
 
@@ -282,42 +282,42 @@ namespace SGAmod.Dimensions.NPCs
 		public override void SetupShop(Chest shop, ref int nextSlot)
 		{
 
-		shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("RingOfRespite"));
+		shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("RingOfRespite").Type);
 		shop.item[nextSlot].shopCustomPrice = 75;
 		shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 		nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("NinjaSash"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("NinjaSash").Type);
 			shop.item[nextSlot].shopCustomPrice = 100;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("StoneBarrierStaff"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("StoneBarrierStaff").Type);
 			shop.item[nextSlot].shopCustomPrice = 50;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("DiesIraeStone"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("DiesIraeStone").Type);
 			shop.item[nextSlot].shopCustomPrice = 50;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("MagusSlippers"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("MagusSlippers").Type);
 			shop.item[nextSlot].shopCustomPrice = 60;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("YoyoTricks"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("YoyoTricks").Type);
 			shop.item[nextSlot].shopCustomPrice = 75;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("BeserkerAuraStaff"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("BeserkerAuraStaff").Type);
 			shop.item[nextSlot].shopCustomPrice = 75;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
 
-			shop.item[nextSlot].SetDefaults(SGAmod.Instance.ItemType("EnchantedFury"));
+			shop.item[nextSlot].SetDefaults(SGAmod.Instance.Find<ModItem>("EnchantedFury").Type);
 			shop.item[nextSlot].shopCustomPrice = 100;
 			shop.item[nextSlot].shopSpecialCurrency = SGAmod.ScrapCustomCurrencyID;
 			nextSlot++;
@@ -335,7 +335,7 @@ namespace SGAmod.Dimensions.NPCs
 						DeeperDungeon.hardMode = Main.hardMode;
 						DeeperDungeon.postPlantera = NPC.downedPlantBoss;
 					}
-					SGAPocketDim.EnterSubworld(mod.GetType().Name + "_DeeperDungeon", true);
+					SGAPocketDim.EnterSubworld(Mod.GetType().Name + "_DeeperDungeon", true);
 				}
 				else
 				{

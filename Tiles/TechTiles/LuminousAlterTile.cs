@@ -15,6 +15,7 @@ using System.IO;
 using Terraria.ModLoader.IO;
 using SGAmod.Items.Placeable.TechPlaceable;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Tiles.TechTiles
 {
@@ -23,8 +24,8 @@ namespace SGAmod.Tiles.TechTiles
         public static LuminousAlterTE FindAlterTE(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int left = i - tile.frameX / 18;
-            int top = j - tile.frameY / 18;
+            int left = i - tile.TileFrameX / 18;
+            int top = j - tile.TileFrameY / 18;
 
             int index = ModContent.GetInstance<LuminousAlterTE>().Find(left, top);
             if (index == -1)
@@ -36,7 +37,7 @@ namespace SGAmod.Tiles.TechTiles
 
         }
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
@@ -74,7 +75,7 @@ namespace SGAmod.Tiles.TechTiles
             //nil
         }
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             /*int dust = Dust.NewDust(new Vector2(i, j) * 16, 0, 0, DustID.PurpleCrystalShard);
             Main.dust[dust].scale = 3f;
@@ -124,7 +125,7 @@ namespace SGAmod.Tiles.TechTiles
 
         public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
         {
-            if (Main.tile[x, y].type == base.Type)
+            if (Main.tile[x, y].TileType == base.Type)
             {
                 if (nextSpecialDrawIndex < Main.specX.Length)
                 {
@@ -139,15 +140,15 @@ namespace SGAmod.Tiles.TechTiles
         {
             Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
             Tile tile = Framing.GetTileSafely(i, j);
-            if (Main.tile[i, j].type == base.Type)
+            if (Main.tile[i, j].TileType == base.Type)
             {
-                if (tile.frameX == 0 && tile.frameY == 0)
+                if (tile.TileFrameX == 0 && tile.TileFrameY == 0)
                 {
                     Texture2D inner = Main.tileTexture[Type];
-                    Texture2D star = ModContent.GetTexture("SGAmod/Tiles/TechTiles/LuminousAlterStar");
-                    Rectangle rect = new Rectangle(0, (int)((Main.GlobalTime * 1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
-                    Rectangle rect2 = new Rectangle(0, (int)(((Main.GlobalTime * 1)+1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
-                    Vector2 offset = zerooroffset + (new Vector2(i, j) * 16) + new Vector2(16, -(0 + (float)Math.Sin(Main.GlobalTime) * 8));
+                    Texture2D star = ModContent.Request<Texture2D>("SGAmod/Tiles/TechTiles/LuminousAlterStar");
+                    Rectangle rect = new Rectangle(0, (int)((Main.GlobalTimeWrappedHourly * 1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
+                    Rectangle rect2 = new Rectangle(0, (int)(((Main.GlobalTimeWrappedHourly * 1)+1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
+                    Vector2 offset = zerooroffset + (new Vector2(i, j) * 16) + new Vector2(16, -(0 + (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 8));
 
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.CreateScale(1, 1, 1));
@@ -156,7 +157,7 @@ namespace SGAmod.Tiles.TechTiles
 
 
                     hallowed.Parameters["prismAlpha"].SetValue(1f);
-                    hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("Perlin"));
+                    hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Perlin").Value);
                     hallowed.Parameters["overlayAlpha"].SetValue(0.5f);
                     hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1.5f, 0.15f, 0f));
                     hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -167,7 +168,7 @@ namespace SGAmod.Tiles.TechTiles
                     {
                         hallowed.Parameters["alpha"].SetValue(1f-brightness);
                         hallowed.Parameters["prismColor"].SetValue(Color.White.ToVector3());
-                        hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, -Main.GlobalTime / 1f, (Main.GlobalTime) / 16f));
+                        hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, -Main.GlobalTimeWrappedHourly / 1f, (Main.GlobalTimeWrappedHourly) / 16f));
                         hallowed.Parameters["rainbowScale"].SetValue(1.265f);
                         hallowed.Parameters["overlayScale"].SetValue(new Vector2(0.1f,0.1f));
                         hallowed.CurrentTechnique.Passes["Prism"].Apply();
@@ -178,9 +179,9 @@ namespace SGAmod.Tiles.TechTiles
                         spriteBatch.Draw(inner, zerooroffset + (new Vector2(i + 1, j + 1) * 16) - Main.screenPosition, new Rectangle(18, 18, 16, 16), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
                     }
 
-                    hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("Perlin"));
+                    hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Perlin").Value);
                     hallowed.Parameters["alpha"].SetValue(Main.dayTime ? 0.25f : 0.30f);
-                    hallowed.Parameters["prismColor"].SetValue(Main.hslToRgb((((i + j) / 10f) + Main.GlobalTime / 4f) % 1f, 1f, 0.75f).ToVector3());
+                    hallowed.Parameters["prismColor"].SetValue(Main.hslToRgb((((i + j) / 10f) + Main.GlobalTimeWrappedHourly / 4f) % 1f, 1f, 0.75f).ToVector3());
                     hallowed.Parameters["overlayAlpha"].SetValue(1f);
                     hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1.5f, 0.15f, 0f));
                     hallowed.Parameters["overlayScale"].SetValue(new Vector2(0.2f,0.2f));
@@ -188,7 +189,7 @@ namespace SGAmod.Tiles.TechTiles
                     for (float f = 3; f > 1f; f -= 0.25f)
                     {
                         hallowed.Parameters["rainbowScale"].SetValue(0.05f+(f/2f));
-                        hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, -Main.GlobalTime / 1f, (Main.GlobalTime) / 8f));
+                        hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, -Main.GlobalTimeWrappedHourly / 1f, (Main.GlobalTimeWrappedHourly) / 8f));
                         hallowed.CurrentTechnique.Passes["Prism"].Apply();
                         spriteBatch.Draw(star, offset - Main.screenPosition, rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2f, new Vector2(f, f), SpriteEffects.None, 0f);
                     }
@@ -357,7 +358,7 @@ namespace SGAmod.Tiles.TechTiles
                 heldItem = playerItem.Clone();
                 chargingProcess = 0;
                 playerItem.TurnToAir();
-                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_CrystalCartImpact, Position.X * 16, Position.Y * 16);
+                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact, Position.X * 16, Position.Y * 16);
                 if (sound != null)
                     sound.Pitch += 0.50f;
 
@@ -394,7 +395,7 @@ namespace SGAmod.Tiles.TechTiles
                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, thisOne.whoAmI);
 
                 heldItem.TurnToAir();
-                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_CrystalCartImpact, Position.X * 16, Position.Y * 16);
+                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact, Position.X * 16, Position.Y * 16);
                 if (sound != null)
                     sound.Pitch -= 0.50f;
 
@@ -445,7 +446,7 @@ namespace SGAmod.Tiles.TechTiles
         public override bool TileCheck(int i, int j)
         {
             Tile tile = Framing.GetTileSafely(i, j);
-            bool valid = tile.active() && tile.frameX == 0 && tile.frameY == 0 && tile.type == ModContent.TileType<LuminousAlter>();
+            bool valid = tile.HasTile && tile.TileFrameX == 0 && tile.TileFrameY == 0 && tile.TileType == ModContent.TileType<LuminousAlter>();
             if (!valid)
             {
                 DebugText("Deleted");
@@ -485,7 +486,7 @@ namespace SGAmod.Tiles.TechTiles
 
                 Tile modtile = Framing.GetTileSafely(checkCoords.X, checkCoords.Y);
 
-                if (ModContent.GetModTile(modtile.type) is ModTile modTile)
+                if (ModContent.GetModTile(modtile.TileType) is ModTile modTile)
                 {
                     if (modTile != null && modTile is IHopperInterface)
                     {
@@ -538,7 +539,7 @@ namespace SGAmod.Tiles.TechTiles
                     {
                         if (itemData != null)
                         {
-                            SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_EtherianPortalIdleLoop, Position.X * 16, Position.Y * 16);
+                            SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalIdleLoop, Position.X * 16, Position.Y * 16);
                             if (sound != null)
                                 sound.Pitch = MathHelper.Clamp(-0.75f + ((chargingProcess / (float)itemData.infusionTime) * 2.10f),-0.80f,0.90f);
                         }
@@ -611,7 +612,7 @@ namespace SGAmod.Tiles.TechTiles
             //If your UI is visble, for some reason SGAmod would not let me access theirs despite it existing :/
             //if (SGAmod.CustomUIMenu.visible)
             //{
-            if (AlterTileTE == null || (((AlterTileTE.Position.ToVector2() + new Vector2(1f, 0)) * 16) - player.Center).Length() > 120)
+            if (AlterTileTE == null || (((AlterTileTE.Position.ToVector2() + new Vector2(1f, 0)) * 16) - Player.Center).Length() > 120)
             {
                 if (AlterTileTE != null)
                     LuminousAlterTE.DebugText("Untoggled");

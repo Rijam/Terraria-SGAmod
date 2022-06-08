@@ -13,6 +13,7 @@ using Terraria.Graphics.Shaders;
 using SGAmod.Effects;
 using System.Linq;
 using SGAmod.Items;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs.Wraiths
 {
@@ -33,27 +34,27 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void SetDefaults()
 		{
-			npc.width = 2;
-			npc.height = 2;
-			npc.damage = 0;
-			npc.defense = 0;
-			npc.lifeMax = 1000000;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath7;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			aiType = -1;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.dontTakeDamage = true;
-			npc.immortal = true;
+			NPC.width = 2;
+			NPC.height = 2;
+			NPC.damage = 0;
+			NPC.defense = 0;
+			NPC.lifeMax = 1000000;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath7;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			AIType = -1;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.dontTakeDamage = true;
+			NPC.immortal = true;
 		}
 
 		public override bool CheckActive()
 		{
-			NPC master = Main.npc[(int)npc.ai[1]];
+			NPC master = Main.npc[(int)NPC.ai[1]];
 			return (!master.active);
 
 
@@ -68,54 +69,54 @@ namespace SGAmod.NPCs.Wraiths
 		{
 
 			alivetimer += 1;
-			NPC master = Main.npc[(int)npc.ai[1]];
+			NPC master = Main.npc[(int)NPC.ai[1]];
 			if (master.active == false)
 			{
-				npc.active = false;
+				NPC.active = false;
 			}
 			else
 			{
-				npc.timeLeft = 99999;
-				Player P = Main.player[npc.target];
-				if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+				NPC.timeLeft = 99999;
+				Player P = Main.player[NPC.target];
+				if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 				{
-					npc.TargetClosest(false);
-					P = Main.player[npc.target];
+					NPC.TargetClosest(false);
+					P = Main.player[NPC.target];
 				}
-				NPC realmaster = Main.npc[(int)npc.ai[2]];
+				NPC realmaster = Main.npc[(int)NPC.ai[2]];
 
 
-				LuminiteWraithArmor myrealmaster = master.modNPC as LuminiteWraithArmor;
+				LuminiteWraithArmor myrealmaster = master.ModNPC as LuminiteWraithArmor;
 				Vector2 theloc = myrealmaster.mytargetis;
-				myrealmaster.whereisthetarget = npc.Center;
+				myrealmaster.whereisthetarget = NPC.Center;
 
 				//int dust2 = Dust.NewDust(npc.Center+new Vector2(-16,-16), 32,32, 247, 0f, 0f, 100, default(Color), 5f);
 				//int dust2 = Dust.NewDust(npc.Center+new Vector2(-16,-16), 32,32, 278, 0f, 0f, 100, default(Color), 5f);
-				int dust2 = Dust.NewDust(npc.Center + new Vector2(-16, -16), 32, 32, 185, 0f, 0f, 100, default(Color), 1f);
+				int dust2 = Dust.NewDust(NPC.Center + new Vector2(-16, -16), 32, 32, 185, 0f, 0f, 100, default(Color), 1f);
 				Main.dust[dust2].noGravity = true;
-				Main.dust[dust2].color = Main.hslToRgb((float)(Main.GlobalTime / 5) % 1, 0.9f, 1f);
+				Main.dust[dust2].color = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 5) % 1, 0.9f, 1f);
 				Main.dust[dust2].color.A = 10;
-				Main.dust[dust2].velocity.X = npc.velocity.X / 3 + (Main.rand.Next(-50, 51) * 0.005f);
-				Main.dust[dust2].velocity.Y = npc.velocity.Y / 3 + (Main.rand.Next(-50, 51) * 0.005f);
+				Main.dust[dust2].velocity.X = NPC.velocity.X / 3 + (Main.rand.Next(-50, 51) * 0.005f);
+				Main.dust[dust2].velocity.Y = NPC.velocity.Y / 3 + (Main.rand.Next(-50, 51) * 0.005f);
 				Main.dust[dust2].alpha = 100; ;
 
-				Vector2 newdist = (master.Center + theloc) - npc.Center;
-				if (npc.ai[0] > -1 && master.dontTakeDamage == false)
+				Vector2 newdist = (master.Center + theloc) - NPC.Center;
+				if (NPC.ai[0] > -1 && master.dontTakeDamage == false)
 				{
-					if (npc.ai[0] % 1800 > 1200)
+					if (NPC.ai[0] % 1800 > 1200)
 					{
 
 						int dustType = 43;//Main.rand.Next(139, 143);
-						int dustIndex = Dust.NewDust(npc.Center + new Vector2(-8, -8), 16, 16, dustType);//,0,5,0,new Color=Main.hslToRgb((float)(npc.ai[0]/300)%1, 1f, 0.9f),1f);
+						int dustIndex = Dust.NewDust(NPC.Center + new Vector2(-8, -8), 16, 16, dustType);//,0,5,0,new Color=Main.hslToRgb((float)(npc.ai[0]/300)%1, 1f, 0.9f),1f);
 						Dust dust = Main.dust[dustIndex];
 						dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.005f;
 						dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.005f;
 						dust.scale = 40f + (Main.rand.Next(-30, 31) * 0.01f);
 						dust.fadeIn = 0f;
 						dust.noGravity = true;
-						dust.color = Main.hslToRgb((float)(npc.ai[0] / 300) % 1, 1f, 1f);
+						dust.color = Main.hslToRgb((float)(NPC.ai[0] / 300) % 1, 1f, 1f);
 
-						if (npc.ai[0] % 1800 > 1350 && npc.ai[0] % 6 == 0 && npc.ai[0] % 1800 < 1700 && alivetimer > 200)
+						if (NPC.ai[0] % 1800 > 1350 && NPC.ai[0] % 6 == 0 && NPC.ai[0] % 1800 < 1700 && alivetimer > 200)
 						{
 							//List<Projectile> itz = Idglib.Shattershots(npc.Center, npc.Center, new Vector2(0f, 8f), ProjectileID.PhantasmalBolt, 20, (float)Main.rand.Next(200, 240) * 0.1f, 30, 1, true, npc.ai[0] / 300f, false, 250);
 						}
@@ -124,15 +125,15 @@ namespace SGAmod.NPCs.Wraiths
 					{
 
 
-						if (npc.ai[0] % 1300 > 1000 || master.ai[3] < 0)
-							newdist = (P.Center + theloc) - npc.Center;
+						if (NPC.ai[0] % 1300 > 1000 || master.ai[3] < 0)
+							newdist = (P.Center + theloc) - NPC.Center;
 						//if (master.ai[3]<0f)
 						//npc.Center+=((P.Center+theloc)-npc.Center)/1.5f;
 						Vector2 orgin = newdist;
 						newdist.Normalize();
-						npc.velocity += newdist / 4f;
-						if (npc.ai[0] % 600 > 450)
-							npc.velocity += orgin / 800f;
+						NPC.velocity += newdist / 4f;
+						if (NPC.ai[0] % 600 > 450)
+							NPC.velocity += orgin / 800f;
 
 						//if (realmaster.life<(int)(realmaster.lifeMax*0.75) && delay==10f)
 						//{
@@ -140,10 +141,10 @@ namespace SGAmod.NPCs.Wraiths
 						//}
 
 
-						if (npc.ai[0] % 300 > 200 && alivetimer > 200)
+						if (NPC.ai[0] % 300 > 200 && alivetimer > 200)
 						{
-							npc.velocity /= 2f;
-							if (npc.ai[0] % 300 > 260 && npc.ai[0] % 10 == 0)
+							NPC.velocity /= 2f;
+							if (NPC.ai[0] % 300 > 260 && NPC.ai[0] % 10 == 0)
 							{
 								//List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ProjectileID.PhantasmalBolt, 10, (float)Main.rand.Next(160, 200) * 0.1f, 30, 1, true, (float)Main.rand.Next(-200, 200) / 2000f, false, 250);
 							}
@@ -157,15 +158,15 @@ namespace SGAmod.NPCs.Wraiths
 
 				}
 
-				if (npc.ai[0] > -800 && npc.ai[0] < -600)
+				if (NPC.ai[0] > -800 && NPC.ai[0] < -600)
 				{
-					npc.ai[0] = -200;
+					NPC.ai[0] = -200;
 
-					int newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y - 10, mod.NPCType("BossCopperWraith"));
+					int newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y - 10, Mod.Find<ModNPC>("BossCopperWraith").Type);
 					NPC newguy2 = Main.npc[newguy];
 					newguy2.life *= 15;
 					newguy2.lifeMax *= 15;
-					CopperWraith created = newguy2.modNPC as CopperWraith;
+					CopperWraith created = newguy2.ModNPC as CopperWraith;
 					created.OffsetPoints = theloc;
 					created.speed = 1f;
 					//if (delay>11f){
@@ -179,10 +180,10 @@ namespace SGAmod.NPCs.Wraiths
 
 
 
-				npc.velocity /= 1.025f;
-				npc.rotation += 0.2f;
+				NPC.velocity /= 1.025f;
+				NPC.rotation += 0.2f;
 
-				npc.ai[0] += 1f;
+				NPC.ai[0] += 1f;
 			}
 
 		}
@@ -192,16 +193,16 @@ namespace SGAmod.NPCs.Wraiths
 		{
 			float Scale = 0f;
 
-			Color glowingcolors1 = Main.hslToRgb((float)(npc.ai[0] / 300) % 1, 1f, 0.9f);
-			Color glowingcolors2 = Main.hslToRgb((float)(-npc.ai[0] / 300) % 1, 1f, 0.9f - (float)Scale / 30);
-			Color glowingcolors3 = Main.hslToRgb((float)(npc.ai[0] / 80) % 1, 1f, 0.9f - (float)Scale / 90);
-			Texture2D texture = mod.GetTexture("NPCs/TPD");
-			Texture2D texture2 = mod.GetTexture("NPCs/TPD1");
-			Texture2D texture3 = mod.GetTexture("NPCs/TPD2");
+			Color glowingcolors1 = Main.hslToRgb((float)(NPC.ai[0] / 300) % 1, 1f, 0.9f);
+			Color glowingcolors2 = Main.hslToRgb((float)(-NPC.ai[0] / 300) % 1, 1f, 0.9f - (float)Scale / 30);
+			Color glowingcolors3 = Main.hslToRgb((float)(NPC.ai[0] / 80) % 1, 1f, 0.9f - (float)Scale / 90);
+			Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/TPD").Value;
+			Texture2D texture2 = Mod.Assets.Request<Texture2D>("NPCs/TPD1").Value;
+			Texture2D texture3 = Mod.Assets.Request<Texture2D>("NPCs/TPD2").Value;
 			//Vector2 drawPos = npc.Center-Main.screenPosition;
-			Vector2 drawPos = npc.Center - Main.screenPosition;
-			spriteBatch.Draw(texture2, drawPos, null, glowingcolors1, npc.rotation, new Vector2(16, 16), new Vector2(2, 2), SpriteEffects.None, 0f);
-			spriteBatch.Draw(texture3, drawPos, null, glowingcolors2, -npc.rotation, new Vector2(16, 16), new Vector2(1, 1) * (1), SpriteEffects.None, 0f);
+			Vector2 drawPos = NPC.Center - Main.screenPosition;
+			spriteBatch.Draw(texture2, drawPos, null, glowingcolors1, NPC.rotation, new Vector2(16, 16), new Vector2(2, 2), SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture3, drawPos, null, glowingcolors2, -NPC.rotation, new Vector2(16, 16), new Vector2(1, 1) * (1), SpriteEffects.None, 0f);
 			return false;
 		}
 
@@ -212,25 +213,25 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void SetDefaults()
 		{
-			npc.width = 16;
-			npc.height = 16;
-			npc.damage = 10;
-			npc.defense = 20;
-			npc.lifeMax = 500;
-			npc.HitSound = SoundID.NPCHit5;
-			npc.DeathSound = SoundID.NPCDeath6;
-			npc.knockBackResist = 0.05f;
-			npc.aiStyle = -1;
-			npc.boss = false;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = 0f;
+			NPC.width = 16;
+			NPC.height = 16;
+			NPC.damage = 10;
+			NPC.defense = 20;
+			NPC.lifeMax = 500;
+			NPC.HitSound = SoundID.NPCHit5;
+			NPC.DeathSound = SoundID.NPCDeath6;
+			NPC.knockBackResist = 0.05f;
+			NPC.aiStyle = -1;
+			NPC.boss = false;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = 0f;
 		}
 
 		public override bool CheckActive()
 		{
-			return NPC.CountNPCS(mod.NPCType("LuminiteWraith")) < 1;
+			return NPC.CountNPCS(Mod.Find<ModNPC>("LuminiteWraith").Type) < 1;
 		}
 
 		public override void SetStaticDefaults()
@@ -241,13 +242,13 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void AI()
 		{
-			npc.localAI[3] += 1;
-			if (npc.localAI[3] % 10 == 0 && npc.localAI[3] % 500 < 180)
+			NPC.localAI[3] += 1;
+			if (NPC.localAI[3] % 10 == 0 && NPC.localAI[3] % 500 < 180)
 			{
-				Vector2 Centerhere = (Main.player[npc.target].Center - npc.Center);
-				List<Projectile> itz = Idglib.Shattershots(npc.Center, Main.player[npc.target].Center, new Vector2(0, 0), ProjectileID.SaucerMissile, 25, -15, (npc.localAI[3] % 500) / 2f, 2, false, 0, false, 800);
-				itz[0].localAI[1] = -(npc.localAI[3] % 500);
-				itz[1].localAI[1] = -(npc.localAI[3] % 500);
+				Vector2 Centerhere = (Main.player[NPC.target].Center - NPC.Center);
+				List<Projectile> itz = Idglib.Shattershots(NPC.Center, Main.player[NPC.target].Center, new Vector2(0, 0), ProjectileID.SaucerMissile, 25, -15, (NPC.localAI[3] % 500) / 2f, 2, false, 0, false, 800);
+				itz[0].localAI[1] = -(NPC.localAI[3] % 500);
+				itz[1].localAI[1] = -(NPC.localAI[3] % 500);
 
 
 			}
@@ -328,8 +329,8 @@ namespace SGAmod.NPCs.Wraiths
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Luminite Wraith");
-			Main.npcFrameCount[npc.type] = 1;
-			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
 		}
 
 		public override void SendExtraAI(BinaryWriter writer)
@@ -363,14 +364,14 @@ namespace SGAmod.NPCs.Wraiths
 			for (int b = 0; b < (3); b = b + 1)
 			{
 				if (SGAWorld.downedWraiths > 2)
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LuminiteWraithNotch"));
+					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("LuminiteWraithNotch").Type);
 			}
 			if (Main.rand.Next(7) == 0)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Armors.Vanity.LuminiteWraithMask>());
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<Items.Armors.Vanity.LuminiteWraithMask>());
 			}
 
-			DropHelper.DropFixedItemQuanity(types.ToArray(), Main.expertMode ? 100 : 50, npc.Center);
+			DropHelper.DropFixedItemQuanity(types.ToArray(), Main.expertMode ? 100 : 50, NPC.Center);
 
 			/*for (int f = 0; f < (Main.expertMode ? 100 : 50); f = f + 1)
 			{
@@ -379,7 +380,7 @@ namespace SGAmod.NPCs.Wraiths
 
 			Achivements.SGAAchivements.UnlockAchivement("Luminite Wraith", Main.LocalPlayer);
 			if (Main.expertMode)
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CosmicFragment"));
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("CosmicFragment").Type);
 			if (SGAWorld.downedWraiths < 4)
 			{
 				SGAWorld.downedWraiths = 4;
@@ -390,32 +391,32 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void SetDefaults()
 		{
-			npc.width = 16;
-			npc.height = 16;
-			npc.damage = 150;
-			npc.defense = 0;
-			npc.lifeMax = 20000;
-			npc.defense = 25;
+			NPC.width = 16;
+			NPC.height = 16;
+			NPC.damage = 150;
+			NPC.defense = 0;
+			NPC.lifeMax = 20000;
+			NPC.defense = 25;
 			if (SGAWorld.downedWraiths < 3 || TheWholeExperience.Check())
 			{
-				npc.damage = 100;
-				npc.lifeMax = 25000;
-				npc.defense = 0;
+				NPC.damage = 100;
+				NPC.lifeMax = 25000;
+				NPC.defense = 0;
 			}
 			else
 			{
 				fighttversion = 1;
 			}
-			npc.HitSound = SoundID.NPCHit5;
-			npc.DeathSound = SoundID.NPCDeath6;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			npc.boss = true;
+			NPC.HitSound = SoundID.NPCHit5;
+			NPC.DeathSound = SoundID.NPCDeath6;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			NPC.boss = true;
 			music = MusicID.TheTowers;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = Item.buyPrice(0, 30, 0, 0);
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = Item.buyPrice(0, 30, 0, 0);
 		}
 		public override string Texture
 		{
@@ -426,15 +427,15 @@ namespace SGAmod.NPCs.Wraiths
 
         public override bool CheckActive()
         {
-            return npc.life>0;
+            return NPC.life>0;
         }
 
         public override bool CheckDead()
 		{
 			if (warninglevel < 70)
             {
-				npc.life = 1;
-				npc.active = true;
+				NPC.life = 1;
+				NPC.active = true;
 				return false;
             }
 			return true;
@@ -445,64 +446,64 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 
 		public override void AI()
 		{
 			stopmovement -= 1;
 			//npc.netUpdate = true;
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
-				if (!P.active || P.dead) { Idglib.Chat("Pathetic...", 25, 25, 80); npc.active = false; }
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
+				if (!P.active || P.dead) { Idglib.Chat("Pathetic...", 25, 25, 80); NPC.active = false; }
 			}
 			else
 			{
 
-				npc.ai[0] += 1;
+				NPC.ai[0] += 1;
 
-				if (npc.ai[0] % 20 == 0)
+				if (NPC.ai[0] % 20 == 0)
 					dodge = new Vector2((float)Main.rand.Next(-200, 200), (float)Main.rand.Next(-100, 100));
-				if (npc.ai[0] == 1)
+				if (NPC.ai[0] == 1)
 				{
 
-					int newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y - 10, mod.NPCType("LuminiteWraithHead"));
+					int newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y - 10, Mod.Find<ModNPC>("LuminiteWraithHead").Type);
 					NPC newguy2 = Main.npc[newguy];
-					CopperArmorPiece newguy3 = newguy2.modNPC as CopperArmorPiece;
-					LuminiteWraithArmor newguy4 = newguy2.modNPC as LuminiteWraithArmor; newguy2.lifeMax = (int)(npc.life / 2); newguy2.life = (int)(npc.lifeMax / 2);
+					CopperArmorPiece newguy3 = newguy2.ModNPC as CopperArmorPiece;
+					LuminiteWraithArmor newguy4 = newguy2.ModNPC as LuminiteWraithArmor; newguy2.lifeMax = (int)(NPC.life / 2); newguy2.life = (int)(NPC.lifeMax / 2);
 					if (fighttversion == 1)
-						newguy2.lifeMax = (int)(npc.life / 3); newguy2.life = (int)(npc.lifeMax / 3);
+						newguy2.lifeMax = (int)(NPC.life / 3); newguy2.life = (int)(NPC.lifeMax / 3);
 
 					newguy4.mytargetis = new Vector2(0, -100);
-					newguy3.attachedID = npc.whoAmI;
+					newguy3.attachedID = NPC.whoAmI;
 					newguy2.knockBackResist = 0.85f;
 					newguy4.delay = 20f;
 
-					newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y - 10, mod.NPCType("LuminiteWraithChestPlate"));
+					newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y - 10, Mod.Find<ModNPC>("LuminiteWraithChestPlate").Type);
 					newguy2 = Main.npc[newguy];
-					newguy3 = newguy2.modNPC as CopperArmorPiece;
-					newguy4 = newguy2.modNPC as LuminiteWraithArmor; newguy2.lifeMax = (int)(npc.lifeMax / 2); newguy2.life = (int)(npc.lifeMax / 2);
+					newguy3 = newguy2.ModNPC as CopperArmorPiece;
+					newguy4 = newguy2.ModNPC as LuminiteWraithArmor; newguy2.lifeMax = (int)(NPC.lifeMax / 2); newguy2.life = (int)(NPC.lifeMax / 2);
 					if (fighttversion == 1)
-						newguy2.lifeMax = (int)(npc.life / 3); newguy2.life = (int)(npc.lifeMax / 3);
+						newguy2.lifeMax = (int)(NPC.life / 3); newguy2.life = (int)(NPC.lifeMax / 3);
 
 					newguy4.mytargetis = new Vector2(160, 100);
-					newguy3.attachedID = npc.whoAmI;
+					newguy3.attachedID = NPC.whoAmI;
 					newguy2.knockBackResist = 0.85f;
 					newguy4.delay = 20f;
 
-					newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y - 10, mod.NPCType("LuminiteWraithPants"));
+					newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y - 10, Mod.Find<ModNPC>("LuminiteWraithPants").Type);
 					newguy2 = Main.npc[newguy];
-					newguy3 = newguy2.modNPC as CopperArmorPiece;
-					newguy4 = newguy2.modNPC as LuminiteWraithArmor; newguy2.lifeMax = (int)(npc.lifeMax / 2); newguy2.life = (int)(npc.lifeMax / 2);
+					newguy3 = newguy2.ModNPC as CopperArmorPiece;
+					newguy4 = newguy2.ModNPC as LuminiteWraithArmor; newguy2.lifeMax = (int)(NPC.lifeMax / 2); newguy2.life = (int)(NPC.lifeMax / 2);
 					if (fighttversion == 1)
-						newguy2.lifeMax = (int)(npc.life / 3); newguy2.life = (int)(npc.lifeMax / 3);
+						newguy2.lifeMax = (int)(NPC.life / 3); newguy2.life = (int)(NPC.lifeMax / 3);
 
 					newguy4.mytargetis = new Vector2(-160, 100);
-					newguy3.attachedID = npc.whoAmI;
+					newguy3.attachedID = NPC.whoAmI;
 					newguy2.knockBackResist = 0.85f;
 					newguy4.delay = 30f;
 
@@ -530,30 +531,30 @@ namespace SGAmod.NPCs.Wraiths
 						Idglib.Chat("He was right to fear you...", 25, 25, 80);
 					}
 
-					if (warninglevel < 20 && npc.life < (int)(npc.lifeMax * 0.2))
+					if (warninglevel < 20 && NPC.life < (int)(NPC.lifeMax * 0.2))
 					{
 						warninglevel += 5;
-						npc.life = npc.lifeMax;
-						npc.netUpdate = true;
+						NPC.life = NPC.lifeMax;
+						NPC.netUpdate = true;
 
 						Idglib.Chat(warninglevel < 10 ? "Oh? Think we're done just yet?" : "You think We'd die that easily?", 25, 25, 80);
 					}
 					else
 					{
-						if (warninglevel < 30 && npc.life < (int)(npc.lifeMax * 0.2))
+						if (warninglevel < 30 && NPC.life < (int)(NPC.lifeMax * 0.2))
 						{
 							warninglevel += 5;
-							npc.life = npc.lifeMax;
-							npc.netUpdate = true;
+							NPC.life = NPC.lifeMax;
+							NPC.netUpdate = true;
 							Idglib.Chat("Well now! Arn't you quite the fighter...", 25, 25, 80);
 						}
 						else
 						{
-							if (warninglevel < 50 && npc.life < (int)(npc.lifeMax * 0.2))
+							if (warninglevel < 50 && NPC.life < (int)(NPC.lifeMax * 0.2))
 							{
 								warninglevel += 5;
-								npc.life = npc.lifeMax;
-								npc.netUpdate = true;
+								NPC.life = NPC.lifeMax;
+								NPC.netUpdate = true;
 								if (warninglevel < 40)
 									Idglib.Chat("Think again!", 25, 25, 80);
 								else
@@ -561,18 +562,18 @@ namespace SGAmod.NPCs.Wraiths
 							}
 							else
 							{
-								if (warninglevel < 70 && npc.life < (int)(npc.lifeMax * 0.2))
+								if (warninglevel < 70 && NPC.life < (int)(NPC.lifeMax * 0.2))
 								{
 									warninglevel += 5;
-									npc.life = npc.lifeMax;
-									npc.netUpdate = true;
+									NPC.life = NPC.lifeMax;
+									NPC.netUpdate = true;
 									Idglib.Chat(warninglevel < 60 ? "This is proving more than We expected..." : (warninglevel < 66 ? "How is he still alive?!" : "Failure is an option we can't afford!"), 25, 25, 80);
 								}
 							}
 						}
 					}
 
-					if (warninglevel > 69 && warninglevel < 1000 && npc.life < (int)(npc.lifeMax * 0.75))
+					if (warninglevel > 69 && warninglevel < 1000 && NPC.life < (int)(NPC.lifeMax * 0.75))
 					{
 						warninglevel = 1000;
 						Idglib.Chat("No you can't beat us!", 25, 25, 80);
@@ -589,14 +590,14 @@ namespace SGAmod.NPCs.Wraiths
 							}
 
 						}*/
-						npc.netUpdate = true;
+						NPC.netUpdate = true;
 					}
-					if (warninglevel > 69 && warninglevel < 2000 && npc.life < (int)(npc.lifeMax * 0.2))
+					if (warninglevel > 69 && warninglevel < 2000 && NPC.life < (int)(NPC.lifeMax * 0.2))
 					{
 						warninglevel = 2000;
 						Idglib.Chat("Master, hear my call!", 25, 25, 80);
 
-						npc.netUpdate = true;
+						NPC.netUpdate = true;
 					}
 
 
@@ -617,10 +618,10 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Vector2 drawPos = npc.Center - Main.screenPosition;
+			Vector2 drawPos = NPC.Center - Main.screenPosition;
 			Color glowingcolors1 = Main.hslToRgb((float)lightColor.R * 0.08f, (float)lightColor.G * 0.08f, (float)lightColor.B * 0.08f);
-			Texture2D texture = mod.GetTexture("NPCs/TPD");
-			spriteBatch.Draw(texture, drawPos, null, glowingcolors1, npc.spriteDirection + (npc.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(5, 35) / 17f, Main.rand.Next(5, 35) / 17f), SpriteEffects.None, 0f);
+			Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/TPD").Value;
+			spriteBatch.Draw(texture, drawPos, null, glowingcolors1, NPC.spriteDirection + (NPC.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(5, 35) / 17f, Main.rand.Next(5, 35) / 17f), SpriteEffects.None, 0f);
 
 			if (fighttversion == 1 && warninglevel > maxfight && quitermode > -1)
 			{
@@ -635,7 +636,7 @@ namespace SGAmod.NPCs.Wraiths
 				{
 					float growth = (float)Math.Pow(Math.Max(0, (quitermode - 300) / 120f) + growth2, 1.50);
 
-					spriteBatch.Draw(sun, npc.Center - Main.screenPosition, null, Color.White * MathHelper.Clamp(1f - ((quitermode - 400f) / 60f), 0f, 1f), ((Main.GlobalTime * ((i % 1f) > 0.4f ? 3f : -3f)) + i / 3f), new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(0.75f, 1f) * growth, SpriteEffects.None, 0f);
+					spriteBatch.Draw(sun, NPC.Center - Main.screenPosition, null, Color.White * MathHelper.Clamp(1f - ((quitermode - 400f) / 60f), 0f, 1f), ((Main.GlobalTimeWrappedHourly * ((i % 1f) > 0.4f ? 3f : -3f)) + i / 3f), new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(0.75f, 1f) * growth, SpriteEffects.None, 0f);
 				}
 			}
 
@@ -644,17 +645,17 @@ namespace SGAmod.NPCs.Wraiths
 
 
 
-			drawPos = npc.Center - Main.screenPosition;
+			drawPos = NPC.Center - Main.screenPosition;
 			for (int i = 0; i < 70; i = i + 1)
 			{
-				float inrc = npc.ai[0] / 50f;
+				float inrc = NPC.ai[0] / 50f;
 				if (warninglevel < i)
 				{
 					glowingcolors1 = Main.hslToRgb(inrc * 0.05f, 0.8f, 1f);
 					float angle = 2f * (float)Math.PI / 70f * i;
 					float dist = 100f;
 					Vector2 thisloc = new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist));
-					spriteBatch.Draw(texture, drawPos + thisloc, null, glowingcolors1, npc.spriteDirection + (npc.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(1, 20) / 17f, Main.rand.Next(1, 20) / 17f), SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture, drawPos + thisloc, null, glowingcolors1, NPC.spriteDirection + (NPC.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(1, 20) / 17f, Main.rand.Next(1, 20) / 17f), SpriteEffects.None, 0f);
 				}
 			}
 
@@ -680,15 +681,15 @@ namespace SGAmod.NPCs.Wraiths
 
 			//float moveval=(float)(Math.Sin(npc.ai[0]/600f)*40f);
 			Vector2 loc = new Vector2(0f, -250f) + dodge;
-			npc.dontTakeDamage = false;
-			npc.GivenName = music == MusicID.LunarBoss ? "The Luminite Wraith" : "Terra Wraith";
+			NPC.dontTakeDamage = false;
+			NPC.GivenName = music == MusicID.LunarBoss ? "The Luminite Wraith" : "Terra Wraith";
 			doingCharge -= 1;
 			if (fighttversion == 0 && warninglevel > 30)
 			{
 				quitermode += 1;
 				if (quitermode % 10 == 0)
-					npc.netUpdate = true;
-				npc.dontTakeDamage = true;
+					NPC.netUpdate = true;
+				NPC.dontTakeDamage = true;
 				music = MusicID.Title;
 				if (quitermode == 100)
 					Idglib.Chat("You know what...?", 25, 25, 80);
@@ -707,20 +708,20 @@ namespace SGAmod.NPCs.Wraiths
 					if (SGAWorld.downedWraiths < 3)
 					{
 						SGAWorld.downedWraiths = 3;
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.LunarCraftingStation);
+						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.LunarCraftingStation);
 						Idglib.Chat("The cultist can now drop an Ancient Manipulator", 150, 150, 70);
 					}
-					npc.active = false;
+					NPC.active = false;
 				}
 			}
 
-			NPCID.Sets.MustAlwaysDraw[npc.type] = false;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = false;
 
 			if (fighttversion == 1 && warninglevel > maxfight && quitermode > -1)
 			{
-				NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+				NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 				quitermode += 1;
-				npc.dontTakeDamage = true;
+				NPC.dontTakeDamage = true;
 				music = MusicID.Title;
 				if (Main.netMode != 1)
 				{
@@ -732,23 +733,23 @@ namespace SGAmod.NPCs.Wraiths
 						Idglib.Chat("It's time, you know your PLACE!", 25, 25, 80);
 					if (quitermode == 400)
 					{
-						RippleBoom.MakeShockwave(npc.Center, 35f, 3f, 60f, 100, 3f, true);
-						int newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("WraithSolarFlareAxe")); NPC newguy2 = Main.npc[newguy]; CopperArmorPiece newguy3 = newguy2.modNPC as CopperArmorPiece; newguy3.attachedID = npc.whoAmI; newguy2.localAI[0] = 0f; newguy2.ai[1] = 128f; newguy2.ai[2] = -128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
-						newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("WraithPhantasm")); newguy2 = Main.npc[newguy]; newguy3 = newguy2.modNPC as CopperArmorPiece; newguy3.attachedID = npc.whoAmI; newguy2.localAI[0] = (float)Math.PI / 2f; newguy2.ai[1] = 128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
-						newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("WraithSolarFlareAxe")); newguy2 = Main.npc[newguy]; newguy3 = newguy2.modNPC as CopperArmorPiece; newguy3.attachedID = npc.whoAmI; newguy2.localAI[0] = (float)Math.PI; newguy2.ai[1] = 128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
-						newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("WraithPhantasm")); newguy2 = Main.npc[newguy]; newguy3 = newguy2.modNPC as CopperArmorPiece; newguy3.attachedID = npc.whoAmI; newguy2.localAI[0] = (float)Math.PI * 1.5f; newguy2.ai[1] = 128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
+						RippleBoom.MakeShockwave(NPC.Center, 35f, 3f, 60f, 100, 3f, true);
+						int newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("WraithSolarFlareAxe").Type); NPC newguy2 = Main.npc[newguy]; CopperArmorPiece newguy3 = newguy2.ModNPC as CopperArmorPiece; newguy3.attachedID = NPC.whoAmI; newguy2.localAI[0] = 0f; newguy2.ai[1] = 128f; newguy2.ai[2] = -128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
+						newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("WraithPhantasm").Type); newguy2 = Main.npc[newguy]; newguy3 = newguy2.ModNPC as CopperArmorPiece; newguy3.attachedID = NPC.whoAmI; newguy2.localAI[0] = (float)Math.PI / 2f; newguy2.ai[1] = 128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
+						newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("WraithSolarFlareAxe").Type); newguy2 = Main.npc[newguy]; newguy3 = newguy2.ModNPC as CopperArmorPiece; newguy3.attachedID = NPC.whoAmI; newguy2.localAI[0] = (float)Math.PI; newguy2.ai[1] = 128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
+						newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("WraithPhantasm").Type); newguy2 = Main.npc[newguy]; newguy3 = newguy2.ModNPC as CopperArmorPiece; newguy3.attachedID = NPC.whoAmI; newguy2.localAI[0] = (float)Math.PI * 1.5f; newguy2.ai[1] = 128f; newguy2.knockBackResist = 0.9f; newguy2.netUpdate = true;
 						for (int i = 0; i < Main.maxNPCs; i += 1)
 						{
 							NPC them = Main.npc[i];
 
-							if (them.active && them.modNPC != null)
+							if (them.active && them.ModNPC != null)
 							{
 
-								if (them.type == mod.NPCType("LuminiteWraithPants") || them.type == mod.NPCType("LuminiteWraithChestPlate") || them.type == mod.NPCType("LuminiteWraithHead"))
+								if (them.type == Mod.Find<ModNPC>("LuminiteWraithPants") .Type|| them.type == Mod.Find<ModNPC>("LuminiteWraithChestPlate") .Type|| them.type == Mod.Find<ModNPC>("LuminiteWraithHead").Type)
 								{
-									LuminiteWraithArmor guy = them.modNPC as LuminiteWraithArmor;
+									LuminiteWraithArmor guy = them.ModNPC as LuminiteWraithArmor;
 
-									if (guy.attachedID == npc.whoAmI)
+									if (guy.attachedID == NPC.whoAmI)
 									{
 										guy.ForcePhaseArmor();
 									}
@@ -767,14 +768,14 @@ namespace SGAmod.NPCs.Wraiths
 				if (quitermode == 600)
 				{
 					quitermode = -1;
-					npc.dontTakeDamage = false;
+					NPC.dontTakeDamage = false;
 					music = MusicID.LunarBoss;
 				}
 			}
 
-			if (npc.dontTakeDamage == false)
-				if (NPC.CountNPCS(mod.NPCType("BossCopperWraith")) > 0)
-					npc.dontTakeDamage = true;
+			if (NPC.dontTakeDamage == false)
+				if (NPC.CountNPCS(Mod.Find<ModNPC>("BossCopperWraith").Type) > 0)
+					NPC.dontTakeDamage = true;
 
 			if (warninglevel > maxfight && quitermode < 0)
 			{
@@ -786,23 +787,23 @@ namespace SGAmod.NPCs.Wraiths
 			}
 
 
-			npc.velocity /= 1.05f;
+			NPC.velocity /= 1.05f;
 			if (quitermode < 1)
 			{
 
 				Vector2 itzx = P.velocity + new Vector2(0, -0.25f);
 				float addtocircle = (warninglevel < 30 ? 0.2f : 0.4f);
 
-				if (npc.ai[0] % 2400 > 2000 && fighttversion > 0 && Main.expertMode)
+				if (NPC.ai[0] % 2400 > 2000 && fighttversion > 0 && Main.expertMode)
 				{
 					addtocircle = 0.75f;
-					double angle = (npc.ai[0] / 20f) + 2.0 * Math.PI * 1.0;
+					double angle = (NPC.ai[0] / 20f) + 2.0 * Math.PI * 1.0;
 					loc = new Vector2((float)((Math.Cos(angle) * (700f + itzx.Length() * 80f))), (float)((Math.Sin(angle) * (700f + itzx.Length() * 80f))));
 				}
 				else
 				{
 
-					if (npc.ai[0] % 3100 > 2400 && fighttversion > 0 && Main.expertMode)
+					if (NPC.ai[0] % 3100 > 2400 && fighttversion > 0 && Main.expertMode)
 					{
 						Vector2 itzy = itzx;
 						itzy.Normalize(); itzy *= 600f;
@@ -812,10 +813,10 @@ namespace SGAmod.NPCs.Wraiths
 
 				}
 
-				Vector2 dir = (P.Center + loc - npc.Center);
+				Vector2 dir = (P.Center + loc - NPC.Center);
 				Vector2 dist = dir;
 
-				if (npc.ai[0] % 600 > 200)
+				if (NPC.ai[0] % 600 > 200)
 				{
 
 					Vector2 distnormal = dist;
@@ -827,20 +828,20 @@ namespace SGAmod.NPCs.Wraiths
 
 					dir.Normalize();
 					if (stopmovement < 1)
-						npc.velocity += (dir * addtocircle) + (distnormal * 0.001f);
+						NPC.velocity += (dir * addtocircle) + (distnormal * 0.001f);
 
 				}
 				else
 				{
 
-					if (npc.ai[0] % 70 > 60 && npc.ai[0] % 600 > 40)
+					if (NPC.ai[0] % 70 > 60 && NPC.ai[0] % 600 > 40)
 					{
-						dir = (P.Center - npc.Center);
+						dir = (P.Center - NPC.Center);
 						dir.Normalize();
 						if (stopmovement < 1)
 						{
 							doingCharge = 45;
-							npc.velocity += (dir * 5);
+							NPC.velocity += (dir * 5);
 						}
 					}
 
@@ -874,12 +875,12 @@ namespace SGAmod.NPCs.Wraiths
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 
-			CopperArmorPiece myself = npc.modNPC as CopperArmorPiece;
-			int npctype = mod.NPCType(myself.attachedType);
+			CopperArmorPiece myself = npc.ModNPC as CopperArmorPiece;
+			int npctype = Mod.Find<ModNPC>(myself.attachedType).Type;
 			NPC myowner = Main.npc[myself.attachedID];
 
 			int width = 64;
-			int height = Math.Max(160, (int)(((myowner.Center - npc.Center).Length()) / 5f));
+			int height = Math.Max(160, (int)(((myowner.Center - NPC.Center).Length()) / 5f));
 
 			Texture2D beam = new Texture2D(Main.graphics.GraphicsDevice, width, height);
 			var dataColors = new Color[width * height];
@@ -906,12 +907,12 @@ namespace SGAmod.NPCs.Wraiths
 
 			Idglib.coloroverride = Color.White;
 
-			Idglib.DrawSkeletronLikeArms(spriteBatch, beam, npc.Center, myowner.Center, -8f, -8f, MathHelper.Clamp((myowner.Center.X - npc.Center.X) * 0.02f, -1, 1));
+			Idglib.DrawSkeletronLikeArms(spriteBatch, beam, NPC.Center, myowner.Center, -8f, -8f, MathHelper.Clamp((myowner.Center.X - NPC.Center.X) * 0.02f, -1, 1));
 			Vector2 drawPos = ((Idglib.skeletronarmjointpos - Main.screenPosition)) + new Vector2(0f, 0f);
-			Texture2D texture = mod.GetTexture("NPCs/TPD");
-			spriteBatch.Draw(texture, drawPos, null, Color.White, npc.spriteDirection + (npc.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(15, 35) / 17f, Main.rand.Next(15, 35) / 17f), SpriteEffects.None, 0f);
+			Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/TPD").Value;
+			spriteBatch.Draw(texture, drawPos, null, Color.White, NPC.spriteDirection + (NPC.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(15, 35) / 17f, Main.rand.Next(15, 35) / 17f), SpriteEffects.None, 0f);
 
-			Vector2 drawOrigin = new Vector2(Main.npcTexture[npc.type].Width / 2, Main.npcTexture[npc.type].Height / 2);
+			Vector2 drawOrigin = new Vector2(Main.npcTexture[NPC.type].Width / 2, Main.npcTexture[NPC.type].Height / 2);
 			//spriteBatch.Draw(Main.npcTexture[npc.type], npc.position-Main.screenPosition, null, drawColor, npc.rotation, drawOrigin, npc.scale, npc.spriteDirection > 0 ? (SpriteEffects.FlipVertically) : SpriteEffects.None, 0f);
 
 
@@ -937,7 +938,7 @@ namespace SGAmod.NPCs.Wraiths
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Solar Axe");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 		public override string Texture
 		{
@@ -945,26 +946,26 @@ namespace SGAmod.NPCs.Wraiths
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 32;
-			npc.height = 32;
-			npc.damage = 15;
-			npc.defDamage = 15;
-			npc.defense = 0;
-			npc.lifeMax = 100000;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath7;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			aiType = -1;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
+			NPC.width = 32;
+			NPC.height = 32;
+			NPC.damage = 15;
+			NPC.defDamage = 15;
+			NPC.defense = 0;
+			NPC.lifeMax = 100000;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath7;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			AIType = -1;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
 		}
 		public override void AI()
 		{
-			CopperArmorPiece myself = npc.modNPC as CopperArmorPiece;
-			int npctype = mod.NPCType(myself.attachedType);
+			CopperArmorPiece myself = npc.ModNPC as CopperArmorPiece;
+			int npctype = Mod.Find<ModNPC>(myself.attachedType).Type;
 			NPC myowner = Main.npc[myself.attachedID];
 			if (myowner.active == false)
 			{
@@ -972,48 +973,48 @@ namespace SGAmod.NPCs.Wraiths
 			}
 			else
 			{
-				npc.dontTakeDamage = myowner.dontTakeDamage;
-				npc.localAI[0] += 0.02f;
-				double angle = ((double)(npc.localAI[0])) + 2.0 * Math.PI;
+				NPC.dontTakeDamage = myowner.dontTakeDamage;
+				NPC.localAI[0] += 0.02f;
+				double angle = ((double)(NPC.localAI[0])) + 2.0 * Math.PI;
 				Player P = Main.player[myowner.target];
-				npc.ai[0] += 1;
-				npc.spriteDirection = npc.velocity.X > 0 ? -1 : 1;
-				Vector2 itt = (myowner.Center - npc.Center + new Vector2((float)Math.Cos((float)angle) * npc.ai[1], (float)Math.Sin((float)angle) * npc.ai[1]));
+				NPC.ai[0] += 1;
+				NPC.spriteDirection = NPC.velocity.X > 0 ? -1 : 1;
+				Vector2 itt = (myowner.Center - NPC.Center + new Vector2((float)Math.Cos((float)angle) * NPC.ai[1], (float)Math.Sin((float)angle) * NPC.ai[1]));
 				float locspeed = 0.25f;
-				if (npc.ai[0] % 900 > 650)
+				if (NPC.ai[0] % 900 > 650)
 				{
-					npc.damage = (int)npc.defDamage * 5;
-					itt = (P.Center - npc.Center + new Vector2((float)Math.Cos((float)angle) * npc.ai[1], (float)Math.Sin((float)angle) * npc.ai[1]));
-					npc.rotation = npc.rotation + (0.65f * npc.spriteDirection);
-					if (npc.ai[0] % 50 == 0)
+					NPC.damage = (int)NPC.defDamage * 5;
+					itt = (P.Center - NPC.Center + new Vector2((float)Math.Cos((float)angle) * NPC.ai[1], (float)Math.Sin((float)angle) * NPC.ai[1]));
+					NPC.rotation = NPC.rotation + (0.65f * NPC.spriteDirection);
+					if (NPC.ai[0] % 50 == 0)
 					{
 						Vector2 itt2 = itt; itt2.Normalize();
-						npc.velocity = (itt2 * 60f);
+						NPC.velocity = (itt2 * 60f);
 					}
-					npc.velocity = npc.velocity * 0.95f;
+					NPC.velocity = NPC.velocity * 0.95f;
 
-					int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, mod.DustType("HotDust"));
+					int dust = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, Mod.Find<ModDust>("HotDust").Type);
 					Main.dust[dust].scale = 0.5f;
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-					Main.dust[dust].velocity = (randomcircle / 2f) + (npc.velocity / 1.5f);
+					Main.dust[dust].velocity = (randomcircle / 2f) + (NPC.velocity / 1.5f);
 					Main.dust[dust].noGravity = true;
 
 				}
 				else
 				{
-					npc.damage = 0;
-					if (npc.ai[0] % 300 < 60)
+					NPC.damage = 0;
+					if (NPC.ai[0] % 300 < 60)
 					{
 						locspeed = 0.50f;
-						npc.velocity = npc.velocity * 0.92f;
+						NPC.velocity = NPC.velocity * 0.92f;
 					}
-					npc.rotation = (float)npc.velocity.X * 0.09f;
+					NPC.rotation = (float)NPC.velocity.X * 0.09f;
 					locspeed = 2.0f;
 				}
-				npc.velocity = npc.velocity * 0.96f;
+				NPC.velocity = NPC.velocity * 0.96f;
 				itt.Normalize();
-				npc.velocity = npc.velocity + (itt * locspeed);
-				npc.timeLeft = 999;
+				NPC.velocity = NPC.velocity + (itt * locspeed);
+				NPC.timeLeft = 999;
 			}
 
 
@@ -1037,7 +1038,7 @@ namespace SGAmod.NPCs.Wraiths
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Phantasm");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 		public override string Texture
 		{
@@ -1046,25 +1047,25 @@ namespace SGAmod.NPCs.Wraiths
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			npc.width = 24;
-			npc.height = 24;
-			npc.damage = 0;
-			npc.defense = 5;
-			npc.lifeMax = 100000;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath7;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			aiType = -1;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
+			NPC.width = 24;
+			NPC.height = 24;
+			NPC.damage = 0;
+			NPC.defense = 5;
+			NPC.lifeMax = 100000;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath7;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			AIType = -1;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
 		}
 		public override void AI()
 		{
-			CopperArmorPiece myself = npc.modNPC as CopperArmorPiece;
-			int npctype = mod.NPCType(myself.attachedType);
+			CopperArmorPiece myself = npc.ModNPC as CopperArmorPiece;
+			int npctype = Mod.Find<ModNPC>(myself.attachedType).Type;
 			NPC myowner = Main.npc[myself.attachedID];
 			if (myowner.active == false)
 			{
@@ -1072,53 +1073,53 @@ namespace SGAmod.NPCs.Wraiths
 			}
 			else
 			{
-				npc.dontTakeDamage = myowner.dontTakeDamage;
-				Player P = Main.player[npc.target];
-				if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+				NPC.dontTakeDamage = myowner.dontTakeDamage;
+				Player P = Main.player[NPC.target];
+				if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 				{
-					npc.TargetClosest(false);
-					P = Main.player[npc.target];
+					NPC.TargetClosest(false);
+					P = Main.player[NPC.target];
 					if (!P.active || P.dead)
 					{
-						npc.active = false;
-						Main.npc[(int)npc.ai[1]].active = false;
+						NPC.active = false;
+						Main.npc[(int)NPC.ai[1]].active = false;
 					}
 				}
 				else
 				{
-					npc.localAI[0] += 0.02f;
-					double angle = ((double)(npc.localAI[0])) + 2.0 * Math.PI;
+					NPC.localAI[0] += 0.02f;
+					double angle = ((double)(NPC.localAI[0])) + 2.0 * Math.PI;
 					if (!myowner.dontTakeDamage)
-						npc.ai[0] += 1;
-					Vector2 itt = (myowner.Center - npc.Center + new Vector2((float)Math.Cos((float)angle) * npc.ai[1], (float)Math.Sin((float)angle) * npc.ai[1]));
-					if (npc.ai[0] % 1800 > 1250)
+						NPC.ai[0] += 1;
+					Vector2 itt = (myowner.Center - NPC.Center + new Vector2((float)Math.Cos((float)angle) * NPC.ai[1], (float)Math.Sin((float)angle) * NPC.ai[1]));
+					if (NPC.ai[0] % 1800 > 1250)
 					{
-						itt = (P.Center - npc.Center + new Vector2((float)Math.Cos((float)angle) * npc.ai[1], (float)Math.Sin((float)angle) * npc.ai[1])); ;
+						itt = (P.Center - NPC.Center + new Vector2((float)Math.Cos((float)angle) * NPC.ai[1], (float)Math.Sin((float)angle) * NPC.ai[1])); ;
 					}
 					float locspeed = 0.25f;
-					if (npc.ai[0] % 1400 > 950)
+					if (NPC.ai[0] % 1400 > 950)
 					{
-						Vector2 cas = new Vector2(npc.position.X - P.position.X, npc.position.Y - P.position.Y);
+						Vector2 cas = new Vector2(NPC.position.X - P.position.X, NPC.position.Y - P.position.Y);
 						double dist = cas.Length();
-						float rotation = (float)Math.Atan2(npc.position.Y - (P.position.Y - (new Vector2(0, (float)(dist * 0.04f))).Y + (P.height * 0.5f)), npc.position.X - (P.position.X + (P.width * 0.5f)));
-						npc.rotation = rotation;//npc.rotation+((rotation-npc.rotation)*0.1f);
-						npc.velocity = npc.velocity * 0.92f;
-						if (npc.ai[0] % 10 == 0 && npc.ai[0] % 1400 > 1150)
+						float rotation = (float)Math.Atan2(NPC.position.Y - (P.position.Y - (new Vector2(0, (float)(dist * 0.04f))).Y + (P.height * 0.5f)), NPC.position.X - (P.position.X + (P.width * 0.5f)));
+						NPC.rotation = rotation;//npc.rotation+((rotation-npc.rotation)*0.1f);
+						NPC.velocity = NPC.velocity * 0.92f;
+						if (NPC.ai[0] % 10 == 0 && NPC.ai[0] % 1400 > 1150)
 						{
-							Idglib.Shattershots(npc.Center, npc.Center + new Vector2(-15 * npc.spriteDirection, 0), new Vector2(0, 0), ProjectileID.MoonlordArrowTrail, 35, 20, 0, 1, true, (Main.rand.Next(-100, 100) * 0.000f) - npc.rotation, true, 300);
+							Idglib.Shattershots(NPC.Center, NPC.Center + new Vector2(-15 * NPC.spriteDirection, 0), new Vector2(0, 0), ProjectileID.MoonlordArrowTrail, 35, 20, 0, 1, true, (Main.rand.Next(-100, 100) * 0.000f) - NPC.rotation, true, 300);
 						}
-						npc.spriteDirection = 1;
+						NPC.spriteDirection = 1;
 					}
 					else
 					{
-						if (Math.Abs(npc.velocity.X) > 2) { npc.spriteDirection = npc.velocity.X > 0 ? -1 : 1; }
-						npc.rotation = (float)npc.velocity.X * 0.09f;
+						if (Math.Abs(NPC.velocity.X) > 2) { NPC.spriteDirection = NPC.velocity.X > 0 ? -1 : 1; }
+						NPC.rotation = (float)NPC.velocity.X * 0.09f;
 						locspeed = 2.5f;
 					}
-					npc.velocity = npc.velocity * 0.96f;
+					NPC.velocity = NPC.velocity * 0.96f;
 					itt.Normalize();
-					npc.velocity = npc.velocity + (itt * locspeed);
-					npc.timeLeft = 999;
+					NPC.velocity = NPC.velocity + (itt * locspeed);
+					NPC.timeLeft = 999;
 				}
 
 			}
@@ -1173,7 +1174,7 @@ namespace SGAmod.NPCs.Wraiths
 		public override void ArmorMalfunction()
         { 
         int theitem=0;
-        if (!Main.player[npc.target].dead && droploot){
+        if (!Main.player[NPC.target].dead && droploot){
         if (tempappeance==ItemID.VortexHelmet || tempappeance==ItemID.VortexBreastplate || tempappeance==ItemID.VortexLeggings)
         theitem = ItemID.FragmentVortex;
         if (tempappeance==ItemID.SolarFlareHelmet || tempappeance==ItemID.SolarFlareBreastplate || tempappeance==ItemID.SolarFlareLeggings)
@@ -1184,7 +1185,7 @@ namespace SGAmod.NPCs.Wraiths
         theitem = ItemID.FragmentNebula;
         if (theitem>0){
         for (int f = 0; f < (Main.expertMode ? 6 : 4); f=f+1){
-        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, theitem);
+        Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, theitem);
         }}
         }
         base.ArmorMalfunction();
@@ -1192,11 +1193,11 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void UpdateLifeRegen(ref int damage)
 		{
-			myself = npc.modNPC as CopperArmorPiece;
+			myself = npc.ModNPC as CopperArmorPiece;
 			NPC myowner = Main.npc[myself.attachedID];
 			if (myowner.active == true)
 			{
-				myowner.lifeRegen -= npc.lifeRegen;
+				myowner.lifeRegen -= NPC.lifeRegen;
 			}
 		}
 
@@ -1216,146 +1217,146 @@ namespace SGAmod.NPCs.Wraiths
 		public void DoAIStuff()
 		{
 
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				}else{
-				npc.ai[0]+=1;
+				NPC.ai[0]+=1;
 
-				if (npc.ai[0]==1){
-				int newguy=NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y-10, mod.NPCType("LuminiteWraithTarget"));
+				if (NPC.ai[0]==1){
+				int newguy=NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y-10, Mod.Find<ModNPC>("LuminiteWraithTarget").Type);
 				NPC newguy2=Main.npc[newguy];
 				newguy2.ai[0]=Main.rand.Next(0,10000);
-				newguy2.ai[1]=npc.whoAmI;
+				newguy2.ai[1]=NPC.whoAmI;
 				newguy2.ai[2]=myself.attachedID;
-				(newguy2.modNPC as LuminiteWraithTarget).delay=delay;
+				(newguy2.ModNPC as LuminiteWraithTarget).delay=delay;
 					newguy2.netUpdate = true;
-				npc.ai[1]=newguy;
+				NPC.ai[1]=newguy;
 				}
 				NPC myowner=Main.npc[myself.attachedID];
-				if (npc.dontTakeDamage==false){
+				if (NPC.dontTakeDamage==false){
 
-			if (npc.ai[3]==ItemID.SpectreRobe){
+			if (NPC.ai[3]==ItemID.SpectreRobe){
 
-			if (npc.ai[0]%400<100 && npc.ai[0]%8==0){
-			Idglib.Shattershots(npc.Center,P.position,new Vector2(P.width,P.height),ProjectileID.DiamondBolt,20,(float)(Main.rand.Next(180,220))*0.1f,30,1,true,0,false,400);
+			if (NPC.ai[0]%400<100 && NPC.ai[0]%8==0){
+			Idglib.Shattershots(NPC.Center,P.position,new Vector2(P.width,P.height),ProjectileID.DiamondBolt,20,(float)(Main.rand.Next(180,220))*0.1f,30,1,true,0,false,400);
 			}
-			if (npc.ai[0]%500==0){
-			Idglib.Shattershots(npc.position,npc.position+new Vector2(0,200),new Vector2(0,0),ProjectileID.DiamondBolt,40,10,360,20,true,0,true,400);
-			}
-
+			if (NPC.ai[0]%500==0){
+			Idglib.Shattershots(NPC.position,NPC.position+new Vector2(0,200),new Vector2(0,0),ProjectileID.DiamondBolt,40,10,360,20,true,0,true,400);
 			}
 
-			if (npc.ai[3]==ItemID.TurtleScaleMail){
+			}
 
-			if (npc.ai[0]%400<150 && npc.ai[0]%8==0){
-			List<Projectile> itz=Idglib.Shattershots(npc.Center,P.position,new Vector2(P.width,P.height),ProjectileID.SporeGas,25,15f,10,1,true,((float)Main.rand.Next(-500,500)/2000f),false,500);
+			if (NPC.ai[3]==ItemID.TurtleScaleMail){
+
+			if (NPC.ai[0]%400<150 && NPC.ai[0]%8==0){
+			List<Projectile> itz=Idglib.Shattershots(NPC.Center,P.position,new Vector2(P.width,P.height),ProjectileID.SporeGas,25,15f,10,1,true,((float)Main.rand.Next(-500,500)/2000f),false,500);
 			//itz[0].aiStyle=0;
 			}
 
 			}
 
 
-			if (npc.ai[3]==ItemID.TikiShirt){
+			if (NPC.ai[3]==ItemID.TikiShirt){
 
-			if (npc.ai[0]%600<100 && npc.ai[0]%4==0){
-			List<Projectile> itz=Idglib.Shattershots(npc.Center,npc.Center,new Vector2(0,16),ProjectileID.HornetStinger,30,5f,180,2,false,npc.ai[0]/15f,false,500);
+			if (NPC.ai[0]%600<100 && NPC.ai[0]%4==0){
+			List<Projectile> itz=Idglib.Shattershots(NPC.Center,NPC.Center,new Vector2(0,16),ProjectileID.HornetStinger,30,5f,180,2,false,NPC.ai[0]/15f,false,500);
 			}
 
 			}
 
 
-			if (npc.ai[3]==ItemID.ShroomiteBreastplate){
+			if (NPC.ai[3]==ItemID.ShroomiteBreastplate){
 
-			if (npc.ai[0]%300<240 && npc.ai[0]%5==0){
-			List<Projectile> itz=Idglib.Shattershots(npc.Center,new Vector2(Main.rand.Next(-500,500)+npc.Center.X,npc.Center.Y+Main.rand.Next(-200,200)),new Vector2(0,0),ProjectileID.Mushroom,30,30f,30,1,true,0f,false,200);
+			if (NPC.ai[0]%300<240 && NPC.ai[0]%5==0){
+			List<Projectile> itz=Idglib.Shattershots(NPC.Center,new Vector2(Main.rand.Next(-500,500)+NPC.Center.X,NPC.Center.Y+Main.rand.Next(-200,200)),new Vector2(0,0),ProjectileID.Mushroom,30,30f,30,1,true,0f,false,200);
 			//itz[0].aiStyle=0;
 			}
 
 			}
 
 
-					if (npc.ai[3] == ItemID.VortexBreastplate)
+					if (NPC.ai[3] == ItemID.VortexBreastplate)
 					{
 
-						if (npc.ai[0] % 900 == 600 && npc.ai[0] > 400)
+						if (NPC.ai[0] % 900 == 600 && NPC.ai[0] > 400)
 						{
-							(myowner.modNPC as LuminiteWraith).stopmovement = 380;
+							(myowner.ModNPC as LuminiteWraith).stopmovement = 380;
 							myowner.netUpdate = true;
 						}
 
-						if (npc.ai[0] % 900 > 600 && npc.ai[0] % 4 == 0)
+						if (NPC.ai[0] % 900 > 600 && NPC.ai[0] % 4 == 0)
 						{
 							for (int a = 0; a < 60; a++)
 							{
 								Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 								Vector2 vecr = randomcircle * 2500;
-								vecr *= (1f - (900f / (npc.ai[0] % 900)));
+								vecr *= (1f - (900f / (NPC.ai[0] % 900)));
 
-								int num622 = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + vecr, 0, 0, 185, 0f, 0f, 100, default(Color), 1f);
+								int num622 = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + vecr, 0, 0, 185, 0f, 0f, 100, default(Color), 1f);
 								Main.dust[num622].velocity *= 1f;
 
 								Main.dust[num622].noGravity = true;
-								Main.dust[num622].color = Main.hslToRgb((float)(Main.GlobalTime / 5) % 1, 0.9f, 1f);
+								Main.dust[num622].color = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 5) % 1, 0.9f, 1f);
 								Main.dust[num622].color.A = 10;
-								Main.dust[num622].velocity.X = npc.velocity.X / 3 + (Main.rand.Next(-50, 51) * 0.005f);
-								Main.dust[num622].velocity.Y = npc.velocity.Y / 3 + (Main.rand.Next(-50, 51) * 0.005f);
+								Main.dust[num622].velocity.X = NPC.velocity.X / 3 + (Main.rand.Next(-50, 51) * 0.005f);
+								Main.dust[num622].velocity.Y = NPC.velocity.Y / 3 + (Main.rand.Next(-50, 51) * 0.005f);
 								Main.dust[num622].alpha = 100; ;
 							}
 						}
-						if (npc.ai[0] % 900 == 600)
+						if (NPC.ai[0] % 900 == 600)
 						{
 							//SoundEffectInstance sound;
-							Main.PlaySound(SoundID.DD2_BookStaffCast, (int)P.Center.X, (int)P.Center.Y);
+							SoundEngine.PlaySound(SoundID.DD2_BookStaffCast, (int)P.Center.X, (int)P.Center.Y);
 
 							Projectile.NewProjectile(P.Center, Vector2.Zero, ModContent.ProjectileType<ProjectileLWraithGravity>(), 200, 0);
 						}
 					}
 
-					if (npc.ai[3] == ItemID.SolarFlareBreastplate)
+					if (NPC.ai[3] == ItemID.SolarFlareBreastplate)
 					{
 
-						if (npc.ai[0] % 900 == 600 && npc.ai[0] > 400)
+						if (NPC.ai[0] % 900 == 600 && NPC.ai[0] > 400)
 						{
-							(myowner.modNPC as LuminiteWraith).stopmovement = 460;
+							(myowner.ModNPC as LuminiteWraith).stopmovement = 460;
 							myowner.netUpdate = true;
 						}
 
-						if (npc.ai[0] % 900 > 600 && npc.ai[0] % 4 == 0)
+						if (NPC.ai[0] % 900 > 600 && NPC.ai[0] % 4 == 0)
 						{
 							for (int a = 0; a < 40; a++)
 							{
 								Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 								Vector2 vecr = randomcircle * 6000;
-								vecr *= (1f - (900f / (npc.ai[0] % 900)));
+								vecr *= (1f - (900f / (NPC.ai[0] % 900)));
 
-								int num622 = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + vecr, 0, 0, 6, 0f, 0f, 100, default(Color), 2.5f);
+								int num622 = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + vecr, 0, 0, 6, 0f, 0f, 100, default(Color), 2.5f);
 								Main.dust[num622].velocity *= 1f;
 
 								Main.dust[num622].noGravity = true;
 							}
 						}
 
-						if (npc.ai[0] % 900 < 160 && npc.ai[0] % 4 == 0 && npc.ai[0] > 450)
+						if (NPC.ai[0] % 900 < 160 && NPC.ai[0] % 4 == 0 && NPC.ai[0] > 450)
 						{
-							List<Projectile> itz = Idglib.Shattershots(new Vector2(npc.Center.X, npc.Center.Y), P.position, new Vector2(P.width, P.height), mod.ProjectileType("HeatWave"), 70, 25f, 30, 1, true, 0, false, 200);
+							List<Projectile> itz = Idglib.Shattershots(new Vector2(NPC.Center.X, NPC.Center.Y), P.position, new Vector2(P.width, P.height), Mod.Find<ModProjectile>("HeatWave").Type, 70, 25f, 30, 1, true, 0, false, 200);
 							itz[0].friendly = false; itz[0].hostile = true;
 							itz[0].alpha = 50;
 							itz[0].tileCollide = false;
 							//itz[0].aiStyle=0;
 						}
 
-						if (npc.ai[0] % 900 == 899)
+						if (NPC.ai[0] % 900 == 899)
 						{
 
-							Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 74, 1f, 0f);
+							SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 74, 1f, 0f);
 							for (int a = 0; a < 60; a++)
 							{
 								Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 
-								int num622 = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y), 0, 0, mod.DustType("HotDust"), randomcircle.X * 8f, randomcircle.Y * 8f, 100, default(Color), 3f);
+								int num622 = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y), 0, 0, Mod.Find<ModDust>("HotDust").Type, randomcircle.X * 8f, randomcircle.Y * 8f, 100, default(Color), 3f);
 								Main.dust[num622].velocity = randomcircle * 20f;
 
 								Main.dust[num622].scale = 2f;
@@ -1366,12 +1367,12 @@ namespace SGAmod.NPCs.Wraiths
 
 
 					}
-					if (npc.ai[3] == ItemID.NebulaBreastplate)
+					if (NPC.ai[3] == ItemID.NebulaBreastplate)
 					{
 
-						if (NPC.CountNPCS(NPCID.DesertDjinn)<2 && npc.ai[0] % (60+NPC.CountNPCS(NPCID.DesertDjinn)*240) == 0)
+						if (NPC.CountNPCS(NPCID.DesertDjinn)<2 && NPC.ai[0] % (60+NPC.CountNPCS(NPCID.DesertDjinn)*240) == 0)
 						{
-							int newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.DesertDjinn);
+							int newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, NPCID.DesertDjinn);
 							NPC newguy2 = Main.npc[newguy];
 							newguy2.knockBackResist = 0f;
 							newguy2.noTileCollide = true;
@@ -1380,9 +1381,9 @@ namespace SGAmod.NPCs.Wraiths
 							newguy2.netUpdate = true;
 							//itz[0].aiStyle=0;
 						}
-						if (npc.ai[0] % 150 == 0)
+						if (NPC.ai[0] % 150 == 0)
                         {
-							List<Projectile> itz = Idglib.Shattershots(new Vector2(npc.Center.X, npc.Center.Y), P.position, new Vector2(P.width, P.height), ProjectileID.NebulaSphere, 40, 16f, 30, 1, true, 0, false, 200);
+							List<Projectile> itz = Idglib.Shattershots(new Vector2(NPC.Center.X, NPC.Center.Y), P.position, new Vector2(P.width, P.height), ProjectileID.NebulaSphere, 40, 16f, 30, 1, true, 0, false, 200);
 							itz[0].friendly = false; itz[0].hostile = true;
 							itz[0].alpha = 50;
 							itz[0].tileCollide = false;
@@ -1391,12 +1392,12 @@ namespace SGAmod.NPCs.Wraiths
 
 					}
 
-					if (npc.ai[3] == ItemID.StardustBreastplate)
+					if (NPC.ai[3] == ItemID.StardustBreastplate)
 					{
 
-						if (NPC.CountNPCS(NPCID.StardustJellyfishBig) < 1 && npc.ai[0] % 40 == 0)
+						if (NPC.CountNPCS(NPCID.StardustJellyfishBig) < 1 && NPC.ai[0] % 40 == 0)
 						{
-							int newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.StardustJellyfishBig);
+							int newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, NPCID.StardustJellyfishBig);
 							NPC newguy2 = Main.npc[newguy];
 							newguy2.knockBackResist = 0f;
 							newguy2.noTileCollide = true;
@@ -1406,10 +1407,10 @@ namespace SGAmod.NPCs.Wraiths
 					}
 
 
-					if (npc.ai[3]==ItemID.SpectrePants){
+					if (NPC.ai[3]==ItemID.SpectrePants){
 
-			if (npc.ai[0]%500<200 && npc.ai[0]%8==0){
-			List<Projectile> itz=Idglib.Shattershots(npc.Center,P.position,new Vector2(P.width,P.height),ProjectileID.DiamondBolt,20,10f,30,1,true,0,false,200);
+			if (NPC.ai[0]%500<200 && NPC.ai[0]%8==0){
+			List<Projectile> itz=Idglib.Shattershots(NPC.Center,P.position,new Vector2(P.width,P.height),ProjectileID.DiamondBolt,20,10f,30,1,true,0,false,200);
 			itz[0].damage=50;
 			float ogspeed=itz[0].velocity.Length();
 			itz[0].velocity.Normalize();
@@ -1421,10 +1422,10 @@ namespace SGAmod.NPCs.Wraiths
 
 			}
 
-			if (npc.ai[3]==ItemID.TikiPants){
+			if (NPC.ai[3]==ItemID.TikiPants){
 
-			if (npc.ai[0]%500<150 && npc.ai[0]%15==0){
-			List<Projectile> itz=Idglib.Shattershots(npc.Center,P.position,new Vector2(P.width,P.height),ProjectileID.PygmySpear,30,2f,30,1,true,0,false,400);
+			if (NPC.ai[0]%500<150 && NPC.ai[0]%15==0){
+			List<Projectile> itz=Idglib.Shattershots(NPC.Center,P.position,new Vector2(P.width,P.height),ProjectileID.PygmySpear,30,2f,30,1,true,0,false,400);
 			itz[0].damage=30;
 			float ogspeed=itz[0].velocity.Length();
 			itz[0].velocity.Normalize();
@@ -1437,10 +1438,10 @@ namespace SGAmod.NPCs.Wraiths
 			}
 
 
-			if (npc.ai[3]==ItemID.SolarFlareLeggings){
+			if (NPC.ai[3]==ItemID.SolarFlareLeggings){
 
-			if (npc.ai[0]%600<200 && npc.ai[0]%10==0){
-			List<Projectile> itz=Idglib.Shattershots(new Vector2(Main.rand.Next(-15,15)+npc.Center.X,npc.Center.Y+Main.rand.Next(0,30)),P.position,new Vector2(P.width,P.height+400),ProjectileID.GeyserTrap,30,10f,30,1,true,0,false,400);
+			if (NPC.ai[0]%600<200 && NPC.ai[0]%10==0){
+			List<Projectile> itz=Idglib.Shattershots(new Vector2(Main.rand.Next(-15,15)+NPC.Center.X,NPC.Center.Y+Main.rand.Next(0,30)),P.position,new Vector2(P.width,P.height+400),ProjectileID.GeyserTrap,30,10f,30,1,true,0,false,400);
 			itz[0].damage=30;
 			//itz[0].aiStyle=0;
 			}
@@ -1448,36 +1449,36 @@ namespace SGAmod.NPCs.Wraiths
 			}
 
 
-					if (npc.ai[3] == ItemID.NebulaLeggings)
+					if (NPC.ai[3] == ItemID.NebulaLeggings)
 					{
 
-						if (npc.ai[0] % 500 < 150 && npc.ai[0] % 15 == 0)
+						if (NPC.ai[0] % 500 < 150 && NPC.ai[0] % 15 == 0)
 						{
-							List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ProjectileID.NebulaBolt, 30, 6f, 30, 1, true, 0, false, 400);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ProjectileID.NebulaBolt, 30, 6f, 30, 1, true, 0, false, 400);
 							itz[0].damage = 30;
 							//itz[0].aiStyle=0;
 						}
 
 					}
 
-					if (npc.ai[3] == ItemID.StardustLeggings)
+					if (NPC.ai[3] == ItemID.StardustLeggings)
 					{
 
-						if (npc.ai[0] % 200 < 32 && npc.ai[0] % 8 == 0)
+						if (NPC.ai[0] % 200 < 32 && NPC.ai[0] % 8 == 0)
 						{
-							List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ProjectileID.StardustJellyfishSmall, 30, 6f, 30, 1, true, 0, false, 400);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ProjectileID.StardustJellyfishSmall, 30, 6f, 30, 1, true, 0, false, 400);
 							itz[0].damage = 30;
 							//itz[0].aiStyle=0;
 						}
 
 					}
 
-					if (npc.ai[3] == ItemID.VortexLeggings)
+					if (NPC.ai[3] == ItemID.VortexLeggings)
 					{
 
-						if (npc.ai[0] % 300 < 80 && npc.ai[0] % 3 == 0)
+						if (NPC.ai[0] % 300 < 80 && NPC.ai[0] % 3 == 0)
 						{
-							List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ProjectileID.VortexAcid, 20, 6f, 30, 1, true, 0, false, 200);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ProjectileID.VortexAcid, 20, 6f, 30, 1, true, 0, false, 200);
 							itz[0].velocity.X /= 3f;
 							itz[0].velocity.Y -= Main.rand.NextFloat(2f,6f);
 							//itz[0].aiStyle=0;
@@ -1486,10 +1487,10 @@ namespace SGAmod.NPCs.Wraiths
 					}
 
 
-					if (npc.ai[3]==ItemID.TikiMask){
+					if (NPC.ai[3]==ItemID.TikiMask){
 
-			if (npc.ai[0]%600<100 && npc.ai[0]%15==0){
-			List<Projectile> itz=Idglib.Shattershots(new Vector2(Main.rand.Next(-15,15)+npc.Center.X,npc.Center.Y+Main.rand.Next(0,30)),P.position,new Vector2(P.width,P.height-300),ProjectileID.BeeHive,10,Main.rand.Next(120,250)/10,30,1,true,0,false,80);
+			if (NPC.ai[0]%600<100 && NPC.ai[0]%15==0){
+			List<Projectile> itz=Idglib.Shattershots(new Vector2(Main.rand.Next(-15,15)+NPC.Center.X,NPC.Center.Y+Main.rand.Next(0,30)),P.position,new Vector2(P.width,P.height-300),ProjectileID.BeeHive,10,Main.rand.Next(120,250)/10,30,1,true,0,false,80);
 			itz[0].damage=50;
 			//int newguy=NPC.NewNPC((int)npc.Center.X+Main.rand.Next(-12,12), (int)npc.Center.Y-10, NPCID.Bee);
 			//itz[0].aiStyle=0;
@@ -1497,12 +1498,12 @@ namespace SGAmod.NPCs.Wraiths
 
 			}
 
-					if (npc.ai[3] == ItemID.ShroomiteHeadgear)
+					if (NPC.ai[3] == ItemID.ShroomiteHeadgear)
 					{
 
-						if (npc.ai[0] % 500 < 250 && npc.ai[0] % 8 == 0)
+						if (NPC.ai[0] % 500 < 250 && NPC.ai[0] % 8 == 0)
 						{
-							List<Projectile> itz = Idglib.Shattershots(new Vector2(Main.rand.Next(-15, 15) + npc.Center.X, npc.Center.Y + Main.rand.Next(-30, 30)), P.position, new Vector2(P.width, P.height - 300), ProjectileID.TruffleSpore, 10, Main.rand.Next(120, 250) / 10, 30, 1, true, 0, false, 250);
+							List<Projectile> itz = Idglib.Shattershots(new Vector2(Main.rand.Next(-15, 15) + NPC.Center.X, NPC.Center.Y + Main.rand.Next(-30, 30)), P.position, new Vector2(P.width, P.height - 300), ProjectileID.TruffleSpore, 10, Main.rand.Next(120, 250) / 10, 30, 1, true, 0, false, 250);
 							itz[0].friendly = false;
 							itz[0].hostile = true;
 							itz[0].netUpdate = true;
@@ -1512,12 +1513,12 @@ namespace SGAmod.NPCs.Wraiths
 
 					}
 
-					if (npc.ai[3] == ItemID.SpectreHood)
+					if (NPC.ai[3] == ItemID.SpectreHood)
 					{
 
-						if (npc.ai[0] % 600 < 100 && npc.ai[0] % 40 == 0)
+						if (NPC.ai[0] % 600 < 100 && NPC.ai[0] % 40 == 0)
 						{
-							int newguy = NPC.NewNPC((int)npc.Center.X + Main.rand.Next(-1000, 1000), (int)npc.Center.Y - 800, NPCID.DungeonSpirit);
+							int newguy = NPC.NewNPC((int)NPC.Center.X + Main.rand.Next(-1000, 1000), (int)NPC.Center.Y - 800, NPCID.DungeonSpirit);
 							NPC newguy2 = Main.npc[newguy];
 							newguy2.knockBackResist = 0f;
 							newguy2.noTileCollide = true;
@@ -1526,14 +1527,14 @@ namespace SGAmod.NPCs.Wraiths
 
 					}
 
-					if (npc.ai[3] == ItemID.TurtleHelmet)
+					if (NPC.ai[3] == ItemID.TurtleHelmet)
 					{
 
-						if (npc.ai[0] % 300 < 80 && npc.ai[0] % 8 == 0)
+						if (NPC.ai[0] % 300 < 80 && NPC.ai[0] % 8 == 0)
 						{
 							Vector2 normzl = new Vector2(Main.rand.NextFloat(-1000, 1000), 0f);
 							normzl.Normalize();
-							List<Projectile> itz = Idglib.Shattershots(npc.Center, npc.Center+normzl*16f, new Vector2(0,0), ProjectileID.SeedPlantera, 20, Main.rand.Next(120, 250) / 10, 30, 1, true, 0, false, 250);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center, NPC.Center+normzl*16f, new Vector2(0,0), ProjectileID.SeedPlantera, 20, Main.rand.Next(120, 250) / 10, 30, 1, true, 0, false, 250);
 							//int newguy=NPC.NewNPC((int)npc.Center.X+Main.rand.Next(-12,12), (int)npc.Center.Y-10, NPCID.Bee);
 							//itz[0].aiStyle=0;
 						}
@@ -1541,10 +1542,10 @@ namespace SGAmod.NPCs.Wraiths
 					}
 
 
-					if (npc.ai[3]==ItemID.StardustHelmet && NPC.CountNPCS(NPCID.StardustCellBig) < 5){
+					if (NPC.ai[3]==ItemID.StardustHelmet && NPC.CountNPCS(NPCID.StardustCellBig) < 5){
 
-			if (npc.ai[0]%600<100 && npc.ai[0]%40==0){
-		int newguy=NPC.NewNPC((int)npc.Center.X+Main.rand.Next(-1000,1000), (int)npc.Center.Y-800, NPCID.StardustCellBig);
+			if (NPC.ai[0]%600<100 && NPC.ai[0]%40==0){
+		int newguy=NPC.NewNPC((int)NPC.Center.X+Main.rand.Next(-1000,1000), (int)NPC.Center.Y-800, NPCID.StardustCellBig);
 		NPC newguy2=Main.npc[newguy];
 		newguy2.knockBackResist=0f;
 		newguy2.noTileCollide=true;
@@ -1553,10 +1554,10 @@ namespace SGAmod.NPCs.Wraiths
 
 			}
 
-			if (npc.ai[3]==ItemID.VortexHelmet){
+			if (NPC.ai[3]==ItemID.VortexHelmet){
 
-			if (npc.ai[0]%600<200 && npc.ai[0]%20==0){
-			List<Projectile> itz=Idglib.Shattershots(npc.Center,P.position,new Vector2(P.width,P.height),mod.ProjectileType("ProjectilePortalLWraith"),30,0f,30,1,true,0,false,400);
+			if (NPC.ai[0]%600<200 && NPC.ai[0]%20==0){
+			List<Projectile> itz=Idglib.Shattershots(NPC.Center,P.position,new Vector2(P.width,P.height),Mod.Find<ModProjectile>("ProjectilePortalLWraith").Type,30,0f,30,1,true,0,false,400);
 			itz[0].damage=150;
 			itz[0].ai[1] = P.whoAmI;
 			itz[0].netUpdate = true;
@@ -1565,11 +1566,11 @@ namespace SGAmod.NPCs.Wraiths
 
 			}
 
-			if (npc.ai[3]==ItemID.SolarFlareHelmet){
+			if (NPC.ai[3]==ItemID.SolarFlareHelmet){
 
-			if (npc.ai[0]%400<150 && npc.ai[0]%15==0){
+			if (NPC.ai[0]%400<150 && NPC.ai[0]%15==0){
 			Vector2 velocity7 = -Vector2.UnitY.RotatedByRandom(0.78539818525314331) * (7f + Main.rand.NextFloat() * 5f);
-			int num1392 = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, 519, npc.whoAmI, 0f, 0f, 0f, 0f, 255);
+			int num1392 = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, 519, NPC.whoAmI, 0f, 0f, 0f, 0f, 255);
 			Main.npc[num1392].velocity = velocity7;
 			Main.npc[num1392].noTileCollide = true;
 			Main.npc[num1392].netUpdate = true;
@@ -1578,12 +1579,12 @@ namespace SGAmod.NPCs.Wraiths
 
 			}
 
-					if (npc.ai[3] == ItemID.NebulaHelmet)
+					if (NPC.ai[3] == ItemID.NebulaHelmet)
 					{
 
-						if (npc.ai[0] % 400 < 150 && npc.ai[0] % 40 == 0)
+						if (NPC.ai[0] % 400 < 150 && NPC.ai[0] % 40 == 0)
 						{
-							int newguy = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.NebulaHeadcrab);
+							int newguy = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, NPCID.NebulaHeadcrab);
 							NPC newguy2 = Main.npc[newguy];
 							newguy2.knockBackResist = 0f;
 							newguy2.noTileCollide = true;
@@ -1600,20 +1601,20 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void SetDefaults()
 		{
-			npc.width = 32;
-			npc.height = 32;
-			npc.damage = 0;
-			npc.defense = 10;
-			npc.lifeMax = 5;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath7;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			aiType = -1;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
+			NPC.width = 32;
+			NPC.height = 32;
+			NPC.damage = 0;
+			NPC.defense = 10;
+			NPC.lifeMax = 5;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath7;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			AIType = -1;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
 			attachedType="LuminiteWraith";
 			friction=0.65f;
 			speed=0.8f;
@@ -1621,8 +1622,8 @@ namespace SGAmod.NPCs.Wraiths
 
 		private void RelayDamage(Player player, int damage, float knockback, bool crit)
 		{
-		myself = npc.modNPC as CopperArmorPiece;
-		int npctype=mod.NPCType(myself.attachedType);
+		myself = npc.ModNPC as CopperArmorPiece;
+		int npctype=Mod.Find<ModNPC>(myself.attachedType).Type;
 		NPC myowner=Main.npc[myself.attachedID];
 		if (myowner.active==true){
 		myowner.StrikeNPC(damage,0f,0,crit,true,true);
@@ -1648,39 +1649,39 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override bool CheckActive()
 		{
-		int npctype=mod.NPCType(myself.attachedType);
+		int npctype=Mod.Find<ModNPC>(myself.attachedType).Type;
 		NPC myowner=Main.npc[myself.attachedID];
 		return (!myowner.active);
 		}
 
 		public override bool CheckDead()
 		{
-		int npctype=mod.NPCType(myself.attachedType);
+		int npctype=Mod.Find<ModNPC>(myself.attachedType).Type;
 		NPC myowner=Main.npc[myself.attachedID];
 
 		if (!myowner.active)
 		return true;
 
-		if (armors.Count>0 && npc.life<1){
+		if (armors.Count>0 && NPC.life<1){
 				if (myowner.active)
 				{
 					if (timeswentdown < 4)
-					npc.ai[3] = (float)Main.rand.Next(-1200, -600);
+					NPC.ai[3] = (float)Main.rand.Next(-1200, -600);
 					else
-					npc.ai[3] = (float)Main.rand.Next(-700, -550);
+					NPC.ai[3] = (float)Main.rand.Next(-700, -550);
 				}
 				else
 				{
-					npc.ai[3] = -499;
+					NPC.ai[3] = -499;
 				}
-		npc.defDefense += Main.expertMode ? 5 : 2;
-		npc.defense=npc.defDefense;
-		npc.life=npc.lifeMax;
-		npc.ai[0]=2;
+		NPC.defDefense += Main.expertMode ? 5 : 2;
+		NPC.defense=NPC.defDefense;
+		NPC.life=NPC.lifeMax;
+		NPC.ai[0]=2;
 		timeswentdown += 1;
-		npc.netUpdate=true;
-		(myowner.modNPC as LuminiteWraith).warninglevel+=1;
-		(myowner.modNPC as LuminiteWraith).warninglevel2+=1;
+		NPC.netUpdate=true;
+		(myowner.ModNPC as LuminiteWraith).warninglevel+=1;
+		(myowner.ModNPC as LuminiteWraith).warninglevel2+=1;
 		return false;
 		}else{
 
@@ -1694,7 +1695,7 @@ namespace SGAmod.NPCs.Wraiths
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Body Plate");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 
 		public override string Texture
@@ -1708,63 +1709,63 @@ namespace SGAmod.NPCs.Wraiths
 			{
 				armors.RemoveAt(0);
 			}
-			npc.ai[3] = -520;
+			NPC.ai[3] = -520;
 
-			npc.netUpdate = true;
+			NPC.netUpdate = true;
 
 		}
 
 		public override void AI()
 		{
 		if (myself==null)
-		myself = npc.modNPC as CopperArmorPiece;
-		int npctype=mod.NPCType(myself.attachedType);
+		myself = npc.ModNPC as CopperArmorPiece;
+		int npctype=Mod.Find<ModNPC>(myself.attachedType).Type;
 		NPC myowner=Main.npc[myself.attachedID];
 		if (myowner.active==false){
 		myself.ArmorMalfunction();
 		}else{
-		if ((myowner.modNPC as LuminiteWraith).warninglevel<1)
+		if ((myowner.ModNPC as LuminiteWraith).warninglevel<1)
 		droploot=true;
-		if (npc.ai[3]<1 && npc.ai[3]>-500){
-		npc.ai[3]=(float)armors[0];
+		if (NPC.ai[3]<1 && NPC.ai[3]>-500){
+		NPC.ai[3]=(float)armors[0];
 		//Main.NewText("got this item: [i:"+armors[0]+"]");
 		tempappeance=armors[0];
 		armors.RemoveAt(0);
 		hitstate=false;
-		if (npc.ai[0]>10)
-		npc.ai[0]=2;
-		npc.netUpdate=true;
-		}else{if (npc.ai[3]<1){npc.ai[3]+=1; hitstate=true;}}
+		if (NPC.ai[0]>10)
+		NPC.ai[0]=2;
+		NPC.netUpdate=true;
+		}else{if (NPC.ai[3]<1){NPC.ai[3]+=1; hitstate=true;}}
 
-	if (npc.ai[3]>0){
+	if (NPC.ai[3]>0){
 	DoAIStuff();
-	npc.alpha=(int)MathHelper.Clamp((float)npc.alpha+6,1,255);
+	NPC.alpha=(int)MathHelper.Clamp((float)NPC.alpha+6,1,255);
 	}
 
-	npc.dontTakeDamage=hitstate;
+	NPC.dontTakeDamage=hitstate;
 	if (myowner.dontTakeDamage==true)
-	npc.dontTakeDamage=true;
+	NPC.dontTakeDamage=true;
 
-		npc.velocity=npc.velocity+(myowner.Center+new Vector2((float)xpos,(float)ypos)-npc.Center)*(myself.speed);
-		npc.velocity=npc.velocity*myself.friction;
-		npc.rotation=(float)npc.velocity.X*0.1f;
+		NPC.velocity=NPC.velocity+(myowner.Center+new Vector2((float)xpos,(float)ypos)-NPC.Center)*(myself.speed);
+		NPC.velocity=NPC.velocity*myself.friction;
+		NPC.rotation=(float)NPC.velocity.X*0.1f;
 		//npc.position=myowner.position;
-		npc.timeLeft=999;
+		NPC.timeLeft=999;
 		}
 
-		if (npc.ai[3]<-400){
+		if (NPC.ai[3]<-400){
 
    	for (int i = 0; i < 3; ++i){
   	double devider=(i / ((double)3f));
-  	double angle=(npc.ai[3]/15)+ 2.0* Math.PI * devider;
+  	double angle=(NPC.ai[3]/15)+ 2.0* Math.PI * devider;
   	Vector2 thecenter=new Vector2((float)((Math.Cos(angle) * 1)), (float)((Math.Sin(angle) * 1)));
     thecenter = thecenter.RotatedByRandom(MathHelper.ToRadians(10));
-    int DustID2 = Dust.NewDust(npc.Center+(thecenter*8f), 0, 0, 43);
+    int DustID2 = Dust.NewDust(NPC.Center+(thecenter*8f), 0, 0, 43);
     Main.dust[DustID2].noGravity = true;
     Main.dust[DustID2].velocity = new Vector2(thecenter.X*0.2f, thecenter.Y*0.2f)*-1f;
     }
 
-	npc.alpha=(int)MathHelper.Clamp((float)npc.alpha-5,1,255);
+	NPC.alpha=(int)MathHelper.Clamp((float)NPC.alpha-5,1,255);
 
 		}
 
@@ -1773,35 +1774,35 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Vector2 drawPos = npc.Center - Main.screenPosition;
+			Vector2 drawPos = NPC.Center - Main.screenPosition;
 			Color lights = lightColor;
-			lights.A = (byte)(npc.alpha);
+			lights.A = (byte)(NPC.alpha);
 
 			//matchingArmors
-			Vector2 drawoffset = new Vector2((float)Math.Sin(Main.GlobalTime * 1.1775f + ((float)npc.whoAmI * 3.734575f)) * 12f, (float)Math.Cos(Main.GlobalTime + ((float)npc.whoAmI * 3.734575f)) * 8f);
+			Vector2 drawoffset = new Vector2((float)Math.Sin(Main.GlobalTimeWrappedHourly * 1.1775f + ((float)NPC.whoAmI * 3.734575f)) * 12f, (float)Math.Cos(Main.GlobalTimeWrappedHourly + ((float)NPC.whoAmI * 3.734575f)) * 8f);
 			bool firstphase = armors.Count >= 400;
 
 			Rectangle drawrect;
-			Texture2D texture = mod.GetTexture("NPCs/Wraiths/Luminite_Wraith_resprite_Leggings");
+			Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/Wraiths/Luminite_Wraith_resprite_Leggings").Value;
 			Vector2 origin = new Vector2((float)texture.Width * 0.5f, -12);
 
 			if (firstphase)
 			{
 				LuminiteWraith.matchingArmors.TryGetValue(tempappeance, out string armorstring);
-				texture = mod.GetTexture("NPCs/Wraiths/Luminite Wraith " + armorstring + " " + armorName);
+				texture = Mod.Assets.Request<Texture2D>("NPCs/Wraiths/Luminite Wraith " + armorstring + " " + armorName).Value;
 			}
 
 			if (GetType() == typeof(LuminiteWraithChestPlate))
 			{
 				if (!firstphase)
-					texture = mod.GetTexture("NPCs/Wraiths/Luminite_Wraith_resprite_Chestplate");
+					texture = Mod.Assets.Request<Texture2D>("NPCs/Wraiths/Luminite_Wraith_resprite_Chestplate").Value;
 				origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
 			}
 			if (GetType() == typeof(LuminiteWraithHead))
 			{
 				if (!firstphase)
-					texture = mod.GetTexture("NPCs/Wraiths/Luminite_Wraith_resprite_Helmet");
-				int offset = (int)(Math.Min(((int)((float)Main.GlobalTime * 8f)) % 15f, 5) * ((float)texture.Height / 6f));
+					texture = Mod.Assets.Request<Texture2D>("NPCs/Wraiths/Luminite_Wraith_resprite_Helmet").Value;
+				int offset = (int)(Math.Min(((int)((float)Main.GlobalTimeWrappedHourly * 8f)) % 15f, 5) * ((float)texture.Height / 6f));
 				drawrect = new Rectangle(0, offset, texture.Width, (int)(texture.Height / 6f));
 				origin = new Vector2((float)texture.Width * 0.5f, ((float)(texture.Height / 6f) * 0.5f) + 20f);
 			}
@@ -1811,27 +1812,27 @@ namespace SGAmod.NPCs.Wraiths
 			}
 
 			SpriteEffects effect = SpriteEffects.None;
-			if (Main.player[npc.target].active && !Main.player[npc.target].dead)
+			if (Main.player[NPC.target].active && !Main.player[NPC.target].dead)
 			{
-				if (Main.player[npc.target].Center.X < npc.Center.X)
+				if (Main.player[NPC.target].Center.X < NPC.Center.X)
 					effect = SpriteEffects.FlipHorizontally;
 			}
 
-			for (float speez = npc.velocity.Length()*(firstphase ? 0.50f : 1f); speez > 0f; speez -= 0.5f)
+			for (float speez = NPC.velocity.Length()*(firstphase ? 0.50f : 1f); speez > 0f; speez -= 0.5f)
 			{
-				Vector2 speedz = (npc.velocity); speedz.Normalize();
-				spriteBatch.Draw(texture, drawPos + (speedz * speez * -2f) + drawoffset, drawrect, lights * 0.1f, npc.rotation, origin, new Vector2(1f, 1f), effect, 0f);
+				Vector2 speedz = (NPC.velocity); speedz.Normalize();
+				spriteBatch.Draw(texture, drawPos + (speedz * speez * -2f) + drawoffset, drawrect, lights * 0.1f, NPC.rotation, origin, new Vector2(1f, 1f), effect, 0f);
 
 			}
 
-			spriteBatch.Draw(texture, drawPos + drawoffset, drawrect, lights, npc.rotation, origin, new Vector2(1f, 1f), effect, 0f);
+			spriteBatch.Draw(texture, drawPos + drawoffset, drawrect, lights, NPC.rotation, origin, new Vector2(1f, 1f), effect, 0f);
 
 			if (!firstphase)
 			{
 				spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
 
-				float opacity = MathHelper.Clamp((float)Math.Sin(Main.GlobalTime) * 1.5f, 0f, 1f);
+				float opacity = MathHelper.Clamp((float)Math.Sin(Main.GlobalTimeWrappedHourly) * 1.5f, 0f, 1f);
 
 				ArmorShaderData shader;
 				shader = GameShaders.Armor.GetShaderFromItemId(ItemID.SolarDye);
@@ -1846,7 +1847,7 @@ namespace SGAmod.NPCs.Wraiths
 				shader.UseSaturation(0.85f);
 				shader.Apply(null);
 
-				spriteBatch.Draw(texture, drawPos + drawoffset, drawrect, Color.White * opacity, npc.rotation, origin, new Vector2(1f, 1f), effect, 0f);
+				spriteBatch.Draw(texture, drawPos + drawoffset, drawrect, Color.White * opacity, NPC.rotation, origin, new Vector2(1f, 1f), effect, 0f);
 
 				spriteBatch.End();
 				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
@@ -1983,15 +1984,15 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void SetDefaults()
 		{
-			projectile.width = 32;
-			projectile.height = 32;
+			Projectile.width = 32;
+			Projectile.height = 32;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
+			Projectile.friendly = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 300;
-			projectile.tileCollide = false;
-			aiType = -1;
+			Projectile.timeLeft = 300;
+			Projectile.tileCollide = false;
+			AIType = -1;
 		}
         public override bool CanDamage()
         {
@@ -2006,7 +2007,7 @@ namespace SGAmod.NPCs.Wraiths
 				Vector2 randomcircle = (Vector2.UnitX.RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi))) * Main.rand.NextFloat(range);
 				Vector2 randomnorm = Vector2.Normalize(randomcircle);
 
-				int num622 = Dust.NewDust(projectile.Center + randomcircle, 0, 0, 226, randomnorm.X * 8f, randomnorm.Y * 8f, 100, default(Color), 1f);
+				int num622 = Dust.NewDust(Projectile.Center + randomcircle, 0, 0, 226, randomnorm.X * 8f, randomnorm.Y * 8f, 100, default(Color), 1f);
 				Main.dust[num622].velocity *= 1f;
 
 				Main.dust[num622].scale = 1.5f;
@@ -2014,10 +2015,10 @@ namespace SGAmod.NPCs.Wraiths
 				Main.dust[num622].fadeIn = 1f + (float)Main.rand.Next(10) * 0.1f;
 			}
 
-			foreach (Player player in Main.player.Where(testplayer => testplayer.active && (testplayer.Center- projectile.Center).Length()<range))
+			foreach (Player player in Main.player.Where(testplayer => testplayer.active && (testplayer.Center- Projectile.Center).Length()<range))
             {
 				//SoundEffectInstance soun
-				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 122, 1f, 0f);
+				SoundEngine.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 122, 1f, 0f);
 				player.AddBuff(BuffID.VortexDebuff, 60 * 5);
 
 				for (int a = 0; a < 60; a++)
@@ -2049,23 +2050,23 @@ namespace SGAmod.NPCs.Wraiths
 			float adder = MathHelper.TwoPi / 64f;
 			for (float fa=0; fa < MathHelper.TwoPi; fa += adder)
 			{
-				trailspots[0].Add(((Vector2.UnitX.RotatedBy(fa)) * range) + projectile.Center);
-				trailspots[1].Add(((Vector2.UnitX.RotatedBy(fa)) * (range*(1f-(projectile.timeLeft/300f)))) + projectile.Center);
+				trailspots[0].Add(((Vector2.UnitX.RotatedBy(fa)) * range) + Projectile.Center);
+				trailspots[1].Add(((Vector2.UnitX.RotatedBy(fa)) * (range*(1f-(Projectile.timeLeft/300f)))) + Projectile.Center);
 			}
 			for (int i = 0; i < 2; i += 1) {
-				TrailHelper trail = new TrailHelper("DefaultPass", mod.GetTexture("noise"));
+				TrailHelper trail = new TrailHelper("DefaultPass", Mod.Assets.Request<Texture2D>("noise").Value);
 				trail.color = delegate (float percent)
 				{
 					return Color.Aquamarine;
 				};
 				trail.projsize = Vector2.Zero;
-				trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
-				trail.trailThickness = (projectile.timeLeft / 200f) * 20f;
+				trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
+				trail.trailThickness = (Projectile.timeLeft / 200f) * 20f;
 				trail.trailThicknessIncrease = 0;
 				trail.doFade = false;
 				trail.connectEnds = true;
 				trail.strength = 1f;
-				trail.DrawTrail(trailspots[i], projectile.Center);
+				trail.DrawTrail(trailspots[i], Projectile.Center);
 			}
 			return false;
 		}
@@ -2097,54 +2098,54 @@ namespace SGAmod.NPCs.Wraiths
 
 		public override void SetDefaults()
 		{
-			projectile.width = 32;
-			projectile.height = 32;
+			Projectile.width = 32;
+			Projectile.height = 32;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
+			Projectile.friendly = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 200;
-			projectile.tileCollide = false;
-			aiType = -1;
+			Projectile.timeLeft = 200;
+			Projectile.tileCollide = false;
+			AIType = -1;
 		}
 
 		public override void AI()
 		{
-			Player ply = Main.player[(int)projectile.ai[1]];
+			Player ply = Main.player[(int)Projectile.ai[1]];
 
-			projectile.rotation += 0.1f;
+			Projectile.rotation += 0.1f;
 			counter += 1;
 
-			if (projectile.ai[0] < 9000)
+			if (Projectile.ai[0] < 9000)
 			{
-				projectile.ai[0] = 10000 + Main.rand.Next(-300, 300);
-				projectile.netUpdate = true;
+				Projectile.ai[0] = 10000 + Main.rand.Next(-300, 300);
+				Projectile.netUpdate = true;
 			}
 
-			if (projectile.timeLeft > 100 && ply.active)
+			if (Projectile.timeLeft > 100 && ply.active)
 			{
 
-				Vector2 there = (ply.Center + new Vector2(projectile.ai[0] - 10000, -200).RotatedByRandom(1.5f)) - projectile.Center;
+				Vector2 there = (ply.Center + new Vector2(Projectile.ai[0] - 10000, -200).RotatedByRandom(1.5f)) - Projectile.Center;
 				there.Normalize();
-				projectile.velocity += there * 1f;
-				projectile.velocity *= 0.95f;
+				Projectile.velocity += there * 1f;
+				Projectile.velocity *= 0.95f;
 
-				vectordir = ply.Center - projectile.Center;
+				vectordir = ply.Center - Projectile.Center;
 				vectordir.Normalize();
 			}
 			else
 			{
-				projectile.velocity /= 2f;
+				Projectile.velocity /= 2f;
 			}
 
-			scale = Math.Min(Math.Min((float)(counter - takeeffectdelay) / openclosetime, 1), (float)projectile.timeLeft / (float)openclosetime);
+			scale = Math.Min(Math.Min((float)(counter - takeeffectdelay) / openclosetime, 1), (float)Projectile.timeLeft / (float)openclosetime);
 
 			if (scale > 0)
 			{
 				int dustType = DustID.AncientLight;
 				Vector2 loc = new Vector2(Main.rand.NextFloat(-1, 1), Main.rand.NextFloat(-1, 1));
 				loc.Normalize();
-				int dustIndex = Dust.NewDust(projectile.Center + loc * 16f, 0, 0, dustType);
+				int dustIndex = Dust.NewDust(Projectile.Center + loc * 16f, 0, 0, dustType);
 				Dust dust = Main.dust[dustIndex];
 				dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
 				dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;
@@ -2153,12 +2154,12 @@ namespace SGAmod.NPCs.Wraiths
 				dust.noGravity = true;
 				dust.color = Color.Turquoise;
 
-				if (projectile.timeLeft == timeleftfirerate && projectile.ai[0] > 0)
+				if (Projectile.timeLeft == timeleftfirerate && Projectile.ai[0] > 0)
 				{
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 					float ai2 = (float)Main.rand.Next(80);
 					float rtoa = vectordir.ToRotation();
-					Projectile.NewProjectile(projectile.Center.X - vectordir.X, projectile.Center.Y - vectordir.Y, vectordir.X * 12, vectordir.Y * 12, 580, 35, 1f, Main.myPlayer, rtoa, ai2);
+					Projectile.NewProjectile(Projectile.Center.X - vectordir.X, Projectile.Center.Y - vectordir.Y, vectordir.X * 12, vectordir.Y * 12, 580, 35, 1f, Main.myPlayer, rtoa, ai2);
 
 					//Player.FindClosest(base.Center, 0, 0);
 
@@ -2166,7 +2167,7 @@ namespace SGAmod.NPCs.Wraiths
 					{
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 
-						int num622 = Dust.NewDust(projectile.Center, 0, 0, 226, randomcircle.X * 8f, randomcircle.Y * 8f, 100, default(Color), 1f);
+						int num622 = Dust.NewDust(Projectile.Center, 0, 0, 226, randomcircle.X * 8f, randomcircle.Y * 8f, 100, default(Color), 1f);
 						Main.dust[num622].velocity *= 1f;
 
 						Main.dust[num622].noGravity = true;
@@ -2187,9 +2188,9 @@ namespace SGAmod.NPCs.Wraiths
 				Texture2D inner = SGAmod.ExtraTextures[98];
 				Texture2D texture = SGAmod.ExtraTextures[99];
 				Texture2D outer = SGAmod.ExtraTextures[101];
-				spriteBatch.Draw(inner, projectile.Center - Main.screenPosition, null, Color.Lerp(Color.Magenta, lightColor, 0.2f), (float)Math.Sin((double)projectile.rotation), new Vector2(inner.Width / 2, inner.Height / 2), new Vector2(1, 1) * scale, SpriteEffects.None, 0f); ;
-				spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, Color.Lerp(Color.Turquoise, lightColor, 0.15f), projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), new Vector2(1, 1) * scale, SpriteEffects.None, 0f); ;
-				spriteBatch.Draw(outer, projectile.Center - Main.screenPosition, null, Color.Lerp(Color.White, lightColor, 0.25f), -projectile.rotation, new Vector2(outer.Width / 2, outer.Height / 2), new Vector2(1, 1) * scale, SpriteEffects.None, 0f); ;
+				spriteBatch.Draw(inner, Projectile.Center - Main.screenPosition, null, Color.Lerp(Color.Magenta, lightColor, 0.2f), (float)Math.Sin((double)Projectile.rotation), new Vector2(inner.Width / 2, inner.Height / 2), new Vector2(1, 1) * scale, SpriteEffects.None, 0f); ;
+				spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.Lerp(Color.Turquoise, lightColor, 0.15f), Projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), new Vector2(1, 1) * scale, SpriteEffects.None, 0f); ;
+				spriteBatch.Draw(outer, Projectile.Center - Main.screenPosition, null, Color.Lerp(Color.White, lightColor, 0.25f), -Projectile.rotation, new Vector2(outer.Width / 2, outer.Height / 2), new Vector2(1, 1) * scale, SpriteEffects.None, 0f); ;
 			}
 			return false;
 		}

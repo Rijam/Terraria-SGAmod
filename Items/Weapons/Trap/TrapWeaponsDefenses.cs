@@ -12,6 +12,7 @@ using Terraria.Enums;
 using SGAmod.Items.Weapons.Trap;
 using SGAmod.Projectiles;
 using Idglibrary;
+using Terraria.Audio;
 
 
 namespace SGAmod.Items.Weapons
@@ -24,10 +25,10 @@ namespace SGAmod.Items.Weapons
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 
-			TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.mod == "Terraria");
+			TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.Mod == "Terraria");
 			if (tt != null)
 			{
-				string[] thetext = tt.text.Split(' ');
+				string[] thetext = tt.Text.Split(' ');
 				string newline = "";
 				List<string> valuez = new List<string>();
 				foreach (string text2 in thetext)
@@ -39,13 +40,13 @@ namespace SGAmod.Items.Weapons
 				{
 					newline += text3;
 				}
-				tt.text = newline;
+				tt.Text = newline;
 			}
 
-			tooltips.Add(new TooltipLine(mod, "DefenseTrapWeaponLine", "Base damage is boosted based on the average of your damage type increases"));
-			tooltips.Add(new TooltipLine(mod, "DefenseTrapWeaponLine", "Trap damage boosts the damage projectiles do on hit"));
-			tooltips.Add(new TooltipLine(mod, "DefenseTrapWeaponLine", Idglib.ColorText(Color.Red, "Will greatly limit you without wearing Gripping Gloves")));
-			tooltips.Add(new TooltipLine(mod, "DefenseTrapWeaponLine", Idglib.ColorText(Color.Red, SlowDown * 100 + "% slower movement effect, gloves reduce slowdown")));
+			tooltips.Add(new TooltipLine(Mod, "DefenseTrapWeaponLine", "Base damage is boosted based on the average of your damage type increases"));
+			tooltips.Add(new TooltipLine(Mod, "DefenseTrapWeaponLine", "Trap damage boosts the damage projectiles do on hit"));
+			tooltips.Add(new TooltipLine(Mod, "DefenseTrapWeaponLine", Idglib.ColorText(Color.Red, "Will greatly limit you without wearing Gripping Gloves")));
+			tooltips.Add(new TooltipLine(Mod, "DefenseTrapWeaponLine", Idglib.ColorText(Color.Red, SlowDown * 100 + "% slower movement effect, gloves reduce slowdown")));
 
 			base.ModifyTooltips(tooltips);
 
@@ -66,7 +67,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
 		{
-			add += (((player.meleeDamage + player.rangedDamage + player.magicDamage + player.minionDamage + player.Throwing().thrownDamage) - 5f) / 5f);
+			add += (((player.GetDamage(DamageClass.Melee) + player.GetDamage(DamageClass.Ranged) + player.GetDamage(DamageClass.Magic) + player.GetDamage(DamageClass.Summon) + player.Throwing().thrownDamage) - 5f) / 5f);
 		}
 
 	}
@@ -79,7 +80,7 @@ namespace SGAmod.Items.Weapons
 			DisplayName.SetDefault("Non-Stationary Portable Bunny Cannon");
 			Tooltip.SetDefault("Shoots bunnies that deal damage twice against whoever they hit" + "\nRight click to change the firing Arc" +
 	"\nCounts as trap damage, doesn't crit");
-			SGAmod.NonStationDefenses.Add(SGAmod.Instance.ItemType("NonStationaryBunnyCannonLauncher"), SGAmod.Instance.ProjectileType("NonStationaryBunnyCannonHolding"));
+			SGAmod.NonStationDefenses.Add(SGAmod.Instance.Find<ModItem>("NonStationaryBunnyCannonLauncher").Type, SGAmod.Instance.Find<ModProjectile>("NonStationaryBunnyCannonHolding").Type);
 		}
 
 		public override int cannontypeitem => ItemID.ExplosiveBunny;
@@ -94,30 +95,26 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 350;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 3.5f;
-			item.value = 100000;
-			item.noUseGraphic = true;
-			item.rare = 6;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.damage = 350;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 3.5f;
+			Item.value = 100000;
+			Item.noUseGraphic = true;
+			Item.rare = 6;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 			//item.UseSound = SoundID.n;
-			item.shootSpeed = 12f;
-			item.shoot = ProjectileID.CannonballFriendly;
+			Item.shootSpeed = 12f;
+			Item.shoot = ProjectileID.CannonballFriendly;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BunnyCannon, 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.BunnyCannon, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -130,7 +127,7 @@ namespace SGAmod.Items.Weapons
 			DisplayName.SetDefault("Non-Stationary Portable Cannon");
 			Tooltip.SetDefault("Shoots Cannonballs that pierce and explode when they hit a tile" + "\nRight click to change the firing Arc" +
 	"\nCounts as trap damage, doesn't crit");
-			SGAmod.NonStationDefenses.Add(SGAmod.Instance.ItemType("NonStationaryCannonLauncher"), SGAmod.Instance.ProjectileType("NonStationaryCannonHolding"));
+			SGAmod.NonStationDefenses.Add(SGAmod.Instance.Find<ModItem>("NonStationaryCannonLauncher").Type, SGAmod.Instance.Find<ModProjectile>("NonStationaryCannonHolding").Type);
 		}
 
 		public virtual int cannontypeitem => ItemID.Cannonball;
@@ -146,30 +143,26 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 300;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 3.5f;
-			item.value = 100000;
-			item.noUseGraphic = true;
-			item.rare = 6;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.damage = 300;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 3.5f;
+			Item.value = 100000;
+			Item.noUseGraphic = true;
+			Item.rare = 6;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 			//item.UseSound = SoundID.n;
-			item.shootSpeed = 12f;
-			item.shoot = ProjectileID.CannonballFriendly;
+			Item.shootSpeed = 12f;
+			Item.shoot = ProjectileID.CannonballFriendly;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Cannon, 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Cannon, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 		public override bool AltFunctionUse(Player player)
@@ -179,7 +172,7 @@ namespace SGAmod.Items.Weapons
 
 		public override bool CanUseItem(Player player)
 		{
-			item.useTurn = false;
+			Item.useTurn = false;
 			return player.CountItem(cannontypeitem) > 0 ? base.CanUseItem(player) : false;
 		}
 
@@ -208,7 +201,7 @@ namespace SGAmod.Items.Weapons
 				if (ittaz > -1)
 				{
 					Main.projectile[ittaz].trap = true;
-					Main.projectile[ittaz].ranged = false;
+					// Main.projectile[ittaz].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 					Main.projectile[ittaz].netUpdate = true;
 					IdgProjectile.Sync(ittaz);
 				}
@@ -241,22 +234,22 @@ namespace SGAmod.Items.Weapons
 		protected override Vector2 offsetholding => new Vector2(0, -16);
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 			//Texture2D texGlow = ModContent.GetTexture("SGAmod/Items/Weapons/SeriousSam/BeamGunProjGlow");
-			Color color = projectile.GetAlpha(lightColor) * 1f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+			Color color = Projectile.GetAlpha(lightColor) * 1f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
 
 			int xindex = 0;
 			int yindex = 0;
 
-			int dir = Main.player[projectile.owner].direction;
+			int dir = Main.player[Projectile.owner].direction;
 
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(Main.player[projectile.owner].direction * offsetholding.X, offsetholding.Y);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(Main.player[Projectile.owner].direction * offsetholding.X, offsetholding.Y);
 
 			drawPos = new Vector2((int)(drawPos.X - (dir*12)) + (dir<1 ? -16 : 0), (int)drawPos.Y-8);
 
-			int attackframe = Main.player[projectile.owner].GetModPlayer<SGAPlayer>().DefenseFrame;
+			int attackframe = Main.player[Projectile.owner].GetModPlayer<SGAPlayer>().DefenseFrame;
 
-			if (Main.player[projectile.owner].direction < 0)
+			if (Main.player[Projectile.owner].direction < 0)
 			{
 				attackframe = 8 - attackframe;
 			}
@@ -273,7 +266,7 @@ namespace SGAmod.Items.Weapons
 
 					Rectangle rect = new Rectangle(x+ (int)offsetdraw.X, y+ (int)offsetdraw.Y + yoffset, 16, 16);
 
-					spriteBatch.Draw(tex, drawPos + new Vector2(drawx, drawy), rect, color, 0, new Vector2(0, 0), projectile.scale, SpriteEffects.None, 0f);
+					spriteBatch.Draw(tex, drawPos + new Vector2(drawx, drawy), rect, color, 0, new Vector2(0, 0), Projectile.scale, SpriteEffects.None, 0f);
 					yindex += 2;
 				}
 				xindex += 2;
@@ -294,7 +287,7 @@ namespace SGAmod.Items.Weapons
 			Tooltip.SetDefault("'A frosty gatling gun in the palm of your... hands'" +
 				"\nRapidly fires snowballs from your inventory" + "\nCan only fire in in a forward arc" +
 	"\nCounts as trap damage, doesn't crit");
-			SGAmod.NonStationDefenses.Add(SGAmod.Instance.ItemType("NonStationarySnowballLauncher"), SGAmod.Instance.ProjectileType("NonStationarySnowballLauncherHolding"));
+			SGAmod.NonStationDefenses.Add(SGAmod.Instance.Find<ModItem>("NonStationarySnowballLauncher").Type, SGAmod.Instance.Find<ModProjectile>("NonStationarySnowballLauncherHolding").Type);
 		}
 
 		public override string Texture
@@ -304,43 +297,39 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 27;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = 1;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 3.5f;
-			item.value = 100000;
-			item.noUseGraphic = true;
-			item.rare = 4;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.damage = 27;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = 1;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 3.5f;
+			Item.value = 100000;
+			Item.noUseGraphic = true;
+			Item.rare = 4;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 			//item.UseSound = SoundID.n;
-			item.shootSpeed = 12f;
-			item.useAmmo = AmmoID.Snowball;
-			item.shoot = ProjectileID.SnowBallFriendly;
+			Item.shootSpeed = 12f;
+			Item.useAmmo = AmmoID.Snowball;
+			Item.shoot = ProjectileID.SnowBallFriendly;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SnowballLauncher, 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.SnowballLauncher, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			item.useTurn = false;
+			Item.useTurn = false;
 			return base.CanUseItem(player);
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			DoTurn(player);
-			Main.PlaySound(SoundID.Item11, player.position);
+			SoundEngine.PlaySound(SoundID.Item11, player.position);
 			float num2 = 12f + (float)Main.rand.Next(450) * 0.01f;
 			float num3 = (float)Main.rand.Next(85, 105);
 			float num4 = (float)Main.rand.Next(-35, 11);
@@ -363,9 +352,9 @@ namespace SGAmod.Items.Weapons
 			num7 = num2 / num7;
 			num5 *= num7;
 			num6 *= num7;
-			int ittaz = Projectile.NewProjectile(vector.X, vector.Y, num5*(type==mod.ProjectileType("JarateShurikensProg") ? 1.25f : 1f), num6, type, damage, knockBack, Main.myPlayer, 0f, 0f);
+			int ittaz = Projectile.NewProjectile(vector.X, vector.Y, num5*(type==Mod.Find<ModProjectile>("JarateShurikensProg") .Type? 1.25f : 1f), num6, type, damage, knockBack, Main.myPlayer, 0f, 0f);
 			Main.projectile[ittaz].trap = true;
-			Main.projectile[ittaz].ranged = false;
+			// Main.projectile[ittaz].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 			Main.projectile[ittaz].netUpdate = true;
 			IdgProjectile.Sync(ittaz);
 
@@ -383,13 +372,13 @@ namespace SGAmod.Items.Weapons
 		protected override Vector2 offsetholding => new Vector2(0, -16);
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 			int frames = 4;
 			//Texture2D texGlow = ModContent.GetTexture("SGAmod/Items/Weapons/SeriousSam/BeamGunProjGlow");
 			SpriteEffects effects = SpriteEffects.FlipHorizontally;
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / frames) / 2f;
-			Color color = projectile.GetAlpha(lightColor) * 1f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-			int timing = (int)(Main.GlobalTime * 8f);
+			Color color = Projectile.GetAlpha(lightColor) * 1f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+			int timing = (int)(Main.GlobalTimeWrappedHourly * 8f);
 			timing %= frames;
 			timing *= ((tex.Height) / frames);
 
@@ -397,14 +386,14 @@ namespace SGAmod.Items.Weapons
 			int xindex = 0;
 			int yindex = 0;
 
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(Main.player[projectile.owner].direction * offsetholding.X, offsetholding.Y);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(Main.player[Projectile.owner].direction * offsetholding.X, offsetholding.Y);
 
 			drawPos = new Vector2((int)drawPos.X, (int)drawPos.Y);
 
 			//Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.CreateScale(1,1,1));
 			//Main.spriteBatch.Draw(Main.blackTileTexture, new Vector2(0, 0), new Rectangle(0, 0, rend.Width, rend.Height), Color.Red, 0, new Vector2(0, 0), new Vector2(1f, 1f), SpriteEffects.None, 0f);
 
-			int xoffset = Main.player[projectile.owner].direction > 0 ? 18 * spritetiles : 0;
+			int xoffset = Main.player[Projectile.owner].direction > 0 ? 18 * spritetiles : 0;
 
 			for (int x = 0; x < 18 * spritetiles; x += 18)
 			{
@@ -416,7 +405,7 @@ namespace SGAmod.Items.Weapons
 
 					Rectangle rect = new Rectangle(x + xoffset, y, 16, 16);
 
-					spriteBatch.Draw(tex, drawPos + new Vector2(drawx, drawy), rect, color, 0, new Vector2(0, 0), projectile.scale, SpriteEffects.None, 0f);
+					spriteBatch.Draw(tex, drawPos + new Vector2(drawx, drawy), rect, color, 0, new Vector2(0, 0), Projectile.scale, SpriteEffects.None, 0f);
 					yindex += 2;
 				}
 				xindex += 2;
@@ -446,16 +435,16 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 100;
-			projectile.penetrate = 10;
-			projectile.timeLeft = 2;
-			aiType = 0;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 100;
+			Projectile.penetrate = 10;
+			Projectile.timeLeft = 2;
+			AIType = 0;
 			drawOriginOffsetX = 8;
 			drawOriginOffsetY = 8;
 			drawHeldProjInFrontOfHeldItemAndArms = false;
@@ -478,30 +467,30 @@ namespace SGAmod.Items.Weapons
 
 		public override bool PreAI()
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 			if (owner == null)
-				projectile.Kill();
+				Projectile.Kill();
 			return true;
 		}
 
 		public override void AI()
 		{
-			Vector2 positiondust = Vector2.Normalize(new Vector2(projectile.velocity.X, projectile.velocity.Y)) * 8f;
-			Player owner = Main.player[projectile.owner];
+			Vector2 positiondust = Vector2.Normalize(new Vector2(Projectile.velocity.X, Projectile.velocity.Y)) * 8f;
+			Player owner = Main.player[Projectile.owner];
 			if (owner == null)
-				projectile.Kill();
+				Projectile.Kill();
 			if (owner.dead)
-				projectile.Kill();
-			owner.heldProj = projectile.whoAmI;
+				Projectile.Kill();
+			owner.heldProj = Projectile.whoAmI;
 			int tryget;
 			SGAmod.NonStationDefenses.TryGetValue(owner.HeldItem.type, out tryget);
-			if (tryget == projectile.type)
+			if (tryget == Projectile.type)
 			{
-				projectile.timeLeft += 1;
+				Projectile.timeLeft += 1;
 			}
 			else
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 
 
@@ -510,26 +499,26 @@ namespace SGAmod.Items.Weapons
 					Vector2 direction = (Main.MouseWorld - owner.Center);
 					if (owner.GetModPlayer<SGAPlayer>().grippinggloves>0)
 					{
-						projectile.direction = (direction.X > 0).ToDirectionInt();
+						Projectile.direction = (direction.X > 0).ToDirectionInt();
 					}
 					else
 					{
-						projectile.direction = (owner.direction > 0).ToDirectionInt();
+						Projectile.direction = (owner.direction > 0).ToDirectionInt();
 					}
 
 				}
 
 				if (owner.GetModPlayer<SGAPlayer>().grippinggloves>0)
 				{
-				owner.ChangeDir(projectile.direction);
+				owner.ChangeDir(Projectile.direction);
 				}
-				projectile.spriteDirection = projectile.direction;
-				owner.heldProj = projectile.whoAmI;
-				projectile.ai[0] += 1;
-				projectile.velocity = new Vector2(0f, 0f);
+				Projectile.spriteDirection = Projectile.direction;
+				owner.heldProj = Projectile.whoAmI;
+				Projectile.ai[0] += 1;
+				Projectile.velocity = new Vector2(0f, 0f);
 				owner.bodyFrame.Y = owner.bodyFrame.Height * 3;
 
-			projectile.Center = owner.Center + new Vector2(owner.direction < 0 ? -projectile.width * 2 : 0, -4f);
+			Projectile.Center = owner.Center + new Vector2(owner.direction < 0 ? -Projectile.width * 2 : 0, -4f);
 
 		}
 

@@ -11,7 +11,7 @@ namespace SGAmod.Tiles
 	public class Banners : ModTile
 	{
 		public static Dictionary<int,string> idToItem = new Dictionary<int, string>();
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -32,7 +32,7 @@ namespace SGAmod.Tiles
 			int style = frameX / 18;
 			string item;
 			if (idToItem.TryGetValue(style, out item))
-			Item.NewItem(i * 16, j * 16, 16, 48, mod.ItemType(item+"Banner"));
+			Item.NewItem(i * 16, j * 16, 16, 48, Mod.Find<ModItem>(item+"Banner").Type);
 		}
 
 		public override void NearbyEffects(int i, int j, bool closer)
@@ -40,11 +40,11 @@ namespace SGAmod.Tiles
 			if (closer)
 			{
 				Player player = Main.player[Main.myPlayer];
-				int style = Main.tile[i, j].frameX / 18;
+				int style = Main.tile[i, j].TileFrameX / 18;
 				string type;
 				if (idToItem.TryGetValue(style, out type))
 				{
-					player.NPCBannerBuff[mod.NPCType(type)] = true;
+					player.NPCBannerBuff[Mod.Find<ModNPC>(type).Type] = true;
 					player.hasBanner = true;
 				}
 			}

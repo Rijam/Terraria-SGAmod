@@ -58,7 +58,7 @@ namespace SGAmod.SkillTree.Survival
         {
             if (player.statLife > player.statLifeMax2 - 1 && player.SGAPly().surprised<1)
             {
-                float adder = ((float)player.Throwing().thrownCrit + (float)player.meleeCrit)*(0.05f*getlevels);
+                float adder = ((float)player.Throwing().thrownCrit + (float)player.GetCritChance(DamageClass.Melee))*(0.05f*getlevels);
                 player.statDefense += (int)adder;
             }
         }

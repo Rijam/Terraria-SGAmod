@@ -27,41 +27,28 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.shootSpeed = 3f;
-			item.shoot = mod.ProjectileType("TransmutationPowderSpray");
-			item.useTurn = true;
+			Item.useStyle = 1;
+			Item.shootSpeed = 3f;
+			Item.shoot = Mod.Find<ModProjectile>("TransmutationPowderSpray").Type;
+			Item.useTurn = true;
 			//ProjectileID.CultistBossLightningOrbArc
-			item.width = 8;
-			item.height = 28;
-			item.maxStack = 30;
-			item.consumable = true;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 40;
-			item.useTime = 40;
-			item.noMelee = true;
-			item.autoReuse = false;
-			item.value = Item.buyPrice(0, 0, 0, 25);
-			item.rare = ItemRarityID.Blue;
+			Item.width = 8;
+			Item.height = 28;
+			Item.maxStack = 30;
+			Item.consumable = true;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 40;
+			Item.useTime = 40;
+			Item.noMelee = true;
+			Item.autoReuse = false;
+			Item.value = Item.buyPrice(0, 0, 0, 25);
+			Item.rare = ItemRarityID.Blue;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 1);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 1);
-			recipe.AddIngredient(ItemID.VilePowder, 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this,3);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 1);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 1);
-			recipe.AddIngredient(ItemID.ViciousPowder, 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddRecipeGroup("SGAmod:BasicWraithShards", 1).AddIngredient(mod.ItemType("BottledMud"), 1).AddIngredient(ItemID.VilePowder, 1).AddTile(TileID.Anvils).Register();
+			CreateRecipe(3).AddRecipeGroup("SGAmod:BasicWraithShards", 1).AddIngredient(mod.ItemType("BottledMud"), 1).AddIngredient(ItemID.ViciousPowder, 1).AddTile(TileID.Anvils).Register();
 		}
 
 		public override bool CanUseItem(Player player)
@@ -157,23 +144,23 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			projectile.width = 6;
-			projectile.height = 6;
-			projectile.friendly = true;
-			projectile.alpha = 255;
-			projectile.penetrate = -1;
-			projectile.extraUpdates = 2;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
-			projectile.timeLeft = 100;
+			Projectile.width = 6;
+			Projectile.height = 6;
+			Projectile.friendly = true;
+			Projectile.alpha = 255;
+			Projectile.penetrate = -1;
+			Projectile.extraUpdates = 2;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
+			Projectile.timeLeft = 100;
 		}
 
 		public override void AI()
 		{
 			int dustType = DustType<TornadoDust>();
-			if (projectile.owner == Main.myPlayer)
+			if (Projectile.owner == Main.myPlayer)
 			{
-				ConvertTiles((int)(projectile.position.X + (float)(projectile.width / 2)) / 16, (int)(projectile.position.Y + (float)(projectile.height / 2)) / 16, 2);
+				ConvertTiles((int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16, (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16, 2);
 
 				int dist = 12 * 12;
 				int outputItem = -1;
@@ -181,7 +168,7 @@ namespace SGAmod.Items.Consumables
 				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
 
-					foreach (Item itemtoConvert in Main.item.Where(testby => !testby.newAndShiny && (itemToItemConversion.TryGetValue(testby.type, out outputItem)) && (testby.Center - projectile.Center).LengthSquared() < dist))
+					foreach (Item itemtoConvert in Main.item.Where(testby => !testby.newAndShiny && (itemToItemConversion.TryGetValue(testby.type, out outputItem)) && (testby.Center - Projectile.Center).LengthSquared() < dist))
 					{
 						if (outputItem > 2)
 						{
@@ -210,29 +197,29 @@ namespace SGAmod.Items.Consumables
 				}
 
 			}
-			if (projectile.ai[0] > 7f)
+			if (Projectile.ai[0] > 7f)
 			{
 				float dustScale = 1f;
-				if (projectile.ai[0] == 8f)
+				if (Projectile.ai[0] == 8f)
 				{
 					dustScale = 0.2f;
 				}
-				else if (projectile.ai[0] == 9f)
+				else if (Projectile.ai[0] == 9f)
 				{
 					dustScale = 0.4f;
 				}
-				else if (projectile.ai[0] == 10f)
+				else if (Projectile.ai[0] == 10f)
 				{
 					dustScale = 0.6f;
 				}
-				else if (projectile.ai[0] == 11f)
+				else if (Projectile.ai[0] == 11f)
 				{
 					dustScale = 0.8f;
 				}
-				projectile.ai[0] += 1f;
+				Projectile.ai[0] += 1f;
 				for (int i = 0; i < 1; i++)
 				{
-					int dustIndex = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustType, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100, default(Color), 1f);
+					int dustIndex = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, dustType, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100, default(Color), 1f);
 					Dust dust = Main.dust[dustIndex];
 					dust.noGravity = true;
 					dust.scale *= 1.75f;
@@ -243,9 +230,9 @@ namespace SGAmod.Items.Consumables
 			}
 			else
 			{
-				projectile.ai[0] += 1f;
+				Projectile.ai[0] += 1f;
 			}
-			projectile.rotation += 0.3f * (float)projectile.direction;
+			Projectile.rotation += 0.3f * (float)Projectile.direction;
 		}
 
 		public void ConvertTiles(int i, int j, int size = 4)
@@ -256,9 +243,9 @@ namespace SGAmod.Items.Consumables
 				{
 					if (WorldGen.InWorld(k, l, 1) && Math.Abs(k - i) + Math.Abs(l - j) < Math.Sqrt(size * size + size * size))
 					{
-						int type = (int)Main.tile[k, l].type;
+						int type = (int)Main.tile[k, l].TileType;
 
-						if (Main.tile[k, l].active())
+						if (Main.tile[k, l].HasTile)
 						{
 							int newTileType = -1;
 							if (tileToTileConversion.TryGetValue(type,out newTileType))
@@ -267,7 +254,7 @@ namespace SGAmod.Items.Consumables
 								{
 									if (whatconverted.Find(typ2e => new Point16(k, l).X == typ2e.X && new Point16(k, l).Y == typ2e.Y).X < 1)
 									{
-										Main.tile[k, l].type = (ushort)newTileType;
+										Main.tile[k, l].TileType = (ushort)newTileType;
 										WorldGen.SquareTileFrame(k, l, true);
 										NetMessage.SendTileSquare(-1, k, l, 1);
 

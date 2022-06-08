@@ -12,16 +12,16 @@ namespace SGAmod.NPCs.Sharkvern
     	
         public override void SetDefaults()
         {
-            projectile.width = 44;
-            projectile.height = 44;
-            projectile.hostile = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 500;
-			projectile.aiStyle = 36;
-            Main.projFrames[projectile.type] = 6;
-            projectile.damage = 18;
+            Projectile.width = 44;
+            Projectile.height = 44;
+            Projectile.hostile = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 500;
+			Projectile.aiStyle = 36;
+            Main.projFrames[Projectile.type] = 6;
+            Projectile.damage = 18;
         }
 
         public override void SetStaticDefaults()
@@ -31,8 +31,8 @@ namespace SGAmod.NPCs.Sharkvern
 		
 		public override void AI()
         {
-            projectile.Opacity=MathHelper.Clamp(((float)projectile.timeLeft/timeToCount),0f,1f);
-           int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y + 2f), projectile.width + 2, projectile.height + 2, mod.DustType("TornadoDust"), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 20, default(Color)*projectile.Opacity, 1f);
+            Projectile.Opacity=MathHelper.Clamp(((float)Projectile.timeLeft/timeToCount),0f,1f);
+           int DustID2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y + 2f), Projectile.width + 2, Projectile.height + 2, Mod.Find<ModDust>("TornadoDust").Type, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 20, default(Color)*Projectile.Opacity, 1f);
             Main.dust[DustID2].noGravity = true;
 		
 		}

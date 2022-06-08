@@ -9,7 +9,7 @@ namespace SGAmod.Dimensions.Walls
 {
 	public class NullWall : ModWall
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false;
 			dustType = DustID.Smoke;
@@ -132,7 +132,7 @@ namespace SGAmod.Dimensions.Walls
 			for (int i = 0; i < allGlass.Length; i += 1)
 			{
 				//texture = "Terraria/Wall_" + WallID.BlueStainedGlass;
-				mod.AddWall("UnbreakableStainedGlass"+i, new UnbreakableStainedGlass(), "Terraria/Wall_" + allGlass[i]);
+				Mod.AddWall("UnbreakableStainedGlass"+i, new UnbreakableStainedGlass(), "Terraria/Wall_" + allGlass[i]);
 			}
 			return false;
 		}
@@ -145,9 +145,9 @@ namespace SGAmod.Dimensions.Walls
 			//if (tile.wallColor() > 0)
 			//	return true;
 
-			Rectangle rect = new Rectangle(tile.wallFrameX(), tile.wallFrameY(), 32, 32);
+			Rectangle rect = new Rectangle(tile.WallFrameX(), tile.WallFrameY(), 32, 32);
 
-			spriteBatch.Draw(Main.wallTexture[tile.wall], zerooroffset + (new Vector2(i, j) * 16) - Main.screenPosition, rect, Lighting.GetColor(i,j,Color.White)*0.75f, 0, new Vector2(rect.Width, rect.Height) / 4f, new Vector2(1f, 1f), SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.wallTexture[tile.WallType], zerooroffset + (new Vector2(i, j) * 16) - Main.screenPosition, rect, Lighting.GetColor(i,j,Color.White)*0.75f, 0, new Vector2(rect.Width, rect.Height) / 4f, new Vector2(1f, 1f), SpriteEffects.None, 0f);
 
 			return false;
 		}

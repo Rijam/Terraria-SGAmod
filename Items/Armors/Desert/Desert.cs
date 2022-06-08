@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.Desert
 {
@@ -25,9 +26,9 @@ namespace SGAmod.Items.Armors.Desert
         {
 			if (sgaply.AddCooldownStack(60 * 45))
 			{
-				sgaply.player.AddBuff(ModContent.BuffType<SandySwiftnessBuff>(), 60 * 16);
+				sgaply.Player.AddBuff(ModContent.BuffType<SandySwiftnessBuff>(), 60 * 16);
 				sgaply.sandStormTimer = 30;
-				var snd = Main.PlaySound(SoundID.DD2_BookStaffCast,(int)sgaply.player.Center.X, (int)sgaply.player.Center.Y);
+				var snd = SoundEngine.PlaySound(SoundID.DD2_BookStaffCast,(int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y);
 				if (snd != null)
                 {
 					snd.Pitch = -0.50f;
@@ -36,11 +37,11 @@ namespace SGAmod.Items.Armors.Desert
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 5000;
-			item.rare = 1;
-			item.defense = 1;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 5000;
+			Item.rare = 1;
+			Item.defense = 1;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -48,12 +49,7 @@ namespace SGAmod.Items.Armors.Desert
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HardenedSand, 20);
-			recipe.AddIngredient(ItemID.Feather, 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.HardenedSand, 20).AddIngredient(ItemID.Feather, 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -67,11 +63,11 @@ namespace SGAmod.Items.Armors.Desert
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 4000;
-			item.rare = 1;
-			item.defense = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 4000;
+			Item.rare = 1;
+			Item.defense = 2;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -84,13 +80,7 @@ namespace SGAmod.Items.Armors.Desert
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.AntlionMandible, 1);
-			recipe.AddIngredient(ItemID.HardenedSand, 10);
-			recipe.AddIngredient(ItemID.Cactus, 25);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.AntlionMandible, 1).AddIngredient(ItemID.HardenedSand, 10).AddIngredient(ItemID.Cactus, 25).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -104,10 +94,10 @@ namespace SGAmod.Items.Armors.Desert
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 5000;
-			item.rare = 1;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 5000;
+			Item.rare = 1;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -118,7 +108,7 @@ namespace SGAmod.Items.Armors.Desert
 					Point therePointpre = new Point((int)player.MountedCenter.X, (int)player.position.Y);
 					Point therePoint = new Point(therePointpre.X >> 4, (therePointpre.Y >> 4) + i);
 					Tile tile = Framing.GetTileSafely(therePoint);
-					if (WorldGen.InWorld(therePoint.X, therePoint.Y) && tile.active() && (TileID.Sets.Conversion.Sand[tile.type] || TileID.Sets.Conversion.HardenedSand[tile.type]))
+					if (WorldGen.InWorld(therePoint.X, therePoint.Y) && tile.HasTile && (TileID.Sets.Conversion.Sand[tile.TileType] || TileID.Sets.Conversion.HardenedSand[tile.TileType]))
 					{
 						if (Math.Abs(player.velocity.X) > 1)
 						{
@@ -143,13 +133,7 @@ namespace SGAmod.Items.Armors.Desert
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.AntlionMandible, 2);
-			recipe.AddIngredient(ItemID.HardenedSand, 20);
-			recipe.AddIngredient(ItemID.SandBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.AntlionMandible, 2).AddIngredient(ItemID.HardenedSand, 20).AddIngredient(ItemID.SandBlock, 10).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -165,26 +149,26 @@ namespace SGAmod.Items.Armors.Desert
         public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 12;
-			item.height = 24;
-			item.rare = ItemRarityID.Blue;
-			item.value = 0;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.Throwing().thrown = true;
-			item.damage = 10;
-			item.shootSpeed = 4f;
-			item.shoot = ProjectileID.SandBallGun;
-			item.useTurn = true;
+			Item.width = 12;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = 0;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.damage = 10;
+			Item.shootSpeed = 4f;
+			Item.shoot = ProjectileID.SandBallGun;
+			Item.useTurn = true;
 			//ProjectileID.CultistBossLightningOrbArc
-			item.width = 12;
-			item.height = 24;
-			item.knockBack = 1;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 12;
-			item.useTime = 12;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.useAmmo = AmmoID.Sand;
+			Item.width = 12;
+			Item.height = 24;
+			Item.knockBack = 1;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 12;
+			Item.useTime = 12;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.useAmmo = AmmoID.Sand;
 		}
 		public static void DrawManifestedItem(Item item,SpriteBatch spriteBatch, Vector2 position, Rectangle frame,float scale)
         {
@@ -197,13 +181,13 @@ namespace SGAmod.Items.Armors.Desert
 
 			for (float i = 0; i < 1f; i += 0.20f)
 			{
-				spriteBatch.Draw(inner, drawPos, null, Color.White * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.75f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 3.00f * (((Main.GlobalTime / 2f) + i) % 1f)), SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, drawPos, null, Color.White * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.75f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 3.00f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f)), SpriteEffects.None, 0f);
 			}
 
 		}
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			DrawManifestedItem(item,spriteBatch, position, frame, scale);
+			DrawManifestedItem(Item,spriteBatch, position, frame, scale);
 
 			return true;
 		}
@@ -211,8 +195,8 @@ namespace SGAmod.Items.Armors.Desert
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			int probg = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, player.whoAmI);
-			Main.projectile[probg].Throwing().thrown = true;
-			Main.projectile[probg].ranged = false;
+			Main.projectile[probg].Throwing().DamageType = DamageClass.Throwing;
+			// Main.projectile[probg].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 			Main.projectile[probg].friendly = true;
 			Main.projectile[probg].hostile = false;
 			Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(10));
@@ -229,7 +213,7 @@ namespace SGAmod.Items.Armors.Desert
 
 	public class SandySwiftnessBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sandy Swiftness");
 			Description.SetDefault("The desert winds aid your beconing call!");

@@ -15,25 +15,25 @@ namespace SGAmod.Items.Tools
 		{
 			DisplayName.SetDefault("Rod Of Teleportation");
 			Tooltip.SetDefault("Left Click to teleport, costs Action Cooldown Stacks instead of Health\nStill applies Chaos State\nCan telefrag enemies when you don't have Chaos State, grants a small period of IFrames\n" + Idglib.ColorText(Color.Orange, "Requires 1 Cooldown stack, adds 60 seconds each"));
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			item.width = 24;
-			item.height = 32;
-			item.useTime = 70;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.noMelee = true;
-			item.damage = 1000;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.UseSound = SoundID.Item6;
-			item.rare = ItemRarityID.LightPurple;
-			item.shoot = ProjectileID.TruffleSpore;
-			item.shootSpeed = 12f;
+			Item.width = 24;
+			Item.height = 32;
+			Item.useTime = 70;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.noMelee = true;
+			Item.damage = 1000;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.UseSound = SoundID.Item6;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.shoot = ProjectileID.TruffleSpore;
+			Item.shootSpeed = 12f;
 		}
 
 		public override bool CanUseItem(Player player)

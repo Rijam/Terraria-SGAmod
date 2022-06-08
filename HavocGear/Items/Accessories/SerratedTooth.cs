@@ -16,12 +16,12 @@ namespace SGAmod.HavocGear.Items.Accessories
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 15, 0, 0);;
-			item.rare = 5;
-			item.accessory = true;
-			item.expert=true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 15, 0, 0);;
+			Item.rare = 5;
+			Item.accessory = true;
+			Item.expert=true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)

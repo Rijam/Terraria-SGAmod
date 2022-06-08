@@ -1,19 +1,20 @@
 using Terraria;
 using Terraria.ModLoader;
 using SGAmod.NPCs;
+using Terraria.ID;
 
 namespace SGAmod.Buffs
 {
 	public class Microtransactions: ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Microtransactions");
 			Description.SetDefault("Losing money every second");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -28,14 +29,14 @@ namespace SGAmod.Buffs
 	}
 	public class MoneyMismanagement : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Money Mismanagement");
 			Description.SetDefault("Your are spending your life away");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -45,19 +46,14 @@ namespace SGAmod.Buffs
 	}
 	public class HeavyCrates : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/HeavyCrates";
-			return true;
-		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Heavy Crates");
 			Description.SetDefault("Cratrosity's influance is making the crates heavy!");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -68,9 +64,9 @@ namespace SGAmod.Buffs
 
 	public class HeavyInventory : HeavyCrates
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
-			base.SetDefaults();
+			base.SetStaticDefaults();
 			DisplayName.SetDefault("Over Encumbered");
 			Description.SetDefault("Filling every inventory slot has made you slower\n'You have too much to carry'");
 			Main.buffNoTimeDisplay[Type] = true;

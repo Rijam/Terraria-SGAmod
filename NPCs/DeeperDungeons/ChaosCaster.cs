@@ -13,36 +13,36 @@ namespace SGAmod.NPCs.DeeperDungeons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Chaos Caster");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.Tim]; //3
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.Tim]; //3
         }
 
         public override void SetDefaults()
         {
-            npc.width = 18;
-            npc.height = 40;
-            npc.damage = 26;
-            npc.defense = 0;
-            npc.lifeMax = 65;
-            npc.value = 150f;
-            npc.aiStyle = 8;
-            npc.knockBackResist = 0.6f;
-            aiType = NPCID.Tim;
-            animationType = NPCID.Tim;
-            npc.HitSound = SoundID.NPCHit2;
-            npc.DeathSound = SoundID.NPCDeath2;
-            npc.buffImmune[BuffID.Confused] = false;
-            banner = npc.type;
-            bannerItem = mod.ItemType("ChaosCasterBanner");
+            NPC.width = 18;
+            NPC.height = 40;
+            NPC.damage = 26;
+            NPC.defense = 0;
+            NPC.lifeMax = 65;
+            NPC.value = 150f;
+            NPC.aiStyle = 8;
+            NPC.knockBackResist = 0.6f;
+            AIType = NPCID.Tim;
+            AnimationType = NPCID.Tim;
+            NPC.HitSound = SoundID.NPCHit2;
+            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.buffImmune[BuffID.Confused] = false;
+            banner = NPC.type;
+            bannerItem = Mod.Find<ModItem>("ChaosCasterBanner").Type;
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 16, 0), npc.velocity, 42, 1f); //Skeleton head gore
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * -16, 0), npc.velocity, 43, 1f); //Skeleton arm gore
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 8, 0), npc.velocity, 43, 1f); //Skeleton arm gore
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 8, 0), npc.velocity, 44, 1f); //Skeleton leg gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 16, 0), NPC.velocity, 42, 1f); //Skeleton head gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * -16, 0), NPC.velocity, 43, 1f); //Skeleton arm gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 8, 0), NPC.velocity, 43, 1f); //Skeleton arm gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 8, 0), NPC.velocity, 44, 1f); //Skeleton leg gore
 
             }
         }
@@ -51,23 +51,23 @@ namespace SGAmod.NPCs.DeeperDungeons
         {
             if (Main.rand.Next(100) < 98) //98% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Bone, Main.rand.Next(1, 3));
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.Bone, Main.rand.Next(1, 3));
             }
             if (Main.rand.Next(65) == 0) //1.53% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.GoldenKey);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.GoldenKey);
             }
             if (Main.rand.Next(250) == 0) //0.4% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.BoneWand);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.BoneWand);
             }
             if (Main.rand.Next(300) == 0) //0.33% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.ClothierVoodooDoll);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.ClothierVoodooDoll);
             }
             if (Main.rand.Next(100) == 0) //1% chance
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.TallyCounter);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.TallyCounter);
             }
         }
     }

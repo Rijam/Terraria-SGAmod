@@ -16,22 +16,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 28;
-			item.height = 26;
-			item.shoot = ModContent.ProjectileType<CutestIceFairy>();
-			item.buffType = ModContent.BuffType<CutestIceFairyBuff>();
-			item.rare = ItemRarityID.LightRed;
-			item.expert = true; //Change to Master Mode in 1.4
-			item.value = 250000;
-			item.UseSound = SoundID.Item25;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 28;
+			Item.height = 26;
+			Item.shoot = ModContent.ProjectileType<CutestIceFairy>();
+			Item.buffType = ModContent.BuffType<CutestIceFairyBuff>();
+			Item.rare = ItemRarityID.LightRed;
+			Item.expert = true; //Change to Master Mode in 1.4
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item25;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -45,21 +45,21 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 30;
-			item.height = 26;
-			item.shoot = ModContent.ProjectileType<AcidicSpiderling>();
-			item.buffType = ModContent.BuffType<AcidicSpiderlingBuff>();
-			item.rare = ItemRarityID.Green;
-			item.expert = true;
-			item.value = 250000;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 30;
+			Item.height = 26;
+			Item.shoot = ModContent.ProjectileType<AcidicSpiderling>();
+			Item.buffType = ModContent.BuffType<AcidicSpiderlingBuff>();
+			Item.rare = ItemRarityID.Green;
+			Item.expert = true;
+			Item.value = 250000;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -73,22 +73,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 20;
-			item.height = 22;
-			item.shoot = ModContent.ProjectileType<MiniCopperWraith>();
-			item.buffType = ModContent.BuffType<MiniCopperWraithBuff>();
-			item.rare = ItemRarityID.Blue;
-			item.expert = true;
-			item.value = 250000;
-			item.UseSound = SoundID.Item46;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 20;
+			Item.height = 22;
+			Item.shoot = ModContent.ProjectileType<MiniCopperWraith>();
+			Item.buffType = ModContent.BuffType<MiniCopperWraithBuff>();
+			Item.rare = ItemRarityID.Blue;
+			Item.expert = true;
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item46;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -102,22 +102,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 20;
-			item.height = 22;
-			item.shoot = ModContent.ProjectileType<MiniTinWraith>();
-			item.buffType = ModContent.BuffType<MiniTinWraithBuff>();
-			item.rare = ItemRarityID.Blue;
-			item.expert = true;
-			item.value = 250000;
-			item.UseSound = SoundID.Item46;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 20;
+			Item.height = 22;
+			Item.shoot = ModContent.ProjectileType<MiniTinWraith>();
+			Item.buffType = ModContent.BuffType<MiniTinWraithBuff>();
+			Item.rare = ItemRarityID.Blue;
+			Item.expert = true;
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item46;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -131,22 +131,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 20;
-			item.height = 22;
-			item.shoot = ModContent.ProjectileType<MiniCobaltWraith>();
-			item.buffType = ModContent.BuffType<MiniCobaltWraithBuff>();
-			item.rare = ItemRarityID.LightRed;
-			item.expert = true;
-			item.value = 250000;
-			item.UseSound = SoundID.Item46;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 20;
+			Item.height = 22;
+			Item.shoot = ModContent.ProjectileType<MiniCobaltWraith>();
+			Item.buffType = ModContent.BuffType<MiniCobaltWraithBuff>();
+			Item.rare = ItemRarityID.LightRed;
+			Item.expert = true;
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item46;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -160,22 +160,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 20;
-			item.height = 22;
-			item.shoot = ModContent.ProjectileType<MiniPalladiumWraith>();
-			item.buffType = ModContent.BuffType<MiniPalladiumWraithBuff>();
-			item.rare = ItemRarityID.LightRed;
-			item.expert = true;
-			item.value = 250000;
-			item.UseSound = SoundID.Item46;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 20;
+			Item.height = 22;
+			Item.shoot = ModContent.ProjectileType<MiniPalladiumWraith>();
+			Item.buffType = ModContent.BuffType<MiniPalladiumWraithBuff>();
+			Item.rare = ItemRarityID.LightRed;
+			Item.expert = true;
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item46;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -189,22 +189,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 20;
-			item.height = 22;
-			item.shoot = ModContent.ProjectileType<MiniLuminiteWraith>();
-			item.buffType = ModContent.BuffType<MiniLuminiteWraithBuff>();
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
-			item.value = 250000;
-			item.UseSound = SoundID.Item46;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 20;
+			Item.height = 22;
+			Item.shoot = ModContent.ProjectileType<MiniLuminiteWraith>();
+			Item.buffType = ModContent.BuffType<MiniLuminiteWraithBuff>();
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item46;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -218,22 +218,22 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 22;
-			item.height = 30;
-			item.shoot = ModContent.ProjectileType<PrismicVisitant>();
-			item.buffType = ModContent.BuffType<PrismicVisitantBuff>();
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
-			item.value = 250000;
-			item.UseSound = SoundID.Item25;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 22;
+			Item.height = 30;
+			Item.shoot = ModContent.ProjectileType<PrismicVisitant>();
+			Item.buffType = ModContent.BuffType<PrismicVisitantBuff>();
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
+			Item.value = 250000;
+			Item.UseSound = SoundID.Item25;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -247,21 +247,21 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 18;
-			item.height = 28;
-			item.shoot = ModContent.ProjectileType<SlimeBaron>();
-			item.buffType = ModContent.BuffType<SlimeBaronBuff>();
-			item.rare = ItemRarityID.Orange;
-			item.expert = true;
-			item.value = 250000;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 18;
+			Item.height = 28;
+			Item.shoot = ModContent.ProjectileType<SlimeBaron>();
+			Item.buffType = ModContent.BuffType<SlimeBaronBuff>();
+			Item.rare = ItemRarityID.Orange;
+			Item.expert = true;
+			Item.value = 250000;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}
@@ -275,21 +275,21 @@ namespace SGAmod.Items.Pets
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DD2PetGato);
-			item.width = 26;
-			item.height = 28;
-			item.shoot = ModContent.ProjectileType<SlimeDuchess>();
-			item.buffType = ModContent.BuffType<SlimeDuchessBuff>();
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
-			item.value = 250000;
+			Item.CloneDefaults(ItemID.DD2PetGato);
+			Item.width = 26;
+			Item.height = 28;
+			Item.shoot = ModContent.ProjectileType<SlimeDuchess>();
+			Item.buffType = ModContent.BuffType<SlimeDuchessBuff>();
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
+			Item.value = 250000;
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
 		}
 	}

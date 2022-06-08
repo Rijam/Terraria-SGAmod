@@ -140,7 +140,7 @@ namespace SGAmod.Items.Placeable
 
 					Effect effect = SGAmod.TrailEffect;
 					effect.Parameters["WorldViewProjection"].SetValue(Effects.WVP.View(Vector2.One) * Effects.WVP.Projection());
-					effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.GetTexture("TiledPerlin"));
+					effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value);
 					effect.Parameters["coordOffset"].SetValue(Main.screenPosition/120000f);
 					effect.Parameters["coordMultiplier"].SetValue(new Vector2(0.5f, 0.35f));
 					effect.Parameters["strength"].SetValue(!day ? 1f : 0.5f);
@@ -271,7 +271,7 @@ namespace SGAmod.Items.Placeable
 
 					Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicWrap, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
-					Texture2D glowOrb = SGAmod.Instance.GetTexture("Extra_49c");
+					Texture2D glowOrb = SGAmod.Instance.Assets.Request<Texture2D>("Extra_49c").Value;
 
 					int index = 0;
 					foreach (CelestialMonolithTE cte in CelestialMonolithTE.CelestialMonolithTileEntities)
@@ -331,30 +331,23 @@ namespace SGAmod.Items.Placeable
 
 		public override void SetDefaults()
 		{
-			item.width = 22;
-			item.height = 32;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.rare = 10;
-			item.value = Item.buyPrice(0, 10, 0, 0);
-			item.createTile = ModContent.TileType<CelestialMonolith>();
+			Item.width = 22;
+			Item.height = 32;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.rare = 10;
+			Item.value = Item.buyPrice(0, 10, 0, 0);
+			Item.createTile = ModContent.TileType<CelestialMonolith>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SunStone, 1);
-			recipe.AddIngredient(ItemID.MoonStone, 1);
-			recipe.AddIngredient(ModContent.ItemType<StarMetalBar>(), 12);
-			recipe.AddIngredient(ModContent.ItemType<HeliosFocusCrystal>(), 2);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.SunStone, 1).AddIngredient(ItemID.MoonStone, 1).AddIngredient(ModContent.ItemType<StarMetalBar>(), 12).AddIngredient(ModContent.ItemType<HeliosFocusCrystal>(), 2).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 }

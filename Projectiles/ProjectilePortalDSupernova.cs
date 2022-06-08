@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 
 namespace SGAmod.Projectiles
@@ -22,7 +23,7 @@ namespace SGAmod.Projectiles
         public virtual int manacost => 4;
         public virtual int startrate => 90;
         public virtual int drainrate => 5;
-        public virtual int portalprojectile => mod.ProjectileType("UnmanedBolt");
+        public virtual int portalprojectile => Mod.Find<ModProjectile>("UnmanedBolt").Type;
         public virtual float portaldistfromsword => 60f;
         public virtual float velmulti => 8f;
 
@@ -30,14 +31,14 @@ namespace SGAmod.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = 10;
-            projectile.light = 0.5f;
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 90;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = 10;
+            Projectile.light = 0.5f;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 90;
         }
 
         public virtual void WhileFiring()
@@ -51,15 +52,15 @@ namespace SGAmod.Projectiles
         public override void AI()
         {
 
-            projectile.ai[0] = portalprojectile;
+            Projectile.ai[0] = portalprojectile;
             base.AI();
 
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             if (player == null || (!player.channel || player.dead || (player.statMana < manacost || (player.HasBuff(BuffID.ManaSickness) && player.buffTime[player.FindBuffIndex(BuffID.ManaSickness)]>60*6))))
             {
-                if (projectile.timeLeft > 29)
+                if (Projectile.timeLeft > 29)
                 {
-                    projectile.timeLeft = 29;
+                    Projectile.timeLeft = 29;
                 }
             }
             else
@@ -69,43 +70,43 @@ namespace SGAmod.Projectiles
                 {
                     Vector2 mousePos = Main.MouseWorld;
 
-                    if (projectile.owner == Main.myPlayer)
+                    if (Projectile.owner == Main.myPlayer)
                     {
                         Vector2 diff = mousePos - player.Center;
                         diff.Normalize();
-                        projectile.velocity = diff;
-                        projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-                        projectile.netUpdate = true;
-                        projectile.Center = mousePos;
+                        Projectile.velocity = diff;
+                        Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+                        Projectile.netUpdate = true;
+                        Projectile.Center = mousePos;
                         player.HeldItem.noMelee = true;
                     }
-                    int dir = projectile.direction;
+                    int dir = Projectile.direction;
                     player.ChangeDir(dir);
                     player.itemTime = 40;
                     player.itemAnimation = 40;
                     player.HeldItem.useStyle = 5;
-                    player.itemRotation = (float)Math.Atan2(projectile.velocity.Y * dir, projectile.velocity.X * dir)+(angleoffset* player.direction);
-                    projectile.damage=player.GetWeaponDamage(player.HeldItem);
+                    player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * dir, Projectile.velocity.X * dir)+(angleoffset* player.direction);
+                    Projectile.damage=player.GetWeaponDamage(player.HeldItem);
 
                     WhileFiring();
 
-                    projectile.Center = player.Center + (projectile.velocity * portaldistfromsword);
-                    projectile.velocity *= velmulti;
+                    Projectile.Center = player.Center + (Projectile.velocity * portaldistfromsword);
+                    Projectile.velocity *= velmulti;
 
                     if (player.manaRegenDelay<15)
                     player.manaRegenDelay = 15;
-                    if (projectile.timeLeft < timeleftfirerate && player.channel)
+                    if (Projectile.timeLeft < timeleftfirerate && player.channel)
                     {
                         if (ogdamage == 0)
                         {
-                            ogdamage = projectile.damage;
+                            ogdamage = Projectile.damage;
                         }
                         else
                         {
-                            projectile.damage = (int)(ogdamage * (1f - player.manaSickReduction));
+                            Projectile.damage = (int)(ogdamage * (1f - player.manaSickReduction));
                         }
-                        Main.PlaySound(SoundID.Item20, player.Center);
-                        projectile.timeLeft = Math.Max(startrate - (int)counterfire * drainrate, projectilerate);
+                        SoundEngine.PlaySound(SoundID.Item20, player.Center);
+                        Projectile.timeLeft = Math.Max(startrate - (int)counterfire * drainrate, projectilerate);
                         counterfire += 1;
                         player.CheckMana(player.HeldItem, (int)(manacost), true);
 
@@ -114,7 +115,7 @@ namespace SGAmod.Projectiles
                 else
                 {
                   if (player == null || (!player.channel || player.dead || !player.CheckMana(player.HeldItem, (int)(manacost), false)))
-                  projectile.Kill();
+                  Projectile.Kill();
 
                 }
             }

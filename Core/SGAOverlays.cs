@@ -80,7 +80,7 @@ namespace SGAmod
 				SGAmod.VanillaHearts.Item1 = Main.heartTexture;
 				SGAmod.VanillaHearts.Item2 = Main.heart2Texture;
 
-				if (Main.heartTexture == SGAmod.Instance.GetTexture("Invisible"))
+				if (Main.heartTexture == SGAmod.Instance.Assets.Request<Texture2D>("Invisible").Value)
 				{
 					Main.heartTexture = SGAmod.OGVanillaHearts.Item1;
 					Main.heart2Texture = SGAmod.OGVanillaHearts.Item2;
@@ -91,7 +91,7 @@ namespace SGAmod
 				Main.heartTexture = SGAmod.VanillaHearts.Item1;
 				Main.heart2Texture = SGAmod.VanillaHearts.Item2;
 
-				if (Main.heartTexture == SGAmod.Instance.GetTexture("Invisible"))
+				if (Main.heartTexture == SGAmod.Instance.Assets.Request<Texture2D>("Invisible").Value)
 				{
 					Main.heartTexture = SGAmod.OGVanillaHearts.Item1;
 					Main.heart2Texture = SGAmod.OGVanillaHearts.Item2;
@@ -108,7 +108,7 @@ namespace SGAmod
 				{
 					int UI_ScreenAnchorX = (int)(typeof(Main).GetField("UI_ScreenAnchorX", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
 
-					Player player = sgaply.player;
+					Player player = sgaply.Player;
 
 					int totalhearts = Math.Min((int)Math.Ceiling((decimal)player.statLifeMax / 20), 20);
 
@@ -141,11 +141,11 @@ namespace SGAmod
 						int num6 = itta.Item3;
 						int num9 = itta.Item4;
 
-						Main.heartTexture = SGAmod.Instance.GetTexture("Invisible");
-						Main.heart2Texture = SGAmod.Instance.GetTexture("Invisible");
+						Main.heartTexture = SGAmod.Instance.Assets.Request<Texture2D>("Invisible").Value;
+						Main.heart2Texture = SGAmod.Instance.Assets.Request<Texture2D>("Invisible").Value;
 
-						Texture2D heartTexture = SGAmod.Instance.GetTexture("GreyHeart");
-						Texture2D heartTexture2 = SGAmod.Instance.GetTexture("ShieldHealth");
+						Texture2D heartTexture = SGAmod.Instance.Assets.Request<Texture2D>("GreyHeart").Value;
+						Texture2D heartTexture2 = SGAmod.Instance.Assets.Request<Texture2D>("ShieldHealth").Value;
 
 						//Main.spriteBatch.Draw(heartTexture, new Vector2(0,0), null, Color.White, 0f, new Vector2(heartTexture.Width / 2, heartTexture.Height / 2), num6, SpriteEffects.None, 0f);
 
@@ -219,11 +219,11 @@ namespace SGAmod
 					float angle = MathHelper.ToRadians(i+((sizeup ? 400f : -400f)*MathHelper.Clamp(1f- ((float)sga.lockoneffect/70f), 0f,1f)));
 					Vector2 hereas = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * (180f+MathHelper.Clamp(300- sga.lockoneffect*4,0,300));
 
-					Texture2D arrow = ModContent.GetTexture("SGAmod/MatrixArrow");
+					Texture2D arrow = ModContent.Request<Texture2D>("SGAmod/MatrixArrow");
 
 					Vector2 drawPos = ((hereas * (sizeup ? 1f : 1f)*Main.essScale) + target.Center) - Main.screenPosition;
 					float sizer = (sizeup ? 0.5f : 1f);
-					Main.spriteBatch.Draw(arrow, drawPos, null, Main.hslToRgb(((i/360f)-Main.GlobalTime*1f)%1f,1f,0.75f)*MathHelper.Clamp((float)sga.lockoneffect/70f,0f,1f), MathHelper.ToRadians(i)+MathHelper.Pi, new Vector2(arrow.Width* sizer, arrow.Height/2), new Vector2(1, 1), SpriteEffects.None, 0f);
+					Main.spriteBatch.Draw(arrow, drawPos, null, Main.hslToRgb(((i/360f)-Main.GlobalTimeWrappedHourly*1f)%1f,1f,0.75f)*MathHelper.Clamp((float)sga.lockoneffect/70f,0f,1f), MathHelper.ToRadians(i)+MathHelper.Pi, new Vector2(arrow.Width* sizer, arrow.Height/2), new Vector2(1, 1), SpriteEffects.None, 0f);
 
 				}
 			}
@@ -246,7 +246,7 @@ namespace SGAmod
 
 				Vector2 drawPos = new Vector2(Main.screenWidth-44,42);
 
-				Texture2D stain = SGAmod.Instance.GetTexture("TiledPerlin");
+				Texture2D stain = SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value;
 				float percentit = (sga.GetEnergyShieldAmmountAndRecharge.Item1 / (float)sga.GetEnergyShieldAmmountAndRecharge.Item2);
 				int barlength = (int)((255f * (percentit)) *Main.UIScale);
 				int height = (int)(24 * Main.UIScale);
@@ -275,7 +275,7 @@ namespace SGAmod
 
 				effect.Parameters["WorldViewProjection"].SetValue(Effects.WVP.View(Main.GameViewMatrix.Zoom) * Effects.WVP.Projection());
 				effect.Parameters["imageTexture"].SetValue(stain);
-				effect.Parameters["coordOffset"].SetValue(new Vector2(0, Main.GlobalTime*-0.1f));
+				effect.Parameters["coordOffset"].SetValue(new Vector2(0, Main.GlobalTimeWrappedHourly*-0.1f));
 				effect.Parameters["coordMultiplier"].SetValue(new Vector2(0.3f,0.1f));
 				effect.Parameters["strength"].SetValue(MathHelper.Clamp(1.5f,0,3));
 
@@ -325,7 +325,7 @@ namespace SGAmod
 			{
 				SpriteBatch spriteBatch = Main.spriteBatch;
 
-				if (locply.HeldItem.type == SGAmod.Instance.ItemType("CaliburnCompess"))
+				if (locply.HeldItem.type == SGAmod.Instance.Find<ModItem>("CaliburnCompess").Type)
 				{
 					spriteBatch.End();
 					//Matrix Custommatrix = Matrix.CreateScale(Main.screenWidth / 1920f, Main.screenHeight / 1024f, 0f);
@@ -339,7 +339,7 @@ namespace SGAmod
 						for (int i = 0; i < SGAWorld.CaliburnAlterCoordsX.Length; i += 1)
 						{
 							string[] texs = { "SGAmod/Items/Weapons/Caliburn/CaliburnTypeA", "SGAmod/Items/Weapons/Caliburn/CaliburnTypeB", "SGAmod/Items/Weapons/Caliburn/CaliburnTypeC" };
-							Texture2D tex = ModContent.GetTexture(texs[i]);
+							Texture2D tex = ModContent.Request<Texture2D>(texs[i]);
 
 							Vector2 drawOrigin = new Vector2(tex.Width, tex.Height) / 2f;
 
@@ -348,7 +348,7 @@ namespace SGAmod
 							bool flip = Vecd.X > 0;
 
 							spriteBatch.Draw(tex, screenCenterDrawPos + (pointthere.ToRotationVector2() * 64f) + (pointthere.ToRotationVector2() * (float)Math.Pow(Vecd.Length(), 0.9) / 50), null, Color.White, pointthere + MathHelper.ToRadians(45) + (flip ? MathHelper.ToRadians(-90) * 3f : 0), drawOrigin, Main.UIScale, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
-							//spriteBatch.Draw(tex, new Vector2(150, 150), null, Color.White, Main.GlobalTime, drawOrigin, 1, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+							//spriteBatch.Draw(tex, new Vector2(150, 150), null, Color.White, Main.GlobalTimeWrappedHourly, drawOrigin, 1, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 
 						}
 					}
@@ -358,7 +358,7 @@ namespace SGAmod
                         for (int i = 0; i < DimDingeonsWorld.darkSectors.Count; i += 1)
                         {
 
-							Texture2D tex = ModContent.GetTexture("SGAmod/Items/WatchersOfNull");
+							Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Items/WatchersOfNull");
 							Texture2D tex2 = Main.itemTexture[ModContent.ItemType<AssemblyStar>()];
 							Rectangle rect = new Rectangle(0, 0, tex.Width, tex.Height / 13);
 
@@ -370,7 +370,7 @@ namespace SGAmod
 							float pointthere = Vecd.ToRotation();
 
 							for(int k=-1;k<3;k+=2)
-							spriteBatch.Draw(tex2, screenCenterDrawPos + (pointthere.ToRotationVector2() * 64f) + (pointthere.ToRotationVector2() * (float)Math.Pow(Vecd.Length(), 0.9) / 50), null, Color.Black*0.4f, Main.GlobalTime * 2f*k, tex2.Size() / 2f, Main.UIScale*1.25f, SpriteEffects.FlipHorizontally, 0f);
+							spriteBatch.Draw(tex2, screenCenterDrawPos + (pointthere.ToRotationVector2() * 64f) + (pointthere.ToRotationVector2() * (float)Math.Pow(Vecd.Length(), 0.9) / 50), null, Color.Black*0.4f, Main.GlobalTimeWrappedHourly * 2f*k, tex2.Size() / 2f, Main.UIScale*1.25f, SpriteEffects.FlipHorizontally, 0f);
 							spriteBatch.Draw(tex, screenCenterDrawPos + (pointthere.ToRotationVector2() * 64f) + (pointthere.ToRotationVector2() * (float)Math.Pow(Vecd.Length(), 0.9) / 50), rect, Color.White*Main.essScale, 0, drawOrigin, Main.UIScale,SpriteEffects.FlipHorizontally, 0f);
 
 
@@ -412,7 +412,7 @@ namespace SGAmod
 						if (check)
 						{
 							Color color = Lighting.GetColor((int)locply.Center.X / 16, (int)locply.Center.Y / 16);
-							Texture2D texture = mod.GetTexture("Items/PlasmaCell");
+							Texture2D texture = mod.Assets.Request<Texture2D>("Items/PlasmaCell").Value;
 							int drawX = (int)(((0)));
 							int drawY = (int)(((-36)));//gravDir 
 
@@ -442,7 +442,7 @@ namespace SGAmod
 
 						if (check)
 						{
-							Texture2D texture = mod.GetTexture("AmmoHud");
+							Texture2D texture = mod.Assets.Request<Texture2D>("AmmoHud").Value;
 							int drawX = (int)(((-texture.Width / 2f)));
 							int drawY = (int)(((-32)));//gravDir 
 
@@ -470,7 +470,7 @@ namespace SGAmod
 
 					float perc = (float)modply.boosterPowerLeft / (float)modply.boosterPowerLeftMax;
 
-					Texture2D texture = mod.GetTexture("BoostBar");
+					Texture2D texture = mod.Assets.Request<Texture2D>("BoostBar").Value;
 
 					int offsetY = -texture.Height+SGAConfigClient.Instance.HUDDisplacement;
 
@@ -511,7 +511,7 @@ namespace SGAmod
 
 							spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.CreateScale(Main.UIScale) * Matrix.CreateTranslation(drawX, drawY, 0));
 
-							float drawcolortrans = MathHelper.Clamp((modply.electricdelay + 100) / 100f, 0.15f+(float)Math.Sin(Main.GlobalTime*5f)/10f, 1f)* (MathHelper.Clamp((1f-perc) * 250f, 0f, 1f));
+							float drawcolortrans = MathHelper.Clamp((modply.electricdelay + 100) / 100f, 0.15f+(float)Math.Sin(Main.GlobalTimeWrappedHourly*5f)/10f, 1f)* (MathHelper.Clamp((1f-perc) * 250f, 0f, 1f));
 
 							if (drawcolortrans > 0f)
 							{
@@ -548,7 +548,7 @@ namespace SGAmod
 						float drawcolortrans = MathHelper.Clamp(perc*50f, 0f, 1f);
 						spriteBatch.Draw(texture, new Vector2(-scaler.X - 2, offsetY), new Rectangle(0, 0, 2, texture.Height), Color.White * drawcolortrans, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
 						spriteBatch.Draw(texture, new Vector2(-scaler.X, offsetY), new Rectangle(2, 0, 2, texture.Height), Color.DarkGray * drawcolortrans, 0f, new Vector2(0, 0), scaler, SpriteEffects.None, 0);
-						spriteBatch.Draw(texture, new Vector2(-scaler.X, offsetY), new Rectangle(2, 0, 2, texture.Height), Main.hslToRgb((Main.GlobalTime/3f)%1f,1f,0.75f) * drawcolortrans, 0f, new Vector2(0, 0), new Vector2(scaler.X * perc, scaler.Y), SpriteEffects.None, 0);
+						spriteBatch.Draw(texture, new Vector2(-scaler.X, offsetY), new Rectangle(2, 0, 2, texture.Height), Main.hslToRgb((Main.GlobalTimeWrappedHourly/3f)%1f,1f,0.75f) * drawcolortrans, 0f, new Vector2(0, 0), new Vector2(scaler.X * perc, scaler.Y), SpriteEffects.None, 0);
 						spriteBatch.Draw(texture, new Vector2(+scaler.X, offsetY), new Rectangle(4, 0, 2, texture.Height), Color.White * drawcolortrans, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
 						offsetY += texture.Height;
 					}
@@ -558,7 +558,7 @@ namespace SGAmod
 					{
 
 
-						texture = mod.GetTexture("ActionCooldown");
+						texture = mod.Assets.Request<Texture2D>("ActionCooldown").Value;
 						int drawX = (int)(((-texture.Width / 4f)));
 						int drawY = (int)(((48+offsetY)));//gravDir 
 
@@ -692,23 +692,23 @@ namespace SGAmod
 				TrippyRainbowEffect.Parameters["uColor"].SetValue(new Vector3(0.05f, 0.05f, 0f));
 				TrippyRainbowEffect.Parameters["uScreenResolution"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight) / 6f);
 				TrippyRainbowEffect.Parameters["uOpacity"].SetValue(0.15f * Filters.Scene["SGAmod:ScreenWave"].GetShader().CombinedOpacity);
-				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTime * 0.1f));
+				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTimeWrappedHourly * 0.1f));
 				TrippyRainbowEffect.Parameters["uIntensity"].SetValue(1f);
 				TrippyRainbowEffect.Parameters["uScreenPosition"].SetValue(Main.screenPosition / 500f);
 				TrippyRainbowEffect.Parameters["uTargetPosition"].SetValue(Main.screenPosition / 500f);
-				TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTime * 0.05f);
-				TrippyRainbowEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("TiledPerlin"));
+				TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTimeWrappedHourly * 0.05f);
+				TrippyRainbowEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value);
 				TrippyRainbowEffect.CurrentTechnique.Passes["ScreenTrippy"].Apply();
 
 				spriteBatch.Draw(Main.blackTileTexture, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, new Rectangle(0, 0, 128, 128), Color.White * 0.25f, -MathHelper.PiOver2, Vector2.One * 56, Vector2.One * 128, SpriteEffects.None, 0f);
-				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTime * 0.1f));
-				TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTime * 0.0075f);
+				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTimeWrappedHourly * 0.1f));
+				TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTimeWrappedHourly * 0.0075f);
 				TrippyRainbowEffect.CurrentTechnique.Passes["ScreenTrippy"].Apply();
 
 				spriteBatch.Draw(Main.blackTileTexture, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, new Rectangle(0, 0, 128, 128), Color.White * 0.25f, 0, Vector2.One * 73, Vector2.One * 128, SpriteEffects.None, 0f);
 
-				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTime * 0.06f));
-				TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTime * 0.0075f);
+				TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTimeWrappedHourly * 0.06f));
+				TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTimeWrappedHourly * 0.0075f);
 				TrippyRainbowEffect.CurrentTechnique.Passes["ScreenTrippy"].Apply();
 
 				spriteBatch.Draw(Main.blackTileTexture, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, new Rectangle(0, 0, 128, 128), Color.White * 0.25f, -MathHelper.PiOver4, Vector2.One * 100, Vector2.One * 128, SpriteEffects.None, 0f);

@@ -45,18 +45,18 @@ namespace SGAmod.Items.Placeable.Paintings
 
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.consumable = true;
-			item.createTile = tile;
-			item.placeStyle = PlaceStyle;
-			item.width = 24;
-			item.height = 24;
-			item.rare = 4;
-			item.value = 0;
+			Item.useStyle = 1;
+			Item.useTurn = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.autoReuse = true;
+			Item.consumable = true;
+			Item.createTile = tile;
+			Item.placeStyle = PlaceStyle;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = 4;
+			Item.value = 0;
 		}
 		public override bool Autoload(ref string name)
 		{
@@ -87,7 +87,7 @@ namespace SGAmod.Items.Placeable.Paintings
 			switch (frameX / (192))
 			{
 				case 0:
-					item = SGAmod.Instance.ItemType("ParadoxGeneralPainting");
+					item = SGAmod.Instance.Find<ModItem>("ParadoxGeneralPainting").Type;
 					break;
 
 			}
@@ -121,7 +121,7 @@ namespace SGAmod.Items.Placeable.Paintings
 			switch (frameX / (192))
 			{
 				case 0:
-					item = SGAmod.Instance.ItemType("UnderTheWaterfallPainting");
+					item = SGAmod.Instance.Find<ModItem>("UnderTheWaterfallPainting").Type;
 					break;
 
 			}
@@ -156,10 +156,10 @@ namespace SGAmod.Items.Placeable.Paintings
 			switch (frameX / (192))
 			{
 				case 0:
-					item = SGAmod.Instance.ItemType("SerenityPainting");
+					item = SGAmod.Instance.Find<ModItem>("SerenityPainting").Type;
 					break;
 				case 1:
-					item = SGAmod.Instance.ItemType("AdventurePainting");
+					item = SGAmod.Instance.Find<ModItem>("AdventurePainting").Type;
 					break;
 
 			}
@@ -194,10 +194,10 @@ namespace SGAmod.Items.Placeable.Paintings
 			switch (frameX / 96)
 			{
 				case 0:
-					item = SGAmod.Instance.ItemType("CalmnessPainting");
+					item = SGAmod.Instance.Find<ModItem>("CalmnessPainting").Type;
 					break;
 				case 1:
-					item = SGAmod.Instance.ItemType("MeetingTheSunPainting");
+					item = SGAmod.Instance.Find<ModItem>("MeetingTheSunPainting").Type;
 					break;
 
 			}
@@ -210,7 +210,7 @@ namespace SGAmod.Items.Placeable.Paintings
 
 	public class SGAPaintings3X3 : ModTile
 	{
-		public override void SetDefaults() {
+		public override void SetStaticDefaults() {
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
@@ -228,7 +228,7 @@ namespace SGAmod.Items.Placeable.Paintings
 			switch (frameX / 54) 
 			{
 				case 0:
-					item = SGAmod.Instance.ItemType("DergPainting");
+					item = SGAmod.Instance.Find<ModItem>("DergPainting").Type;
 					break;
 
 			}

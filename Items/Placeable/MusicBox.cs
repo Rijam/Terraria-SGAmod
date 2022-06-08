@@ -32,18 +32,18 @@ namespace SGAmod.Items.Placeable
 		}
 
 		public override void SetDefaults() {
-			item.useStyle = 1;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.consumable = true;
-			item.createTile = SGAmod.Instance.TileType(internalname);
-			item.width = 24;
-			item.height = 24;
-			item.rare = 4;
-			item.value = 100000;
-			item.accessory = true;
+			Item.useStyle = 1;
+			Item.useTurn = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.autoReuse = true;
+			Item.consumable = true;
+			Item.createTile = SGAmod.Instance.Find<ModTile>(internalname).Type;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = 4;
+			Item.value = 100000;
+			Item.accessory = true;
 		}
 		public override bool Autoload(ref string name)
 		{
@@ -56,7 +56,7 @@ namespace SGAmod.Tiles
 {
 	public class SGATileMusicBox : ModTile
 	{
-		int itemID => SGAmod.Instance.ItemType(internalname);
+		int itemID => SGAmod.Instance.Find<ModItem>(internalname).Type;
 		string internalname;
 
 		public SGATileMusicBox(string internalname2)
@@ -71,7 +71,7 @@ namespace SGAmod.Tiles
 		}
 
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileObsidianKill[Type] = true;

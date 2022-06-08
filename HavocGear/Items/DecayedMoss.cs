@@ -9,16 +9,16 @@ namespace SGAmod.HavocGear.Items
         public override void SetDefaults()
         {
 
-            item.width = 22;
-            item.height = 22;
-            item.maxStack = 99;
+            Item.width = 22;
+            Item.height = 22;
+            Item.maxStack = 99;
 
-            item.rare = 1;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
-            item.UseSound = SoundID.Item81;
-            item.consumable = true;
+            Item.rare = 1;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = 1;
+            Item.UseSound = SoundID.Item81;
+            Item.consumable = true;
         }
 
         public override void SetStaticDefaults()
@@ -30,10 +30,10 @@ namespace SGAmod.HavocGear.Items
 
         public override bool CanUseItem(Player player)
         {
-            return TileLoader.IsSapling(Main.tile[Player.tileTargetX, Player.tileTargetY].type);
+            return TileLoader.IsSapling(Main.tile[Player.tileTargetX, Player.tileTargetY].TileType);
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             if (WorldGen.GrowTree(Player.tileTargetX, Player.tileTargetY))
             {
@@ -47,14 +47,7 @@ namespace SGAmod.HavocGear.Items
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<Biomass>(), 2);
-            recipe.AddIngredient(ModContent.ItemType<MoistSand>(), 4);
-            recipe.AddIngredient(ModContent.ItemType<Weapons.SwampSeeds>(), 6);
-            recipe.AddIngredient(ModContent.ItemType<DankCore>(), 1);
-            recipe.AddTile(TileID.AlchemyTable);
-            recipe.SetResult(this, 12);
-            recipe.AddRecipe();
+            CreateRecipe(12).AddIngredient(ModContent.ItemType<Biomass>(), 2).AddIngredient(ModContent.ItemType<MoistSand>(), 4).AddIngredient(ModContent.ItemType<Weapons.SwampSeeds>(), 6).AddIngredient(ModContent.ItemType<DankCore>(), 1).AddTile(TileID.AlchemyTable).Register();
         }
 
     }

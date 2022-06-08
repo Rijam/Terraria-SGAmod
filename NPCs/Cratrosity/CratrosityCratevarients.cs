@@ -87,15 +87,15 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void AI()
 		{
 			base.AI();
-			int npctype = mod.NPCType("Cratrosity");
+			int npctype = Mod.Find<ModNPC>("Cratrosity").Type;
 			if (NPC.CountNPCS(npctype) > 0)
 			{
 				NPC myowner = Main.npc[NPC.FindFirstNPC(npctype)];
-				npc.ai[0] += Main.rand.Next(0, 4);
-				if (myowner.ai[0] % 10 == 0 && npc.ai[0] % 300 < 90)
+				NPC.ai[0] += Main.rand.Next(0, 4);
+				if (myowner.ai[0] % 10 == 0 && NPC.ai[0] % 300 < 90)
 				{
 					Player P = Main.player[myowner.target];
-					List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingPlatinumCoin>(), 30, 8, 0, 1, true, 0, false, 220);
+					List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingPlatinumCoin>(), 30, 8, 0, 1, true, 0, false, 220);
 					itz[0].aiStyle = 5;
 				}
 			}
@@ -134,10 +134,10 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void AI()
 		{
-			int spawnedint = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Cratrosity"));
+			int spawnedint = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("Cratrosity").Type);
 			NPC spawned = Main.npc[spawnedint];
 			spawned.ai[3] = 300001;
-			npc.active = false;
+			NPC.active = false;
 		}
 
 
@@ -156,15 +156,15 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void AI()
 		{
-	int spawnedint=NPC.NewNPC((int)npc.Center.X,(int)npc.Center.Y, mod.NPCType("Cratrosity"));
+	int spawnedint=NPC.NewNPC((int)NPC.Center.X,(int)NPC.Center.Y, Mod.Find<ModNPC>("Cratrosity").Type);
 	NPC spawned=Main.npc[spawnedint];
 spawned.ai[3]=100001;
-			if (NPC.CountNPCS(mod.NPCType("Cratrogeddon")) > 0)
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("Cratrogeddon").Type) > 0)
 			{
-				(spawned.modNPC as Cratrosity).offsetype = new Vector2(-700, 0);
+				(spawned.ModNPC as Cratrosity).offsetype = new Vector2(-700, 0);
 				spawned.GivenName = "Pride";
 			}
-npc.active=false;
+NPC.active=false;
 	}
 
 
@@ -173,15 +173,15 @@ npc.active=false;
 	{
 		public override void AI()
 		{
-	int spawnedint=NPC.NewNPC((int)npc.Center.X,(int)npc.Center.Y, mod.NPCType("Cratrosity"));
+	int spawnedint=NPC.NewNPC((int)NPC.Center.X,(int)NPC.Center.Y, Mod.Find<ModNPC>("Cratrosity").Type);
 	NPC spawned=Main.npc[spawnedint];
 spawned.ai[3]=-100001;
-			if (NPC.CountNPCS(mod.NPCType("Cratrogeddon")) > 0)
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("Cratrogeddon").Type) > 0)
 			{
-				(spawned.modNPC as Cratrosity).offsetype = new Vector2(700, 0);
+				(spawned.ModNPC as Cratrosity).offsetype = new Vector2(700, 0);
 				spawned.GivenName = "Accomplishment";
 			}
-			npc.active = false;
+			NPC.active = false;
 		}
 
 	}
@@ -193,16 +193,16 @@ spawned.ai[3]=-100001;
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cratrogeddon");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 
 		public override void AI()
 		{
-	int spawnedint=NPC.NewNPC((int)npc.Center.X,(int)npc.Center.Y, mod.NPCType("Cratrogeddon"));
+	int spawnedint=NPC.NewNPC((int)NPC.Center.X,(int)NPC.Center.Y, Mod.Find<ModNPC>("Cratrogeddon").Type);
 	NPC spawned=Main.npc[spawnedint];
-Cratrosity origin = spawned.modNPC as Cratrosity;
+Cratrosity origin = spawned.ModNPC as Cratrosity;
 origin.postmoonlord=1;
-npc.active=false;
+NPC.active=false;
 	}
 
 	}

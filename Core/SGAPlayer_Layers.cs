@@ -22,14 +22,19 @@ using SGAmod.NPCs.Murk;
 using SGAmod.NPCs.Sharkvern;
 using SGAmod.NPCs.SpiderQueen;
 using SGAmod.NPCs.Hellion;
-using CalamityMod;
+//using CalamityMod;
 
 using Terraria.Utilities;
 using SGAmod.SkillTree;
 
 namespace SGAmod
 {
-		public partial class SGAPlayer : ModPlayer
+	//Just gonna comment this all out.
+	//Modders previously using PlayerLayer and ModPlayer.ModifyDrawLayers will now have to adapt to the replacements:
+	//PlayerDrawLayer, ModPlayer.HideDrawLayers, and ModPlayer.ModifyDrawLayerOrdering.
+	//https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#player-drawing
+	/*
+	public partial class SGAPlayer : ModPlayer
 	{
 
 		public static readonly PlayerLayer WaveBeamArm = new PlayerLayer("SGAmod", "WaveBeamArm", PlayerLayer.Arms, delegate (PlayerDrawInfo drawInfo)
@@ -40,7 +45,7 @@ namespace SGAmod
 
 				//better version, from Qwerty's Mod
 				Color color = drawInfo.bodyColor;
-				Texture2D texture = mod.GetTexture("Items/Armors/BeamArms");
+				Texture2D texture = mod.Assets.Request<Texture2D>("Items/Armors/BeamArms").Value;
 					int drawX = (int)((drawInfo.position.X+drawPlayer.bodyPosition.X+10) - Main.screenPosition.X);
 					int drawY = (int)(((drawPlayer.bodyPosition.Y-4)+drawPlayer.MountedCenter.Y) - Main.screenPosition.Y);//gravDir 
 					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), new Rectangle(0,drawPlayer.bodyFrame.Y,drawPlayer.bodyFrame.Width,drawPlayer.bodyFrame.Height), color, (float)drawPlayer.fullRotation, new Vector2(drawPlayer.bodyFrame.Width/2,drawPlayer.bodyFrame.Height/2), 1f, (drawPlayer.direction==-1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (drawPlayer.gravDir>0 ? SpriteEffects.None : SpriteEffects.FlipVertically), 0);
@@ -56,7 +61,7 @@ namespace SGAmod
 				//better version, from Qwerty's Mod
 				Color color = drawInfo.bodyColor;
 
-				Texture2D texture = mod.GetTexture("Items/Accessories/PrismalAirTank_Back");
+				Texture2D texture = mod.Assets.Request<Texture2D>("Items/Accessories/PrismalAirTank_Back").Value;
 					int drawX = (int)((drawInfo.position.X+drawPlayer.bodyPosition.X+10) - Main.screenPosition.X);
 					int drawY = (int)(((drawPlayer.bodyPosition.Y-4)+drawPlayer.MountedCenter.Y) - Main.screenPosition.Y);//gravDir 
 					DrawData data = new DrawData(texture, new Vector2(drawX, drawY), new Rectangle(0,drawPlayer.bodyFrame.Y,drawPlayer.bodyFrame.Width,drawPlayer.bodyFrame.Height), color, (float)drawPlayer.fullRotation, new Vector2(drawPlayer.bodyFrame.Width/2,drawPlayer.bodyFrame.Height/2), 1f, (drawPlayer.direction==-1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (drawPlayer.gravDir>0 ? SpriteEffects.None : SpriteEffects.FlipVertically), 0);
@@ -177,7 +182,7 @@ namespace SGAmod
 					{
 						//percent += (1f-ff);
 
-						Matrix mxatrix = Matrix.CreateRotationY((Main.GlobalTime * 2f) + (percent + (ff))) * Matrix.CreateRotationZ(((i / (float)activestacks) * MathHelper.TwoPi) + ((Main.GlobalTime)* rand2));
+						Matrix mxatrix = Matrix.CreateRotationY((Main.GlobalTimeWrappedHourly * 2f) + (percent + (ff))) * Matrix.CreateRotationZ(((i / (float)activestacks) * MathHelper.TwoPi) + ((Main.GlobalTimeWrappedHourly)* rand2));
 						Vector3 vec3 = Vector3.Transform(Vector3.UnitX, mxatrix);
 						float alpha = 1f;
 						if (modply.CooldownStacks.Count >= i)
@@ -192,7 +197,7 @@ namespace SGAmod
 
 				if (whichone.Count > 0)
 				{
-					Texture2D texture = SGAmod.Instance.GetTexture(glow ? "Glow" : "Extra_57b");
+					Texture2D texture = SGAmod.Instance.Assets.Request<Texture2D>(glow ? "Glow" : "Extra_57b").Value;
 
 					for (int a = 0; a < whichone.Count; a += 1)
 					{
@@ -310,11 +315,11 @@ namespace SGAmod
 
 			if (modply.armorglowmasks[index] != null)// && !drawPlayer.mount.Active)
 			{
-				Texture2D texture = ModContent.GetTexture(modply.armorglowmasks[index]);
+				Texture2D texture = ModContent.Request<Texture2D>(modply.armorglowmasks[index]);
 
 				if (index == 1 && !drawPlayer.Male && modply.armorglowmasks[4] != null)
 				{
-					texture = ModContent.GetTexture(modply.armorglowmasks[4]);
+					texture = ModContent.Request<Texture2D>(modply.armorglowmasks[4]);
 				}
 
 				int drawX = (int)((drawInfo.position.X + drawPlayer.bodyPosition.X + 10) - Main.screenPosition.X);
@@ -344,9 +349,9 @@ namespace SGAmod
 					{
 						for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.Pi / 8f)
 						{
-							float distance = (2f + (float)Math.Sin(Main.GlobalTime * 3f) * 2f)+(20f * (modply.valkyrieSet.Item4-0.25f));
-							float drawX2 = (float)(drawX + Math.Cos(Main.GlobalTime + f) * distance);
-							float drawY2 = (float)(drawY + Math.Sin(Main.GlobalTime + f) * distance)+drawPlayer.gfxOffY;
+							float distance = (2f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 2f)+(20f * (modply.valkyrieSet.Item4-0.25f));
+							float drawX2 = (float)(drawX + Math.Cos(Main.GlobalTimeWrappedHourly + f) * distance);
+							float drawY2 = (float)(drawY + Math.Sin(Main.GlobalTimeWrappedHourly + f) * distance)+drawPlayer.gfxOffY;
 
 							Color colorz = Color.White * MathHelper.Clamp(drawPlayer.buffTime[indexer] / 200f, 0f, 1f);
 
@@ -361,22 +366,22 @@ namespace SGAmod
 
 		}
 
-		public override void ModifyDrawLayers(List<PlayerLayer> layers)
+        public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
 		{
 			//plasmaLeftInClip
-			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
+			SGAPlayer sgaplayer = Player.GetModPlayer<SGAPlayer>();
 
 			#region MiscVisuals
 
 			if (sgaplayer.SpaceDiverset && CustomWings<1)
-			{
+			{*/
 			/*int wingsLayer = layers.FindIndex(PlayerLayer => PlayerLayer.Name.Equals("Wings"));
 			int backacclayer = layers.FindIndex(PlayerLayer => PlayerLayer.Name.Equals("BackAcc"));
 			if (SpaceDiverWings < 0.6f)
 			layers.RemoveAt(wingsLayer);
 			SpaceDiverTank.visible = true;
 			layers.Insert(backacclayer, SpaceDiverTank);*/
-			}
+			/*}
 
 			//Main.NewText(sgaplayer.CustomWings);
 			if (sgaplayer.CustomWings>0)
@@ -409,7 +414,7 @@ namespace SGAmod
 				}
 			}
 
-			if (player.HeldItem.type == mod.ItemType("WaveBeam"))
+			if (Player.HeldItem.type == Mod.Find<ModItem>("WaveBeam").Type)
 			{
 				int armLayer2 = layers.FindIndex(PlayerLayer => PlayerLayer.Name.Equals("HandOnAcc"));
 				if (armLayer2 >= 0)
@@ -452,11 +457,11 @@ namespace SGAmod
 				}
 			}
 
-			if (player.mount != null && player.mount.Active)
+			if (Player.mount != null && Player.mount.Active)
 			{
 				int armsLayer = layers.FindIndex(PlayerLayer => PlayerLayer.Name.Equals("MountFront"));
 				//hjgkhj
-				if (armsLayer >= 0 && player.mount.Type == ModContent.MountType<Items.Mounts.GeneralsArmchairMount>())
+				if (armsLayer >= 0 && Player.mount.Type == ModContent.MountType<Items.Mounts.GeneralsArmchairMount>())
 				{
 					layers.Insert(layers.Count - 1, Items.Mounts.GeneralsArmchairMount.GeneralChair);
 				}
@@ -471,7 +476,7 @@ namespace SGAmod
 			for (int intc = 0; intc < 4; intc += 1)
 			{
 				int oneToLookAt = intc;
-				if (intc == 1 && !player.Male)//Use Female glowmask instead of the male one
+				if (intc == 1 && !Player.Male)//Use Female glowmask instead of the male one
 				{
 					oneToLookAt = 4;
 				}
@@ -508,6 +513,6 @@ namespace SGAmod
 
         }
 
-    }
+    }*/
 
 }

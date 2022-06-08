@@ -36,21 +36,21 @@ namespace SGAmod.NPCs.Sharkvern
 		
 		public override void SetDefaults()
         {
-            npc.width = 52;     
-            npc.height = 66;    
-            npc.damage = 25;
-            npc.defense = 5;
-            npc.lifeMax = 27000;
-            npc.knockBackResist = 0.0f;
-            npc.behindTiles = true;
-            npc.noTileCollide = true;
-            npc.netAlways = true;
-            npc.noGravity = true;
-            npc.dontCountMe = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.chaseable = true;
-            npc.lavaImmune = false;
-            npc.aiStyle = -1;
+            NPC.width = 52;     
+            NPC.height = 66;    
+            NPC.damage = 25;
+            NPC.defense = 5;
+            NPC.lifeMax = 27000;
+            NPC.knockBackResist = 0.0f;
+            NPC.behindTiles = true;
+            NPC.noTileCollide = true;
+            NPC.netAlways = true;
+            NPC.noGravity = true;
+            NPC.dontCountMe = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.chaseable = true;
+            NPC.lavaImmune = false;
+            NPC.aiStyle = -1;
         }
 
         public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -62,9 +62,9 @@ namespace SGAmod.NPCs.Sharkvern
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
-                Gore.NewGore(npc.Center + new Vector2(0, 0), npc.velocity / 2f, mod.GetGoreSlot("Gores/Sharkvern_tail_gib"), 1f);
+                Gore.NewGore(NPC.Center + new Vector2(0, 0), NPC.velocity / 2f, Mod.GetGoreSlot("Gores/Sharkvern_tail_gib"), 1f);
             }
         }
 
@@ -75,11 +75,11 @@ namespace SGAmod.NPCs.Sharkvern
 
         public override bool CheckActive()
         {
-            return !Main.npc[(int)npc.ai[3]].active;
+            return !Main.npc[(int)NPC.ai[3]].active;
         }
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
-            return !npc.dontTakeDamage;
+            return !NPC.dontTakeDamage;
         }
 
         public static void DoDust(NPC npc)
@@ -88,7 +88,7 @@ namespace SGAmod.NPCs.Sharkvern
             float angle = MathHelper.TwoPi * devider;
             Vector2 thecenter = new Vector2((float)((Math.Cos(angle) * 80)), (float)((Math.Sin(angle) * 80)));
             thecenter = thecenter.RotatedByRandom(MathHelper.ToRadians(20));
-            int DustID2 = Dust.NewDust(npc.Center + (thecenter * 2.5f), 0, 0, SGAmod.Instance.DustType("TornadoDust"), thecenter.X * 0.8f, thecenter.X * 0.8f, 255-(int)(npc.Opacity*255f), default(Color), 1.5f);
+            int DustID2 = Dust.NewDust(npc.Center + (thecenter * 2.5f), 0, 0, SGAmod.Instance.Find<ModDust>("TornadoDust").Type, thecenter.X * 0.8f, thecenter.X * 0.8f, 255-(int)(npc.Opacity*255f), default(Color), 1.5f);
             Main.dust[DustID2].noGravity = true;
             Main.dust[DustID2].velocity = new Vector2(thecenter.X * 0.2f, thecenter.Y * 0.2f) * -1f;
 
@@ -98,54 +98,54 @@ namespace SGAmod.NPCs.Sharkvern
         {
             //npc.AddBuff(ModContent.BuffType<Buffs.LavaBurn>(),900);
 
-            npc.Opacity = MathHelper.Clamp(npc.Opacity + (npc.dontTakeDamage ? -0.01f : 0.02f), 0.2f, 1f);
+            NPC.Opacity = MathHelper.Clamp(NPC.Opacity + (NPC.dontTakeDamage ? -0.01f : 0.02f), 0.2f, 1f);
 
-            if (npc.ai[3] > 0)
-                npc.realLife = (int)npc.ai[3];
-            if (npc.target < 0 || npc.target == byte.MaxValue || Main.player[npc.target].dead)
-                npc.TargetClosest(true);
-            if (!Main.npc[(int)npc.ai[3]].active){
-            npc.timeLeft = 0;
-            npc.active=false;
-          }else{npc.timeLeft=500;}
+            if (NPC.ai[3] > 0)
+                NPC.realLife = (int)NPC.ai[3];
+            if (NPC.target < 0 || NPC.target == byte.MaxValue || Main.player[NPC.target].dead)
+                NPC.TargetClosest(true);
+            if (!Main.npc[(int)NPC.ai[3]].active){
+            NPC.timeLeft = 0;
+            NPC.active=false;
+          }else{NPC.timeLeft=500;}
 
             if (Main.netMode != 1)
             {
-                if (!Main.npc[(int)npc.ai[1]].active)
+                if (!Main.npc[(int)NPC.ai[1]].active)
                 {
-                    npc.life = 0;
-                    npc.HitEffect(0, 10.0);
-                    npc.active = false;
+                    NPC.life = 0;
+                    NPC.HitEffect(0, 10.0);
+                    NPC.active = false;
                 }
             }
 
-            npc.dontTakeDamage = Main.npc[(int)npc.ai[1]].dontTakeDamage;
-            if (npc.dontTakeDamage)
-                DoDust(npc);
+            NPC.dontTakeDamage = Main.npc[(int)NPC.ai[1]].dontTakeDamage;
+            if (NPC.dontTakeDamage)
+                DoDust(NPC);
 
-            if (npc.ai[1] < (double)Main.npc.Length)
+            if (NPC.ai[1] < (double)Main.npc.Length)
             {
                
-                Vector2 npcCenter = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
+                Vector2 npcCenter = new Vector2(NPC.position.X + (float)NPC.width * 0.5f, NPC.position.Y + (float)NPC.height * 0.5f);
                
-                float dirX = Main.npc[(int)npc.ai[1]].position.X + (float)(Main.npc[(int)npc.ai[1]].width / 2) - npcCenter.X;
-                float dirY = Main.npc[(int)npc.ai[1]].position.Y + (float)(Main.npc[(int)npc.ai[1]].height / 2) - npcCenter.Y;
+                float dirX = Main.npc[(int)NPC.ai[1]].position.X + (float)(Main.npc[(int)NPC.ai[1]].width / 2) - npcCenter.X;
+                float dirY = Main.npc[(int)NPC.ai[1]].position.Y + (float)(Main.npc[(int)NPC.ai[1]].height / 2) - npcCenter.Y;
                 KeepUpright(dirX,dirY);
-                npc.rotation = (float)Math.Atan2(dirY, dirX) + 1.57f;
+                NPC.rotation = (float)Math.Atan2(dirY, dirX) + 1.57f;
                 float length = (float)Math.Sqrt(dirX * dirX + dirY * dirY);
-                float dist = (length - (float)npc.width) / length;
+                float dist = (length - (float)NPC.width) / length;
                 float posX = dirX * dist;
                 float posY = dirY * dist;
-                npc.velocity = Vector2.Zero;
-                npc.position.X = npc.position.X + posX;
-                npc.position.Y = npc.position.Y + posY;
+                NPC.velocity = Vector2.Zero;
+                NPC.position.X = NPC.position.X + posX;
+                NPC.position.Y = NPC.position.Y + posY;
             }
             return false;
         }
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = Main.npcTexture[npc.type];
+            Texture2D texture = Main.npcTexture[NPC.type];
             Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
             //Main.spriteBatch.Draw(texture, npc.Center - Main.screenPosition, new Rectangle?(), drawColor*npc.Opacity, npc.rotation, origin, npc.scale,localdist.X>0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return false;
@@ -171,21 +171,21 @@ namespace SGAmod.NPCs.Sharkvern
 
         public override void SetDefaults()
         {
-            npc.width = 52;
-            npc.height = 48;
-            npc.damage = 36;
-            npc.defense = 25;
-            npc.lifeMax = 27000;
-            npc.knockBackResist = 0.0f;
-            npc.behindTiles = true;
-            npc.noTileCollide = true;
-            npc.netAlways = true;
-            npc.noGravity = true;
-            npc.dontCountMe = true;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.chaseable = false;
-            npc.lavaImmune = false;
-            npc.aiStyle = -1;
+            NPC.width = 52;
+            NPC.height = 48;
+            NPC.damage = 36;
+            NPC.defense = 25;
+            NPC.lifeMax = 27000;
+            NPC.knockBackResist = 0.0f;
+            NPC.behindTiles = true;
+            NPC.noTileCollide = true;
+            NPC.netAlways = true;
+            NPC.noGravity = true;
+            NPC.dontCountMe = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.chaseable = false;
+            NPC.lavaImmune = false;
+            NPC.aiStyle = -1;
         }
 
         public override bool PreAI()
@@ -196,35 +196,35 @@ namespace SGAmod.NPCs.Sharkvern
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
                 if (GetType() == typeof(SharkvernBody))
-                    Gore.NewGore(npc.Center + new Vector2(0, 0), npc.velocity / 2f, mod.GetGoreSlot("Gores/Sharkvern_body_gib"), 1f);
+                    Gore.NewGore(NPC.Center + new Vector2(0, 0), NPC.velocity / 2f, Mod.GetGoreSlot("Gores/Sharkvern_body_gib"), 1f);
 
                 if (GetType() == typeof(SharkvernNeck))
                 {
-                    Gore.NewGore(npc.Center + new Vector2(16, 0).RotatedBy(npc.rotation), npc.velocity / 2f, mod.GetGoreSlot("Gores/Sharkvern_body_gib"), 1f);
-                    Gore.NewGore(npc.Center + new Vector2(16, 0).RotatedBy(npc.rotation), npc.velocity / 2f, mod.GetGoreSlot("Gores/Sharkvern_fin_gib"), 1f);
+                    Gore.NewGore(NPC.Center + new Vector2(16, 0).RotatedBy(NPC.rotation), NPC.velocity / 2f, Mod.GetGoreSlot("Gores/Sharkvern_body_gib"), 1f);
+                    Gore.NewGore(NPC.Center + new Vector2(16, 0).RotatedBy(NPC.rotation), NPC.velocity / 2f, Mod.GetGoreSlot("Gores/Sharkvern_fin_gib"), 1f);
                 }
                 if (GetType() == typeof(SharkvernBody) || GetType() == typeof(SharkvernBody3))
-                    Gore.NewGore(npc.Center + new Vector2(0, 0), npc.velocity / 2f, mod.GetGoreSlot("Gores/Sharkvern_body_gib"), 1f);
+                    Gore.NewGore(NPC.Center + new Vector2(0, 0), NPC.velocity / 2f, Mod.GetGoreSlot("Gores/Sharkvern_body_gib"), 1f);
             }
 
-            if (npc.life > 0 && Main.netMode != 1 && Main.rand.Next(1) == 0)
+            if (NPC.life > 0 && Main.netMode != 1 && Main.rand.Next(1) == 0)
             {
-                SharkvernHead jawsbrain = Main.npc[(int)npc.ai[3]].modNPC as SharkvernHead;
-                float percent = Main.npc[(int)npc.ai[3]].life;
-                float percent2 = Main.npc[(int)npc.ai[3]].lifeMax;
+                SharkvernHead jawsbrain = Main.npc[(int)NPC.ai[3]].ModNPC as SharkvernHead;
+                float percent = Main.npc[(int)NPC.ai[3]].life;
+                float percent2 = Main.npc[(int)NPC.ai[3]].lifeMax;
                 if (jawsbrain.sergedout < 1 && (percent / percent2) < 0.8f)
                 {
                     jawsbrain.sergedout = (int)(60f * (8f + ((percent / percent2) * (Main.expertMode ? 15f : 25f))));
                     int randomSpawn = Main.rand.Next(0);
                     if (randomSpawn == 0)
                     {
-                        randomSpawn = mod.NPCType("AquaSurge");
+                        randomSpawn = Mod.Find<ModNPC>("AquaSurge").Type;
                     }
 
-                    int num660 = NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)(npc.position.Y + (float)npc.height), randomSpawn, 0, 0f, 0f, 0f, 0f, 255);
+                    int num660 = NPC.NewNPC((int)(NPC.position.X + (float)(NPC.width / 2)), (int)(NPC.position.Y + (float)NPC.height), randomSpawn, 0, 0f, 0f, 0f, 0f, 255);
                 }
             }
         }
@@ -242,11 +242,11 @@ namespace SGAmod.NPCs.Sharkvern
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.width = 52;             
-            npc.height = 54;           
-            npc.damage = 36;
-            npc.defense = 45;
-            npc.lifeMax = 27000;
+            NPC.width = 52;             
+            NPC.height = 54;           
+            NPC.damage = 36;
+            NPC.defense = 45;
+            NPC.lifeMax = 27000;
         }
 
     }
@@ -262,11 +262,11 @@ namespace SGAmod.NPCs.Sharkvern
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.width = 52;             
-            npc.height = 52;           
-            npc.damage = 36;
-            npc.defense = 45;
-            npc.lifeMax = 27000;
+            NPC.width = 52;             
+            NPC.height = 52;           
+            NPC.damage = 36;
+            NPC.defense = 45;
+            NPC.lifeMax = 27000;
         }
 
     }
@@ -287,17 +287,17 @@ namespace SGAmod.NPCs.Sharkvern
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.width = 52;             
-            npc.height = 56;           
-            npc.damage = 36;
-            npc.defense = 45;
-            npc.lifeMax = 27000;
+            NPC.width = 52;             
+            NPC.height = 56;           
+            NPC.damage = 36;
+            NPC.defense = 45;
+            NPC.lifeMax = 27000;
         }
 
         public override bool PreAI()
         {
         base.PreAI();
-            if (npc.ai[0] % 600 == 3)  //Npc spawn rate
+            if (NPC.ai[0] % 600 == 3)  //Npc spawn rate
             {
             //NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, mod.NPCType("DarkProbe"));  //NPC name
             }

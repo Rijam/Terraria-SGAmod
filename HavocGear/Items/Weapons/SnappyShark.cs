@@ -27,20 +27,20 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-	item.CloneDefaults(ItemID.Megashark);
-			item.damage = 35;
-			item.noMelee = true;
-			item.ranged = true;
-			item.width = 52;
-			item.height = 28;
-			item.useTime = 9;
-			item.knockBack = 4;
-			item.value = 10000;
-			item.rare = 5;
-			item.UseSound = SoundID.Item41;
-			item.autoReuse = true;
-            item.useAmmo = mod.ItemType("SharkTooth");
-			item.shoot = mod.ProjectileType("SnappyTooth");
+	Item.CloneDefaults(ItemID.Megashark);
+			Item.damage = 35;
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 52;
+			Item.height = 28;
+			Item.useTime = 9;
+			Item.knockBack = 4;
+			Item.value = 10000;
+			Item.rare = 5;
+			Item.UseSound = SoundID.Item41;
+			Item.autoReuse = true;
+            Item.useAmmo = Mod.Find<ModItem>("SharkTooth").Type;
+			Item.shoot = Mod.Find<ModProjectile>("SnappyTooth").Type;
 		}		
 
 		public override bool Shoot (Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

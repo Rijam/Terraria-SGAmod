@@ -22,44 +22,37 @@ namespace SGAmod.Items.Pets
 
         public override void SetDefaults()
         {
-            item.damage = 0;
-            item.useStyle = 1;
-            item.width = 16;
-            item.height = 30;
-            item.UseSound = SoundID.Item2;
-            item.useAnimation = 20;
-            item.useTime = 20;
-            item.rare = 4;
-            item.noMelee = true;
-            item.value = Item.sellPrice(0, 5, 0, 0);
-            item.shoot = mod.ProjectileType("HeartLanternPetProj");
-            item.buffType = mod.BuffType("HeartLanternPetBuff");
-            item.noUseGraphic = true;
+            Item.damage = 0;
+            Item.useStyle = 1;
+            Item.width = 16;
+            Item.height = 30;
+            Item.UseSound = SoundID.Item2;
+            Item.useAnimation = 20;
+            Item.useTime = 20;
+            Item.rare = 4;
+            Item.noMelee = true;
+            Item.value = Item.sellPrice(0, 5, 0, 0);
+            Item.shoot = Mod.Find<ModProjectile>("HeartLanternPetProj").Type;
+            Item.buffType = Mod.Find<ModBuff>("HeartLanternPetBuff").Type;
+            Item.noUseGraphic = true;
         }
 
         public override void UseStyle(Player player)
         {
             if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
             {
-                player.AddBuff(item.buffType, 3600, true);
+                player.AddBuff(Item.buffType, 3600, true);
             }
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.HeartLantern, 1);
-            recipe.AddIngredient(ItemID.DemonWings, 1);
-            recipe.AddIngredient(ItemID.SoulofNight, 5);
-            recipe.AddIngredient(mod.ItemType("VirulentBar"), 8);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.HeartLantern, 1).AddIngredient(ItemID.DemonWings, 1).AddIngredient(ItemID.SoulofNight, 5).AddIngredient(mod.ItemType("VirulentBar"), 8).AddTile(TileID.MythrilAnvil).Register();
         }
 
     }
         public class HeartLanternPetBuff : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Heart Lantern Pet");
             Description.SetDefault("Healing you, providing light, and keeping you comfort <3");
@@ -72,10 +65,10 @@ namespace SGAmod.Items.Pets
             player.buffTime[buffIndex] = 18000;
             //SGAPlayer modPlayer = (SGAPlayer)player.GetModPlayer(mod, "OphioidPlayer");
             //modPlayer.PetBuff = true;
-            bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("HeartLanternPetProj")] <= 0;
+            bool petProjectileNotSpawned = player.ownedProjectileCounts[Mod.Find<ModProjectile>("HeartLanternPetProj").Type] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {
-                Projectile.NewProjectile(player.position.X + (float)(player.width / 2), player.position.Y + (float)(player.height / 2), 0f, 0f, mod.ProjectileType("HeartLanternPetProj"), 0, 0f, player.whoAmI, 0f, 0f);
+                Projectile.NewProjectile(player.position.X + (float)(player.width / 2), player.position.Y + (float)(player.height / 2), 0f, 0f, Mod.Find<ModProjectile>("HeartLanternPetProj").Type, 0, 0f, player.whoAmI, 0f, 0f);
             }
         }
 
@@ -86,9 +79,9 @@ namespace SGAmod.Items.Pets
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("<3");
-            Main.projFrames[projectile.type] = 1;
-            Main.projPet[projectile.type] = true;
-            ProjectileID.Sets.LightPet[projectile.type] = true;
+            Main.projFrames[Projectile.type] = 1;
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.LightPet[Projectile.type] = true;
         }
 
         public override string Texture
@@ -98,11 +91,11 @@ namespace SGAmod.Items.Pets
 
         public override void SetDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.ZephyrFish);
-            aiType = ProjectileID.ZephyrFish;
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.netImportant = true;
+            Projectile.CloneDefaults(ProjectileID.ZephyrFish);
+            AIType = ProjectileID.ZephyrFish;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.netImportant = true;
         }
 
         public override bool PreAI()
@@ -111,7 +104,7 @@ namespace SGAmod.Items.Pets
                 {
                     if (Main.player[i].active && !Main.player[i].dead)
                     {
-                        if ((Main.player[i].Center - projectile.Center).Length() < 800)
+                        if ((Main.player[i].Center - Projectile.Center).Length() < 800)
                         {
                         //Main.player[i].AddBuff(BuffID.HeartLamp, 2);
                         if (!Main.player[i].HasBuff(BuffID.HeartLamp))
@@ -127,24 +120,24 @@ namespace SGAmod.Items.Pets
         public override void AI()
         {
 
-            projectile.localAI[0] += 1;
-            Player player = Main.player[projectile.owner];
-            Lighting.AddLight(projectile.Center,Color.Red.ToVector3());
-            if (player.HasBuff(mod.BuffType("HeartLanternPetBuff")))
+            Projectile.localAI[0] += 1;
+            Player player = Main.player[Projectile.owner];
+            Lighting.AddLight(Projectile.Center,Color.Red.ToVector3());
+            if (player.HasBuff(Mod.Find<ModBuff>("HeartLanternPetBuff").Type))
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
 
             //Teleport if too far away
-            Vector2 PlayPosProjPos = player.position - projectile.position;
+            Vector2 PlayPosProjPos = player.position - Projectile.position;
             float distance = PlayPosProjPos.Length();
             if (Main.myPlayer == player.whoAmI && distance > 1000f)
             {
                 // Whenever you deal with non-regular events that change the behavior or position drastically, make sure to only run the code on the owner of the projectile,
                 // and then set netUpdate to true
-                projectile.position = player.position;
-                projectile.velocity *= 0.1f;
-                projectile.netUpdate = true;
+                Projectile.position = player.position;
+                Projectile.velocity *= 0.1f;
+                Projectile.netUpdate = true;
             }
         }
 
@@ -153,11 +146,11 @@ namespace SGAmod.Items.Pets
 
             Texture2D tex = SGAmod.ExtraTextures[90];
             Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-            Vector2 drawPos = (((projectile.Center - Main.screenPosition)) + new Vector2(projectile.velocity.X > 0 ? -8f : -2f, 0f)*projectile.rotation.ToRotationVector2())+new Vector2(0f,-2f);
-            int timing = (int)(projectile.localAI[0] / 6f);
+            Vector2 drawPos = (((Projectile.Center - Main.screenPosition)) + new Vector2(Projectile.velocity.X > 0 ? -8f : -2f, 0f)*Projectile.rotation.ToRotationVector2())+new Vector2(0f,-2f);
+            int timing = (int)(Projectile.localAI[0] / 6f);
             timing %= 4;
             timing *= ((tex.Height) / 4);
-            spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), lightColor, projectile.rotation, drawOrigin, 0.75f, projectile.velocity.X>0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), lightColor, Projectile.rotation, drawOrigin, 0.75f, Projectile.velocity.X>0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             return true;
         }
 
@@ -174,26 +167,19 @@ namespace SGAmod.Items.Pets
         public override void SetDefaults()
         {
             base.SetDefaults();
-            item.shoot = mod.ProjectileType("StarinabottlePetProj");
-            item.buffType = mod.BuffType("StarinabottlePetBuff");
-            item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("StarinabottlePetProj").Type;
+            Item.buffType = Mod.Find<ModBuff>("StarinabottlePetBuff").Type;
+            Item.noUseGraphic = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.StarinaBottle, 1);
-            recipe.AddIngredient(ItemID.AngelWings, 1);
-            recipe.AddIngredient(ItemID.SoulofLight, 5);
-            recipe.AddIngredient(mod.ItemType("VirulentBar"), 8);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.StarinaBottle, 1).AddIngredient(ItemID.AngelWings, 1).AddIngredient(ItemID.SoulofLight, 5).AddIngredient(mod.ItemType("VirulentBar"), 8).AddTile(TileID.MythrilAnvil).Register();
         }
 
     }
     public class StarinabottlePetBuff : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("S.I.A.B Pet");
             Description.SetDefault("Providing you with light and your mates with some mana regen");
@@ -206,10 +192,10 @@ namespace SGAmod.Items.Pets
             player.buffTime[buffIndex] = 18000;
             //SGAPlayer modPlayer = (SGAPlayer)player.GetModPlayer(mod, "OphioidPlayer");
             //modPlayer.PetBuff = true;
-            bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("StarinabottlePetProj")] <= 0;
+            bool petProjectileNotSpawned = player.ownedProjectileCounts[Mod.Find<ModProjectile>("StarinabottlePetProj").Type] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {
-                Projectile.NewProjectile(player.position.X + (float)(player.width / 2), player.position.Y + (float)(player.height / 2), 0f, 0f, mod.ProjectileType("StarinabottlePetProj"), 0, 0f, player.whoAmI, 0f, 0f);
+                Projectile.NewProjectile(player.position.X + (float)(player.width / 2), player.position.Y + (float)(player.height / 2), 0f, 0f, Mod.Find<ModProjectile>("StarinabottlePetProj").Type, 0, 0f, player.whoAmI, 0f, 0f);
             }
         }
 
@@ -220,9 +206,9 @@ namespace SGAmod.Items.Pets
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("<3");
-            Main.projFrames[projectile.type] = 1;
-            Main.projPet[projectile.type] = true;
-            ProjectileID.Sets.LightPet[projectile.type] = true;
+            Main.projFrames[Projectile.type] = 1;
+            Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.LightPet[Projectile.type] = true;
         }
 
         public override string Texture
@@ -232,11 +218,11 @@ namespace SGAmod.Items.Pets
 
         public override void SetDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.ZephyrFish);
-            aiType = ProjectileID.ZephyrFish;
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.netImportant = true;
+            Projectile.CloneDefaults(ProjectileID.ZephyrFish);
+            AIType = ProjectileID.ZephyrFish;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.netImportant = true;
         }
 
         public override bool PreAI()
@@ -245,7 +231,7 @@ namespace SGAmod.Items.Pets
             {
                 if (Main.player[i].active && !Main.player[i].dead)
                 {
-                    if ((Main.player[i].Center - projectile.Center).Length() < 800)
+                    if ((Main.player[i].Center - Projectile.Center).Length() < 800)
                     {
                         //Main.player[i].AddBuff(BuffID.HeartLamp, 2);
                         if (!Main.player[i].HasBuff(BuffID.StarInBottle))
@@ -261,24 +247,24 @@ namespace SGAmod.Items.Pets
         public override void AI()
         {
 
-            projectile.localAI[0] += 1;
-            Player player = Main.player[projectile.owner];
-            Lighting.AddLight(projectile.Center, Color.Yellow.ToVector3());
-            if (player.HasBuff(mod.BuffType("StarinabottlePetBuff")))
+            Projectile.localAI[0] += 1;
+            Player player = Main.player[Projectile.owner];
+            Lighting.AddLight(Projectile.Center, Color.Yellow.ToVector3());
+            if (player.HasBuff(Mod.Find<ModBuff>("StarinabottlePetBuff").Type))
             {
-                projectile.timeLeft = 2;
+                Projectile.timeLeft = 2;
             }
 
             //Teleport if too far away
-            Vector2 PlayPosProjPos = player.position - projectile.position;
+            Vector2 PlayPosProjPos = player.position - Projectile.position;
             float distance = PlayPosProjPos.Length();
             if (Main.myPlayer == player.whoAmI && distance > 1000f)
             {
                 // Whenever you deal with non-regular events that change the behavior or position drastically, make sure to only run the code on the owner of the projectile,
                 // and then set netUpdate to true
-                projectile.position = player.position;
-                projectile.velocity *= 0.1f;
-                projectile.netUpdate = true;
+                Projectile.position = player.position;
+                Projectile.velocity *= 0.1f;
+                Projectile.netUpdate = true;
             }
         }
 
@@ -287,11 +273,11 @@ namespace SGAmod.Items.Pets
 
             Texture2D tex = SGAmod.ExtraTextures[91];
             Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-            Vector2 drawPos = (((projectile.Center - Main.screenPosition)) + new Vector2(projectile.velocity.X > 0 ? -8f : -2f, 0f) * projectile.rotation.ToRotationVector2()) + new Vector2(0f, -2f);
-            int timing = (int)(projectile.localAI[0] / 6f);
+            Vector2 drawPos = (((Projectile.Center - Main.screenPosition)) + new Vector2(Projectile.velocity.X > 0 ? -8f : -2f, 0f) * Projectile.rotation.ToRotationVector2()) + new Vector2(0f, -2f);
+            int timing = (int)(Projectile.localAI[0] / 6f);
             timing %= 4;
             timing *= ((tex.Height) / 4);
-            spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), lightColor, projectile.rotation, drawOrigin, 0.75f, projectile.velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), lightColor, Projectile.rotation, drawOrigin, 0.75f, Projectile.velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             return true;
         }
 

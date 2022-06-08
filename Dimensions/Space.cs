@@ -8,7 +8,7 @@ using Terraria.GameContent.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,6 +30,7 @@ using SGAmod.Dimensions.Tiles;
 using SGAmod.Tiles.Monolith;
 using SGAmod.Items.Accessories;
 using SGAmod.Dimensions.Walls;
+using Terraria.Audio;
 
 namespace SGAmod.Dimensions
 {
@@ -280,7 +281,7 @@ namespace SGAmod.Dimensions
                 if (crystal != null)
                 {
                     focusCrystal = crystal;
-                    StationFocusCrystal cryrs = crystal.modNPC as StationFocusCrystal;
+                    StationFocusCrystal cryrs = crystal.ModNPC as StationFocusCrystal;
                     cryrs.station = this;
                 }
             }
@@ -304,7 +305,7 @@ namespace SGAmod.Dimensions
 
         public virtual bool CanOverrideTile(Tile tile)
         {
-            return tile.type == tileType || tile.type == tileTypeInside || tile.type == tileTypeLight;
+            return tile.TileType == tileType || tile.TileType == tileTypeInside || tile.TileType == tileTypeLight;
         }
         private void SpawnSecurity()
         {
@@ -366,7 +367,7 @@ namespace SGAmod.Dimensions
                 {
                     if (loopingSiren == default || loopingSiren.State != SoundState.Playing)
                     {
-                        loopingSiren = Main.PlaySound(SGAmod.Instance.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/"+loopsnd).WithVolume(0.4f).WithPitchVariance(.10f), position);
+                        loopingSiren = SoundEngine.PlaySound(SGAmod.Instance.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/"+loopsnd).WithVolume(0.4f).WithPitchVariance(.10f), position);
                     }
                 }
 
@@ -378,8 +379,8 @@ namespace SGAmod.Dimensions
             if (securitySpawned.Count > 0)
             {
                 Effect effect = SGAmod.TextureBlendEffect;
-                Texture2D glowTex = SGAmod.Instance.GetTexture("Extra_49c");
-                Texture2D glowTex2 = SGAmod.Instance.GetTexture("Glow");
+                Texture2D glowTex = SGAmod.Instance.Assets.Request<Texture2D>("Extra_49c").Value;
+                Texture2D glowTex2 = SGAmod.Instance.Assets.Request<Texture2D>("Glow").Value;
 
                 for (int i = 0; i < 3; i += 1)
                 {
@@ -401,7 +402,7 @@ namespace SGAmod.Dimensions
                         effect.Parameters["noiseMultiplier"].SetValue(new Vector2(1f, 1f));
                         effect.Parameters["noiseOffset"].SetValue(new Vector2(0f, 0f));
 
-                        effect.Parameters["Texture"].SetValue(i == 1 ? SGAmod.Instance.GetTexture("ElectricFireNoColor") : SGAmod.Instance.GetTexture("LightBeam"));
+                        effect.Parameters["Texture"].SetValue(i == 1 ? SGAmod.Instance.Assets.Request<Texture2D>("ElectricFireNoColor") .Value: SGAmod.Instance.Assets.Request<Texture2D>("LightBeam").Value);
                         effect.Parameters["noiseTexture"].SetValue(glowTex);
                         effect.Parameters["textureProgress"].SetValue(0);
                         effect.Parameters["noiseBlendPercent"].SetValue(1f);
@@ -525,7 +526,7 @@ namespace SGAmod.Dimensions
                             Point loc = (thereAreThey / 16).ToPoint();
                             Tile tile = Framing.GetTileSafely(loc.X, loc.Y);
 
-                            if (!tile.active())
+                            if (!tile.HasTile)
                             {
                                 allOpen += 1;
                             }
@@ -567,7 +568,7 @@ namespace SGAmod.Dimensions
         {
             if (glassType == WallID.Glass)
             {
-                glassType = SGAmod.Instance.WallType("UnbreakableStainedGlass" + uniRand.Next(5));
+                glassType = SGAmod.Instance.Find<ModWall>("UnbreakableStainedGlass" + uniRand.Next(5)).Type;
             }
         }
 
@@ -659,7 +660,7 @@ namespace SGAmod.Dimensions
                         if (there.Item2 >= TileRangeWalkwayMin)
                         {
                             Tile tile = Framing.GetTileSafely((int)(there.Item1.X / 16), (int)(there.Item1.Y / 16));
-                            if (tile.wall < 1)
+                            if (tile.WallType < 1)
                             {
                                 walltype = there.Item2 >= TileRangeWalkwayHalf ? glassType : wallTypeConnector;
                             }
@@ -675,7 +676,7 @@ namespace SGAmod.Dimensions
                     float dister = (there.Item1 - centerPos).Length();
 
                     if (there.Item2 < 2 && Math.Sin(dister / 16f) > 0)
-                        Main.tile[(int)there.Item1.X / 16, (int)there.Item1.Y / 16].wall = (ushort)glassType;
+                        Main.tile[(int)there.Item1.X / 16, (int)there.Item1.Y / 16].WallType = (ushort)glassType;
 
                     for (int x = -thickness; x <= thickness; x += 1)
                     {
@@ -684,10 +685,10 @@ namespace SGAmod.Dimensions
                             Point vexx = (there.Item1 / 16).ToPoint();
                             Tile tile = Main.tile[vexx.X + x, vexx.Y + y];
 
-                            if (tile.type == tileType)
+                            if (tile.TileType == tileType)
                                 tile.color((byte)Paints.White);
 
-                            if (tile.type == tileTypeInside)
+                            if (tile.TileType == tileTypeInside)
                                 tile.color((byte)Paints.White);
                         }
                     }
@@ -713,9 +714,9 @@ namespace SGAmod.Dimensions
                         Point here = ((there.Item1 / 16) + new Vector2(0, -1)).ToPoint();
                         Tile theTile = Framing.GetTileSafely(here.X, here.Y);
 
-                        if (theTile.type == tileTypeInside)
+                        if (theTile.TileType == tileTypeInside)
                         {
-                            theTile.type = (ushort)tileTypeLight;
+                            theTile.TileType = (ushort)tileTypeLight;
 
                         }
 
@@ -733,7 +734,7 @@ namespace SGAmod.Dimensions
                         {
                             Point here = ((there.Item1 / 16) + herethere).ToPoint();
                             Tile theTile = Framing.GetTileSafely(here.X, here.Y);
-                            if (!theTile.active() && theTile.wall < 1)
+                            if (!theTile.HasTile && theTile.WallType < 1)
                             {
                                 foreach (Point line in IDGWorldGen.GetLine((there.Item1 / 16).ToPoint(), here))
                                 {
@@ -776,10 +777,10 @@ namespace SGAmod.Dimensions
 
                         Point here = new Point(opening.X + herethere.X, opening.Y + herethere.Y);
                         Tile theTile = Framing.GetTileSafely(here.X, here.Y);
-                        if (!theTile.active() && theTile.wall < 1 && theTileToBubble.wall < 1 && theTileToBubble.type == tileType)
+                        if (!theTile.HasTile && theTile.WallType < 1 && theTileToBubble.WallType < 1 && theTileToBubble.TileType == tileType)
                         {
-                            theTileToBubble.active(true);
-                            theTileToBubble.type = (ushort)tileBubbleType;
+                            theTileToBubble.HasTile;
+                            theTileToBubble.TileType = (ushort)tileBubbleType;
                             theTileToBubble.color((byte)PaintID.Teal);
                         }
                     }
@@ -792,9 +793,9 @@ namespace SGAmod.Dimensions
                         Point here = new Point(opening.X + herethere.X, opening.Y + herethere.Y);
                         Tile theTile = Framing.GetTileSafely(here.X, here.Y);
 
-                        if (theTileToBubble.type == tileTypeInside && theTile.type == tileBubbleType)
+                        if (theTileToBubble.TileType == tileTypeInside && theTile.TileType == tileBubbleType)
                         {
-                            theTileToBubble.wall = (ushort)wallTypeBubble;
+                            theTileToBubble.WallType = (ushort)wallTypeBubble;
                             theTileToBubble.wallColor((byte)PaintID.White);
                         }
                     }
@@ -820,8 +821,8 @@ namespace SGAmod.Dimensions
                     if (there.Item2  == TileRangeInnerDoors)
                     {
                         Tile door1Tile = tile;
-                        door1Tile.type = (ushort)tileTypeMainDoorTile;
-                        door1Tile.active(true);
+                        door1Tile.TileType = (ushort)tileTypeMainDoorTile;
+                        door1Tile.HasTile;
                         clearArea = false;
                     }
 
@@ -832,7 +833,7 @@ namespace SGAmod.Dimensions
 
                         if (clearArea)
                         {
-                            tile.active(false);
+                            tile.HasTile;
                         }
 
                         if (platformEdge.Contains(therePoint))
@@ -1053,8 +1054,8 @@ namespace SGAmod.Dimensions
                     Point therePoint = new Point((int)there.Item1.X / 16, (int)there.Item1.Y / 16);
                     Tile tile = Framing.GetTileSafely(therePoint.X, therePoint.Y);
 
-                    if (station.CanOverrideTile(tile) || Main.tileMerge[ModContent.TileType<Spacerock>()][tile.type])
-                        tile.active(false);
+                    if (station.CanOverrideTile(tile) || Main.tileMerge[ModContent.TileType<Spacerock>()][tile.TileType])
+                        tile.HasTile;
                 }
 
                 //place stuff
@@ -1068,11 +1069,11 @@ namespace SGAmod.Dimensions
                     Tile tileBelow = Framing.GetTileSafely(therePointBelow.X, therePointBelow.Y);
 
                     //On solid tiles only
-                    if ((Main.tileSolid[tileBelow.type]) && tileBelow.active())
+                    if ((Main.tileSolid[tileBelow.TileType]) && tileBelow.HasTile)
                         solidFloorsInThisStation.Add((therePoint, there.Item2));
 
                     //On Platforms only
-                    if ((Main.tileSolidTop[tileBelow.type]) && tileBelow.active())
+                    if ((Main.tileSolidTop[tileBelow.TileType]) && tileBelow.HasTile)
                         platformFloorsInThisStation.Add((therePoint, there.Item2));
 
                 }
@@ -1094,7 +1095,7 @@ namespace SGAmod.Dimensions
                     WorldGen.PlaceObject(floor.Item1.X, floor.Item1.Y, ModContent.TileType<CelestialMonolith>());
                     Tile tile = Framing.GetTileSafely(floor.Item1.X, floor.Item1.Y);
 
-                    if (tile.type == ModContent.TileType<CelestialMonolith>())
+                    if (tile.TileType == ModContent.TileType<CelestialMonolith>())
                     {
                         CelestialMonolithTE inst = ModContent.GetInstance<CelestialMonolithTE>();
 
@@ -1180,7 +1181,7 @@ namespace SGAmod.Dimensions
 
                 if (bossindex >= 0)
                 {
-                    SpaceBoss boss = Main.npc[bossindex]?.modNPC as SpaceBoss;
+                    SpaceBoss boss = Main.npc[bossindex]?.ModNPC as SpaceBoss;
                     if (boss != null && boss.WakingUpStartMusic)
                     {
                         return true;
@@ -1193,7 +1194,7 @@ namespace SGAmod.Dimensions
 
         public override Texture2D GetMapBackgroundImage()
         {
-            return SGAmod.Instance.GetTexture("SpaceMapBackground_NoSun");
+            return SGAmod.Instance.Assets.Request<Texture2D>("SpaceMapBackground_NoSun").Value;
         }
 
         public override int? Music
@@ -1355,7 +1356,7 @@ namespace SGAmod.Dimensions
                     int whereY = Math.Min(width, Math.Max(0, where.Y + y));
 
                     Tile tile = Framing.GetTileSafely(whereX, whereY);
-                    if (tile.active() && Main.tileSolid[tile.type])
+                    if (tile.HasTile && Main.tileSolid[tile.TileType])
                         ammount += 1;
                 }
             }
@@ -1433,8 +1434,8 @@ namespace SGAmod.Dimensions
                         {
                             Tile tile = Framing.GetTileSafely(x, y);
 
-                            if (tile.type == TileID.Adamantite)
-                                tile.type = myFragementOre;
+                            if (tile.TileType == TileID.Adamantite)
+                                tile.TileType = myFragementOre;
                             //tile.color((byte)Paints.DeepRed);
                         }
                     }
@@ -1470,16 +1471,16 @@ namespace SGAmod.Dimensions
                     for (int x = 0; x < Main.maxTilesX; x += 1)
                     {
                         Tile tile = Main.tile[x, y];
-                        bool asteriodRocks = tile.type == ModContent.TileType<Spacerock>() || tile.type == ModContent.TileType<Spacerock2>() || tile.type == ModContent.TileType<AstrialLuminite>() || tile.type == TileID.Meteorite
-                             || tile.type == TileID.LunarBlockSolar || tile.type == TileID.LunarBlockNebula || tile.type == TileID.LunarBlockVortex || tile.type == TileID.LunarBlockStardust;
+                        bool asteriodRocks = tile.TileType == ModContent.TileType<Spacerock>() || tile.TileType == ModContent.TileType<Spacerock2>() || tile.TileType == ModContent.TileType<AstrialLuminite>() || tile.TileType == TileID.Meteorite
+                             || tile.TileType == TileID.LunarBlockSolar || tile.TileType == TileID.LunarBlockNebula || tile.TileType == TileID.LunarBlockVortex || tile.TileType == TileID.LunarBlockStardust;
 
                         if (!asteriodRocks)
                             continue;
 
                         if (GetTilesAround(x, y, 1) > uniRand.Next(3, 6))
-                            Main.tile[x, y].active(true);
+                            Main.tile[x, y].HasTile;
                         else
-                            Main.tile[x, y].active(false);
+                            Main.tile[x, y].HasTile;
                     }
                 }
             }
@@ -1566,9 +1567,9 @@ namespace SGAmod.Dimensions
             {
                 for (int y = 0; y < height; y += 1)
                 {
-                    Main.tile[x, y].active(false);
-                    Main.tile[x, y].type = (ushort)ModContent.TileType<Spacerock2>();
-                    Main.tile[x, y].wall = 0;
+                    Main.tile[x, y].HasTile;
+                    Main.tile[x, y].TileType = (ushort)ModContent.TileType<Spacerock2>();
+                    Main.tile[x, y].WallType = 0;
 
                 }
             }
@@ -1632,8 +1633,8 @@ namespace SGAmod.Dimensions
             {
                 for (int yy = 0; yy < 2; yy += 1)
                 {
-                    Main.tile[Main.spawnTileX + xx, Main.spawnTileY + yy].type = TileID.MartianConduitPlating;
-                    Main.tile[Main.spawnTileX + xx, Main.spawnTileY + yy].active(true);
+                    Main.tile[Main.spawnTileX + xx, Main.spawnTileY + yy].TileType = TileID.MartianConduitPlating;
+                    Main.tile[Main.spawnTileX + xx, Main.spawnTileY + yy].HasTile;
                 }
             }
 
@@ -1722,7 +1723,7 @@ namespace SGAmod.Dimensions
 
             MakeSmallStations(UniRand);
 
-            EmptySpaces = EmptySpaces.Where(testby => rect.Contains(new Point((int)testby.X / 16, (int)testby.Y / 16)) && AsteriodDensity(new Point((int)testby.X / 16, (int)testby.Y / 16), 8) < 20 && Main.tile[(int)testby.X / 16, (int)testby.Y / 16].wall <= 0).ToList();
+            EmptySpaces = EmptySpaces.Where(testby => rect.Contains(new Point((int)testby.X / 16, (int)testby.Y / 16)) && AsteriodDensity(new Point((int)testby.X / 16, (int)testby.Y / 16), 8) < 20 && Main.tile[(int)testby.X / 16, (int)testby.Y / 16].WallType <= 0).ToList();
 
             //Cellular Crap
 
@@ -1903,7 +1904,7 @@ namespace SGAmod.Dimensions
         public override void Update(GameTime gameTime)
         {
             int bossIndex = NPC.FindFirstNPC(ModContent.NPCType<SpaceBoss>());
-            SpaceBoss boss = bossIndex >= 0 ? Main.npc[bossIndex].modNPC as SpaceBoss : null;
+            SpaceBoss boss = bossIndex >= 0 ? Main.npc[bossIndex].ModNPC as SpaceBoss : null;
 
             skyalpha = MathHelper.Clamp(skyalpha + (boss != null && boss.goingDark > 0 ? -0.0015f : 0.005f), 0f, 1f);
             darkalpha = MathHelper.Clamp(darkalpha + (boss != null && boss.goingDark > 0 ? 0.0025f : (boss != null && boss.DyingState ? -0.075f : -0.005f)), 0f, 1f);
@@ -1912,7 +1913,7 @@ namespace SGAmod.Dimensions
 
             if (boss != null && bossIndex >= 0 && !boss.DyingState)
             {
-                sunBossPosition = boss.npc.Center;
+                sunBossPosition = boss.NPC.Center;
                 sunIsApprouching = MathHelper.Clamp(1f - (boss.countdownToTheEnd / (100f * 60f)), 0f, 1f);
             }
             else
@@ -1952,8 +1953,8 @@ namespace SGAmod.Dimensions
             Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, identity);
 
             int bossIndex = NPC.FindFirstNPC(ModContent.NPCType<SpaceBoss>());
-            SpaceBoss boss = bossIndex >= 0 ? Main.npc[bossIndex].modNPC as SpaceBoss : null;
-            bool drawBoss = boss != null && boss.npc.active;
+            SpaceBoss boss = bossIndex >= 0 ? Main.npc[bossIndex].ModNPC as SpaceBoss : null;
+            bool drawBoss = boss != null && boss.NPC.active;
 
 
             VertexBuffer vertexBuffer;
@@ -1963,10 +1964,10 @@ namespace SGAmod.Dimensions
             for (int type = 0; type < 2; type += 1)
             {
 
-                Vector2 parallex = new Vector2(alwaysthesame.NextFloat(), alwaysthesame.NextFloat()) + (type == 0 ? Vector2.Zero : (new Vector2(Main.screenPosition.X, Main.screenPosition.Y * 2.5f) / 500000f));// new Vector2(Main.screenPosition.X / 9000f, -Main.GlobalTime * 0.1f);
+                Vector2 parallex = new Vector2(alwaysthesame.NextFloat(), alwaysthesame.NextFloat()) + (type == 0 ? Vector2.Zero : (new Vector2(Main.screenPosition.X, Main.screenPosition.Y * 2.5f) / 500000f));// new Vector2(Main.screenPosition.X / 9000f, -Main.GlobalTimeWrappedHourly * 0.1f);
 
                 effect.Parameters["WorldViewProjection"].SetValue(WVP.View(Vector2.One) * WVP.Projection());
-                effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.GetTexture(type == 0 ? "TiledPerlin" : "Space"));
+                effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>(type == 0 ? "TiledPerlin" : "Space").Value);
                 effect.Parameters["coordOffset"].SetValue(parallex);
                 effect.Parameters["coordMultiplier"].SetValue(new Vector2(0.25f, 0.45f));
                 effect.Parameters["strength"].SetValue(type == 0 ? 1f : 5f);
@@ -2077,7 +2078,7 @@ namespace SGAmod.Dimensions
                     float closenessScale = 1f + ((float)Math.Pow(((sunIsApprouching/30f)) * 500f, 4.80f) / 800f);
                     float closenessScale2 = closenessScale + ((float)Math.Pow(sunIsApprouching * 2500f, 1.20f) / 800f);
 
-                    Texture2D inner = SGAmod.Instance.GetTexture("Extra_57b");//Main.extraTexture[57];
+                    Texture2D inner = SGAmod.Instance.Assets.Request<Texture2D>("Extra_57b").Value;//Main.extraTexture[57];
 
 
                     Vector2 textureOrigin = new Vector2(inner.Width / 2, inner.Height / 2);
@@ -2086,7 +2087,7 @@ namespace SGAmod.Dimensions
 
                     for (float i = 0; i < 1f; i += 0.10f)
                     {
-                        spriteBatch.Draw(inner, sunPosition, null, ((lights * 0.6f * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.5f) * 0.50f) * skyalpha, i * MathHelper.TwoPi, textureOrigin, (2.5f * (0.5f + 3.00f * (((Main.GlobalTime / 2f) + i) % 1f))) * closenessScale2, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(inner, sunPosition, null, ((lights * 0.6f * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.5f) * 0.50f) * skyalpha, i * MathHelper.TwoPi, textureOrigin, (2.5f * (0.5f + 3.00f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f))) * closenessScale2, SpriteEffects.None, 0f);
                     }
 
                     Main.spriteBatch.End();
@@ -2103,16 +2104,16 @@ namespace SGAmod.Dimensions
 
                     if (alphaeffectSunShader > 0)
                     {
-                        Texture2D noise = ModContent.GetTexture("SGAmod/TiledPerlin");
+                        Texture2D noise = ModContent.Request<Texture2D>("SGAmod/TiledPerlin");
                         Vector2 sunspotmoved = sunPosition+new Vector2(1.6f, 1.6f);
                         Main.spriteBatch.End();
                         Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, identity);
 
                         Effect RadialEffect = SGAmod.RadialEffect;
 
-                        RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("Stain"));
+                        RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Stain").Value);
                         RadialEffect.Parameters["alpha"].SetValue(alphaeffectSunShader);
-                        RadialEffect.Parameters["texOffset"].SetValue(new Vector2(0,-Main.GlobalTime * 0.275f));
+                        RadialEffect.Parameters["texOffset"].SetValue(new Vector2(0,-Main.GlobalTimeWrappedHourly * 0.275f));
                         RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(1f, 0.5f));
                         RadialEffect.Parameters["ringScale"].SetValue(0.24f);
                         RadialEffect.Parameters["ringOffset"].SetValue(0.45f);
@@ -2125,9 +2126,9 @@ namespace SGAmod.Dimensions
 
                         for (float ff = -1f; ff < 2; ff += 2)
                         {
-                            RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("TrailEffect"));
+                            RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TrailEffect").Value);
                             RadialEffect.Parameters["alpha"].SetValue(alphaeffectSunRayShader);
-                            RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f*ff, (-Main.GlobalTime+(ff>0 ? 343 : 0)) * 0.750f));
+                            RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f*ff, (-Main.GlobalTimeWrappedHourly+(ff>0 ? 343 : 0)) * 0.750f));
                             RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(10f, 1.5f));
                             RadialEffect.Parameters["ringScale"].SetValue(0.70f);
                             RadialEffect.Parameters["ringOffset"].SetValue(0.40f);
@@ -2152,18 +2153,18 @@ namespace SGAmod.Dimensions
                         spriteBatch.Draw(noise, sunspotmoved, null, Color.White, 0, noise.Size() / 2f, 0.132f * closenessScale, SpriteEffects.None, 0f);
 
                         SGAmod.SphereMapEffect.Parameters["colorBlend"].SetValue(Color.Red.ToVector4() * alphaeffectSunShader * 0.25f);
-                        SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(ModContent.GetTexture("SGAmod/TiledPerlin"));
+                        SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(ModContent.Request<Texture2D>("SGAmod/TiledPerlin"));
                         SGAmod.SphereMapEffect.Parameters["mappedTextureMultiplier"].SetValue(new Vector2(0.5f, 0.5f));
-                        SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(Main.GlobalTime / 32f, 0));
+                        SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(Main.GlobalTimeWrappedHourly / 32f, 0));
 
                         SGAmod.SphereMapEffect.CurrentTechnique.Passes["SphereMapAlpha"].Apply();
 
                         spriteBatch.Draw(noise, sunspotmoved, null, Color.White, 0, noise.Size() / 2f, 0.132f * closenessScale, SpriteEffects.None, 0f);
 
                         SGAmod.SphereMapEffect.Parameters["colorBlend"].SetValue(Color.Orange.ToVector4() * alphaeffectSunShader*0.25f);
-                        SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(ModContent.GetTexture("SGAmod/Voronoi"));
+                        SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(ModContent.Request<Texture2D>("SGAmod/Voronoi"));
                         SGAmod.SphereMapEffect.Parameters["mappedTextureMultiplier"].SetValue(new Vector2(4f, 4f));
-                        SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(Main.GlobalTime / 20f, 0));
+                        SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(Main.GlobalTimeWrappedHourly / 20f, 0));
 
                         SGAmod.SphereMapEffect.CurrentTechnique.Passes["SphereMapAlpha"].Apply();
 
@@ -2172,9 +2173,9 @@ namespace SGAmod.Dimensions
                         for (float f = 0.20f; f < 1f; f += 0.25f)
                         {
                             SGAmod.SphereMapEffect.Parameters["colorBlend"].SetValue(Color.Lerp(Color.Yellow, Color.Red, sunIsApprouching/1.10f).ToVector4() * (f / 2f)* alphaeffectSunShader);
-                            SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(ModContent.GetTexture("SGAmod/TiledPerlin"));
+                            SGAmod.SphereMapEffect.Parameters["mappedTexture"].SetValue(ModContent.Request<Texture2D>("SGAmod/TiledPerlin"));
                             SGAmod.SphereMapEffect.Parameters["mappedTextureMultiplier"].SetValue(new Vector2(f, f));
-                            SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(Main.GlobalTime / (10f + (f * 8f)), 0));
+                            SGAmod.SphereMapEffect.Parameters["mappedTextureOffset"].SetValue(new Vector2(Main.GlobalTimeWrappedHourly / (10f + (f * 8f)), 0));
 
                             SGAmod.SphereMapEffect.CurrentTechnique.Passes["SphereMapAlpha"].Apply();
 
@@ -2228,13 +2229,13 @@ namespace SGAmod.Dimensions
             for (int type = starterType; type > 0; type -= 1)
             {
 
-                Vector2 parallex = new Vector2(Main.GlobalTime * alwaysthesame.NextFloat(0.02f, 0.04f), 0f);
+                Vector2 parallex = new Vector2(Main.GlobalTimeWrappedHourly * alwaysthesame.NextFloat(0.02f, 0.04f), 0f);
                     float aspectRato = Main.screenWidth / Main.screenHeight;
 
                 Effect effect = SGAmod.TrailEffect;
 
                 effect.Parameters["WorldViewProjection"].SetValue(WVP.View(Vector2.One) * WVP.Projection());
-                effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.GetTexture("Space"));
+                effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Space").Value);
                 effect.Parameters["coordOffset"].SetValue(parallex);
                 effect.Parameters["coordMultiplier"].SetValue(new Vector2(0.50f, 0.50f)*new Vector2(aspectRato,1f)*new Vector2(alwaysthesame.NextFloat(0.80f,1.75f), alwaysthesame.NextFloat(0.80f, 1.75f)));
                 effect.Parameters["strength"].SetValue(0.05f+((starterType-type) / 60f)*2f);
@@ -2332,9 +2333,9 @@ namespace SGAmod.Dimensions
         {
             base._AsteriodLoot();
 
-            for (int i = 0; i < 1 + (projectile.width / 4); i += 1)
+            for (int i = 0; i < 1 + (Projectile.width / 4); i += 1)
             {
-                Item.NewItem(projectile.position, projectile.width, projectile.height, ModContent.ItemType<OverseenCrystal>(), Main.rand.Next(1, 3));
+                Item.NewItem(Projectile.position, Projectile.width, Projectile.height, ModContent.ItemType<OverseenCrystal>(), Main.rand.Next(1, 3));
             }
         }
 
@@ -2345,26 +2346,26 @@ namespace SGAmod.Dimensions
             Texture2D tex = Main.itemTexture[ModContent.ItemType<OverseenCrystal>()];
 
             Vector2 vec = tex.Size() / 2f;
-            Vector2 drawPos = projectile.Center - Main.screenPosition;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
 
-            UnifiedRandom rand = new UnifiedRandom(projectile.whoAmI);
+            UnifiedRandom rand = new UnifiedRandom(Projectile.whoAmI);
 
             Color colormix = Color.Lerp(lightColor, Color.SkyBlue, 0.75f);
 
-            for (int i = 0; i < projectile.width * 0.80; i += 1)
+            for (int i = 0; i < Projectile.width * 0.80; i += 1)
             {
                 Vector2 offset = Vector2.One.RotatedBy(rand.NextFloat(MathHelper.TwoPi));
 
-                spriteBatch.Draw(tex, drawPos + (offset * (projectile.width + 4) * (projectile.width < 20 ? (rand.NextFloat(0.60f, 0.80f)) : (rand.NextFloat(0.40f, 0.60f)))).RotatedBy(projectile.rotation), null, colormix * rand.NextFloat(0.45f, 0.65f), projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(tex, drawPos + (offset * (Projectile.width + 4) * (Projectile.width < 20 ? (rand.NextFloat(0.60f, 0.80f)) : (rand.NextFloat(0.40f, 0.60f)))).RotatedBy(Projectile.rotation), null, colormix * rand.NextFloat(0.45f, 0.65f), Projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, Projectile.scale, SpriteEffects.None, 0f);
             }
 
             base._DrawAsteriod(spriteBatch, lightColor);
 
-            for (int i = 0; i < projectile.width * 0.40; i += 1)
+            for (int i = 0; i < Projectile.width * 0.40; i += 1)
             {
                 Vector2 offset = Vector2.One.RotatedBy(rand.NextFloat(MathHelper.TwoPi));
 
-                spriteBatch.Draw(tex, drawPos + (offset * (projectile.width + 4) * (projectile.width < 20 ? (rand.NextFloat(0.1f, 1f)) : (rand.NextFloat(0.10f, 0.80f)))).RotatedBy(projectile.rotation), null, colormix * rand.NextFloat(0.25f, 0.75f), projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(tex, drawPos + (offset * (Projectile.width + 4) * (Projectile.width < 20 ? (rand.NextFloat(0.1f, 1f)) : (rand.NextFloat(0.10f, 0.80f)))).RotatedBy(Projectile.rotation), null, colormix * rand.NextFloat(0.25f, 0.75f), Projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, Projectile.scale, SpriteEffects.None, 0f);
             }
 
         }
@@ -2388,7 +2389,7 @@ namespace SGAmod.Dimensions
         public override void AI()
         {
             base.AI();
-            if (projectile.ai[0] < 1)
+            if (Projectile.ai[0] < 1)
             {
                 glowColor = Color.Lerp(Color.Purple, Color.White, 0.50f);
             }
@@ -2398,24 +2399,24 @@ namespace SGAmod.Dimensions
         {
             base._AsteriodLoot();
 
-            for (int i = 0; i < 1 + (projectile.width / 4); i += 1)
+            for (int i = 0; i < 1 + (Projectile.width / 4); i += 1)
             {
-                Item.NewItem(projectile.position, projectile.width, projectile.height, ItemID.CrystalShard, Main.rand.Next(1, 3));
+                Item.NewItem(Projectile.position, Projectile.width, Projectile.height, ItemID.CrystalShard, Main.rand.Next(1, 3));
             }
         }
 
         protected override void _DrawAsteriod(SpriteBatch spriteBatch, Color lightColor)
         {
 
-            Texture2D tex = Main.itemTexture[(int)projectile.ai[0]];
+            Texture2D tex = Main.itemTexture[(int)Projectile.ai[0]];
             Texture2D textile = SGAmod.ExtraTextures[114];
 
             Vector2 vec = tex.Size() / 2f;
-            Vector2 drawPos = projectile.Center - Main.screenPosition;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
 
-            UnifiedRandom rand = new UnifiedRandom(projectile.whoAmI);
+            UnifiedRandom rand = new UnifiedRandom(Projectile.whoAmI);
 
-            for (int i = 0; i < projectile.width * 0.75; i += 1)
+            for (int i = 0; i < Projectile.width * 0.75; i += 1)
             {
                 Vector2 offset = Vector2.One.RotatedBy(rand.NextFloat(MathHelper.TwoPi));
 
@@ -2423,7 +2424,7 @@ namespace SGAmod.Dimensions
 
                 Point thisPart = new Point(partof * 18, 0);
 
-                spriteBatch.Draw(textile, drawPos + (offset * (projectile.width + 4) * (projectile.width < 20 ? (rand.NextFloat(0.80f, 0.90f)) : (rand.NextFloat(0.60f, 0.80f)))).RotatedBy(projectile.rotation), new Rectangle(thisPart.X, thisPart.Y, 16, 16), Color.White, projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(textile, drawPos + (offset * (Projectile.width + 4) * (Projectile.width < 20 ? (rand.NextFloat(0.80f, 0.90f)) : (rand.NextFloat(0.60f, 0.80f)))).RotatedBy(Projectile.rotation), new Rectangle(thisPart.X, thisPart.Y, 16, 16), Color.White, Projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, Projectile.scale, SpriteEffects.None, 0f);
             }
 
             base._DrawAsteriod(spriteBatch, lightColor);
@@ -2451,11 +2452,11 @@ namespace SGAmod.Dimensions
         public override void AI()
         {
             base.AI();
-            if (projectile.ai[0] < 1)
+            if (Projectile.ai[0] < 1)
             {
                 gems = new int[] { ItemID.Amethyst, ItemID.Topaz, ItemID.Sapphire, ItemID.Emerald, ItemID.Ruby, ItemID.Diamond, ItemID.Amber };
                 gemtype = Main.rand.Next((int)gems.Length);
-                projectile.ai[0] = gems[gemtype];
+                Projectile.ai[0] = gems[gemtype];
                 Color[] colors = new Color[] { Color.Purple, Color.Yellow, Color.Blue, Color.Lime, Color.Red, Color.Aquamarine, Color.Orange };
                 //SGAmod.GemColors.TryGetValue(gemtype, out Color colorgem);
                 glowColor = Color.Lerp(colors[gemtype], Color.White, 0.50f);
@@ -2466,9 +2467,9 @@ namespace SGAmod.Dimensions
         {
             base._AsteriodLoot();
 
-            for (int i = 0; i < 1 + (projectile.width / 4); i += 1)
+            for (int i = 0; i < 1 + (Projectile.width / 4); i += 1)
             {
-                Item.NewItem(projectile.position, projectile.width, projectile.height, (int)projectile.ai[0], Main.rand.Next(1, 3));
+                Item.NewItem(Projectile.position, Projectile.width, Projectile.height, (int)Projectile.ai[0], Main.rand.Next(1, 3));
             }
         }
 
@@ -2476,15 +2477,15 @@ namespace SGAmod.Dimensions
         protected override void _DrawAsteriod(SpriteBatch spriteBatch, Color lightColor)
         {
 
-            Texture2D tex = Main.itemTexture[(int)projectile.ai[0]];
+            Texture2D tex = Main.itemTexture[(int)Projectile.ai[0]];
             Texture2D textile = SGAmod.ExtraTextures[113];
 
             Vector2 vec = tex.Size() / 2f;
-            Vector2 drawPos = projectile.Center - Main.screenPosition;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
 
-            UnifiedRandom rand = new UnifiedRandom(projectile.whoAmI);
+            UnifiedRandom rand = new UnifiedRandom(Projectile.whoAmI);
 
-            for (int i = 0; i < projectile.width * 0.75; i += 1)
+            for (int i = 0; i < Projectile.width * 0.75; i += 1)
             {
                 Vector2 offset = Vector2.One.RotatedBy(rand.NextFloat(MathHelper.TwoPi));
 
@@ -2493,7 +2494,7 @@ namespace SGAmod.Dimensions
 
                 Point thisPart = new Point(partof2, partof * 18);
 
-                spriteBatch.Draw(textile, drawPos + (offset * (projectile.width + 4) * (projectile.width < 20 ? (rand.NextFloat(0.80f, 0.90f)) : (rand.NextFloat(0.60f, 0.80f)))).RotatedBy(projectile.rotation), new Rectangle(thisPart.X, thisPart.Y, 16, 16), Color.White, projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(textile, drawPos + (offset * (Projectile.width + 4) * (Projectile.width < 20 ? (rand.NextFloat(0.80f, 0.90f)) : (rand.NextFloat(0.60f, 0.80f)))).RotatedBy(Projectile.rotation), new Rectangle(thisPart.X, thisPart.Y, 16, 16), Color.White, Projectile.rotation + (MathHelper.PiOver2) + offset.ToRotation(), vec, Projectile.scale, SpriteEffects.None, 0f);
             }
 
             /*for (int i = 0; i < projectile.width*0.75; i += 1)
@@ -2530,7 +2531,7 @@ namespace SGAmod.Dimensions
             if (Main.rand.Next(0, 100) == 0)
             {
 
-                //int maxAsteriods = Main.projectile.Where(testby => testby?.modProjectile is IMineableAsteriod).Count();
+                //int maxAsteriods = Main.projectile.Where(testby => testby?.ModProjectile is IMineableAsteriod).Count();
 
                 if (Main.rand.Next(0, 3) == 0)
                     return;
@@ -2570,13 +2571,13 @@ namespace SGAmod.Dimensions
                 if (!SpaceDim.SpaceBossIsActive && Main.rand.Next(0, 100) <= 2)
                 {
                     int npc = NPC.NewNPC((int)proj.Center.X, (int)proj.Center.Y, ModContent.NPCType<OverseenHeadAsteriod>());
-                    MineableAsteriod grabrock = proj.modProjectile as MineableAsteriod;
+                    MineableAsteriod grabrock = proj.ModProjectile as MineableAsteriod;
                     grabrock.npc = npc;
-                    grabrock.projectile.damage = 40;
-                    grabrock.projectile.timeLeft = 99999;
-                    grabrock.projectile.hostile = true;
-                    grabrock.projectile.friendly = false;
-                    grabrock.projectile.ignoreWater = false;
+                    grabrock.Projectile.damage = 40;
+                    grabrock.Projectile.timeLeft = 99999;
+                    grabrock.Projectile.hostile = true;
+                    grabrock.Projectile.friendly = false;
+                    grabrock.Projectile.ignoreWater = false;
                 }
             }
 
@@ -2590,16 +2591,16 @@ namespace SGAmod.Dimensions
         {
             Projectile refProjectile = new Projectile();
             refProjectile.SetDefaults(ProjectileID.Boulder);
-            aiType = ProjectileID.Boulder;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = 10;
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.tileCollide = true;
-            projectile.timeLeft = 60 * 30;
-            projectile.damage = 0;
-            projectile.ignoreWater = false;
+            AIType = ProjectileID.Boulder;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = 10;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 60 * 30;
+            Projectile.damage = 0;
+            Projectile.ignoreWater = false;
             rotateAngle = Main.rand.NextFloat(0.01f, 0.05f) * (Main.rand.NextBool() ? 1f : -1f);
             vanityLook = Main.rand.Next(0, 100);
         }
@@ -2622,11 +2623,11 @@ namespace SGAmod.Dimensions
             if (chainMine)
             {
                 int dist = 64 * 64;
-                foreach (Projectile asteriod in Main.projectile.Where(testby => testby.active && testby.whoAmI != projectile.whoAmI && testby.modProjectile != null && testby.modProjectile is IMineableAsteriod && (testby.Center-projectile.Center).LengthSquared()<dist).OrderBy(testby => (testby.Center - projectile.Center).LengthSquared()))
+                foreach (Projectile asteriod in Main.projectile.Where(testby => testby.active && testby.whoAmI != Projectile.whoAmI && testby.ModProjectile != null && testby.ModProjectile is IMineableAsteriod && (testby.Center-Projectile.Center).LengthSquared()<dist).OrderBy(testby => (testby.Center - Projectile.Center).LengthSquared()))
                 {
-                    if (projectile.whoAmI != asteriod.whoAmI)
+                    if (Projectile.whoAmI != asteriod.whoAmI)
                     {
-                        IMineableAsteriod asteriod2 = asteriod.modProjectile as IMineableAsteriod;
+                        IMineableAsteriod asteriod2 = asteriod.ModProjectile as IMineableAsteriod;
                         Item copyPick = pickaxe.Clone();
                         copyPick.pick /= 2;
                         asteriod2.MineAsteriod(copyPick, false);
@@ -2638,11 +2639,11 @@ namespace SGAmod.Dimensions
             if (asteriodHealth < 1)
             {
                 AsteriodLoot();
-                projectile.Kill();
+                Projectile.Kill();
             }
             else
             {
-                SoundEffectInstance snd = Main.PlaySound(SoundID.Tink, (int)projectile.Center.X, (int)projectile.Center.Y);
+                SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Tink, (int)Projectile.Center.X, (int)Projectile.Center.Y);
                 if (snd != null)
                 {
                     //snd.Pitch = -0.50f;
@@ -2654,7 +2655,7 @@ namespace SGAmod.Dimensions
         {
             List<(int, int)> loot = new List<(int, int)>();
 
-            for (int i = 0; i < 1 + (projectile.width / 3); i += 1)
+            for (int i = 0; i < 1 + (Projectile.width / 3); i += 1)
             {
                 List<int> stuff = new List<int>();
                 for (int a = 0; a < 2; a += 1)
@@ -2688,22 +2689,22 @@ namespace SGAmod.Dimensions
                 loot.Add((itemtype, itemtype == ModContent.ItemType<BubblePickup>() ? 1 : Main.rand.Next(1, 5)));
             }
 
-            SoundEffectInstance snd = Main.PlaySound(SoundID.DD2_MonkStaffGroundImpact, (int)projectile.Center.X, (int)projectile.Center.Y);
+            SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.DD2_MonkStaffGroundImpact, (int)Projectile.Center.X, (int)Projectile.Center.Y);
             if (snd != null)
             {
                 snd.Pitch = -0.50f;
             }
 
             foreach ((int, int) stuff in loot)
-                Item.NewItem(projectile.position, projectile.width, projectile.height, stuff.Item1, stuff.Item2);
+                Item.NewItem(Projectile.position, Projectile.width, Projectile.height, stuff.Item1, stuff.Item2);
 
             for (int num654 = 0; num654 < 12; num654++)
             {
                 Vector2 dir = (Vector2.UnitX).RotateRandom(MathHelper.TwoPi);
                 Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize(); Vector2 ogcircle = randomcircle; randomcircle *= (float)(num654 / 10.00);
-                int num655 = Dust.NewDust(projectile.Center + dir * projectile.width, 0, 0, 23, dir.X * (num654 / 2f), dir.Y * (num654 / 2f), 100, new Color(30, 30, 30, 20), 2f);
+                int num655 = Dust.NewDust(Projectile.Center + dir * Projectile.width, 0, 0, 23, dir.X * (num654 / 2f), dir.Y * (num654 / 2f), 100, new Color(30, 30, 30, 20), 2f);
                 Main.dust[num655].noGravity = true;
-                Main.dust[num655].scale = projectile.width / 10f;
+                Main.dust[num655].scale = Projectile.width / 10f;
 
             }
 
@@ -2711,25 +2712,25 @@ namespace SGAmod.Dimensions
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.penetrate--;
-            if (projectile.penetrate <= 0)
+            Projectile.penetrate--;
+            if (Projectile.penetrate <= 0)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             else
             {
-                SoundEffectInstance snd = Main.PlaySound(SoundID.Item10, (int)projectile.Center.X, (int)projectile.Center.Y);
+                SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Item10, (int)Projectile.Center.X, (int)Projectile.Center.Y);
                 if (snd != null)
                 {
                     snd.Pitch = -0.75f;
                 }
-                if (projectile.velocity.X != oldVelocity.X)
+                if (Projectile.velocity.X != oldVelocity.X)
                 {
-                    projectile.velocity.X = -oldVelocity.X;
+                    Projectile.velocity.X = -oldVelocity.X;
                 }
-                if (projectile.velocity.Y != oldVelocity.Y)
+                if (Projectile.velocity.Y != oldVelocity.Y)
                 {
-                    projectile.velocity.Y = -oldVelocity.Y;
+                    Projectile.velocity.Y = -oldVelocity.Y;
                 }
             }
             return false;
@@ -2748,19 +2749,19 @@ namespace SGAmod.Dimensions
 
             for (int i = 0; i < Main.rand.Next(1, 3); i += 1)
             {
-                if (projectile.width > 20)
+                if (Projectile.width > 20)
                 {
-                    Vector2 velocity = projectile.velocity.RotatedByRandom(MathHelper.TwoPi) + (Vector2.One.RotatedByRandom(MathHelper.TwoPi) / 5f);
+                    Vector2 velocity = Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) + (Vector2.One.RotatedByRandom(MathHelper.TwoPi) / 5f);
                     velocity *= Main.rand.NextFloat(-2f, 2f);
 
-                    Projectile proj = Projectile.NewProjectileDirect(projectile.Center, projectile.velocity + velocity, projectile.type, projectile.damage / 2, projectile.knockBack);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.Center, Projectile.velocity + velocity, Projectile.type, Projectile.damage / 2, Projectile.knockBack);
                     proj.width /= 2;
                     proj.height /= 2;
-                    proj.ai[0] = projectile.ai[0];
-                    ((MineableAsteriod)(proj.modProjectile)).glowColor = glowColor;
+                    proj.ai[0] = Projectile.ai[0];
+                    ((MineableAsteriod)(proj.ModProjectile)).glowColor = glowColor;
 
                     if (GetType() == typeof(MineableAsteriodGem))
-                        ((MineableAsteriodGem)(proj.modProjectile)).gemtype = ((MineableAsteriodGem)this).gemtype;
+                        ((MineableAsteriodGem)(proj.ModProjectile)).gemtype = ((MineableAsteriodGem)this).gemtype;
                 }
             }
 
@@ -2772,27 +2773,27 @@ namespace SGAmod.Dimensions
             if (npc >= 0 && Main.npc[npc].active)
             {
                 NPC npc2 = Main.npc[npc];
-                projectile.Center = npc2.Center;
-                projectile.velocity = npc2.velocity;
-                projectile.tileCollide = false;
-                if (npc2.modNPC != null)
-                (npc2.modNPC as OverseenHeadAsteriod).timer = 3;
+                Projectile.Center = npc2.Center;
+                Projectile.velocity = npc2.velocity;
+                Projectile.tileCollide = false;
+                if (npc2.ModNPC != null)
+                (npc2.ModNPC as OverseenHeadAsteriod).timer = 3;
             }
             else
             {
-                projectile.tileCollide = true;
+                Projectile.tileCollide = true;
                 npc = -1;
             }
 
             miningTargeted = (int)MathHelper.Clamp(miningTargeted - 1, 0, 20);
-            projectile.rotation += rotateAngle;
+            Projectile.rotation += rotateAngle;
 
-            if (projectile.damage > 0 && npc < 0)
+            if (Projectile.damage > 0 && npc < 0)
             {
-                if (projectile.velocity.Length() > 3f)
-                    projectile.velocity *= 0.97f;
+                if (Projectile.velocity.Length() > 3f)
+                    Projectile.velocity *= 0.97f;
                 else
-                    projectile.damage = 0;
+                    Projectile.damage = 0;
             }
 
             //int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 20, default(Color), 1f);
@@ -2801,31 +2802,31 @@ namespace SGAmod.Dimensions
 
         protected virtual void _DrawAsteriod(SpriteBatch spriteBatch, Color lightColor)
         {
-            lightColor = Lighting.GetColor((int)projectile.Center.X >> 4, (int)projectile.Center.Y >> 4);
+            lightColor = Lighting.GetColor((int)Projectile.Center.X >> 4, (int)Projectile.Center.Y >> 4);
 
             int vanitytype = (3 + (vanityLook % 3));
             Texture2D tex;
 
             Color blending = Color.White;
 
-            if (projectile.width < 20)
-                tex = mod.GetTexture(vanityLook < 10 ? (vanityLook < 5 ? "Dimensions/Space/MeteorSmall2" : "Dimensions/Space/MeteorSmall") : "Dimensions/Space/MeteorSmall" + (3 + (vanityLook % 3)));
+            if (Projectile.width < 20)
+                tex = Mod.Assets.Request<Texture2D>(vanityLook < 10 ? (vanityLook < 5 ? "Dimensions/Space/MeteorSmall2" : "Dimensions/Space/MeteorSmall") : "Dimensions/Space/MeteorSmall" + (3 + (vanityLook % 3))).Value;
             else
-                tex = mod.GetTexture(vanityLook < 10 ? (vanityLook < 5 ? "Dimensions/Space/MeteorLarge2" : "Dimensions/Space/MeteorLarge") : "Dimensions/Space/MeteorLarge" + (3 + (vanityLook % 3)));
+                tex = Mod.Assets.Request<Texture2D>(vanityLook < 10 ? (vanityLook < 5 ? "Dimensions/Space/MeteorLarge2" : "Dimensions/Space/MeteorLarge") : "Dimensions/Space/MeteorLarge" + (3 + (vanityLook % 3))).Value;
 
             if (GetType() == typeof(MineableAsteriodOverseenCrystal))
             {
-                if (projectile.width < 20)
+                if (Projectile.width < 20)
                     blending = Color.PaleTurquoise;
                 else
-                    tex = mod.GetTexture((new string[3] { "Dimensions/Space/GlowAsteriod", "Dimensions/Space/GlowAsteriodalt", "Dimensions/Space/GlowAsteriodalt2" })[vanityLook%3]);
+                    tex = Mod.Assets.Request<Texture2D>((new string[3] { "Dimensions/Space/GlowAsteriod", "Dimensions/Space/GlowAsteriodalt", "Dimensions/Space/GlowAsteriodalt2" })[vanityLook%3]).Value;
             }
 
             //Main.spriteBatch.End();
             //Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 2f);
-            Vector2 drawPos = projectile.Center - Main.screenPosition;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
 
             Rectangle size = new Rectangle(0, 0, tex.Width, (int)(drawOrigin.Y));
             Rectangle sizeOutline = new Rectangle(0, (int)(drawOrigin.Y), tex.Width, (int)(drawOrigin.Y));
@@ -2833,17 +2834,17 @@ namespace SGAmod.Dimensions
             //Main.spriteBatch.End();
             //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            spriteBatch.Draw(tex, drawPos, size, lightColor.MultiplyRGB(blending), projectile.rotation, drawOrigin / 2f, projectile.scale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(tex, drawPos, sizeOutline, Color.Red * (miningTargeted / 20f), projectile.rotation, drawOrigin / 2f, projectile.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(tex, drawPos, size, lightColor.MultiplyRGB(blending), Projectile.rotation, drawOrigin / 2f, Projectile.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(tex, drawPos, sizeOutline, Color.Red * (miningTargeted / 20f), Projectile.rotation, drawOrigin / 2f, Projectile.scale, SpriteEffects.None, 0f);
         }
 
         protected virtual void _DrawAsteriodGlow(SpriteBatch spriteBatch, Color lightColor)
         {
 
-            Texture2D texGlow = mod.GetTexture("GlowOrb");
-            Vector2 drawPos = projectile.Center - Main.screenPosition;
+            Texture2D texGlow = Mod.Assets.Request<Texture2D>("GlowOrb").Value;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
 
-            spriteBatch.Draw(texGlow, drawPos, null, glowColor * 0.5f, 0, texGlow.Size() / 2f, projectile.scale * (projectile.width / 64f), SpriteEffects.None, 0f);
+            spriteBatch.Draw(texGlow, drawPos, null, glowColor * 0.5f, 0, texGlow.Size() / 2f, Projectile.scale * (Projectile.width / 64f), SpriteEffects.None, 0f);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -2868,15 +2869,15 @@ namespace SGAmod.Dimensions
         {
             Projectile refProjectile = new Projectile();
             refProjectile.SetDefaults(ProjectileID.Boulder);
-            aiType = ProjectileID.Boulder;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = 10;
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.tileCollide = true;
-            projectile.timeLeft = 2;
-            projectile.damage = 0;
+            AIType = ProjectileID.Boulder;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = 10;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 2;
+            Projectile.damage = 0;
         }
 
         public override bool CanDamage()
@@ -2899,14 +2900,14 @@ namespace SGAmod.Dimensions
             }
             */
 
-            List<Projectile> Asteriods = Main.projectile.Where(testby => testby.active && testby?.modProjectile is IMineableAsteriod).ToList();
+            List<Projectile> Asteriods = Main.projectile.Where(testby => testby.active && testby?.ModProjectile is IMineableAsteriod).ToList();
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             foreach (Projectile roid in Asteriods)
             {
-                IMineableAsteriod asteriod = (IMineableAsteriod)roid.modProjectile;
+                IMineableAsteriod asteriod = (IMineableAsteriod)roid.ModProjectile;
                 asteriod.DrawAsteriodGlow(spriteBatch,lightColor);
             }
 
@@ -2915,7 +2916,7 @@ namespace SGAmod.Dimensions
 
             foreach (Projectile roid in Asteriods)
             {
-                IMineableAsteriod asteriod = (IMineableAsteriod)roid.modProjectile;
+                IMineableAsteriod asteriod = (IMineableAsteriod)roid.ModProjectile;
                 asteriod.DrawAsteriod(spriteBatch, lightColor);
             }
 
@@ -2936,11 +2937,11 @@ namespace SGAmod.Dimensions
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.dontTakeDamage = false;
-            npc.defense = 250;
-            npc.life = 5000;
-            npc.lifeMax = 5000;
-            npc.damage = 0;
+            NPC.dontTakeDamage = false;
+            NPC.defense = 250;
+            NPC.life = 5000;
+            NPC.lifeMax = 5000;
+            NPC.damage = 0;
             timer = 5;
         }
 
@@ -2969,19 +2970,19 @@ namespace SGAmod.Dimensions
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.CloneDefaults(NPCID.MeteorHead);
+            NPC.CloneDefaults(NPCID.MeteorHead);
 
-            npc.knockBackResist = 0.25f;
-            npc.life *= 3;
-            npc.lifeMax *= 3;
+            NPC.knockBackResist = 0.25f;
+            NPC.life *= 3;
+            NPC.lifeMax *= 3;
             //npc.defense += 15;
             //npc.defDamage += 15;
 
-            npc.aiStyle = 74;
+            NPC.aiStyle = 74;
 
             if (Main.rand.Next(0, 3) < 2 || SpaceDim.SpaceBossIsActive)
             {
-                npc.aiStyle = Main.rand.NextBool() ? 86 : 56;
+                NPC.aiStyle = Main.rand.NextBool() ? 86 : 56;
             }
         }
 
@@ -2997,11 +2998,11 @@ namespace SGAmod.Dimensions
             if (GetType() != typeof(StationFocusCrystal))
             {
                 //TileID.ExposedGems
-                npc.type = NPCID.MeteorHead;
+                NPC.type = NPCID.MeteorHead;
                 if (GetType() == typeof(OverseenHeadBossShield))
-                    Item.NewItem(npc.position, npc.width, npc.height, ItemID.Heart);
+                    Item.NewItem(NPC.position, NPC.width, NPC.height, ItemID.Heart);
                 else
-                    Item.NewItem(npc.position, npc.width, npc.height, ModContent.ItemType<Glowrock>(), Main.rand.Next(1, 4));
+                    Item.NewItem(NPC.position, NPC.width, NPC.height, ModContent.ItemType<Glowrock>(), Main.rand.Next(1, 4));
             }
 
             return true;
@@ -3013,11 +3014,11 @@ namespace SGAmod.Dimensions
             timer -= 1;
             if (timer < 1)
             {
-                npc.StrikeNPC(npc.lifeMax * 2, 0, 0);
+                NPC.StrikeNPC(NPC.lifeMax * 2, 0, 0);
             }
-            if (npc.aiStyle != 56)
+            if (NPC.aiStyle != 56)
             {
-                int num825 = Dust.NewDust(npc.position, npc.width, npc.height, 180);
+                int num825 = Dust.NewDust(NPC.position, NPC.width, NPC.height, 180);
                 Dust dust40 = Main.dust[num825];
                 Dust dust2 = dust40;
                 dust2.velocity *= 0.1f;
@@ -3029,23 +3030,23 @@ namespace SGAmod.Dimensions
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
 
-            Texture2D tex = Main.npcTexture[npc.type];
+            Texture2D tex = Main.npcTexture[NPC.type];
 
             Vector2 drawOrigin = new Vector2(tex.Width, tex.Height);
-            Vector2 drawPos = npc.Center - Main.screenPosition;
+            Vector2 drawPos = NPC.Center - Main.screenPosition;
 
-            Texture2D texGlow = mod.GetTexture("GlowOrb");
+            Texture2D texGlow = Mod.Assets.Request<Texture2D>("GlowOrb").Value;
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 
-            spriteBatch.Draw(texGlow, drawPos, null, Color.Blue * 0.75f*npc.Opacity, 0, texGlow.Size() / 2f, 0.15f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texGlow, drawPos, null, Color.Blue * 0.75f*NPC.Opacity, 0, texGlow.Size() / 2f, 0.15f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            spriteBatch.Draw(tex, drawPos, null, Color.Lerp(lightColor,Color.White, 0.5f) * npc.Opacity, npc.rotation, drawOrigin / 2f, npc.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(tex, drawPos, null, Color.Lerp(lightColor,Color.White, 0.5f) * NPC.Opacity, NPC.rotation, drawOrigin / 2f, NPC.scale, SpriteEffects.None, 0f);
 
             return false;
         }
@@ -3061,12 +3062,12 @@ namespace SGAmod.Dimensions
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Air Bubble");
-            ItemID.Sets.ItemNoGravity[item.type] = false;
+            ItemID.Sets.ItemNoGravity[Item.type] = false;
         }
 
         public override bool OnPickup(Player player)
         {
-            player.SGAPly().RestoreBreath(20*item.stack);
+            player.SGAPly().RestoreBreath(20*Item.stack);
             return false;
         }
 
@@ -3092,16 +3093,16 @@ namespace SGAmod.Dimensions
 
         public override void SetDefaults()
         {
-            npc.friendly = false;
-            npc.defense = 50;
-            npc.life = 7500;
-            npc.lifeMax = 7500;
-            npc.width = 64;
-            npc.height = 64;
-            npc.damage = 0;
-            npc.aiStyle = -1;
-            npc.noGravity = true;
-            npc.knockBackResist = 0f;
+            NPC.friendly = false;
+            NPC.defense = 50;
+            NPC.life = 7500;
+            NPC.lifeMax = 7500;
+            NPC.width = 64;
+            NPC.height = 64;
+            NPC.damage = 0;
+            NPC.aiStyle = -1;
+            NPC.noGravity = true;
+            NPC.knockBackResist = 0f;
         }
 
         public override bool CheckActive()
@@ -3119,7 +3120,7 @@ namespace SGAmod.Dimensions
             if (!SpaceDim.SpaceBossIsActive)
             station.TriggerSecurity();
 
-            SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_CrystalCartImpact, (int)npc.Center.X, (int)npc.Center.Y);
+            SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact, (int)NPC.Center.X, (int)NPC.Center.Y);
             if (sound != null)
             {
                 sound.Pitch += Main.rand.NextFloat(0f, 0.25f);
@@ -3129,33 +3130,33 @@ namespace SGAmod.Dimensions
 
         public override void AI()
         {
-            if (npc.life < (int)(npc.lifeMax * 0.9))
+            if (NPC.life < (int)(NPC.lifeMax * 0.9))
             {
                 if (!SpaceDim.SpaceBossIsActive)
                     station.TriggerSecurity();
             }
 
 
-            NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-            npc.localAI[0] += 1;
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
+            NPC.localAI[0] += 1;
             hitVisual = Math.Max(hitVisual - 0.1f, 0f);
 
             shielded = true;
-            npc.dontTakeDamage = false;
+            NPC.dontTakeDamage = false;
 
             bool bossExists = SpaceDim.SpaceBossIsActive;
 
             int checkRange = 2400 * 2400;
             int checkRange2 = 420 * 420;
 
-            playersInRange = Main.player.Where(testby => testby.active && !testby.dead && (testby.Center - npc.Center).LengthSquared() < checkRange).ToList();
+            playersInRange = Main.player.Where(testby => testby.active && !testby.dead && (testby.Center - NPC.Center).LengthSquared() < checkRange).ToList();
 
 
             foreach (Player player in playersInRange)
             {
-                if ((player.Center - npc.Center).LengthSquared() < checkRange)
+                if ((player.Center - NPC.Center).LengthSquared() < checkRange)
                 {
-                    if (!bossExists && (player.Center - npc.Center).LengthSquared() < checkRange2)
+                    if (!bossExists && (player.Center - NPC.Center).LengthSquared() < checkRange2)
                     {
                         shielded = false;
                     }
@@ -3173,7 +3174,7 @@ namespace SGAmod.Dimensions
             if (SpaceDim.SpaceBossIsActive)
             {
                 boss = Main.npc[NPC.FindFirstNPC(ModContent.NPCType<SpaceBoss>())];
-                SpaceBoss trueBoss = boss.modNPC as SpaceBoss;
+                SpaceBoss trueBoss = boss.ModNPC as SpaceBoss;
 
                 float toCheckDist = 2400;
                 float healScaling = 1;
@@ -3184,21 +3185,21 @@ namespace SGAmod.Dimensions
                     healScaling /= 3f;
                 }
 
-                if (trueBoss.goingDark > 0 || trueBoss.DyingState || trueBoss.Sleeping || boss.ai[3] > 1 || (boss.Center - npc.Center).Length() > toCheckDist)
+                if (trueBoss.goingDark > 0 || trueBoss.DyingState || trueBoss.Sleeping || boss.ai[3] > 1 || (boss.Center - NPC.Center).Length() > toCheckDist)
                 {
                     boss = null;
                 }
                 if (boss != null)
                 {
-                    float healRate = (npc.lifeMax / (60f * 30f)) * healScaling;
+                    float healRate = (NPC.lifeMax / (60f * 30f)) * healScaling;
                     boss.life = Math.Min(boss.life + (int)healRate, boss.lifeMax);
                     shielded = false;
                 }
             }
             if (SpaceDim.crystalAsteriods)
-                npc.localAI[1] = Math.Min(npc.localAI[1] + 0.005f, 1f);
+                NPC.localAI[1] = Math.Min(NPC.localAI[1] + 0.005f, 1f);
 
-            npc.dontTakeDamage = shielded;
+            NPC.dontTakeDamage = shielded;
 
             shieldedVisual = MathHelper.Clamp(shieldedVisual + (shielded ? 0.05f : -0.05f), 0f, 1f);
         }
@@ -3208,10 +3209,10 @@ namespace SGAmod.Dimensions
 
             if (SpaceDim.crystalAsteriods)
             {
-                Item.NewItem(npc.position+npc.Hitbox.Size()/2, 0,0, ModContent.ItemType<HeliosFocusCrystal>(), 1);
+                Item.NewItem(NPC.position+NPC.Hitbox.Size()/2, 0,0, ModContent.ItemType<HeliosFocusCrystal>(), 1);
             }
 
-            SoundEffectInstance snd = Main.PlaySound(SoundID.Shatter, (int)npc.Center.X, (int)npc.Center.Y);
+            SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Shatter, (int)NPC.Center.X, (int)NPC.Center.Y);
 
             if (snd != null)
             {
@@ -3222,7 +3223,7 @@ namespace SGAmod.Dimensions
             {
                 float num1182 = (float)num1181 / 20f;
                 Vector2 vector123 = new Vector2(Main.rand.NextFloat() * 10f, 0f).RotatedBy(num1182 * -(float)Math.PI + Main.rand.NextFloat() * 0.1f - 0.05f);
-                Gore gore8 = Gore.NewGoreDirect(npc.Center + vector123 * 3f, vector123, Utils.SelectRandom<int>(Main.rand, mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore1"), mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore2"), mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore3"), mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore4")));
+                Gore gore8 = Gore.NewGoreDirect(NPC.Center + vector123 * 3f, vector123, Utils.SelectRandom<int>(Main.rand, Mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore1"), Mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore2"), Mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore3"), Mod.GetGoreSlot("Gores/HeliosFocusCrystal_Gore4")));
                 if (gore8.velocity.Y > 0f)
                 {
                     Gore gore9 = gore8;
@@ -3240,7 +3241,7 @@ namespace SGAmod.Dimensions
 
             for (float num475 = 4; num475 < 24f; num475 += 0.1f)
             {
-                Vector2 startloc = (npc.Center);
+                Vector2 startloc = (NPC.Center);
                 int dust = Dust.NewDust(new Vector2(startloc.X, startloc.Y), 0, 0, ModContent.DustType<Dusts.LeviDust>());
 
                 float anglehalf2 = Main.rand.NextFloat(MathHelper.TwoPi);
@@ -3254,7 +3255,7 @@ namespace SGAmod.Dimensions
             if (boss != null)
             {
                 if (!boss.dontTakeDamage)
-                    boss.StrikeNPC(npc.lifeMax, 0, 1);
+                    boss.StrikeNPC(NPC.lifeMax, 0, 1);
 
             }
 
@@ -3291,15 +3292,15 @@ namespace SGAmod.Dimensions
                 {
                     bool theBoss = (ent.Item2 == typeof(NPC));
 
-                    List<Vector2> drawPoints = new List<Vector2>() { npc.Center, ent.Item1.Center };
+                    List<Vector2> drawPoints = new List<Vector2>() { NPC.Center, ent.Item1.Center };
                     Vector2 dist = drawPoints[1] - drawPoints[0];
 
                     for (float i = -1; i < 2; i += 1.5f)
                     {
 
-                        TrailHelper trail2 = new TrailHelper("FadedBasicEffectAlphaPass", mod.GetTexture("TiledPerlin"));
+                        TrailHelper trail2 = new TrailHelper("FadedBasicEffectAlphaPass", Mod.Assets.Request<Texture2D>("TiledPerlin").Value);
                         trail2.projsize = Vector2.Zero;
-                        trail2.coordOffset = new Vector2(((Main.GlobalTime / 6f)*i) + (npc.whoAmI * 9.245f), -Main.GlobalTime * 0.5f);
+                        trail2.coordOffset = new Vector2(((Main.GlobalTimeWrappedHourly / 6f)*i) + (NPC.whoAmI * 9.245f), -Main.GlobalTimeWrappedHourly * 0.5f);
                         trail2.coordMultiplier = new Vector2(0.1f, dist.Length() / 512f);
                         trail2.doFade = false;
                         trail2.trailThickness = 16f;
@@ -3319,13 +3320,13 @@ namespace SGAmod.Dimensions
                                 return Color.OrangeRed* (1f-(percent/2f));
                             };
                         }
-                        trail2.DrawTrail(drawPoints, npc.Center);
+                        trail2.DrawTrail(drawPoints, NPC.Center);
                     }
                 }
             }
 
 
-        Vector2 poz = npc.Center - Main.screenPosition;
+        Vector2 poz = NPC.Center - Main.screenPosition;
             float size = 320f;
 
             if (poz.X > -size && poz.X < Main.screenWidth + size && poz.Y > -size && poz.Y < Main.screenHeight + size)
@@ -3337,11 +3338,11 @@ namespace SGAmod.Dimensions
                     for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 6f)
                     {
                         float extraAngle = ((f2 - 1f) / 3f) * MathHelper.Pi / 2f;
-                        float rotter = (Main.GlobalTime / 3f) + f + extraAngle;
+                        float rotter = (Main.GlobalTimeWrappedHourly / 3f) + f + extraAngle;
 
-                        float realAnglez = (f / 3f) + ((MathHelper.TwoPi / 3f) * (f2 - 1f)) + (Main.GlobalTime / 3);
+                        float realAnglez = (f / 3f) + ((MathHelper.TwoPi / 3f) * (f2 - 1f)) + (Main.GlobalTimeWrappedHourly / 3);
 
-                        rotter = MathHelper.SmoothStep(rotter, realAnglez, npc.localAI[1]);
+                        rotter = MathHelper.SmoothStep(rotter, realAnglez, NPC.localAI[1]);
 
                         layers.Add((f, f2, rotter));
                     }
@@ -3351,18 +3352,18 @@ namespace SGAmod.Dimensions
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-                Texture2D mainTex = Main.npcTexture[npc.type];
-                Texture2D otherTex = mod.GetTexture("Dimensions/Space/StationFocusCrystalSmall");
-                Texture2D glowTex = mod.GetTexture("Glow");
-                Texture2D glowTex2 = mod.GetTexture("GlowOrb");
+                Texture2D mainTex = Main.npcTexture[NPC.type];
+                Texture2D otherTex = Mod.Assets.Request<Texture2D>("Dimensions/Space/StationFocusCrystalSmall").Value;
+                Texture2D glowTex = Mod.Assets.Request<Texture2D>("Glow").Value;
+                Texture2D glowTex2 = Mod.Assets.Request<Texture2D>("GlowOrb").Value;
                 Vector2 halfGlow = glowTex.Size() / 2f;
                 ArmorShaderData stardustsshader = GameShaders.Armor.GetShaderFromItemId(ItemID.StardustDye);
 
                 Color colorz = Color.White;
 
-                spriteBatch.Draw(glowTex2, npc.Center - Main.screenPosition, null, Color.White * 0.50f * overallAlpha, 0, glowTex2.Size() / 2f, new Vector2(1f, 1f) * 1f, SpriteEffects.None, 0);
+                spriteBatch.Draw(glowTex2, NPC.Center - Main.screenPosition, null, Color.White * 0.50f * overallAlpha, 0, glowTex2.Size() / 2f, new Vector2(1f, 1f) * 1f, SpriteEffects.None, 0);
 
-                if (npc.localAI[1] < 1)
+                if (NPC.localAI[1] < 1)
                 {
                     foreach ((float, float, float) rot in layers)
                     {
@@ -3370,11 +3371,11 @@ namespace SGAmod.Dimensions
                         float f2 = rot.Item2;
                         float rotter = rot.Item3;
 
-                        float dister = MathHelper.SmoothStep((40f + (f2 * 8f)) + (float)Math.Sin((f2 * 2f) + (Main.GlobalTime * 2f)) * 10f, 42f, npc.localAI[1]);
+                        float dister = MathHelper.SmoothStep((40f + (f2 * 8f)) + (float)Math.Sin((f2 * 2f) + (Main.GlobalTimeWrappedHourly * 2f)) * 10f, 42f, NPC.localAI[1]);
 
-                        float addedAngle = MathHelper.SmoothStep(0f, MathHelper.Pi, npc.localAI[1]);
+                        float addedAngle = MathHelper.SmoothStep(0f, MathHelper.Pi, NPC.localAI[1]);
 
-                        spriteBatch.Draw(glowTex, npc.Center + (rotter.ToRotationVector2() * (dister)) - Main.screenPosition, null, Color.White * 1.50f * overallAlpha * (1f - npc.localAI[1]), rotter + MathHelper.PiOver2 + addedAngle, halfGlow, new Vector2(1f, 1f) * 1.25f, SpriteEffects.None, 0);
+                        spriteBatch.Draw(glowTex, NPC.Center + (rotter.ToRotationVector2() * (dister)) - Main.screenPosition, null, Color.White * 1.50f * overallAlpha * (1f - NPC.localAI[1]), rotter + MathHelper.PiOver2 + addedAngle, halfGlow, new Vector2(1f, 1f) * 1.25f, SpriteEffects.None, 0);
                     }
                 }
 
@@ -3382,7 +3383,7 @@ namespace SGAmod.Dimensions
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
                 int intdexer = 0;
-                UnifiedRandom randoz = new UnifiedRandom(npc.whoAmI);
+                UnifiedRandom randoz = new UnifiedRandom(NPC.whoAmI);
 
                 foreach ((float, float, float) rot in layers)
                 {
@@ -3390,19 +3391,19 @@ namespace SGAmod.Dimensions
                     float f2 = rot.Item2;
                     float rotter = rot.Item3;
 
-                    DrawData value7 = new DrawData(otherTex, new Vector2(30f, 30f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(randoz.Next(10000), randoz.Next(10000), otherTex.Width, otherTex.Height)), Microsoft.Xna.Framework.Color.White, npc.rotation, glowTex.Size() / 2f, npc.scale * 5f, SpriteEffects.None, 0);
+                    DrawData value7 = new DrawData(otherTex, new Vector2(30f, 30f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(randoz.Next(10000), randoz.Next(10000), otherTex.Width, otherTex.Height)), Microsoft.Xna.Framework.Color.White, NPC.rotation, glowTex.Size() / 2f, NPC.scale * 5f, SpriteEffects.None, 0);
 
-                    float dister = MathHelper.SmoothStep((40f + (f2 * 8f)) + (float)Math.Sin((f2 * 2f) + (Main.GlobalTime * 2f)) * 10f, 42f, npc.localAI[1]);
+                    float dister = MathHelper.SmoothStep((40f + (f2 * 8f)) + (float)Math.Sin((f2 * 2f) + (Main.GlobalTimeWrappedHourly * 2f)) * 10f, 42f, NPC.localAI[1]);
 
-                    float addedAngle = MathHelper.SmoothStep(0f, MathHelper.Pi, npc.localAI[1]);
+                    float addedAngle = MathHelper.SmoothStep(0f, MathHelper.Pi, NPC.localAI[1]);
 
-                    stardustsshader.UseColor(Main.hslToRgb(((rotter / MathHelper.TwoPi) + (f / MathHelper.TwoPi)) % 1f, 1f - (npc.localAI[1] / 1.5f), 0.75f).ToVector3() * 1f);
+                    stardustsshader.UseColor(Main.hslToRgb(((rotter / MathHelper.TwoPi) + (f / MathHelper.TwoPi)) % 1f, 1f - (NPC.localAI[1] / 1.5f), 0.75f).ToVector3() * 1f);
                     stardustsshader.UseOpacity(1f);
                     stardustsshader.Apply(null, new DrawData?(value7));
 
                     intdexer += 1;
 
-                    spriteBatch.Draw(otherTex, npc.Center + (rotter.ToRotationVector2() * (dister)) - Main.screenPosition, null, Color.White * 1f * overallAlpha, rotter + MathHelper.PiOver2 + addedAngle, otherTex.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0);
+                    spriteBatch.Draw(otherTex, NPC.Center + (rotter.ToRotationVector2() * (dister)) - Main.screenPosition, null, Color.White * 1f * overallAlpha, rotter + MathHelper.PiOver2 + addedAngle, otherTex.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0);
                 }
 
                 Main.spriteBatch.End();
@@ -3410,7 +3411,7 @@ namespace SGAmod.Dimensions
 
                 for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 6f)
                 {
-                    spriteBatch.Draw(mainTex, npc.Center + (Vector2.UnitX.RotatedBy(f + Main.GlobalTime * 2f) * (4f + (hitVisual * 2f))) - Main.screenPosition, null, Main.hslToRgb(f / MathHelper.TwoPi, 1f, 0.75f), 0, mainTex.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(mainTex, NPC.Center + (Vector2.UnitX.RotatedBy(f + Main.GlobalTimeWrappedHourly * 2f) * (4f + (hitVisual * 2f))) - Main.screenPosition, null, Main.hslToRgb(f / MathHelper.TwoPi, 1f, 0.75f), 0, mainTex.Size() / 2f, 1f, SpriteEffects.None, 0f);
                 }
 
                 Main.spriteBatch.End();
@@ -3430,7 +3431,7 @@ namespace SGAmod.Dimensions
      /*           
 hallowed.Parameters["prismColor"].SetValue(Color.White.ToVector3());
 hallowed.Parameters["prismAlpha"].SetValue(1f);
-hallowed.Parameters["overlayStrength"].SetValue(new Vector3(2f, 0.10f, Main.GlobalTime / 4f));
+hallowed.Parameters["overlayStrength"].SetValue(new Vector3(2f, 0.10f, Main.GlobalTimeWrappedHourly / 4f));
 hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
 hallowed.Parameters["rainbowScale"].SetValue(0.8f);
      */
@@ -3438,14 +3439,14 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
                 hallowed.Parameters["alpha"].SetValue(1f);
 
                 hallowed.Parameters["overlayScale"].SetValue(new Vector2(1f,1f));
-                hallowed.Parameters["overlayTexture"].SetValue(ModContent.GetTexture("SGAmod/Voronoi"));
+                hallowed.Parameters["overlayTexture"].SetValue(ModContent.Request<Texture2D>("SGAmod/Voronoi"));
                 hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, 0, 0f));
-                hallowed.Parameters["overlayAlpha"].SetValue( (1f-(npc.life / (float)npc.lifeMax))*1f);
+                hallowed.Parameters["overlayAlpha"].SetValue( (1f-(NPC.life / (float)NPC.lifeMax))*1f);
                 hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f,1f,1f));
 
                 hallowed.CurrentTechnique.Passes["TextureMixAdditive"].Apply();             
 
-                spriteBatch.Draw(mainTex, npc.Center - Main.screenPosition, null, Color.White * 1f * overallAlpha, 0, mainTex.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0);
+                spriteBatch.Draw(mainTex, NPC.Center - Main.screenPosition, null, Color.White * 1f * overallAlpha, 0, mainTex.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0);
 
                 if (hitVisual > 0)
                 {
@@ -3460,11 +3461,11 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
                     fadeIn.Parameters["blendColor"].SetValue(Color.White.ToVector3());
 
                     fadeIn.CurrentTechnique.Passes["FadeIn"].Apply();
-                    spriteBatch.Draw(mainTex, npc.Center - Main.screenPosition, null, Color.White * 1f * overallAlpha, 0, mainTex.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0);
+                    spriteBatch.Draw(mainTex, NPC.Center - Main.screenPosition, null, Color.White * 1f * overallAlpha, 0, mainTex.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0);
 
                 }
 
-                Texture2D[] texs = { mod.GetTexture("Voronoi"), mod.GetTexture("Voronoi"), mod.GetTexture("Voronoi"), mod.GetTexture("Voronoi") };
+                Texture2D[] texs = { Mod.Assets.Request<Texture2D>("Voronoi").Value, Mod.Assets.Request<Texture2D>("Voronoi").Value, Mod.Assets.Request<Texture2D>("Voronoi").Value, Mod.Assets.Request<Texture2D>("Voronoi") .Value};
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -3477,7 +3478,7 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
 
                     for(float ff = 0; ff < 1; ff += 1 / 4f)
                     {
-                        scalePercentList.Add((ff+Main.GlobalTime/4f)%1f);
+                        scalePercentList.Add((ff+Main.GlobalTimeWrappedHourly/4f)%1f);
                     }
 
                     //scalePercentList = scalePercentList.OrderBy(testby => 100-testby).ToList();
@@ -3489,17 +3490,17 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
                         Texture2D tex = texs[0];
 
                         Vector2 sizer = new Vector2(tex.Width, tex.Height);
-                        DrawData value9 = new DrawData(tex, new Vector2(300f, 300f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, (int)sizer.X, (int)sizer.Y)), Microsoft.Xna.Framework.Color.White, npc.rotation, tex.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+                        DrawData value9 = new DrawData(tex, new Vector2(300f, 300f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, (int)sizer.X, (int)sizer.Y)), Microsoft.Xna.Framework.Color.White, NPC.rotation, tex.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
                         float percex = 0;// (index / (float)texs.Length);
                         float colorAlpha = MathHelper.Clamp((float)Math.Sin(perr*MathHelper.Pi)*1.75f,0f,1f)*0.5f;
-                        deathShader.UseColor(Main.hslToRgb((percex + (Main.GlobalTime * (0.25f))) % 1f, 0.75f, 0.75f) * colorAlpha * overallAlpha * shieldedVisual);
+                        deathShader.UseColor(Main.hslToRgb((percex + (Main.GlobalTimeWrappedHourly * (0.25f))) % 1f, 0.75f, 0.75f) * colorAlpha * overallAlpha * shieldedVisual);
                         deathShader.UseOpacity(0.70f);
                         GameShaders.Misc["ForceField"].Apply(new DrawData?(value9));
 
-                        float scaleEffect = 0.75f+ (perr*0.25f);// + ((float)Math.Sin(((index / 4f) * MathHelper.Pi) + Main.GlobalTime / 1f) * 0.15f);
+                        float scaleEffect = 0.75f+ (perr*0.25f);// + ((float)Math.Sin(((index / 4f) * MathHelper.Pi) + Main.GlobalTimeWrappedHourly / 1f) * 0.15f);
 
 
-                        spriteBatch.Draw(texs[0], npc.Center + new Vector2(0, -4) - Main.screenPosition, null, Color.White, 0, tex.Size() / 2f, (new Vector2(160f, 100f) / tex.Size()) * scaleEffect, index % 2 == 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+                        spriteBatch.Draw(texs[0], NPC.Center + new Vector2(0, -4) - Main.screenPosition, null, Color.White, 0, tex.Size() / 2f, (new Vector2(160f, 100f) / tex.Size()) * scaleEffect, index % 2 == 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
                         index += 1;
                     }
 
@@ -3511,11 +3512,11 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
                             var deathShader = GameShaders.Misc["ForceField"];
                             float percex = 0;// (index / (float)texs.Length);
                             float colorAlpha = (1f / (1f + index));
-                            deathShader.UseColor(Main.hslToRgb((percex + (Main.GlobalTime*(0.25f)))%1f,0.75f,0.75f)* colorAlpha* overallAlpha*shieldedVisual);
+                            deathShader.UseColor(Main.hslToRgb((percex + (Main.GlobalTimeWrappedHourly*(0.25f)))%1f,0.75f,0.75f)* colorAlpha* overallAlpha*shieldedVisual);
                             deathShader.UseOpacity(0.70f);
                             GameShaders.Misc["ForceField"].Apply(new DrawData?(value9));
 
-                            float scaleEffect = 1f+((float)Math.Sin(((index / 4f) * MathHelper.Pi) + Main.GlobalTime / 1f) * 0.15f);
+                            float scaleEffect = 1f+((float)Math.Sin(((index / 4f) * MathHelper.Pi) + Main.GlobalTimeWrappedHourly / 1f) * 0.15f);
 
                             spriteBatch.Draw(tex, npc.Center + new Vector2(0, -4) - Main.screenPosition, null, Color.White, 0, tex.Size() / 2f, (new Vector2(160f, 100f) / tex.Size())*(1f+(index/12f))* scaleEffect, index%2==0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
                             index -= 1;
@@ -3535,40 +3536,40 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Falling Comet");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 30;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 30;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override string Texture => "Terraria/Projectile_607";
 
         public override void SetDefaults()
         {
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.friendly = false;
-            projectile.hostile = true;
-            projectile.tileCollide = true;
-            projectile.alpha = 40;
-            projectile.timeLeft = 9000;
-            projectile.light = 0.75f;
-            projectile.extraUpdates = 2;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.tileCollide = true;
+            Projectile.alpha = 40;
+            Projectile.timeLeft = 9000;
+            Projectile.light = 0.75f;
+            Projectile.extraUpdates = 2;
         }
 
         public override bool PreKill(int timeLeft)
         {
-            SoundEffectInstance snd = Main.PlaySound(SoundID.DD2_BetsysWrathImpact, (int)projectile.Center.X, (int)projectile.Center.Y);
+            SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.DD2_BetsysWrathImpact, (int)Projectile.Center.X, (int)Projectile.Center.Y);
 
             if (snd != null)
             {
                 snd.Pitch = Main.rand.NextFloat(0.25f, 0.60f);
             }
 
-            float velocityAngle = projectile.velocity.ToRotation().AngleLerp(MathHelper.PiOver2, 0.75f);
+            float velocityAngle = Projectile.velocity.ToRotation().AngleLerp(MathHelper.PiOver2, 0.75f);
 
             for (int i = 0; i < 60; i += 1)
             {
                 Vector2 offset = (velocityAngle+(MathHelper.Pi+Main.rand.NextFloat(-0.35f,0.35f))).ToRotationVector2();
-                int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.BlueCrystalShard);
+                int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.BlueCrystalShard);
                 Main.dust[dust].scale = 1.5f;
                 Main.dust[dust].alpha = 150;
                 Main.dust[dust].velocity = Vector2.Normalize(offset) * (float)(1f * Main.rand.NextFloat(0f, 3f)*(i/5f));
@@ -3579,7 +3580,7 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
             {
                 float num1182 = (float)num1181 / 15f;
                 Vector2 vector123 = new Vector2((num1182*0.80f)+0.15f, 0f).RotatedBy(Main.rand.NextFloat(-0.25f,0.25f));
-                Gore gore = Gore.NewGoreDirect(projectile.position, Vector2.Zero, Utils.SelectRandom<int>(Main.rand, 375, 376, 377), 0.75f);
+                Gore gore = Gore.NewGoreDirect(Projectile.position, Vector2.Zero, Utils.SelectRandom<int>(Main.rand, 375, 376, 377), 0.75f);
 
                 if (gore != null)
                 {
@@ -3594,7 +3595,7 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
             {
                 float num1182 = (float)num1181 / 20f;
                 Vector2 vector123 = new Vector2(Main.rand.NextFloat() * 10f, 0f).RotatedBy(num1182 * -(float)Math.PI + Main.rand.NextFloat() * 0.1f - 0.05f);
-                int itemz = Item.NewItem(projectile.Center+ vector123*3, ModContent.ItemType<Glowrock>(), Main.rand.Next(1, 3));
+                int itemz = Item.NewItem(Projectile.Center+ vector123*3, ModContent.ItemType<Glowrock>(), Main.rand.Next(1, 3));
                 if (itemz >= 0)
                 {
                     Main.item[itemz].velocity = (Vector2.Normalize(vector123)*0.50f)+(vector123*0.75f);
@@ -3606,29 +3607,29 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
 
         public override void AI()
         {
-            projectile.localAI[0] += 1;
+            Projectile.localAI[0] += 1;
 
-            if (projectile.localAI[0] == 1)
+            if (Projectile.localAI[0] == 1)
             {
-                projectile.localAI[1] = Main.rand.Next(10000);
+                Projectile.localAI[1] = Main.rand.Next(10000);
             }
 
-            if (projectile.localAI[0] % 60 == 0)
+            if (Projectile.localAI[0] % 60 == 0)
             {
-                SoundEffectInstance snd = Main.PlaySound(SoundID.NPCKilled, (int)projectile.Center.X, (int)projectile.Center.Y, 7);
+                SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.NPCKilled, (int)Projectile.Center.X, (int)Projectile.Center.Y, 7);
 
                 if (snd != null)
                 {
-                    snd.Pitch = -0.75f+(projectile.timeLeft/9000f);
+                    snd.Pitch = -0.75f+(Projectile.timeLeft/9000f);
                 }
             }
 
-            projectile.rotation += ((projectile.localAI[1] - 5000f) / 5000f) * (MathHelper.Pi * 0.01f);
-            projectile.spriteDirection = projectile.velocity.X > 0 ? 1 : -1;
-            projectile.velocity = projectile.velocity.RotatedBy((float)Math.Sin((projectile.localAI[0] + projectile.localAI[1]) / 120f) * 0.002f);
+            Projectile.rotation += ((Projectile.localAI[1] - 5000f) / 5000f) * (MathHelper.Pi * 0.01f);
+            Projectile.spriteDirection = Projectile.velocity.X > 0 ? 1 : -1;
+            Projectile.velocity = Projectile.velocity.RotatedBy((float)Math.Sin((Projectile.localAI[0] + Projectile.localAI[1]) / 120f) * 0.002f);
 
-            Vector2 offset = Vector2.Normalize(projectile.velocity.RotatedByRandom(MathHelper.Pi / 12f)).RotatedBy(MathHelper.Pi);
-            int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.BlueCrystalShard);
+            Vector2 offset = Vector2.Normalize(Projectile.velocity.RotatedByRandom(MathHelper.Pi / 12f)).RotatedBy(MathHelper.Pi);
+            int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.BlueCrystalShard);
             Main.dust[dust].scale = 0.5f;
             Main.dust[dust].alpha = 150;
             Main.dust[dust].velocity = Vector2.Normalize(offset) * (float)(1f * Main.rand.NextFloat(0f, 3f));
@@ -3643,42 +3644,42 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
             int bufferRange2 = 240;
             Rectangle bufferrect2 = new Rectangle((int)Main.screenPosition.X - bufferRange2, (int)Main.screenPosition.Y - bufferRange2, (int)Main.screenPosition.X + Main.screenWidth + bufferRange2, (int)Main.screenPosition.Y + Main.screenHeight + bufferRange2);
 
-            if (!bufferrect2.Contains(projectile.Center.ToPoint()))
+            if (!bufferrect2.Contains(Projectile.Center.ToPoint()))
             {
                 return false;
             }
 
 
             Texture2D trailTex = SGAmod.ExtraTextures[110];
-            Texture2D asteriodTex = mod.GetTexture("Dimensions/Space/BlueAsteroidSmall" + (projectile.localAI[1]%2 > 0 ? "" : "2"));
-            float alphaFade = Math.Min(projectile.timeLeft/300f,1f);
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D asteriodTex = Mod.Assets.Request<Texture2D>("Dimensions/Space/BlueAsteroidSmall" + (projectile.localAI[1]%2 > 0 ? "" : "2")).Value;
+            float alphaFade = Math.Min(Projectile.timeLeft/300f,1f);
+            Texture2D texture = Main.projectileTexture[Projectile.type];
             Vector2 origin = new Vector2(trailTex.Width / 2f, trailTex.Height / 6f);
 
-            float lastpos = (-projectile.velocity).ToRotation();
+            float lastpos = (-Projectile.velocity).ToRotation();
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
             Color colorz = Color.PaleTurquoise;
 
-            Texture2D glowTex = mod.GetTexture("GlowOrb");
+            Texture2D glowTex = Mod.Assets.Request<Texture2D>("GlowOrb").Value;
             ArmorShaderData stardustsshader = GameShaders.Armor.GetShaderFromItemId(ItemID.VortexDye);
 
-            DrawData value8 = new DrawData(glowTex, new Vector2(30f, 30f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 64, 64)), Microsoft.Xna.Framework.Color.White, projectile.rotation, glowTex.Size() / 2f, projectile.scale * 5f, SpriteEffects.None, 0);
+            DrawData value8 = new DrawData(glowTex, new Vector2(30f, 30f), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 64, 64)), Microsoft.Xna.Framework.Color.White, Projectile.rotation, glowTex.Size() / 2f, Projectile.scale * 5f, SpriteEffects.None, 0);
             stardustsshader.UseColor(colorz.ToVector3());
             stardustsshader.UseOpacity(0.15f);
             stardustsshader.Apply(null, new DrawData?(value8));
 
 
-            for (int i = projectile.oldPos.Length - 1; i > 0; i -= 1)
+            for (int i = Projectile.oldPos.Length - 1; i > 0; i -= 1)
             {
-                float alpha = 1f-(i / (float)projectile.oldPos.Length);
-                Vector2 pos1 = projectile.oldPos[i] + (projectile.Hitbox.Size() / 2f);
-                spriteBatch.Draw(trailTex, pos1 - Main.screenPosition, null, Color.Aqua * alphaFade* alpha * 0.20f, lastpos + MathHelper.PiOver2, origin, (1f-(i/ (float)projectile.oldPos.Length)),SpriteEffects.None, 0f);
+                float alpha = 1f-(i / (float)Projectile.oldPos.Length);
+                Vector2 pos1 = Projectile.oldPos[i] + (Projectile.Hitbox.Size() / 2f);
+                spriteBatch.Draw(trailTex, pos1 - Main.screenPosition, null, Color.Aqua * alphaFade* alpha * 0.20f, lastpos + MathHelper.PiOver2, origin, (1f-(i/ (float)Projectile.oldPos.Length)),SpriteEffects.None, 0f);
                 if (i > 0)
                 {
-                    Vector2 pos2 = projectile.oldPos[i-1] + (projectile.Hitbox.Size() / 2f);
+                    Vector2 pos2 = Projectile.oldPos[i-1] + (Projectile.Hitbox.Size() / 2f);
                     lastpos = (pos2 - pos1).ToRotation();
                 }
             }
@@ -3689,7 +3690,7 @@ hallowed.Parameters["rainbowScale"].SetValue(0.8f);
 
             origin = new Vector2(asteriodTex.Width, asteriodTex.Height / 2) / 2f;
 
-            spriteBatch.Draw(asteriodTex, projectile.Center - Main.screenPosition, new Rectangle(0, 0, asteriodTex.Width, asteriodTex.Height / 2), Color.White * alphaFade * 1f, projectile.rotation, origin, 1f, projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(asteriodTex, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, asteriodTex.Width, asteriodTex.Height / 2), Color.White * alphaFade * 1f, Projectile.rotation, origin, 1f, Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 
 
             return false;

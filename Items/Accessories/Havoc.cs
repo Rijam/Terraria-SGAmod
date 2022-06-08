@@ -18,39 +18,31 @@ namespace SGAmod.Items.Accessories
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            Color c = Main.hslToRgb((float)(Main.GlobalTime/4f)%1f, 0.45f, 0.65f);
-			tooltips.Add(new TooltipLine(mod,"Dedicated", Idglib.ColorText(c,"Dedicated to PeopleMCNugget")));
-			c = Main.hslToRgb((float)(Main.GlobalTime / 3.17f) % 1f, 0.65f, 0.45f);
-			tooltips.Add(new TooltipLine(mod, "Dedicated2", Idglib.ColorText(c, "And the amazing spriters who helped him")));
+            Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly/4f)%1f, 0.45f, 0.65f);
+			tooltips.Add(new TooltipLine(Mod,"Dedicated", Idglib.ColorText(c,"Dedicated to PeopleMCNugget")));
+			c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 3.17f) % 1f, 0.65f, 0.45f);
+			tooltips.Add(new TooltipLine(Mod, "Dedicated2", Idglib.ColorText(c, "And the amazing spriters who helped him")));
 		}
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(1, 0, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.accessory = true;
-			item.expert=true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(1, 0, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.accessory = true;
+			Item.expert=true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 		player.GetModPlayer<SGAPlayer>().Havoc = 1;
-		mod.GetItem("Photosynthesizer").UpdateAccessory(player,hideVisual);
-		mod.GetItem("SerratedTooth").UpdateAccessory(player,hideVisual);
+		Mod.GetItem("Photosynthesizer").UpdateAccessory(player,hideVisual);
+		Mod.GetItem("SerratedTooth").UpdateAccessory(player,hideVisual);
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("SharkTooth"), 100);
-			recipe.AddIngredient(mod.ItemType("MurkyGel"), 100);
-			recipe.AddIngredient(mod.ItemType("Photosynthesizer"), 1);
-			recipe.AddIngredient(mod.ItemType("SerratedTooth"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 15);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("SharkTooth"), 100).AddIngredient(mod.ItemType("MurkyGel"), 100).AddIngredient(mod.ItemType("Photosynthesizer"), 1).AddIngredient(mod.ItemType("SerratedTooth"), 1).AddIngredient(mod.ItemType("PrismalBar"), 15).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 }

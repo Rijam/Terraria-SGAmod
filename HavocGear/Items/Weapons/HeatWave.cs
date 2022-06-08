@@ -21,23 +21,23 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 25;
-			item.magic = true;
-			item.mana = 8;
-			item.width = 34;      
-            item.height = 24;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = 5;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 6;
-	        item.shootSpeed = 14f;
-            item.noMelee = true; 
-			item.shoot = mod.ProjectileType("HotRound");
-			item.UseSound = SoundID.Item9;		
-			item.autoReuse = true;
-		    item.useTurn = true;
+			Item.damage = 25;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 8;
+			Item.width = 34;      
+            Item.height = 24;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = 5;
+			Item.knockBack = 6;
+			Item.value = 10000;
+			Item.rare = 6;
+	        Item.shootSpeed = 14f;
+            Item.noMelee = true; 
+			Item.shoot = Mod.Find<ModProjectile>("HotRound").Type;
+			Item.UseSound = SoundID.Item9;		
+			Item.autoReuse = true;
+		    Item.useTurn = true;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -50,12 +50,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 		}
 		public override void AddRecipes()
         	{
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "FieryShard", 12);
-            recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "FieryShard", 12).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.MythrilAnvil).Register();
         	}
 	}
 }

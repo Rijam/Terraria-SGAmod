@@ -20,22 +20,22 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 75;
-			item.ranged = true;
-			item.width = 32;
-			item.height = 62;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 2;
-			item.value = 750000;
-			item.rare = ItemRarityID.Purple;
-			item.UseSound = SoundID.Item99;
-			item.autoReuse = true;
-			item.shoot = 10;
-			item.shootSpeed = 20f;
-			item.useAmmo = AmmoID.Dart;
+			Item.damage = 75;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 32;
+			Item.height = 62;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 2;
+			Item.value = 750000;
+			Item.rare = ItemRarityID.Purple;
+			Item.UseSound = SoundID.Item99;
+			Item.autoReuse = true;
+			Item.shoot = 10;
+			Item.shootSpeed = 20f;
+			Item.useAmmo = AmmoID.Dart;
 		}
 
         public override bool ConsumeAmmo(Player player)
@@ -58,7 +58,7 @@ namespace SGAmod.Items.Weapons
 
 			for (int i = 0; i < numberProjectiles; i++)
 			{
-				int typeOfShot = mod.ProjectileType("FlamingStinger");
+				int typeOfShot = Mod.Find<ModProjectile>("FlamingStinger").Type;
 				if (false)
 					typeOfShot = type;
 
@@ -66,14 +66,14 @@ namespace SGAmod.Items.Weapons
 				int proj=Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y,typeOfShot , damage, knockBack, player.whoAmI);
 				Main.projectile[proj].friendly=true;
 				Main.projectile[proj].hostile=false;
-				Main.projectile[proj].knockBack=item.knockBack;
+				Main.projectile[proj].knockBack=Item.knockBack;
 				Main.projectile[proj].ai[0] = (int)Main.rand.Next(0, 80);
 				Main.projectile[proj].netUpdate = true;
 				Main.projectile[proj].localNPCHitCooldown = 3;
 				Main.projectile[proj].usesLocalNPCImmunity = true;
 
 				IdgProjectile.AddOnHitBuff(proj,BuffID.OnFire,60*6);
-				IdgProjectile.AddOnHitBuff(proj, mod.BuffType("Gourged"), 60 * 6);
+				IdgProjectile.AddOnHitBuff(proj, Mod.Find<ModBuff>("Gourged").Type, 60 * 6);
 				IdgProjectile.Sync(proj);
 			}
 			return false;
@@ -81,18 +81,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType <Gatlipiller>(), 1);
-			recipe.AddIngredient(ItemID.Stinger, 12);
-			recipe.AddIngredient(ModContent.ItemType <HavocGear.Items.Weapons.SharkTooth>(), 50);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.VirulentBar>(), 5);
-			recipe.AddIngredient(ModContent.ItemType<IlluminantEssence>(), 20);
-			recipe.AddIngredient(ModContent.ItemType<VibraniumBar>(), 8);
-			recipe.AddIngredient(ItemID.LunarBar, 5);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-			//recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ModContent.ItemType <Gatlipiller>(), 1).AddIngredient(ItemID.Stinger, 12).AddIngredient(ModContent.ItemType <HavocGear.Items.Weapons.SharkTooth>(), 50).AddIngredient(ModContent.ItemType<HavocGear.Items.VirulentBar>(), 5).AddIngredient(ModContent.ItemType<IlluminantEssence>(), 20).AddIngredient(ModContent.ItemType<VibraniumBar>(), 8).AddIngredient(ItemID.LunarBar, 5).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -109,14 +98,14 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ranged = true;
-			projectile.extraUpdates = 3;
-			projectile.penetrate = 5;
-			projectile.timeLeft = 300;
-			projectile.localNPCHitCooldown = 3;
-			projectile.usesLocalNPCImmunity = true;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.extraUpdates = 3;
+			Projectile.penetrate = 5;
+			Projectile.timeLeft = 300;
+			Projectile.localNPCHitCooldown = 3;
+			Projectile.usesLocalNPCImmunity = true;
 		}
 
 		public override string Texture
@@ -126,32 +115,32 @@ namespace SGAmod.Items.Weapons
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type=fakeid;
+			Projectile.type=fakeid;
 			return true;
 		}
 
 		public override void AI()
 		{
-			projectile.ai[0] += 1;
-			if (projectile.ai[0] % 40 == 0)
+			Projectile.ai[0] += 1;
+			if (Projectile.ai[0] % 40 == 0)
 			{
-				Vector2 avel = projectile.velocity.RotatedBy(MathHelper.ToRadians(projectile.ai[0] % 80==0 ? 90 : -90))/5f;
-				int proj=Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, avel.X, avel.Y, ProjectileID.SporeGas3, projectile.damage*2, projectile.knockBack, projectile.owner);
+				Vector2 avel = Projectile.velocity.RotatedBy(MathHelper.ToRadians(Projectile.ai[0] % 80==0 ? 90 : -90))/5f;
+				int proj=Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, avel.X, avel.Y, ProjectileID.SporeGas3, Projectile.damage*2, Projectile.knockBack, Projectile.owner);
 				Main.projectile[proj].usesLocalNPCImmunity = true;
 				Main.projectile[proj].localNPCHitCooldown = -1;
 				Main.projectile[proj].scale = 0.5f;
 				Main.projectile[proj].extraUpdates = 1;
-				Main.projectile[proj].ranged = true;
+				Main.projectile[proj].DamageType = DamageClass.Ranged;
 				Main.projectile[proj].netUpdate = true;
-				IdgProjectile.AddOnHitBuff(proj, mod.BuffType("AcidBurn"), 60 * 2);
+				IdgProjectile.AddOnHitBuff(proj, Mod.Find<ModBuff>("AcidBurn").Type, 60 * 2);
 				IdgProjectile.Sync(proj);
 			}
 
-			int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 6);
+			int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 6);
         Main.dust[dust].scale = 0.8f;
         Main.dust[dust].noGravity = false;
-        Main.dust[dust].velocity = projectile.velocity*(float)(Main.rand.Next(20,100)*0.005f);
-        projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+        Main.dust[dust].velocity = Projectile.velocity*(float)(Main.rand.Next(20,100)*0.005f);
+        Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 		}
 
 	}

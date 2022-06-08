@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
-using Terraria.ModLoader.Audio;
+using Terraria.Audio;
 
 namespace SGAmod
 {
@@ -63,8 +63,8 @@ namespace SGAmod
 
 
 	}
-
-	public class MusicStreamingOGGPlus : MusicStreamingOGG
+	//Um I'm just going to comment all of this music stuff out
+	/*public class MusicStreamingOGGPlus : MusicStreamingOGG
 	{
 		public float volume = 1f;
 		public float volumeGoal = 1f;
@@ -77,8 +77,9 @@ namespace SGAmod
 		public float volumeScale = 0.01f;
 		private bool initCheck = false;
 
+		
 		public MusicStreamingOGGPlus(string path)
-	: base(path)
+	:base(path)
 		{
 		}
 		public bool StartPlus(float volume = 0f)
@@ -124,8 +125,8 @@ namespace SGAmod
 
 		}
 
-
-	}
+		
+}*/
 
 	public class ScreenExplosion
 	{

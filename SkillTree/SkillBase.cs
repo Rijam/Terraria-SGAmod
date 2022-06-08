@@ -127,7 +127,7 @@ namespace SGAmod.SkillTree
         public virtual void OnPlayerDamage(ref int damage, ref bool crit, NPC npc, Projectile proj) { }
         public virtual void OnEnemyDamage(ref int damage, ref bool crit, ref float knockback, Item item, Projectile proj) { }
         public virtual bool ReforgePrice(Item item, ref int reforgePrice, ref bool canApplyDiscount) { return true; }
-        public virtual bool UseItem(Item item) { return true; }
+        public virtual bool? UseItem(Item item) { return true; }
         public virtual void UseTimeMultiplier(Item item, ref float current) { }
         public virtual void GetWeaponDamage(Item item, ref int damage) { }
 
@@ -269,12 +269,12 @@ namespace SGAmod.SkillTree
                             previous[0] = (float)rand.NextDouble() * 10f; starts[0] = previous[0];
                             previous[1] = (float)rand.NextDouble(); starts[1] = previous[1];
                         }
-                        float radius = overallradius + (float)Math.Sin(MathHelper.ToRadians(rad1 + Main.GlobalTime * (90f + previous[0]))) * ((0.50f + previous[1]) * ripplesize);
+                        float radius = overallradius + (float)Math.Sin(MathHelper.ToRadians(rad1 + Main.GlobalTimeWrappedHourly * (90f + previous[0]))) * ((0.50f + previous[1]) * ripplesize);
                         previous[0] = (float)rand.NextDouble() * 10f;
                         previous[1] = (float)rand.NextDouble();
                         if (i + 3 >= vertices.Length) { previous = starts; }
 
-                        float radius2 = overallradius + (float)Math.Sin(MathHelper.ToRadians(rad2 + Main.GlobalTime * (90f + previous[0]))) * ((0.50f + previous[1]) * ripplesize);
+                        float radius2 = overallradius + (float)Math.Sin(MathHelper.ToRadians(rad2 + Main.GlobalTimeWrappedHourly * (90f + previous[0]))) * ((0.50f + previous[1]) * ripplesize);
 
                         float angle = -(adder + MathHelper.ToRadians(((float)i / (vertices.Length - (polys * 3))) * maxdegre));
                         Vector3 theplace = new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0) * radius;

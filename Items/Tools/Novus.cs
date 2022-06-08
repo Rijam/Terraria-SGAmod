@@ -14,37 +14,33 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 5;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useAnimation = 26;
-			item.useTime = 12;
-			item.pick = 55;
-			item.useStyle = 1;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useTurn = true;
+			Item.damage = 5;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useAnimation = 26;
+			Item.useTime = 12;
+			Item.pick = 55;
+			Item.useStyle = 1;
+			Item.knockBack = 6;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useTurn = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
 			if (Main.rand.Next(7) == 0)
 			{
-				SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
-				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("NovusSparkle"));
+				SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
+				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, Mod.Find<ModDust>("NovusSparkle").Type);
 				Main.dust[dust].color=new Color(180, 60, 140);
 				Main.dust[dust].alpha=(sgaplayer.Novusset>0 ? 181 : 180);
 
@@ -53,7 +49,7 @@ namespace SGAmod.Items.Tools
 
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
 		{
-		SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+		SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
         if (sgaplayer.Novusset>0)
 		mult = 1.2f;
 
@@ -71,28 +67,24 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 7;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.axe = 12;
-			item.useStyle = 1;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 7;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.axe = 12;
+			Item.useStyle = 1;
+			Item.knockBack = 6;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 8).AddTile(TileID.Anvils).Register();
 		}
 
 	}

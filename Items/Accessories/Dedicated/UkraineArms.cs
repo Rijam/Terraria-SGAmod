@@ -10,6 +10,7 @@ using SGAmod.HavocGear.Items.Accessories;
 using Idglibrary;
 using Microsoft.Xna.Framework.Audio;
 using System.Linq;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Accessories.Dedicated
 {
@@ -26,7 +27,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 		public string DedicatedItem()
 		{
 			//tooltips.Add(new TooltipLine(mod, "Dedicated", 
-			//Color c = Main.hslToRgb((float)(Main.GlobalTime / 5f) % 1f, 0.45f, 0.65f);
+			//Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 5f) % 1f, 0.45f, 0.65f);
 			return "To the boundless valor displayed by Ukrainians during Russia's invasion";
 		}
 
@@ -54,21 +55,21 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 			if (player.UkraineArms)
 			{
-				if (UkraineArms.IsItAPerfectlyGoodTimeForAnInvasion(player.player))
+				if (UkraineArms.IsItAPerfectlyGoodTimeForAnInvasion(player.Player))
 				{
 					if (player.UkraineArmsBuff < 1)
 					{
-						Projectile.NewProjectile(player.player.Center, Vector2.Zero, ModContent.ProjectileType<UkraineArmsProj>(), 100, 0, player.player.whoAmI);
+						Projectile.NewProjectile(player.Player.Center, Vector2.Zero, ModContent.ProjectileType<UkraineArmsProj>(), 100, 0, player.Player.whoAmI);
 					}
-					player.player.blackBelt = true;
-					player.player.AddBuff(buff, 60);
+					player.Player.blackBelt = true;
+					player.Player.AddBuff(buff, 60);
 				}
 
 
 				if (player.UkraineArmsBuff>0)
 				{
-					player.player.statDefense = (int)(player.player.statDefense * 1.25f);
-					player.player.endurance += 0.15f;
+					player.Player.statDefense = (int)(player.Player.statDefense * 1.25f);
+					player.Player.endurance += 0.15f;
 				}
 			}
         }
@@ -84,7 +85,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 		public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
 		{
-			if (line.mod == "Terraria" && line.Name == "ItemName")
+			if (line.Mod == "Terraria" && line.Name == "ItemName")
 			{
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Main.UIScaleMatrix);
@@ -100,8 +101,8 @@ namespace SGAmod.Items.Accessories.Dedicated
 				hallowed.Parameters["prismColor"].SetValue(Color.Blue.ToVector3());
 				hallowed.Parameters["rainbowScale"].SetValue(0f);
 				hallowed.Parameters["overlayScale"].SetValue(new Vector2(1f, 1f));
-				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("Voronoi"));
-				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(-Main.GlobalTime / 20f, -Main.GlobalTime / 4f, Main.GlobalTime * 1f));
+				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Voronoi").Value);
+				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(-Main.GlobalTimeWrappedHourly / 20f, -Main.GlobalTimeWrappedHourly / 4f, Main.GlobalTimeWrappedHourly * 1f));
 				hallowed.Parameters["overlayAlpha"].SetValue(1.5f);
 				hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f, 0f, 0f));
 				hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -114,8 +115,8 @@ namespace SGAmod.Items.Accessories.Dedicated
 				hallowed.Parameters["prismColor"].SetValue(Color.Gold.ToVector3());
 				hallowed.Parameters["rainbowScale"].SetValue(0f);
 				hallowed.Parameters["overlayScale"].SetValue(new Vector2(0.05f, 2f));
-				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("SmallLaserHorz"));
-				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTime / 20f, Main.GlobalTime / 2f, Main.GlobalTime * 1f));
+				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaserHorz").Value);
+				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTimeWrappedHourly / 20f, Main.GlobalTimeWrappedHourly / 2f, Main.GlobalTimeWrappedHourly * 1f));
 				hallowed.Parameters["overlayAlpha"].SetValue(1.5f);
 				hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f, 0f, 0f));
 				hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -128,8 +129,8 @@ namespace SGAmod.Items.Accessories.Dedicated
 				hallowed.Parameters["prismColor"].SetValue(Color.Gold.ToVector3());
 				hallowed.Parameters["rainbowScale"].SetValue(0f);
 				hallowed.Parameters["overlayScale"].SetValue(new Vector2(0.05f, 2f));
-				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("SmallLaserHorz"));
-				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTime / 20f, 0.5f+(Main.GlobalTime / 2f), Main.GlobalTime * 1f));
+				hallowed.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaserHorz").Value);
+				hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTimeWrappedHourly / 20f, 0.5f+(Main.GlobalTimeWrappedHourly / 2f), Main.GlobalTimeWrappedHourly * 1f));
 				hallowed.Parameters["overlayAlpha"].SetValue(1.5f);
 				hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f, 0f, 0f));
 				hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -146,12 +147,12 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.buyPrice(gold: 1);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.buyPrice(gold: 1);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 
 	}
@@ -163,7 +164,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 			texture = "SGAmod/Buffs/UkraineValorBuff";
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ukrainian Valor");
 			Description.SetDefault("Banding together against an opressive foe...\nGives players Black Belt, 25% more defense, and 15% increased endurance\nGives Friendly NPCs 50% damage resistance and heals them");
@@ -246,11 +247,11 @@ namespace SGAmod.Items.Accessories.Dedicated
 		}
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.aiStyle = -1;
-			projectile.timeLeft = 30;
-			projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.aiStyle = -1;
+			Projectile.timeLeft = 30;
+			Projectile.tileCollide = false;
 		}
 
 		public override string Texture
@@ -270,25 +271,25 @@ namespace SGAmod.Items.Accessories.Dedicated
 		public override void AI()
 		{
 
-			float timeTime = MathHelper.Clamp(projectile.timeLeft / 30f, 0f, Math.Min(projectile.localAI[0] / 20f, 1));
+			float timeTime = MathHelper.Clamp(Projectile.timeLeft / 30f, 0f, Math.Min(Projectile.localAI[0] / 20f, 1));
 			float realTimeLeft = MathHelper.SmoothStep(0f, 1f, timeTime);
-			Vector2 scaler = (Vector2.One * (Math.Max(1f, 1f + (float)Math.Sin(projectile.localAI[0] / 6f) * 0.2f)) * realTimeLeft);
+			Vector2 scaler = (Vector2.One * (Math.Max(1f, 1f + (float)Math.Sin(Projectile.localAI[0] / 6f) * 0.2f)) * realTimeLeft);
 
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 
 			Entity owner = null;
-			if (projectile.owner>=255 || projectile.owner<0)
+			if (Projectile.owner>=255 || Projectile.owner<0)
 			{
-				owner = Main.npc[(int)projectile.ai[0]];
+				owner = Main.npc[(int)Projectile.ai[0]];
 			}
 			else
 			{
-				owner = Main.player[projectile.owner];
+				owner = Main.player[Projectile.owner];
 			}
 
-			if (projectile.localAI[0] == 1)
+			if (Projectile.localAI[0] == 1)
             {
-				Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/P5defense").WithVolume(1f).WithPitchVariance(.25f), projectile.Center);
+				SoundEngine.PlaySound(Mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/P5defense").WithVolume(1f).WithPitchVariance(.25f), Projectile.Center);
 			}
 
 
@@ -312,7 +313,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 					{
 						for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 2f)
 						{
-							Vector2 angle = ((f + projectile.localAI[0] / 20f).ToRotationVector2() * new Vector2(npcTown.width/2f, 16f));
+							Vector2 angle = ((f + Projectile.localAI[0] / 20f).ToRotationVector2() * new Vector2(npcTown.width/2f, 16f));
 							UkraineFlagDust uadust = new UkraineFlagDust(npcTown.Center+new Vector2(0,npcTown.height/2) + angle, -Vector2.UnitY * Main.rand.NextFloat(1f, 1.5f) * ((float)npcTown.height/9f), Main.rand.Next(8, 12), f <= 0);
 							uadust.scale = new Vector2(0.06f, 0.12f);
 							uadust.rotationAdd = 0;
@@ -335,16 +336,16 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 				if (ownerExists)
 				{
-					projectile.timeLeft = 30;
-					projectile.Center = owner.Center + new Vector2(0, ((-owner.height)+16) - scaler.Y * 24f);
+					Projectile.timeLeft = 30;
+					Projectile.Center = owner.Center + new Vector2(0, ((-owner.height)+16) - scaler.Y * 24f);
 				}
 			}
 
 			for(float f=0;f<MathHelper.TwoPi; f += MathHelper.TwoPi / 2f)
             {
-				Vector2 angle = ((f+projectile.localAI[0]/20f).ToRotationVector2() * new Vector2(24f, 16f));
+				Vector2 angle = ((f+Projectile.localAI[0]/20f).ToRotationVector2() * new Vector2(24f, 16f));
 
-				UkraineFlagDust uadust = new UkraineFlagDust(projectile.Center + angle, -Vector2.UnitY * Main.rand.NextFloat(1f, 1.25f)*1.25f,Main.rand.Next(16,24),f<=0);
+				UkraineFlagDust uadust = new UkraineFlagDust(Projectile.Center + angle, -Vector2.UnitY * Main.rand.NextFloat(1f, 1.25f)*1.25f,Main.rand.Next(16,24),f<=0);
 				uadust.scale = new Vector2(0.1f, 0.2f);
 				uadust.rotationAdd = 0;
 				float smoothLerp = MathHelper.SmoothStep(uadust.velocity.ToRotation(),owner.velocity.ToRotation(), MathHelper.Clamp(owner.velocity.LengthSquared()/96f,0f,1f));
@@ -354,7 +355,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 				flagDusts.Add(uadust);
 
-				uadust = new UkraineFlagDust(projectile.Center + (angle * new Vector2(Main.rand.NextFloat(0f,1f), Main.rand.NextFloat(0f, 1f))), -Vector2.UnitY * Main.rand.NextFloat(1f, 1.45f), Main.rand.Next(38, Main.rand.Next(60, 120)), f <= 0);
+				uadust = new UkraineFlagDust(Projectile.Center + (angle * new Vector2(Main.rand.NextFloat(0f,1f), Main.rand.NextFloat(0f, 1f))), -Vector2.UnitY * Main.rand.NextFloat(1f, 1.45f), Main.rand.Next(38, Main.rand.Next(60, 120)), f <= 0);
 				uadust.scale = new Vector2(0.075f, 0.075f);
 				uadust.fadeIn = 0.40f;
 				uadust.fadeTime = Main.rand.NextFloat(4f, 36f);
@@ -373,19 +374,19 @@ namespace SGAmod.Items.Accessories.Dedicated
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			float timeTime = MathHelper.Clamp(projectile.timeLeft/30f,0f,Math.Min(projectile.localAI[0]/20f,1f));
-			float introEffect = projectile.localAI[0] < 300 || projectile.timeLeft <28 ? 30f : 90f;
-			float timeTimeRepeat = MathHelper.Clamp((projectile.timeLeft / 30f), 0f, Math.Min((projectile.localAI[0] % 320f) / introEffect, 1));
+			float timeTime = MathHelper.Clamp(Projectile.timeLeft/30f,0f,Math.Min(Projectile.localAI[0]/20f,1f));
+			float introEffect = Projectile.localAI[0] < 300 || Projectile.timeLeft <28 ? 30f : 90f;
+			float timeTimeRepeat = MathHelper.Clamp((Projectile.timeLeft / 30f), 0f, Math.Min((Projectile.localAI[0] % 320f) / introEffect, 1));
 
 			float realTimeLeft = MathHelper.SmoothStep(0f, 1f, timeTime);
 			float realTimeLeftRepeatGlow = MathHelper.SmoothStep(0f, 1f, timeTimeRepeat);
-			Vector2 scaler = (Vector2.One * (Math.Max(1f, 1f + (float)Math.Sin(projectile.localAI[0] / 6f) * 0.2f)) * realTimeLeft);
+			Vector2 scaler = (Vector2.One * (Math.Max(1f, 1f + (float)Math.Sin(Projectile.localAI[0] / 6f) * 0.2f)) * realTimeLeft);
 
 
 			Texture2D coat = Main.itemTexture[ModContent.ItemType<UkraineArms>()];
-			Texture2D glow = ModContent.GetTexture("SGAmod/Glow");
+			Texture2D glow = ModContent.Request<Texture2D>("SGAmod/Glow");
 
-			Vector2 drawPos = projectile.Center;
+			Vector2 drawPos = Projectile.Center;
 			Vector2 coatCenter = coat.Size() / 2f;
 			Vector2 glowCenter = glow.Size() / 2f;
 
@@ -404,8 +405,8 @@ namespace SGAmod.Items.Accessories.Dedicated
 				effect.Parameters["noiseMultiplier"].SetValue(new Vector2(1f, 1f));
 				effect.Parameters["noiseOffset"].SetValue(new Vector2(0f, 0f));
 
-				effect.Parameters["Texture"].SetValue(SGAmod.Instance.GetTexture("Extra_49c"));
-				effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.GetTexture("Extra_49c"));
+				effect.Parameters["Texture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Extra_49c").Value);
+				effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Extra_49c").Value);
 				effect.Parameters["noiseProgress"].SetValue(realTimeLeftRepeatGlow);
 				effect.Parameters["textureProgress"].SetValue(0f);
 				effect.Parameters["noiseBlendPercent"].SetValue(1f);
@@ -417,7 +418,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 				effect.CurrentTechnique.Passes["TextureBlend"].Apply();
 
-				Main.spriteBatch.Draw(glow, drawPos - Main.screenPosition, null, Color.White, projectile.rotation, glowCenter, appearGlow*4f, default, 0);
+				Main.spriteBatch.Draw(glow, drawPos - Main.screenPosition, null, Color.White, Projectile.rotation, glowCenter, appearGlow*4f, default, 0);
 
 				effect.Parameters["strength"].SetValue(alphaGlow*2f);
 				effect.Parameters["colorTo"].SetValue(Color.Blue.ToVector4());
@@ -425,7 +426,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 				effect.CurrentTechnique.Passes["TextureBlend"].Apply();
 
-				Main.spriteBatch.Draw(glow, drawPos - Main.screenPosition, null, Color.White, projectile.rotation, glowCenter, 2f+(appearGlow * 1f), default, 0);
+				Main.spriteBatch.Draw(glow, drawPos - Main.screenPosition, null, Color.White, Projectile.rotation, glowCenter, 2f+(appearGlow * 1f), default, 0);
 
 			}
 
@@ -449,7 +450,7 @@ namespace SGAmod.Items.Accessories.Dedicated
 
 			for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 6f)
 			{
-				spriteBatch.Draw(coat, (drawPos + (Vector2.UnitX.RotatedBy(f + Main.GlobalTime * 2f) * 3f)) - Main.screenPosition, null, Color.Blue * 0.50f* realTimeLeft, 0, coatCenter, scaler, SpriteEffects.None, 0f);
+				spriteBatch.Draw(coat, (drawPos + (Vector2.UnitX.RotatedBy(f + Main.GlobalTimeWrappedHourly * 2f) * 3f)) - Main.screenPosition, null, Color.Blue * 0.50f* realTimeLeft, 0, coatCenter, scaler, SpriteEffects.None, 0f);
 			}
 
 

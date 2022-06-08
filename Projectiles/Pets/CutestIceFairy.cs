@@ -11,133 +11,133 @@ namespace SGAmod.Projectiles.Pets
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cutest Ice Fairy");
-			Main.projFrames[projectile.type] = 8;
-			Main.projPet[projectile.type] = true;
+			Main.projFrames[Projectile.type] = 8;
+			Main.projPet[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.DD2PetGato); //Has 8 frames. But doesn't seem to use the last 4 frames, even in vanilla. Vanilla: Projectile_703
+			Projectile.CloneDefaults(ProjectileID.DD2PetGato); //Has 8 frames. But doesn't seem to use the last 4 frames, even in vanilla. Vanilla: Projectile_703
 															   //Modified AI to use the last 4 frames if the projectile is moving fast
-			projectile.aiStyle = -1;
-			projectile.width = 24;
-			projectile.height = 24;
-			//aiType = ProjectileID.DD2PetGato;
+			Projectile.aiStyle = -1;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			//AIType = ProjectileID.DD2PetGato;
 			drawOffsetX = -12;
 			drawOriginOffsetY -= 14;
 		}
 
 		public override bool PreAI()
 		{
-			Player player = Main.player[projectile.owner];
-			player.petFlagDD2Gato = false; // Relic from aiType
+			Player player = Main.player[Projectile.owner];
+			player.petFlagDD2Gato = false; // Relic from AIType
 			return true;
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			if (player.HasBuff(ModContent.BuffType<Buffs.Pets.CutestIceFairyBuff>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
-			Lighting.AddLight(projectile.Center, 0.0f, 0.18f, 0.25f);
+			Lighting.AddLight(Projectile.Center, 0.0f, 0.18f, 0.25f);
 
 			//Taken from AI_144_DD2Pets() and modified
 			float numIs3f = 3f;
-			int numOfFrames = Main.projFrames[projectile.type];
+			int numOfFrames = Main.projFrames[Projectile.type];
 			Vector2 playerDirection = new Vector2(player.direction * 30, -20f);
-			playerDirection.Y += (float)Math.Cos(projectile.localAI[0] * ((float)Math.PI / 30f)) * 2f;
-			projectile.direction = (projectile.spriteDirection = player.direction);
+			playerDirection.Y += (float)Math.Cos(Projectile.localAI[0] * ((float)Math.PI / 30f)) * 2f;
+			Projectile.direction = (Projectile.spriteDirection = player.direction);
 			Vector2 playerCenterAndDirection = player.MountedCenter + playerDirection;
-			float distToProjCenter = Vector2.Distance(projectile.Center, playerCenterAndDirection);
+			float distToProjCenter = Vector2.Distance(Projectile.Center, playerCenterAndDirection);
 			if (distToProjCenter > 1000f)
 			{
-				projectile.Center = player.Center + playerDirection;
+				Projectile.Center = player.Center + playerDirection;
 			}
-			Vector2 distPlayerToProj = playerCenterAndDirection - projectile.Center;
+			Vector2 distPlayerToProj = playerCenterAndDirection - Projectile.Center;
 			if (distToProjCenter < numIs3f)
 			{
-				projectile.velocity *= 0.25f;
+				Projectile.velocity *= 0.25f;
 			}
 			if (distPlayerToProj != Vector2.Zero)
 			{
 				if (distPlayerToProj.Length() < numIs3f * 0.5f)
 				{
-					projectile.velocity = distPlayerToProj;
+					Projectile.velocity = distPlayerToProj;
 				}
 				else
 				{
-					projectile.velocity = distPlayerToProj * 0.1f;
+					Projectile.velocity = distPlayerToProj * 0.1f;
 				}
 			}
-			if (projectile.velocity.Length() > 6f)
+			if (Projectile.velocity.Length() > 6f)
 			{
-				float num7 = projectile.velocity.X * 0.08f + projectile.velocity.Y * projectile.spriteDirection * 0.02f;
-				if (Math.Abs(projectile.rotation - num7) >= (float)Math.PI)
+				float num7 = Projectile.velocity.X * 0.08f + Projectile.velocity.Y * Projectile.spriteDirection * 0.02f;
+				if (Math.Abs(Projectile.rotation - num7) >= (float)Math.PI)
 				{
-					if (num7 < projectile.rotation)
+					if (num7 < Projectile.rotation)
 					{
-						projectile.rotation -= (float)Math.PI * 2f;
+						Projectile.rotation -= (float)Math.PI * 2f;
 					}
 					else
 					{
-						projectile.rotation += (float)Math.PI * 2f;
+						Projectile.rotation += (float)Math.PI * 2f;
 					}
 				}
 				float num8 = 12f;
-				projectile.rotation = (projectile.rotation * (num8 - 1f) + num7) / num8;
-				if (projectile.frameCounter++ >= 2)
+				Projectile.rotation = (Projectile.rotation * (num8 - 1f) + num7) / num8;
+				if (Projectile.frameCounter++ >= 2)
 				{
-					projectile.frameCounter = 0;
-					projectile.frame++;
+					Projectile.frameCounter = 0;
+					Projectile.frame++;
 				}
 			}
 			else
 			{
-				if (projectile.rotation > (float)Math.PI)
+				if (Projectile.rotation > (float)Math.PI)
 				{
-					projectile.rotation -= (float)Math.PI * 2f;
+					Projectile.rotation -= (float)Math.PI * 2f;
 				}
-				if (projectile.rotation > -0.005f && projectile.rotation < 0.005f)
+				if (Projectile.rotation > -0.005f && Projectile.rotation < 0.005f)
 				{
-					projectile.rotation = 0f;
+					Projectile.rotation = 0f;
 				}
 				else
 				{
-					projectile.rotation *= 0.96f;
+					Projectile.rotation *= 0.96f;
 				}
-				if (projectile.frameCounter++ >= 4)
+				if (Projectile.frameCounter++ >= 4)
 				{
-					projectile.frameCounter = 0;
-					if (projectile.frame++ >= numOfFrames)
+					Projectile.frameCounter = 0;
+					if (Projectile.frame++ >= numOfFrames)
 					{
-						projectile.frame = 0;
+						Projectile.frame = 0;
 					}
 				}
 			}
-			if (Math.Abs(projectile.velocity.X) > 6f)
+			if (Math.Abs(Projectile.velocity.X) > 6f)
 			{
-				if (projectile.frame < 4)
+				if (Projectile.frame < 4)
 				{
-					projectile.frame += 4;
+					Projectile.frame += 4;
 				}
-				if (projectile.frame >= 8)
+				if (Projectile.frame >= 8)
 				{
-					projectile.frame = 4;
+					Projectile.frame = 4;
 				}
 			}
 			else
 			{
-				if (projectile.frame >= 4)
+				if (Projectile.frame >= 4)
 				{
-					projectile.frame = 0;
+					Projectile.frame = 0;
 				}
 			}
-			projectile.localAI[0] += 1f;
-			if (projectile.localAI[0] > 120f)
+			Projectile.localAI[0] += 1f;
+			if (Projectile.localAI[0] > 120f)
 			{
-				projectile.localAI[0] = 0f;
+				Projectile.localAI[0] = 0f;
 			}
 		}
 	}

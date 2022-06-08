@@ -10,10 +10,11 @@ using Terraria;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria.Utilities;
 using Terraria.ID;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Terraria.ModLoader;
 using Terraria.Graphics;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs.Hellion
 {
@@ -49,18 +50,18 @@ namespace SGAmod.NPCs.Hellion
         }
         public override void SetDefaults()
         {
-            npc.width = 54;
-            npc.height = 54;
-            npc.damage = 100;
-            npc.defense = 20;
-            npc.lifeMax = 27000;
-            npc.knockBackResist = 0.0f;
-            npc.behindTiles = true;
-            npc.noTileCollide = true;
-            npc.netAlways = false;
-            npc.noGravity = true;
-            npc.dontCountMe = true;
-            npc.HitSound = SoundID.NPCHit1;
+            NPC.width = 54;
+            NPC.height = 54;
+            NPC.damage = 100;
+            NPC.defense = 20;
+            NPC.lifeMax = 27000;
+            NPC.knockBackResist = 0.0f;
+            NPC.behindTiles = true;
+            NPC.noTileCollide = true;
+            NPC.netAlways = false;
+            NPC.noGravity = true;
+            NPC.dontCountMe = true;
+            NPC.HitSound = SoundID.NPCHit1;
         }
 
         int phase = 0;
@@ -72,7 +73,7 @@ namespace SGAmod.NPCs.Hellion
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
-            target.AddBuff(mod.BuffType("TechnoCurse"), 60 * 5);
+            target.AddBuff(Mod.Find<ModBuff>("TechnoCurse").Type, 60 * 5);
         }
 
         public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
@@ -85,7 +86,7 @@ namespace SGAmod.NPCs.Hellion
 
         public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
         {
-            if (npc.ai[1] > 0 && Main.npc[(int)npc.ai[1]].active)
+            if (NPC.ai[1] > 0 && Main.npc[(int)NPC.ai[1]].active)
                 damage = (int)(damage / 2f);
         }
 
@@ -94,7 +95,7 @@ namespace SGAmod.NPCs.Hellion
 
             if (phase > 1)
             {
-                if (npc.ai[0] < 600)
+                if (NPC.ai[0] < 600)
                     damage = (int)(damage * 0.05f);
                 damage = (int)(damage * 0.75f);
                 if (projectile.penetrate != 1)
@@ -103,7 +104,7 @@ namespace SGAmod.NPCs.Hellion
                     damage = (int)(damage * 0.25f);
                 }
             }
-            if (npc.ai[1] > 0)
+            if (NPC.ai[1] > 0)
             {
                 damage = (int)(damage * 0.25f);
                 if (projectile.penetrate != 1)
@@ -123,7 +124,7 @@ namespace SGAmod.NPCs.Hellion
 
         public override bool CheckActive()
         {
-            return !Main.npc[(int)npc.ai[3]].active;
+            return !Main.npc[(int)NPC.ai[3]].active;
         }
 
         public void WormHead(Player player)
@@ -131,7 +132,7 @@ namespace SGAmod.NPCs.Hellion
             if (Main.netMode != 1)
             {
                 //make parts
-                if (npc.ai[0] == 3)
+                if (NPC.ai[0] == 3)
                 {
 
                     /*npc.realLife = npc.whoAmI;
@@ -150,12 +151,12 @@ namespace SGAmod.NPCs.Hellion
                     }
                     */
 
-                    npc.netUpdate = true;
+                    NPC.netUpdate = true;
                 }
 
                 //do ai
 
-                Vector2 theplayerdir = player.Center - (npc.Center);
+                Vector2 theplayerdir = player.Center - (NPC.Center);
                 Vector2 orgrot = theplayerdir;
                 float maxspeed = 100f;
                 float friction = 0.97f;
@@ -173,10 +174,10 @@ namespace SGAmod.NPCs.Hellion
                     {
                         int whento = phase < 1 ? 160 : 250;
 
-                        chargeWarning = (int)Math.Max((npc.ai[0] % whento) - (whento - 120), 0);
+                        chargeWarning = (int)Math.Max((NPC.ai[0] % whento) - (whento - 120), 0);
                         float chargespeedmul = MathHelper.Clamp(theplayerdir.Length() / 1000f, 0.5f, 1f);
 
-                        if (npc.ai[0] % whento > whento - 20)
+                        if (NPC.ai[0] % whento > whento - 20)
                         {
                             swapUp = Main.rand.NextFloat(MathHelper.PiOver2 * 0.25f, MathHelper.PiOver2 * 0.75f) * (Main.rand.NextBool() ? 1f : -1f);
                             acceerate = 4f * chargespeedmul;
@@ -185,7 +186,7 @@ namespace SGAmod.NPCs.Hellion
                         {
                             if (phase > 0)
                             {
-                                theplayerdir = player.Center - (npc.Center - ((npc.ai[2] + MathHelper.ToRadians(npc.ai[0]) * 2f).ToRotationVector2() * 200f));
+                                theplayerdir = player.Center - (NPC.Center - ((NPC.ai[2] + MathHelper.ToRadians(NPC.ai[0]) * 2f).ToRotationVector2() * 200f));
                             }
                             else
                             {
@@ -195,23 +196,23 @@ namespace SGAmod.NPCs.Hellion
                         }
 
 
-                        if (npc.ai[0] % timerMax > timerTo)
+                        if (NPC.ai[0] % timerMax > timerTo)
                         {
                             chargeWarning = 0;
                             if (phase > 0)
                             {
-                                theplayerdir = player.Center - (npc.Center + ((npc.ai[2] + MathHelper.ToRadians(npc.ai[0])).ToRotationVector2() * 1000f));
+                                theplayerdir = player.Center - (NPC.Center + ((NPC.ai[2] + MathHelper.ToRadians(NPC.ai[0])).ToRotationVector2() * 1000f));
                             }
                             else
                             {
-                                theplayerdir = orgrot.RotatedBy(MathHelper.Pi * 0.025f*(float)Math.Sin((npc.ai[0]/200f)*MathHelper.TwoPi));
+                                theplayerdir = orgrot.RotatedBy(MathHelper.Pi * 0.025f*(float)Math.Sin((NPC.ai[0]/200f)*MathHelper.TwoPi));
                                 Vector2 aplay = -theplayerdir + new Vector2(0, 0.01f);
                                 if (theplayerdir.Length() < 0.2)
                                     theplayerdir = -Vector2.UnitY;
                                 else
                                     theplayerdir.Normalize();
-                                    float disttorbit = 420 + MathHelper.Clamp((((npc.ai[0] % timerMax)-timerTo)-180)*2f, 0,720);
-                                theplayerdir = player.Center - (npc.Center + (theplayerdir * disttorbit));
+                                    float disttorbit = 420 + MathHelper.Clamp((((NPC.ai[0] % timerMax)-timerTo)-180)*2f, 0,720);
+                                theplayerdir = player.Center - (NPC.Center + (theplayerdir * disttorbit));
                             }
 
                             friction = 0.92f;
@@ -219,13 +220,13 @@ namespace SGAmod.NPCs.Hellion
                             acceeratedist = 1500f;
                             facetoplayer = true;
 
-                            if (npc.ai[0] % 10 == 0 && npc.ai[0] % 80 < 40)
-                                if (phase == 0 && npc.ai[0] % timerMax > timerTo+160)
+                            if (NPC.ai[0] % 10 == 0 && NPC.ai[0] % 80 < 40)
+                                if (phase == 0 && NPC.ai[0] % timerMax > timerTo+160)
                                 {
-                                    float spread = 50 + (1f-(npc.life/(float)npc.lifeMax))*120f;
-                                    int count = 2 + (npc.life < (npc.lifeMax * ((1f + HellionCore.beginphase[0]) / 2f)) ? 1 : 0);
-                                    Idglib.Shattershots(npc.Center, npc.Center + npc.rotation.ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<HellionCorePlasmaAttackButGreen>(), 50, 24, spread, count, true, 0, false, 400);
-                                    Idglib.Shattershots(npc.Center, npc.Center + npc.rotation.ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<HellionCoreArmWarning>(), 1, 1f, spread, count, true, 0, false, 60);
+                                    float spread = 50 + (1f-(NPC.life/(float)NPC.lifeMax))*120f;
+                                    int count = 2 + (NPC.life < (NPC.lifeMax * ((1f + HellionCore.beginphase[0]) / 2f)) ? 1 : 0);
+                                    Idglib.Shattershots(NPC.Center, NPC.Center + NPC.rotation.ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<HellionCorePlasmaAttackButGreen>(), 50, 24, spread, count, true, 0, false, 400);
+                                    Idglib.Shattershots(NPC.Center, NPC.Center + NPC.rotation.ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<HellionCoreArmWarning>(), 1, 1f, spread, count, true, 0, false, 60);
                                 }
                             // if (npc.ai[0] % 125 == 0)
                             //     if (phase == 1)
@@ -233,10 +234,10 @@ namespace SGAmod.NPCs.Hellion
                         }
                         else
                         {
-                            if (npc.ai[0] % 180 == 0 && phase < 2)
+                            if (NPC.ai[0] % 180 == 0 && phase < 2)
                             {
-                                Idglib.Shattershots(npc.Center, npc.Center + npc.rotation.ToRotationVector2(), new Vector2(0, 0), ProjectileID.DemonScythe, 40, 5, 160, Hellion.GetHellion().phase < 1 ? 5 : 3, false, 0, false, 250);
-                                Idglib.Shattershots(npc.Center, npc.Center + npc.rotation.ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<PinkyWarning>(), 1, 1, 160, Hellion.GetHellion().phase < 1 ? 5 : 3, false, 0, false, 250);
+                                Idglib.Shattershots(NPC.Center, NPC.Center + NPC.rotation.ToRotationVector2(), new Vector2(0, 0), ProjectileID.DemonScythe, 40, 5, 160, Hellion.GetHellion().phase < 1 ? 5 : 3, false, 0, false, 250);
+                                Idglib.Shattershots(NPC.Center, NPC.Center + NPC.rotation.ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<PinkyWarning>(), 1, 1, 160, Hellion.GetHellion().phase < 1 ? 5 : 3, false, 0, false, 250);
 
 
                             }
@@ -249,17 +250,17 @@ namespace SGAmod.NPCs.Hellion
                 {
                     if (noact < 1)
                         facetoplayer = true;
-                    for (int k = 0; k < npc.buffTime.Length; k++)
+                    for (int k = 0; k < NPC.buffTime.Length; k++)
                     {
-                        if (npc.buffTime[k] > 5)
-                            npc.buffTime[k] -= 2;
+                        if (NPC.buffTime[k] > 5)
+                            NPC.buffTime[k] -= 2;
                     }
 
                     acceerate = 4f;
                     acceeratedist = 150000f;
                     friction = 0.93f;
 
-                    NPC master = Main.npc[(int)npc.ai[3]];
+                    NPC master = Main.npc[(int)NPC.ai[3]];
 
                     Vector2 hellcenter = master.Center;
                     Vector2 thehelldir = player.Center - (hellcenter);
@@ -271,14 +272,14 @@ namespace SGAmod.NPCs.Hellion
                     else
                         aplay.Normalize();
 
-                    float ittz = 1400f + (float)Math.Sin((npc.ai[2] * 171.9424f) + npc.ai[0] / 15f) * 600f;
+                    float ittz = 1400f + (float)Math.Sin((NPC.ai[2] * 171.9424f) + NPC.ai[0] / 15f) * 600f;
                     float ittz2 = aioffset % 2 == 0 ? 1f : -1f;
-                    float angles = (float)Math.Cos(MathHelper.ToRadians((npc.ai[2] * 351.724f) - npc.ai[0] * (ittz2 * 8f))) * 46f;
+                    float angles = (float)Math.Cos(MathHelper.ToRadians((NPC.ai[2] * 351.724f) - NPC.ai[0] * (ittz2 * 8f))) * 46f;
                     Vector2 former = theplayerdir;
 
-                    theplayerdir = (master.Center - (aplay * 500) + ((aplay * ittz).RotatedBy(angles))) - npc.Center;
+                    theplayerdir = (master.Center - (aplay * 500) + ((aplay * ittz).RotatedBy(angles))) - NPC.Center;
 
-                    if ((npc.ai[0] + aioffset * 8) % 1700 > 1280)
+                    if ((NPC.ai[0] + aioffset * 8) % 1700 > 1280)
                     {
                         acceerate = 8f;
                         if (former.Length() > 0)
@@ -286,15 +287,15 @@ namespace SGAmod.NPCs.Hellion
                         else
                             former = Vector2.UnitY;
 
-                        theplayerdir = (master.Center - ((aplay * 3500) + ((former * (ittz * 2f)).RotatedBy(angles)))) - npc.Center;
+                        theplayerdir = (master.Center - ((aplay * 3500) + ((former * (ittz * 2f)).RotatedBy(angles)))) - NPC.Center;
 
-                        if ((npc.ai[0] + aioffset * 6) % 1700 == 1600)
+                        if ((NPC.ai[0] + aioffset * 6) % 1700 == 1600)
                         {
 
-                            bool fastlaser = (npc.ai[0] + aioffset * 8) % 1700 == 1500;
+                            bool fastlaser = (NPC.ai[0] + aioffset * 8) % 1700 == 1500;
 
-                            Vector2 where = npc.Center - (new Vector2(((npc.ai[0] % 40) == 0) ? 1f : -1f, 0f) * 80f);
-                            Vector2 where2 = player.Center - npc.Center;
+                            Vector2 where = NPC.Center - (new Vector2(((NPC.ai[0] % 40) == 0) ? 1f : -1f, 0f) * 80f);
+                            Vector2 where2 = player.Center - NPC.Center;
                             if (aplay.Length() < 0.2)
                                 where2 = Vector2.UnitY;
                             else
@@ -319,7 +320,7 @@ namespace SGAmod.NPCs.Hellion
                             Func<Vector2, Vector2, float, Vector2, Vector2> projectilemoving = delegate (Vector2 playerpos, Vector2 projpos, float time, Vector2 current)
                             {
 
-                                Vector2 gothere333 = npc.Center;
+                                Vector2 gothere333 = NPC.Center;
                                 Vector2 slideover = gothere333 - projpos;
                                 current = slideover / 2f;
 
@@ -340,14 +341,14 @@ namespace SGAmod.NPCs.Hellion
                             Hellion.GetHellion().manualmovement = 50;
                             Func<float, bool> projectilepattern = (time) => (time == 20);
 
-                            int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 100, 200, npc.rotation, mod.ProjectileType("HellionBeam"), projectilepattern, 10f, 160, true);
-                            (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilefacing = projectilefacing;
-                            (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilemoving = projectilemoving;
-                            Main.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
+                            int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 100, 200, NPC.rotation, Mod.Find<ModProjectile>("HellionBeam").Type, projectilepattern, 10f, 160, true);
+                            (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilefacing = projectilefacing;
+                            (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilemoving = projectilemoving;
+                            SoundEngine.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
                             Main.projectile[ize2].hide = true;
                             Main.projectile[ize2].netUpdate = true;
 
-                            if ((npc.Center - player.Center).Length() < 100)
+                            if ((NPC.Center - player.Center).Length() < 100)
                                 Spawnlaserportal();
 
                         }
@@ -358,25 +359,25 @@ namespace SGAmod.NPCs.Hellion
                         //Main.NewText(handsAttack);
 
 
-                        if ((npc.ai[0] + aioffset * 64) % 1200 > 800 && (npc.ai[0] % 3000 > 1400))
+                        if ((NPC.ai[0] + aioffset * 64) % 1200 > 800 && (NPC.ai[0] % 3000 > 1400))
                         {
                             int len = 720 * 720;
-                            if (handsAttack > 0 || (player.Center - npc.Center).LengthSquared() > len)
+                            if (handsAttack > 0 || (player.Center - NPC.Center).LengthSquared() > len)
                             {
                                 nomove = 60;
 
                                 friction = 0.98f;
 
-                                int delay = (int)(npc.ai[0] + aioffset * 8);
+                                int delay = (int)(NPC.ai[0] + aioffset * 8);
 
-                                Vector2 thingz = player.Center - npc.Center;
+                                Vector2 thingz = player.Center - NPC.Center;
 
-                                if ((delay) % 180 == 0 && handsAttack < -180 && (npc.localAI[3] >= 300) && Vector2.Dot(Vector2.Normalize(thehelldir),Vector2.Normalize(thingz))>0.5f)
+                                if ((delay) % 180 == 0 && handsAttack < -180 && (NPC.localAI[3] >= 300) && Vector2.Dot(Vector2.Normalize(thehelldir),Vector2.Normalize(thingz))>0.5f)
                                 {
                                     thingz.Normalize();
                                     chargeAt = thingz * 120f;
                                     //npc.velocity += thingz * 85f;
-                                    Idglib.Shattershots(npc.Center, player.Center, new Vector2(0, 0), ModContent.ProjectileType<HellionCoreArmWarning>(), 2, 12, 160, 1, true, 0, false, 60);
+                                    Idglib.Shattershots(NPC.Center, player.Center, new Vector2(0, 0), ModContent.ProjectileType<HellionCoreArmWarning>(), 2, 12, 160, 1, true, 0, false, 60);
                                     handsAttack = 100;
                                 }
 
@@ -384,14 +385,14 @@ namespace SGAmod.NPCs.Hellion
                                 {
                                     //Vector2 thingz = player.Center - npc.Center;
                                     //thingz.Normalize();
-                                    npc.velocity = Vector2.Normalize(chargeAt) * 128f;
+                                    NPC.velocity = Vector2.Normalize(chargeAt) * 128f;
 
                                 }
 
                                 if (handsAttack < 1)//((delay - 80) % 180 < 20)
                                 {
-                                    if (npc.velocity.LengthSquared() > 20 * 20)
-                                        npc.velocity *= 0.80f;
+                                    if (NPC.velocity.LengthSquared() > 20 * 20)
+                                        NPC.velocity *= 0.80f;
                                 }
 
                                 /*if ((delay + 60) % 180 < 60 && delay%10 == 0)
@@ -407,7 +408,7 @@ namespace SGAmod.NPCs.Hellion
                                     former = Vector2.UnitY;
                                 else
                                     former.Normalize();
-                                theplayerdir = (master.Center - (aplay * 2500) + ((former * ittz).RotatedBy(angles))) - npc.Center;
+                                theplayerdir = (master.Center - (aplay * 2500) + ((former * ittz).RotatedBy(angles))) - NPC.Center;
                             }
                         }
                     }
@@ -426,28 +427,28 @@ namespace SGAmod.NPCs.Hellion
                     if (nomove < 1)
                     {
                         if (noact < 160 && nomove < 1)
-                            npc.velocity += theplayerdir * (acceerate + (dist / acceeratedist));
+                            NPC.velocity += theplayerdir * (acceerate + (dist / acceeratedist));
                         if (slowedSpeed > 0)
                             maxspeed = 2;
-                        if (npc.velocity.Length() > maxspeed)
-                            npc.velocity = theplayerdir * maxspeed;
+                        if (NPC.velocity.Length() > maxspeed)
+                            NPC.velocity = theplayerdir * maxspeed;
 
-                        if (npc.velocity.Length() > maxspeed / 2 && maxspeed >= 25f && phase > 1)
+                        if (NPC.velocity.Length() > maxspeed / 2 && maxspeed >= 25f && phase > 1)
                         {
-                            if (npc.localAI[3] > 0)
-                                npc.localAI[3] = Math.Min(npc.localAI[3] * 0.96f, 300);
-                            npc.localAI[3] = MathHelper.Max(npc.localAI[3] - 10, -200);
+                            if (NPC.localAI[3] > 0)
+                                NPC.localAI[3] = Math.Min(NPC.localAI[3] * 0.96f, 300);
+                            NPC.localAI[3] = MathHelper.Max(NPC.localAI[3] - 10, -200);
                         }
 
                     }
                 }
 
-                npc.velocity *= friction;
+                NPC.velocity *= friction;
 
                 if (facetoplayer)
-                    npc.rotation = npc.rotation.AngleLerp((player.Center - npc.Center).ToRotation(), 0.075f);
+                    NPC.rotation = NPC.rotation.AngleLerp((player.Center - NPC.Center).ToRotation(), 0.075f);
                 else
-                    npc.rotation = npc.rotation.AngleLerp(theplayerdir.ToRotation(), 0.075f);
+                    NPC.rotation = NPC.rotation.AngleLerp(theplayerdir.ToRotation(), 0.075f);
 
 
             }
@@ -457,7 +458,7 @@ namespace SGAmod.NPCs.Hellion
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
-            if (npc.localAI[3] < 300 || npc.localAI[2]<300)
+            if (NPC.localAI[3] < 300 || NPC.localAI[2]<300)
                 return false;
 
             return (nomove > 0 || phase < 2);
@@ -482,7 +483,7 @@ namespace SGAmod.NPCs.Hellion
             if (phase == 0)
             {
 
-                if (npc.ai[0] % 800 <= 400)
+                if (NPC.ai[0] % 800 <= 400)
                 {
 
                     /*if (npc.ai[0] % 160 == 30 + aioffset * 2)
@@ -495,7 +496,7 @@ namespace SGAmod.NPCs.Hellion
                 }
             }
 
-            if (((npc.ai[0] + (aioffset * 210))) % 600 == 400 && npc.ai[0] % 800 < 400)
+            if (((NPC.ai[0] + (aioffset * 210))) % 600 == 400 && NPC.ai[0] % 800 < 400)
             {
 
                 Spawnlaserportal();
@@ -505,9 +506,9 @@ namespace SGAmod.NPCs.Hellion
 
         public void Spawnlaserportal()
         {
-            Vector2 where = npc.Center;
-            Vector2 where2 = Main.player[npc.target].Center - npc.Center;
-            Vector2 wheretogo2 = new Vector2(128f + ((((-npc.ai[0] + aioffset) * 3.373475f) * 73.174f) % 96f), where2.ToRotation());
+            Vector2 where = NPC.Center;
+            Vector2 where2 = Main.player[NPC.target].Center - NPC.Center;
+            Vector2 wheretogo2 = new Vector2(128f + ((((-NPC.ai[0] + aioffset) * 3.373475f) * 73.174f) % 96f), where2.ToRotation());
             where2.Normalize();
             Func<Vector2, Vector2, float, float, float> projectilefacing = delegate (Vector2 playerpos, Vector2 projpos, float time, float current)
             {
@@ -522,7 +523,7 @@ namespace SGAmod.NPCs.Hellion
                 float angle = MathHelper.ToRadians(((wheretogo.Y + -time * 1.37f)));
                 Vector2 instore = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * wheretogo.X;
 
-                Vector2 gothere333 = npc.Center + instore;
+                Vector2 gothere333 = NPC.Center + instore;
                 Vector2 slideover = gothere333 - projpos;
                 current = slideover / 2.5f;
 
@@ -542,17 +543,17 @@ namespace SGAmod.NPCs.Hellion
 
             int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 20, phase < 1 ? 40 : 250, wheretogo2.Y, phase < 1 ? ModContent.ProjectileType<HellionCorePlasmaAttack>() : ProjectileID.DesertDjinnCurse,
                 projectilepattern, phase < 1 ? 12f : 3f, phase < 1 ? 600 : 200);
-            (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilefacing = projectilefacing;
-            (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilemoving = projectilemoving;
-            Main.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 45, 0.25f, 0.5f);
+            (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilefacing = projectilefacing;
+            (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilemoving = projectilemoving;
+            SoundEngine.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 45, 0.25f, 0.5f);
             Main.projectile[ize2].netUpdate = true;
 
         }
 
         public override void NPCLoot()
         {
-            if (!Main.player[npc.target].dead && !onlyOnce)// && SGAWorld.downedHellion>1)
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ByteSoul"), 1);
+            if (!Main.player[NPC.target].dead && !onlyOnce)// && SGAWorld.downedHellion>1)
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("ByteSoul").Type, 1);
             onlyOnce = true;
         }
 
@@ -570,7 +571,7 @@ namespace SGAmod.NPCs.Hellion
                     var datacolors2 = new Color[size];
                     tex.GetData(datacolors2);
 
-                    NPC master = Main.npc[(int)npc.ai[3]];
+                    NPC master = Main.npc[(int)NPC.ai[3]];
 
                     int losehp = (int)Math.Pow((master.lifeMax - master.life) / master.lifeMax, 1.05);
 
@@ -593,23 +594,23 @@ namespace SGAmod.NPCs.Hellion
         {
 
             handsAttack -= 1;
-            npc.localAI[3] += phase > 0 && noact > 0 ? 1 : (phase > 1 ? 3 : 1);
-            npc.dontTakeDamage = false;
-            if (npc.localAI[3] < 300)
+            NPC.localAI[3] += phase > 0 && noact > 0 ? 1 : (phase > 1 ? 3 : 1);
+            NPC.dontTakeDamage = false;
+            if (NPC.localAI[3] < 300)
             {
-                npc.dontTakeDamage = true;
+                NPC.dontTakeDamage = true;
                 if (phase < 1)
                 {
-                    npc.ai[0] -= 1;
+                    NPC.ai[0] -= 1;
                     noact = Math.Max(noact, 5);
                 }
             }
 
             if (phase > 0 && noact > 0)
             {
-                UnifiedRandom rando = new UnifiedRandom(npc.whoAmI);
-                npc.localAI[3] -= 1;
-                npc.localAI[3] = Math.Min(npc.localAI[3] * 0.99f, phase > 1 ? rando.Next(300, 1500) : 500);
+                UnifiedRandom rando = new UnifiedRandom(NPC.whoAmI);
+                NPC.localAI[3] -= 1;
+                NPC.localAI[3] = Math.Min(NPC.localAI[3] * 0.99f, phase > 1 ? rando.Next(300, 1500) : 500);
             }
 
             if (phase < 2 || noact > 200)
@@ -643,17 +644,17 @@ namespace SGAmod.NPCs.Hellion
             slowedSpeed -= 1;
             if (aioffset == 9990)
             {
-                aioffset = (int)npc.ai[0];
-                npc.ai[0] = 0;
+                aioffset = (int)NPC.ai[0];
+                NPC.ai[0] = 0;
 
                 if (!Main.dedServ)
                 {
                     Texture2D atex;
 
-                    if (npc.ai[2] > Math.PI)
+                    if (NPC.ai[2] > Math.PI)
                     {
                         rotoffset = 90f;
-                        atex = ModContent.GetTexture("SGAmod/NPCs/Sharkvern/SharkvernHead");
+                        atex = ModContent.Request<Texture2D>("SGAmod/NPCs/Sharkvern/SharkvernHead");
                     }
                     else
                     {
@@ -664,7 +665,7 @@ namespace SGAmod.NPCs.Hellion
                         atex = SGAmod.HellionGores[Main.rand.Next(0, SGAmod.HellionGores.Count)];
 
                         rotoffset = Main.rand.Next(0, 360);
-                        npc.scale = Main.rand.NextFloat(1.5f, 2.5f);
+                        NPC.scale = Main.rand.NextFloat(1.5f, 2.5f);
 
                     }
 
@@ -703,64 +704,64 @@ namespace SGAmod.NPCs.Hellion
             }
             noact -= 1;
 
-            Player player = Main.player[npc.target];
-            if (npc.ai[3] > 0)
-                npc.realLife = (int)npc.ai[3];
-            if (npc.target < 0 || npc.target == byte.MaxValue || Main.player[npc.target].dead)
+            Player player = Main.player[NPC.target];
+            if (NPC.ai[3] > 0)
+                NPC.realLife = (int)NPC.ai[3];
+            if (NPC.target < 0 || NPC.target == byte.MaxValue || Main.player[NPC.target].dead)
             {
-                npc.TargetClosest(true);
-                if (npc.target < 0 || npc.target == byte.MaxValue || Main.player[npc.target].dead)
-                    npc.active = false;
+                NPC.TargetClosest(true);
+                if (NPC.target < 0 || NPC.target == byte.MaxValue || Main.player[NPC.target].dead)
+                    NPC.active = false;
             }
             else
             {
-                npc.ai[0] += 1;
+                NPC.ai[0] += 1;
             }
-            if (!Main.npc[(int)npc.ai[3]].active)
+            if (!Main.npc[(int)NPC.ai[3]].active)
             {
-                npc.life = 0;
-                npc.HitEffect(0, 10000000.0);
-                npc.active = false;
+                NPC.life = 0;
+                NPC.HitEffect(0, 10000000.0);
+                NPC.active = false;
                 return false;
             }
             else
             {
-                npc.timeLeft = 500;
+                NPC.timeLeft = 500;
 
-                NPC owner = Main.npc[(int)npc.ai[3]];
+                NPC owner = Main.npc[(int)NPC.ai[3]];
 
                 if (owner.life < (int)(owner.lifeMax * HellionCore.beginphase[0]) && phase == 0)
                 {
                     phase = 1;
                     noact = 150;
-                    npc.ai[0] = (int)npc.ai[2] * 350;
-                    if (npc.ai[2] > 0)
+                    NPC.ai[0] = (int)NPC.ai[2] * 350;
+                    if (NPC.ai[2] > 0)
                     {
-                        npc.ai[1] = -1;
+                        NPC.ai[1] = -1;
                     }
                 }
 
                 if (owner.life < (int)(owner.lifeMax * HellionCore.beginphase[1]) && phase == 1)
                 {
-                    npc.localAI[3] += 10000;
+                    NPC.localAI[3] += 10000;
                     phase = 2;
                     noact = 300;
-                    npc.ai[0] = aioffset * 3;
+                    NPC.ai[0] = aioffset * 3;
 
-                    npc.velocity = new Vector2(Main.rand.Next(-99999, 99999), Main.rand.Next(-99999, 99999));
-                    if (npc.velocity.Length() < 1)
-                        npc.velocity = Vector2.UnitY;
-                    npc.velocity.Normalize();
-                    npc.velocity *= Main.rand.NextFloat(15f, 64f);
+                    NPC.velocity = new Vector2(Main.rand.Next(-99999, 99999), Main.rand.Next(-99999, 99999));
+                    if (NPC.velocity.Length() < 1)
+                        NPC.velocity = Vector2.UnitY;
+                    NPC.velocity.Normalize();
+                    NPC.velocity *= Main.rand.NextFloat(15f, 64f);
 
-                    npc.ai[1] = -1;
-                    npc.ai[2] = Main.rand.NextFloat(0f, MathHelper.ToRadians(360));
-                    npc.netUpdate = true;
+                    NPC.ai[1] = -1;
+                    NPC.ai[2] = Main.rand.NextFloat(0f, MathHelper.ToRadians(360));
+                    NPC.netUpdate = true;
                 }
 
             }
 
-            if ((int)npc.ai[1] <0)
+            if ((int)NPC.ai[1] <0)
             {
                 /*if (Main.rand.Next(200, 300) < npc.localAI[3])
                 {
@@ -781,7 +782,7 @@ namespace SGAmod.NPCs.Hellion
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    npc.localAI[2] += 1;
+                    NPC.localAI[2] += 1;
                     //npc.life = 0;
                     //npc.HitEffect(0, 10.0);
                     //npc.active = false;
@@ -793,24 +794,24 @@ namespace SGAmod.NPCs.Hellion
 
             //If we are a worm segment: below:
 
-            if ((int)npc.ai[1] > -1 && npc.ai[1] < (double)Main.npc.Length && Main.npc[(int)npc.ai[1]].type == mod.NPCType("HellionWorm"))
+            if ((int)NPC.ai[1] > -1 && NPC.ai[1] < (double)Main.npc.Length && Main.npc[(int)NPC.ai[1]].type == Mod.Find<ModNPC>("HellionWorm").Type)
             {
-                npc.localAI[2] += 1;
-                float scalie = (npc.localAI[2] / 300f);
+                NPC.localAI[2] += 1;
+                float scalie = (NPC.localAI[2] / 300f);
                 if (scalie > 0f)
                 {
-                    Vector2 npcCenter = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
+                    Vector2 npcCenter = new Vector2(NPC.position.X + (float)NPC.width * 0.5f, NPC.position.Y + (float)NPC.height * 0.5f);
 
-                    float dirX = Main.npc[(int)npc.ai[1]].position.X + (float)(Main.npc[(int)npc.ai[1]].width / 2) - npcCenter.X;
-                    float dirY = Main.npc[(int)npc.ai[1]].position.Y + (float)(Main.npc[(int)npc.ai[1]].height / 2) - npcCenter.Y;
+                    float dirX = Main.npc[(int)NPC.ai[1]].position.X + (float)(Main.npc[(int)NPC.ai[1]].width / 2) - npcCenter.X;
+                    float dirY = Main.npc[(int)NPC.ai[1]].position.Y + (float)(Main.npc[(int)NPC.ai[1]].height / 2) - npcCenter.Y;
                     KeepUpright(dirX, dirY);
-                    npc.rotation = (float)Math.Atan2(dirY, dirX) + 1.57f;
+                    NPC.rotation = (float)Math.Atan2(dirY, dirX) + 1.57f;
                     float length = ((float)Math.Sqrt(dirX * dirX + dirY * dirY));
-                    float dist = (length - (float)npc.width) / length;
+                    float dist = (length - (float)NPC.width) / length;
                     float posX = dirX * dist;
                     float posY = dirY * dist;
-                    npc.velocity *= 0.90f;
-                    npc.position = npc.position + (new Vector2(posX, posY) * MathHelper.Clamp(scalie * scalie* scalie, 0.005f, 0.25f));
+                    NPC.velocity *= 0.90f;
+                    NPC.position = NPC.position + (new Vector2(posX, posY) * MathHelper.Clamp(scalie * scalie* scalie, 0.005f, 0.25f));
 
                     WormSegment(player);
                 }
@@ -832,15 +833,15 @@ namespace SGAmod.NPCs.Hellion
 
             Idglib.coloroverride = Color.White;
 
-            NPC myowner = Main.npc[(int)npc.ai[3]];
+            NPC myowner = Main.npc[(int)NPC.ai[3]];
 
-            float alpha = MathHelper.Clamp((npc.localAI[3] - 150) / 150f, 0.0f, 1f);
+            float alpha = MathHelper.Clamp((NPC.localAI[3] - 150) / 150f, 0.0f, 1f);
 
-            if (npc.ai[1] < 0 && phase < 2)
+            if (NPC.ai[1] < 0 && phase < 2)
             {
                 List<NPC> worms = new List<NPC>();
-                NPC current = npc;
-                worms.Add(npc);
+                NPC current = NPC;
+                worms.Add(NPC);
                 for (int i = 0; i < Main.npc.Length; i += 1)
                 {
                     NPC thatNPC = Main.npc[i];
@@ -856,22 +857,22 @@ namespace SGAmod.NPCs.Hellion
 
                 if (worms.Count > 1)
                 {
-                    Effects.TrailHelper trail = new Effects.TrailHelper("FadedBasicEffectAlphaPass", mod.GetTexture("ElectricFireNoColor"));
+                    Effects.TrailHelper trail = new Effects.TrailHelper("FadedBasicEffectAlphaPass", Mod.Assets.Request<Texture2D>("ElectricFireNoColor").Value);
                     trail.color = delegate (float percent)
                     {
                         NPC wormDude = worms[(int)Math.Min(((worms.Count-1) * percent), worms.Count - 1)];
 
-                        return Main.hslToRgb((percent + Main.GlobalTime / 3f) % 1f, 0.75f, 0.75f) * MathHelper.Clamp(wormDude.localAI[3] / 300f, 0f, 1f) * MathHelper.Clamp((wormDude.localAI[2]+100) / 300f, 0f, 1f);
+                        return Main.hslToRgb((percent + Main.GlobalTimeWrappedHourly / 3f) % 1f, 0.75f, 0.75f) * MathHelper.Clamp(wormDude.localAI[3] / 300f, 0f, 1f) * MathHelper.Clamp((wormDude.localAI[2]+100) / 300f, 0f, 1f);
                     };
 
                     trail.projsize = Vector2.Zero;
-                    trail.coordOffset = new Vector2(0, Main.GlobalTime * -0.75f);
+                    trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -0.75f);
                     trail.coordMultiplier = new Vector2(1f, worms.Count/10f);
                     trail.trailThickness = 32f;
                     trail.trailThicknessIncrease = 0;
                     trail.doFade = false;
                     trail.connectEnds = false;
-                    trail.strength = MathHelper.Clamp((npc.localAI[3]-150) / 150f, 0f, 1f);
+                    trail.strength = MathHelper.Clamp((NPC.localAI[3]-150) / 150f, 0f, 1f);
 
                     List<Vector2> listOfPoints = new List<Vector2>();
                     listOfPoints.AddRange(worms.Select(testby => testby.Center).ToList());
@@ -885,19 +886,19 @@ namespace SGAmod.NPCs.Hellion
             //if (scale >= 0f)
             //{
 
-            if (chargeWarning > 0 && Main.player[npc.target] != null)
+            if (chargeWarning > 0 && Main.player[NPC.target] != null)
             {
-                Vector2 there = (Main.player[npc.target].Center - npc.Center);
+                Vector2 there = (Main.player[NPC.target].Center - NPC.Center);
                 float dist = there.Length();
 
                 List<Vector2> toThem = new List<Vector2>();
 
-                toThem.Add(npc.Center);
-                toThem.Add(Main.player[npc.target].Center);
+                toThem.Add(NPC.Center);
+                toThem.Add(Main.player[NPC.target].Center);
 
-                TrailHelper trail = new TrailHelper("FadedBasicEffectPass", mod.GetTexture("SmallLaser"));
+                TrailHelper trail = new TrailHelper("FadedBasicEffectPass", Mod.Assets.Request<Texture2D>("SmallLaser").Value);
                 trail.projsize = Vector2.Zero;
-                trail.coordOffset = new Vector2(0, -Main.GlobalTime*0.75f);
+                trail.coordOffset = new Vector2(0, -Main.GlobalTimeWrappedHourly*0.75f);
                 trail.coordMultiplier = new Vector2(1f, 1f);
                 trail.trailThickness = (float)chargeWarning / 10f;
                 trail.trailThicknessIncrease = 0;
@@ -909,7 +910,7 @@ namespace SGAmod.NPCs.Hellion
                 };
                 trail.DrawTrail(toThem);
 
-                spriteBatch.Draw(Main.quicksIconTexture, (Main.player[npc.target].Center-Vector2.Normalize(there)*72f) - Main.screenPosition, null, Color.White*MathHelper.Clamp(chargeWarning / 64f,0f,1f), 0, Main.quicksIconTexture.Size()/2f, 2f+ MathHelper.Clamp(chargeWarning / 32f, 0f, 2f), SpriteEffects.None, 0f);
+                spriteBatch.Draw(Main.quicksIconTexture, (Main.player[NPC.target].Center-Vector2.Normalize(there)*72f) - Main.screenPosition, null, Color.White*MathHelper.Clamp(chargeWarning / 64f,0f,1f), 0, Main.quicksIconTexture.Size()/2f, 2f+ MathHelper.Clamp(chargeWarning / 32f, 0f, 2f), SpriteEffects.None, 0f);
 
                 //spriteBatch.Draw(Main.blackTileTexture, (npc.Center - Main.screenPosition), new Rectangle(0, 0, 1, 8), Color.Red * MathHelper.Clamp((float)chargeWarning / 90f, 0f, 1f), there.ToRotation(), new Vector2(0, 4), new Vector2(dist, (float)chargeWarning / 30f), SpriteEffects.None, 0f);
             }
@@ -917,17 +918,17 @@ namespace SGAmod.NPCs.Hellion
             if (armtex != null && phase > 1 && noact < 200)
             {
                 Idglib.coloroverride = Color.White * alpha;
-                int aval = noact > 0 ? 0 : (int)npc.localAI[3];
+                int aval = noact > 0 ? 0 : (int)NPC.localAI[3];
 
                 if (aval < 5)
                     aval = 5;
 
                 if (myowner != null && myowner.active && Main.rand.Next(aval, aval + 200) > 250)
                 {
-                    Idglib.DrawSkeletronLikeArms(spriteBatch, armtex, npc.Center, myowner.Center, 0f, 0f, MathHelper.Clamp((myowner.Center.X - npc.Center.X) * 0.02f, -1, 1));
+                    Idglib.DrawSkeletronLikeArms(spriteBatch, armtex, NPC.Center, myowner.Center, 0f, 0f, MathHelper.Clamp((myowner.Center.X - NPC.Center.X) * 0.02f, -1, 1));
                     Vector2 drawPos = ((Idglib.skeletronarmjointpos - Main.screenPosition)) + new Vector2(0f, 0f);
-                    Texture2D texture = mod.GetTexture("NPCs/TPD");
-                    spriteBatch.Draw(texture, drawPos, null, Main.DiscoColor * alpha, npc.spriteDirection + (npc.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(15, 35) / 4f, Main.rand.Next(15, 35) / 4f), SpriteEffects.None, 0f);
+                    Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/TPD").Value;
+                    spriteBatch.Draw(texture, drawPos, null, Main.DiscoColor * alpha, NPC.spriteDirection + (NPC.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(15, 35) / 4f, Main.rand.Next(15, 35) / 4f), SpriteEffects.None, 0f);
                 }
             }
             // }
@@ -936,7 +937,7 @@ namespace SGAmod.NPCs.Hellion
 
             if (tex != null)
             {
-                float distort = 1f - MathHelper.Clamp((npc.localAI[3] - 0) / 300f, 0f, 1f);
+                float distort = 1f - MathHelper.Clamp((NPC.localAI[3] - 0) / 300f, 0f, 1f);
 
                 Texture2D texture = tex;//Main.npcTexture[npc.type];
                 Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
@@ -946,7 +947,7 @@ namespace SGAmod.NPCs.Hellion
                 {
                     if (alpha < 1)
                         offset = Main.rand.NextVector2Circular(distort * 960f, distort * 960f);
-                    Main.spriteBatch.Draw(texture, (npc.Center + offset - Main.screenPosition) * scale, new Rectangle?(), drawColor * alpha, npc.rotation + MathHelper.ToRadians(rotoffset), origin, npc.scale * scale, localdist.X > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+                    Main.spriteBatch.Draw(texture, (NPC.Center + offset - Main.screenPosition) * scale, new Rectangle?(), drawColor * alpha, NPC.rotation + MathHelper.ToRadians(rotoffset), origin, NPC.scale * scale, localdist.X > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
                 }
             }
             //}
@@ -964,104 +965,104 @@ namespace SGAmod.NPCs.Hellion
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hellion Monologging");
-            Main.npcFrameCount[npc.type] = 1;
+            Main.npcFrameCount[NPC.type] = 1;
         }
         public override void SetDefaults()
         {
-            npc.width = 96;
-            npc.height = 96;
-            npc.damage = 0;
-            npc.defense = 10;
-            npc.lifeMax = 750000;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.value = 0f;
-            npc.knockBackResist = 0f;
-            npc.aiStyle = 0;
-            npc.boss = true;
-            //aiType = NPCID.BlueSlime;
-            //animationType = NPCID.BlueSlime;
-            npc.noTileCollide = false;
-            npc.noGravity = false;
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Silence");
-            npc.noTileCollide = true;
-            npc.noGravity = true;
-            npc.value = Item.buyPrice(0, 90, 0, 0);
-            npc.netAlways = true;
-            npc.chaseable = false;
-            npc.dontTakeDamage = true;
+            NPC.width = 96;
+            NPC.height = 96;
+            NPC.damage = 0;
+            NPC.defense = 10;
+            NPC.lifeMax = 750000;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.value = 0f;
+            NPC.knockBackResist = 0f;
+            NPC.aiStyle = 0;
+            NPC.boss = true;
+            //AIType = NPCID.BlueSlime;
+            //AnimationType = NPCID.BlueSlime;
+            NPC.noTileCollide = false;
+            NPC.noGravity = false;
+            music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Silence");
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
+            NPC.value = Item.buyPrice(0, 90, 0, 0);
+            NPC.netAlways = true;
+            NPC.chaseable = false;
+            NPC.dontTakeDamage = true;
         }
 
         public override bool PreAI()
         {
-            Player P = Main.player[npc.target];
-            if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+            Player P = Main.player[NPC.target];
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
             {
-                npc.TargetClosest(false);
-                P = Main.player[npc.target];
+                NPC.TargetClosest(false);
+                P = Main.player[NPC.target];
                 if (!P.active || P.dead)
                 {
                     float speed = ((-10f));
-                    npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-                    npc.active = false;
+                    NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+                    NPC.active = false;
                 }
 
             }
             else
             {
-                npc.ai[0] += 1;
-                if (npc.ai[0] == 1 && SGAWorld.downedHellion < 1)
+                NPC.ai[0] += 1;
+                if (NPC.ai[0] == 1 && SGAWorld.downedHellion < 1)
                 {
                     if (SGAWorld.NightmareHardcore < 1)
-                        npc.ai[1] = 1;
+                        NPC.ai[1] = 1;
                     for (int i = 0; i < 8 + P.extraAccessorySlots; i += 1)
                     {
                         if (P.armor[i].type == ModContent.ItemType<Items.Accessories.DevPower>())
                         {
-                            npc.ai[1] = 0;
+                            NPC.ai[1] = 0;
                             break;
                         }
                     }
                 }
-                if (npc.ai[0] > 200 && (npc.ai[0] < 540 || npc.ai[1] == 0))
+                if (NPC.ai[0] > 200 && (NPC.ai[0] < 540 || NPC.ai[1] == 0))
                 {
-                    npc.velocity += (((P.Center + new Vector2(0, -200)) - npc.Center) / 100f);
+                    NPC.velocity += (((P.Center + new Vector2(0, -200)) - NPC.Center) / 100f);
                 }
-                npc.velocity /= 1.5f;
+                NPC.velocity /= 1.5f;
 
             }
             Hellion Hellinstance = new Hellion();
 
 
 
-            if (npc.ai[0] == 120)
+            if (NPC.ai[0] == 120)
                 Hellinstance.HellionTaunt("hmmmm...");
-            if (npc.ai[0] == 260)
+            if (NPC.ai[0] == 260)
                 Hellinstance.HellionTaunt("It seems you have destroyed my most powerful creation...");
 
-            if (npc.ai[1] == 1)
+            if (NPC.ai[1] == 1)
             {
-                if (SGAWorld.downedHellion == -1 && npc.ai[0] == 100)
+                if (SGAWorld.downedHellion == -1 && NPC.ai[0] == 100)
                 {
                     Hellinstance.HellionTaunt("You are still too weak...");
-                    npc.ai[0] = 461;
+                    NPC.ai[0] = 461;
                 }
 
-                if (npc.ai[0] == 460)
+                if (NPC.ai[0] == 460)
                     Hellinstance.HellionTaunt("But no matter...");
 
-                if (npc.ai[0] == 560)
+                if (NPC.ai[0] == 560)
                     Hellinstance.HellionTaunt("Only with the power of [The Secret of Souls] would you ever hope to succeed...");
 
-                if (npc.ai[0] == 600)
+                if (NPC.ai[0] == 600)
                 {
-                    Projectile.NewProjectile(npc.Center, Vector2.Zero, SGAmod.Instance.ProjectileType("HellionTeleport"), 0, 2f);
+                    Projectile.NewProjectile(NPC.Center, Vector2.Zero, SGAmod.Instance.Find<ModProjectile>("HellionTeleport").Type, 0, 2f);
                 }
 
-                if (npc.ai[0] == 660)
+                if (NPC.ai[0] == 660)
                 {
-                    npc.life = 0;
-                    npc.active = false;
+                    NPC.life = 0;
+                    NPC.active = false;
                     SGAWorld.downedHellion = -1;
                 }
 
@@ -1069,24 +1070,24 @@ namespace SGAmod.NPCs.Hellion
             else
             {
 
-                if (npc.ai[0] == 460)
+                if (NPC.ai[0] == 460)
                     Hellinstance.HellionTaunt("Your powerful, very powerful, maybe that's why he fled to you.");
-                if (npc.ai[0] == 700)
+                if (NPC.ai[0] == 700)
                     Hellinstance.HellionTaunt("With that kind of power, we could have been allies, But in the end...");
-                if (npc.ai[0] == 1000)
+                if (NPC.ai[0] == 1000)
                     Hellinstance.HellionTaunt("I have put far too many resources into the project");
-                if (npc.ai[0] == 1100)
+                if (NPC.ai[0] == 1100)
                     Hellinstance.HellionTaunt("And far too many slip ups to have let accured");
-                if (npc.ai[0] == 1300)
+                if (NPC.ai[0] == 1300)
                     Hellinstance.HellionTaunt("So...");
-                if (npc.ai[0] == 1500)
+                if (NPC.ai[0] == 1500)
                     Hellinstance.HellionTaunt("I think it's finally time, I ended this, myself");
 
-                if (npc.ai[0] == 1700)
+                if (NPC.ai[0] == 1700)
                 {
-                    NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)npc.position.Y + npc.height / 2, mod.NPCType("Hellion"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
-                    npc.life = 0;
-                    npc.active = false;
+                    NPC.NewNPC((int)(NPC.position.X + (float)(NPC.width / 2)), (int)NPC.position.Y + NPC.height / 2, Mod.Find<ModNPC>("Hellion").Type, NPC.whoAmI, 0f, 0f, 0f, 0f, 255);
+                    NPC.life = 0;
+                    NPC.active = false;
 
                     if (SGAWorld.downedHellion < 1)
                     {
@@ -1119,7 +1120,7 @@ namespace SGAmod.NPCs.Hellion
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Hellion.HellionTeleport(spriteBatch, npc.Center, 1f, 96);
+            Hellion.HellionTeleport(spriteBatch, NPC.Center, 1f, 96);
             return false;
         }
 
@@ -1148,38 +1149,38 @@ namespace SGAmod.NPCs.Hellion
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hellion Core");
-            Main.npcFrameCount[npc.type] = 1;
+            Main.npcFrameCount[NPC.type] = 1;
         }
         public override void SetDefaults()
         {
-            npc.width = 96;
-            npc.height = 96;
-            npc.damage = 0;
-            npc.defense = 10;
-            npc.lifeMax = 750000;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.value = 0f;
-            npc.knockBackResist = 0f;
-            npc.aiStyle = 0;
-            npc.boss = true;
-            //aiType = NPCID.BlueSlime;
-            //animationType = NPCID.BlueSlime;
-            npc.noTileCollide = false;
-            npc.noGravity = false;
+            NPC.width = 96;
+            NPC.height = 96;
+            NPC.damage = 0;
+            NPC.defense = 10;
+            NPC.lifeMax = 750000;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.value = 0f;
+            NPC.knockBackResist = 0f;
+            NPC.aiStyle = 0;
+            NPC.boss = true;
+            //AIType = NPCID.BlueSlime;
+            //AnimationType = NPCID.BlueSlime;
+            NPC.noTileCollide = false;
+            NPC.noGravity = false;
             music = MusicID.Boss3;
-            npc.noTileCollide = true;
-            npc.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
             //bossBag = mod.ItemType("SPinkyBag");
-            npc.value = Item.buyPrice(0, 90, 0, 0);
-            npc.netAlways = true;
-            npc.chaseable = false;
+            NPC.value = Item.buyPrice(0, 90, 0, 0);
+            NPC.netAlways = true;
+            NPC.chaseable = false;
         }
 
         public override void NPCLoot()
         {
 
-            int num154 = NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)npc.position.Y + npc.height / 2, mod.NPCType("HellionMonolog"), npc.whoAmI, SGAWorld.downedHellion < 1 || TheWholeExperience.Check() ? 0f : 1698f, 0f, 0f, 0f, 255);
+            int num154 = NPC.NewNPC((int)(NPC.position.X + (float)(NPC.width / 2)), (int)NPC.position.Y + NPC.height / 2, Mod.Find<ModNPC>("HellionMonolog").Type, NPC.whoAmI, SGAWorld.downedHellion < 1 || TheWholeExperience.Check() ? 0f : 1698f, 0f, 0f, 0f, 255);
 
         }
 
@@ -1204,8 +1205,8 @@ namespace SGAmod.NPCs.Hellion
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            float clamper = MathHelper.Clamp((npc.localAI[0] - 60) / 60f, 0f, 1f);
-            Hellion.HellionTeleport(spriteBatch, npc.Center, clamper, 96 * clamper);
+            float clamper = MathHelper.Clamp((NPC.localAI[0] - 60) / 60f, 0f, 1f);
+            Hellion.HellionTeleport(spriteBatch, NPC.Center, clamper, 96 * clamper);
             return false;
         }
 
@@ -1221,29 +1222,29 @@ namespace SGAmod.NPCs.Hellion
 
         public override void AdvancePhases()
         {
-            if (hellionmessages == 0 && npc.life < npc.lifeMax * 0.9)
+            if (hellionmessages == 0 && NPC.life < NPC.lifeMax * 0.9)
             {
                 HellionTaunt("PIXEL HULL BREACHED! RELEASING REPAIR WRAITHS!", 1);
                 hellionmessages = 2;
                 repairs += 5;
             }
-            if (hellionmessages == 2 && npc.life < npc.lifeMax * 0.8)
+            if (hellionmessages == 2 && NPC.life < NPC.lifeMax * 0.8)
             {
                 HellionTaunt("You ain't bad! But you won't last much longer");
                 hellionmessages = 3;
             }
-            if (hellionmessages == 3 && npc.life < npc.lifeMax * 0.75)
+            if (hellionmessages == 3 && NPC.life < NPC.lifeMax * 0.75)
             {
                 HellionTaunt("HULL SUSTAINED DAMAGE, SUGGESTED COURSE OF ACTION: DODGE!", 1);
                 hellionmessages = 4;
             }
-            if (hellionmessages == 4 && npc.life < npc.lifeMax * 0.65)
+            if (hellionmessages == 4 && NPC.life < NPC.lifeMax * 0.65)
             {
                 HellionTaunt("CORRUPTION DETECTED, FURTHER REPAIRS NEEDED!", 1);
                 hellionmessages = 5;
                 repairs += 5;
             }
-            if (hellionmessages == 5 && npc.life < npc.lifeMax * 0.6)
+            if (hellionmessages == 5 && NPC.life < NPC.lifeMax * 0.6)
             {
                 HellionTaunt("ALERT: TERRARIAN PROVING OVERPOWERING, CHANCES OF SUCCESS DROPPING!", 1);
                 HellionTaunt("RELEASING REMAINING REPAIR WRAITHS!", 1);
@@ -1255,59 +1256,59 @@ namespace SGAmod.NPCs.Hellion
                 HellionTaunt("REPAIR WRAITHS DEPLETED", 1);
                 hellionmessages = 7;
             }
-            if (hellionmessages < 20 && npc.life < npc.lifeMax * 0.15)
+            if (hellionmessages < 20 && NPC.life < NPC.lifeMax * 0.15)
             {
                 HellionTaunt("SYSTEMS ERROR! SYSTEMS BADLY DAMAGED: RETREAT HIGHLY SUGGESTED!", 1);
                 hellionmessages = 20;
             }
 
-            if (npc.life < (int)(npc.lifeMax * HellionCore.beginphase[0]) && phase == 0)
+            if (NPC.life < (int)(NPC.lifeMax * HellionCore.beginphase[0]) && phase == 0)
             {
                 phase = 1;
                 HellionTaunt("Engauge Seperate Protocall!");
             }
-            if (npc.life < (int)(npc.lifeMax * HellionCore.beginphase[1]) && phase == 1)
+            if (NPC.life < (int)(NPC.lifeMax * HellionCore.beginphase[1]) && phase == 1)
             {
-                npc.ai[0] = 0;
+                NPC.ai[0] = 0;
                 phase = 2;
                 HellionTaunt("Begin Planetary Ravanger mode!");
             }
-            if (phase == 2 && npc.ai[0] == 80)
+            if (phase == 2 && NPC.ai[0] == 80)
                 HellionTaunt("Time to meet your end!");
-            if (phase == 2 && npc.ai[0] == 200)
+            if (phase == 2 && NPC.ai[0] == 200)
                 HellionTaunt("Now witness the power that ended your friend's world!");
 
         }
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
-            npc.damage = (int)(npc.damage * 0.6f);
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.75f * bossLifeScale);
+            NPC.damage = (int)(NPC.damage * 0.6f);
         }
         public override bool PreAI()
         {
             if (!Main.expertMode)
             {
                 HellionTaunt("NO U, normie difficulty");
-                npc.active = false;
+                NPC.active = false;
             }
 
-            npc.localAI[0] += 1;
+            NPC.localAI[0] += 1;
 
-            if (npc.localAI[0] < 150)
+            if (NPC.localAI[0] < 150)
             {
                 for (int f = 0; f < 6; f++)
                 {
-                    float scale2 = (float)Math.Sin((npc.localAI[0] * MathHelper.Pi) / 150);
+                    float scale2 = (float)Math.Sin((NPC.localAI[0] * MathHelper.Pi) / 150);
                     if (Main.rand.Next(0, 30) < scale2 * 45f)
                     {
-                        float direction = f + (npc.localAI[0] / 60f);
+                        float direction = f + (NPC.localAI[0] / 60f);
                         //float scale = MathHelper.Clamp((npc.localAI[0]) / 300f, 0f, 1f);
                         Vector2 spread = Vector2.UnitX.RotatedBy((direction / 6f) * MathHelper.TwoPi) * (1f - scale2) * 640f;
 
                         ShadowParticle part = new ShadowParticle(
-                            npc.Center + spread,
-                            (npc.velocity) + Main.rand.NextVector2Circular(4f, 4f),
+                            NPC.Center + spread,
+                            (NPC.velocity) + Main.rand.NextVector2Circular(4f, 4f),
                             Vector2.One * scale2 * 0.75f,
                             30,
                             new Vector2(-0.01f, -0.01f),
@@ -1322,41 +1323,41 @@ namespace SGAmod.NPCs.Hellion
                 }
             }
 
-            Player P = Main.player[npc.target];
-            if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+            Player P = Main.player[NPC.target];
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
             {
-                npc.TargetClosest(false);
-                P = Main.player[npc.target];
+                NPC.TargetClosest(false);
+                P = Main.player[NPC.target];
                 if (!P.active || P.dead)
                 {
                     float speed = ((-10f));
-                    npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-                    npc.active = false;
+                    NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+                    NPC.active = false;
                 }
 
             }
             else
             {
-                if (npc.localAI[3] == 0)
+                if (NPC.localAI[3] == 0)
                 {
                     manualmovement = 200;
-                    npc.Center = P.Center + new Vector2(0, -256f);
-                    npc.localAI[3] = 1;
+                    NPC.Center = P.Center + new Vector2(0, -256f);
+                    NPC.localAI[3] = 1;
                 }
                 AdvancePhases();
-                npc.netUpdate = true;
-                npc.timeLeft = 99999;
+                NPC.netUpdate = true;
+                NPC.timeLeft = 99999;
                 manualmovement -= 1;
 
-                npc.ai[0] += 1;
+                NPC.ai[0] += 1;
 
                 if (repairs > 0)
                 {
-                    if (npc.ai[0] % 200 == 0)
+                    if (NPC.ai[0] % 200 == 0)
                     {
-                        int num154 = NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)npc.position.Y + npc.height / 2, mod.NPCType("HealingDrone"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
-                        Main.npc[num154].target = npc.target;
-                        Main.npc[num154].lifeMax = (int)(npc.lifeMax * 0.004);
+                        int num154 = NPC.NewNPC((int)(NPC.position.X + (float)(NPC.width / 2)), (int)NPC.position.Y + NPC.height / 2, Mod.Find<ModNPC>("HealingDrone").Type, NPC.whoAmI, 0f, 0f, 0f, 0f, 255);
+                        Main.npc[num154].target = NPC.target;
+                        Main.npc[num154].lifeMax = (int)(NPC.lifeMax * 0.004);
                         Main.npc[num154].life = Main.npc[num154].lifeMax;
                         Main.npc[num154].netUpdate = true;
 
@@ -1366,16 +1367,16 @@ namespace SGAmod.NPCs.Hellion
                 }
 
 
-                if (npc.ai[0] == 1)
+                if (NPC.ai[0] == 1)
                 {
                     int latestNPC = -1;
                     for (int i = 0; i < 60; ++i)
                     {
                         int npc2;
 
-                        npc2 = NPC.NewNPC((int)npc.Center.X + Main.rand.Next(-640, 640), (int)npc.Center.Y + Main.rand.Next(-640, 640), mod.NPCType("HellionWorm"));//NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("HellionWorm"), npc.whoAmI, 0, latestNPC);
-                        Main.npc[(int)npc2].realLife = npc.whoAmI;
-                        Main.npc[(int)npc2].ai[3] = npc.whoAmI;
+                        npc2 = NPC.NewNPC((int)NPC.Center.X + Main.rand.Next(-640, 640), (int)NPC.Center.Y + Main.rand.Next(-640, 640), Mod.Find<ModNPC>("HellionWorm").Type);//NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("HellionWorm"), npc.whoAmI, 0, latestNPC);
+                        Main.npc[(int)npc2].realLife = NPC.whoAmI;
+                        Main.npc[(int)npc2].ai[3] = NPC.whoAmI;
                         Main.npc[(int)npc2].ai[0] = i;
                         Main.npc[(int)npc2].localAI[2] = -(200+(i * 6));
                         Main.npc[(int)npc2].localAI[3] = -(i * 4);
@@ -1390,7 +1391,7 @@ namespace SGAmod.NPCs.Hellion
                 }
 
 
-                Vector2 gothere = npc.Center + new Vector2(0, 1);
+                Vector2 gothere = NPC.Center + new Vector2(0, 1);
                 int divider = 1;
                 float accelerate = 250f;
 
@@ -1400,7 +1401,7 @@ namespace SGAmod.NPCs.Hellion
                     
                     for (int i = 0; i < Main.maxNPCs; i += 1)
                     {
-                        if (Main.npc[i].active && Main.npc[i].type == mod.NPCType("HellionWorm"))
+                        if (Main.npc[i].active && Main.npc[i].type == Mod.Find<ModNPC>("HellionWorm").Type)
                         {
                             divider += 1;
                             gothere += Main.npc[i].Center;
@@ -1414,16 +1415,16 @@ namespace SGAmod.NPCs.Hellion
                 else
                 {
                     accelerate = 2500;
-                    gothere = P.Center + new Vector2(600 * ((npc.ai[0] % 1400 > 700) ? 1f : -1f), 0);
+                    gothere = P.Center + new Vector2(600 * ((NPC.ai[0] % 1400 > 700) ? 1f : -1f), 0);
 
-                    if (npc.ai[0] < 600 && npc.ai[0] >= 100)
-                        npc.life = (int)Math.Min(npc.life + ((float)((npc.lifeMax / 2f) * (1f - HellionCore.beginphase[1]) / 500f)), npc.lifeMax);
+                    if (NPC.ai[0] < 600 && NPC.ai[0] >= 100)
+                        NPC.life = (int)Math.Min(NPC.life + ((float)((NPC.lifeMax / 2f) * (1f - HellionCore.beginphase[1]) / 500f)), NPC.lifeMax);
 
-                    if (npc.ai[0] % 10 == 0 && npc.ai[0] % 1850 > 1500)
+                    if (NPC.ai[0] % 10 == 0 && NPC.ai[0] % 1850 > 1500)
                     {
 
-                        Vector2 where = npc.Center;
-                        Vector2 wheretogo2 = new Vector2(320f + (npc.ai[0] * 3739.6792f) % 960f, (npc.ai[0] * 6834.392f) % 360f);
+                        Vector2 where = NPC.Center;
+                        Vector2 wheretogo2 = new Vector2(320f + (NPC.ai[0] * 3739.6792f) % 960f, (NPC.ai[0] * 6834.392f) % 360f);
                         Func<Vector2, Vector2, float, float, float> projectilefacing = delegate (Vector2 playerpos, Vector2 projpos, float time, float current)
                         {
                             float val = current;
@@ -1452,18 +1453,18 @@ namespace SGAmod.NPCs.Hellion
                         Func<float, bool> projectilepattern = (time) => (time > 120 && time % 80 == 0);
 
                         int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 75, 200, wheretogo2.Y, ProjectileID.DesertDjinnCurse, projectilepattern, 1f, 200);
-                        (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilefacing = projectilefacing;
-                        (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilemoving = projectilemoving;
-                        Main.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
+                        (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilefacing = projectilefacing;
+                        (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilemoving = projectilemoving;
+                        SoundEngine.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
                         Main.projectile[ize2].netUpdate = true;
 
                     }
 
-                    if (npc.ai[0] % 20 == 0 && npc.ai[0] % 900 > 650)
+                    if (NPC.ai[0] % 20 == 0 && NPC.ai[0] % 900 > 650)
                     {
 
-                        Vector2 where = npc.Center;
-                        Vector2 wheretogo2 = P.Center + new Vector2(320f + (npc.ai[0] * 3739.6792f) % 960f, (npc.ai[0] * 6834.392f) % 360f);
+                        Vector2 where = NPC.Center;
+                        Vector2 wheretogo2 = P.Center + new Vector2(320f + (NPC.ai[0] * 3739.6792f) % 960f, (NPC.ai[0] * 6834.392f) % 360f);
                         Func<Vector2, Vector2, float, float, float> projectilefacing = delegate (Vector2 playerpos, Vector2 projpos, float time, float current)
                         {
                             float val = current;
@@ -1492,40 +1493,40 @@ namespace SGAmod.NPCs.Hellion
                         Func<float, bool> projectilepattern = (time) => (time > 120 && time % 30 == 0);
 
                         int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 50, 240, wheretogo2.Y, ModContent.ProjectileType<HellionCorePlasmaAttack>(), projectilepattern, 15f, 800);
-                        (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilefacing = projectilefacing;
-                        (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilemoving = projectilemoving;
-                        Main.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
+                        (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilefacing = projectilefacing;
+                        (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilemoving = projectilemoving;
+                        SoundEngine.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
                         Main.projectile[ize2].netUpdate = true;
 
                     }
 
 
-                    if (npc.ai[0] % 400 < 30)
+                    if (NPC.ai[0] % 400 < 30)
                         accelerate = 400;
 
                 }
 
-                Vector2 gogo = gothere - npc.Center;
+                Vector2 gogo = gothere - NPC.Center;
                 Vector2 gogo2 = gogo; gogo2.Normalize();
 
-                if ((npc.ai[0] % 1200 < 900) && npc.ai[0] % 1200 != 950)
+                if ((NPC.ai[0] % 1200 < 900) && NPC.ai[0] % 1200 != 950)
                 {
                     if (manualmovement < 1)
-                        npc.velocity += gogo / accelerate;
+                        NPC.velocity += gogo / accelerate;
 
                 }
                 else
                 {
 
-                    if (npc.ai[0] % 1200 == 950)
+                    if (NPC.ai[0] % 1200 == 950)
                     {
 
                         for (int rotz = 0; rotz < 360; rotz += 360 / 3)
                         {
 
-                            Vector2 where = npc.Center - (new Vector2(((npc.ai[0] % 40) == 0) ? 1f : -1f, 0f) * 80f);
+                            Vector2 where = NPC.Center - (new Vector2(((NPC.ai[0] % 40) == 0) ? 1f : -1f, 0f) * 80f);
                             Vector2 wheretogo2 = new Vector2(96f, rotz);
-                            Vector2 where2 = P.Center - npc.Center;
+                            Vector2 where2 = P.Center - NPC.Center;
                             where2.Normalize();
                             Func<Vector2, Vector2, float, float, float> projectilefacing = delegate (Vector2 playerpos, Vector2 projpos, float time, float current)
                             {
@@ -1543,7 +1544,7 @@ namespace SGAmod.NPCs.Hellion
                                 float angle = MathHelper.ToRadians(((wheretogo.Y + time * 2f)));
                                 Vector2 instore = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * wheretogo.X;
 
-                                Vector2 gothere333 = Hellion.GetHellion().npc.Center + instore;
+                                Vector2 gothere333 = Hellion.GetHellion().NPC.Center + instore;
                                 Vector2 slideover = gothere333 - projpos;
                                 current = slideover / 2f;
 
@@ -1559,10 +1560,10 @@ namespace SGAmod.NPCs.Hellion
                             };
                             Func<float, bool> projectilepattern = (time) => (time == 20);
 
-                            int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 100, 250, wheretogo2.Y, mod.ProjectileType("HellionBeam"), projectilepattern, 3f, 200, true);
-                            (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilefacing = projectilefacing;
-                            (Main.projectile[ize2].modProjectile as ParadoxMirror).projectilemoving = projectilemoving;
-                            Main.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
+                            int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 100, 250, wheretogo2.Y, Mod.Find<ModProjectile>("HellionBeam").Type, projectilepattern, 3f, 200, true);
+                            (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilefacing = projectilefacing;
+                            (Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilemoving = projectilemoving;
+                            SoundEngine.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
                             Main.projectile[ize2].netUpdate = true;
 
                         }
@@ -1570,7 +1571,7 @@ namespace SGAmod.NPCs.Hellion
 
 
                 }
-                npc.velocity /= 1.02f;
+                NPC.velocity /= 1.02f;
 
             }
             return false;
@@ -1596,44 +1597,44 @@ namespace SGAmod.NPCs.Hellion
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Repair Support Wraith");
-            Main.npcFrameCount[npc.type] = 1;
-            NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+            Main.npcFrameCount[NPC.type] = 1;
+            NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
         }
         public override void SetDefaults()
         {
-            npc.width = 16;
-            npc.height = 16;
-            npc.damage = 0;
-            npc.defense = 0;
-            npc.lifeMax = 10000;
-            npc.HitSound = SoundID.NPCHit5;
-            npc.DeathSound = SoundID.NPCDeath6;
-            npc.knockBackResist = 0.05f;
-            npc.aiStyle = -1;
-            npc.boss = false;
-            animationType = 0;
-            npc.noTileCollide = true;
-            npc.noGravity = true;
-            npc.value = Item.buyPrice(0, 1, 0, 0);
+            NPC.width = 16;
+            NPC.height = 16;
+            NPC.damage = 0;
+            NPC.defense = 0;
+            NPC.lifeMax = 10000;
+            NPC.HitSound = SoundID.NPCHit5;
+            NPC.DeathSound = SoundID.NPCDeath6;
+            NPC.knockBackResist = 0.05f;
+            NPC.aiStyle = -1;
+            NPC.boss = false;
+            AnimationType = 0;
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
+            NPC.value = Item.buyPrice(0, 1, 0, 0);
         }
         public override void AI()
         {
 
             //npc.netUpdate = true;
-            NPC master = Main.npc[(int)npc.ai[1]];
-            Player P = Main.player[npc.target];
+            NPC master = Main.npc[(int)NPC.ai[1]];
+            Player P = Main.player[NPC.target];
             Hellion hell = Hellion.GetHellion();
-            npc.localAI[0] += 1;
+            NPC.localAI[0] += 1;
 
             if (hell == null)
             {
-                npc.active = false;
+                NPC.active = false;
                 return;
             }
 
-            NPC guy = Main.npc[(int)npc.ai[1]];
+            NPC guy = Main.npc[(int)NPC.ai[1]];
 
-            bool checksem = master.active && !master.dontTakeDamage && !master.friendly && master.type != npc.type && master.whoAmI != npc.whoAmI
+            bool checksem = master.active && !master.dontTakeDamage && !master.friendly && master.type != NPC.type && master.whoAmI != NPC.whoAmI
                  && !master.immortal && master.chaseable;
 
             if (master == null || master.active == false || !checksem)
@@ -1643,19 +1644,19 @@ namespace SGAmod.NPCs.Hellion
                 {
                     if (Main.npc[i] != null)
                         if (Main.npc[i].active)
-                            if (!Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && Main.npc[i].type != npc.type && !master.immortal && master.chaseable)
+                            if (!Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && Main.npc[i].type != NPC.type && !master.immortal && master.chaseable)
                                 stuffs.Add(i);
                 }
 
                 if (stuffs.Count > 0)
                 {
-                    npc.ai[1] = stuffs[(Main.rand.Next(0, stuffs.Count))];
+                    NPC.ai[1] = stuffs[(Main.rand.Next(0, stuffs.Count))];
                 }
                 else
                 {
                     if (hell != null)
                     {
-                        npc.ai[1] = hell.npc.whoAmI;
+                        NPC.ai[1] = hell.NPC.whoAmI;
                     }
                     else
                     {
@@ -1671,10 +1672,10 @@ namespace SGAmod.NPCs.Hellion
 
 
 
-            if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
             {
-                npc.TargetClosest(false);
-                P = Main.player[npc.target];
+                NPC.TargetClosest(false);
+                P = Main.player[NPC.target];
 
             }
             else
@@ -1683,35 +1684,35 @@ namespace SGAmod.NPCs.Hellion
                 {
 
 
-                    npc.ai[0] += 1;
-                    if (npc.ai[0] == 1)
+                    NPC.ai[0] += 1;
+                    if (NPC.ai[0] == 1)
                     {
-                        npc.ai[1] = Main.rand.NextFloat(0.0025f, 0.0075f) * (Main.rand.Next(0, 2) == 1 ? 1f : -1f);
-                        npc.ai[2] = Main.rand.NextFloat(0f, MathHelper.ToRadians(360));
-                        npc.netUpdate = true;
+                        NPC.ai[1] = Main.rand.NextFloat(0.0025f, 0.0075f) * (Main.rand.Next(0, 2) == 1 ? 1f : -1f);
+                        NPC.ai[2] = Main.rand.NextFloat(0f, MathHelper.ToRadians(360));
+                        NPC.netUpdate = true;
 
                     }
-                    npc.ai[2] += npc.ai[1];
+                    NPC.ai[2] += NPC.ai[1];
                     Vector2 tothere = master.Center;
-                    tothere += new Vector2((float)Math.Cos(npc.ai[2]), (float)Math.Sin(npc.ai[2])) * (200);
-                    tothere -= npc.Center;
+                    tothere += new Vector2((float)Math.Cos(NPC.ai[2]), (float)Math.Sin(NPC.ai[2])) * (200);
+                    tothere -= NPC.Center;
                     tothere.Normalize();
-                    npc.velocity += tothere * 1f;
+                    NPC.velocity += tothere * 1f;
 
-                    if (npc.ai[0] % 180 == 0)
+                    if (NPC.ai[0] % 180 == 0)
                     {
-                        Idglib.Shattershots(npc.position, master.Center, new Vector2(0, 0), ProjectileID.DD2DarkMageHeal, 50, 12, 0, 1, true, 0, true, 300);
-                        if (master.type == mod.NPCType("HellionWorm"))
-                            hell.npc.life = Math.Min(hell.npc.lifeMax, hell.npc.life + 200);
-                        if (master.type == mod.NPCType("Hellion"))
-                            hell.npc.life = Math.Min(hell.npc.lifeMax, hell.npc.life + 500);
+                        Idglib.Shattershots(NPC.position, master.Center, new Vector2(0, 0), ProjectileID.DD2DarkMageHeal, 50, 12, 0, 1, true, 0, true, 300);
+                        if (master.type == Mod.Find<ModNPC>("HellionWorm").Type)
+                            hell.NPC.life = Math.Min(hell.NPC.lifeMax, hell.NPC.life + 200);
+                        if (master.type == Mod.Find<ModNPC>("Hellion").Type)
+                            hell.NPC.life = Math.Min(hell.NPC.lifeMax, hell.NPC.life + 500);
                     }
 
                 }
 
 
                 float fric = 0.97f;
-                npc.velocity = npc.velocity * fric;
+                NPC.velocity = NPC.velocity * fric;
             }
 
         }
@@ -1733,50 +1734,50 @@ namespace SGAmod.NPCs.Hellion
         public override void SetDefaults()
         {
             if (GetType() != typeof(Items.Weapons.Technical.EngineerSentryShotProj))
-            projectile.CloneDefaults(ProjectileID.SnowBallFriendly);
-            projectile.tileCollide = true;
-            projectile.friendly = false;
-            projectile.hostile = true;
-            projectile.aiStyle = -1;
-            projectile.tileCollide = false;
-            projectile.extraUpdates = 3;
-            projectile.timeLeft = 600;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = -1;
-            projectile.penetrate = -1;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 20;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+            Projectile.CloneDefaults(ProjectileID.SnowBallFriendly);
+            Projectile.tileCollide = true;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.aiStyle = -1;
+            Projectile.tileCollide = false;
+            Projectile.extraUpdates = 3;
+            Projectile.timeLeft = 600;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+            Projectile.penetrate = -1;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override void AI()
         {
-            projectile.localAI[0] += 1;
-            projectile.ai[0] += 1;
+            Projectile.localAI[0] += 1;
+            Projectile.ai[0] += 1;
 
-            if (projectile.ai[0] == 1)
+            if (Projectile.ai[0] == 1)
             {
-                var snd = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 68);
+                var snd = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 68);
                 if (snd != null)
                 {
                     snd.Pitch = -0.5f;
                 }
             }
 
-            projectile.position -= projectile.velocity * (1f - MathHelper.Clamp((projectile.ai[0] - 120) / 120f, 0.10f, 1f));
+            Projectile.position -= Projectile.velocity * (1f - MathHelper.Clamp((Projectile.ai[0] - 120) / 120f, 0.10f, 1f));
 
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
 
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            Texture2D textureGlow = ModContent.GetTexture("SGAmod/Glow");
+            Texture2D texture = Main.projectileTexture[Projectile.type];
+            Texture2D textureGlow = ModContent.Request<Texture2D>("SGAmod/Glow");
 
-            float realVelocity = (MathHelper.Clamp((projectile.ai[0] - 300) / 300, 0f, 1f));
-            float realAlpha = MathHelper.Clamp(projectile.localAI[0] / 300, 0f, 1f);
-            float timeLeft = Math.Min(projectile.timeLeft / 50f, 1f);
+            float realVelocity = (MathHelper.Clamp((Projectile.ai[0] - 300) / 300, 0f, 1f));
+            float realAlpha = MathHelper.Clamp(Projectile.localAI[0] / 300, 0f, 1f);
+            float timeLeft = Math.Min(Projectile.timeLeft / 50f, 1f);
 
             Vector2 drawOrigin2 = texture.Size() / 2f;
             Vector2 drawOrigin3 = textureGlow.Size() / 2f;
@@ -1784,35 +1785,35 @@ namespace SGAmod.NPCs.Hellion
             //Color color = Color.White;
             //Color color2 = Color.Purple;
 
-            float alpha = MathHelper.Clamp(projectile.localAI[0] / 30f, 0f, 1f);
+            float alpha = MathHelper.Clamp(Projectile.localAI[0] / 30f, 0f, 1f);
 
-            float scale = 2f - MathHelper.Clamp(projectile.localAI[0] / 70f, 0f, 1f);
+            float scale = 2f - MathHelper.Clamp(Projectile.localAI[0] / 70f, 0f, 1f);
 
-            float scaledpre = MathHelper.Clamp((projectile.localAI[0] - 20) / 45f, 0f, 1f) * scale;
+            float scaledpre = MathHelper.Clamp((Projectile.localAI[0] - 20) / 45f, 0f, 1f) * scale;
 
             float detail = 1f;// + projectile.velocity.Length();
 
-            float maxtrail = (float)(projectile.oldPos.Length - 15f);
-            float maxtrail2 = (float)(projectile.oldPos.Length - 1f);
+            float maxtrail = (float)(Projectile.oldPos.Length - 15f);
+            float maxtrail2 = (float)(Projectile.oldPos.Length - 1f);
 
             for (float f = maxtrail2; f >= 3f; f -= 0.25f)
             {
-                Vector2 pos = Vector2.Lerp(projectile.oldPos[(int)f - 1], projectile.oldPos[(int)f], f % 1f);
-                float rot = projectile.oldRot[(int)f - 1];
-                spriteBatch.Draw(texture, pos + (projectile.Hitbox.Size() / 2f) - Main.screenPosition, null, Color * timeLeft * (1f / detail) * (1f - (f / maxtrail2)) * alpha, rot + MathHelper.PiOver2, drawOrigin2, new Vector2(0.2f, 2.0f) * scaledpre, SpriteEffects.None, 0f);
+                Vector2 pos = Vector2.Lerp(Projectile.oldPos[(int)f - 1], Projectile.oldPos[(int)f], f % 1f);
+                float rot = Projectile.oldRot[(int)f - 1];
+                spriteBatch.Draw(texture, pos + (Projectile.Hitbox.Size() / 2f) - Main.screenPosition, null, Color * timeLeft * (1f / detail) * (1f - (f / maxtrail2)) * alpha, rot + MathHelper.PiOver2, drawOrigin2, new Vector2(0.2f, 2.0f) * scaledpre, SpriteEffects.None, 0f);
             }
 
             for (float f = maxtrail; f >= 1f; f -= 0.5f)
             {
-                Vector2 pos = Vector2.Lerp(projectile.oldPos[(int)f - 1], projectile.oldPos[(int)f], f % 1f);
-                float rot = projectile.oldRot[(int)f - 1];
-                spriteBatch.Draw(texture, pos + (projectile.Hitbox.Size() / 2f) - Main.screenPosition, null, Color * timeLeft * (1f / detail) * (1f - (f / maxtrail)) * alpha, rot + MathHelper.PiOver2, drawOrigin2, scaledpre, SpriteEffects.None, 0f);
+                Vector2 pos = Vector2.Lerp(Projectile.oldPos[(int)f - 1], Projectile.oldPos[(int)f], f % 1f);
+                float rot = Projectile.oldRot[(int)f - 1];
+                spriteBatch.Draw(texture, pos + (Projectile.Hitbox.Size() / 2f) - Main.screenPosition, null, Color * timeLeft * (1f / detail) * (1f - (f / maxtrail)) * alpha, rot + MathHelper.PiOver2, drawOrigin2, scaledpre, SpriteEffects.None, 0f);
             }
             for (float f = maxtrail; f >= 1f; f -= 0.5f)
             {
-                Vector2 pos = Vector2.Lerp(projectile.oldPos[(int)f - 1], projectile.oldPos[(int)f], f % 1f);
-                float rot = projectile.oldRot[(int)f - 1];
-                spriteBatch.Draw(textureGlow, pos + (projectile.Hitbox.Size() / 2f) - Main.screenPosition, null, Color2 * timeLeft * (0.75f / detail) * (1f - (f / maxtrail)) * alpha, rot + MathHelper.PiOver2, drawOrigin3, new Vector2(0.4f, 1.0f) * scaledpre, SpriteEffects.None, 0f);
+                Vector2 pos = Vector2.Lerp(Projectile.oldPos[(int)f - 1], Projectile.oldPos[(int)f], f % 1f);
+                float rot = Projectile.oldRot[(int)f - 1];
+                spriteBatch.Draw(textureGlow, pos + (Projectile.Hitbox.Size() / 2f) - Main.screenPosition, null, Color2 * timeLeft * (0.75f / detail) * (1f - (f / maxtrail)) * alpha, rot + MathHelper.PiOver2, drawOrigin3, new Vector2(0.4f, 1.0f) * scaledpre, SpriteEffects.None, 0f);
             }
 
             return false;
@@ -1841,16 +1842,16 @@ namespace SGAmod.NPCs.Hellion
         public override void SetDefaults()
         {
             //projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-            projectile.width = 8;
-            projectile.height = 20;
-            projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-            projectile.hostile = true;
-            projectile.friendly = false;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 60;
-            projectile.extraUpdates = 1;
-            aiType = -1;
-            projectile.aiStyle = -1;
+            Projectile.width = 8;
+            Projectile.height = 20;
+            Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+            Projectile.hostile = true;
+            Projectile.friendly = false;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 60;
+            Projectile.extraUpdates = 1;
+            AIType = -1;
+            Projectile.aiStyle = -1;
             timeleft = 60;
         }
 

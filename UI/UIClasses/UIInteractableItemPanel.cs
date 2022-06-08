@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.UI;
 using Terraria.ID;
 using SGAmod.UI.UIClasses;
+using Terraria.Audio;
 
 namespace SGAmod.UI
 {
@@ -32,7 +33,7 @@ namespace SGAmod.UI
 							{
 								if (i == 0)
 								{
-									Main.PlaySound(SoundID.Coins, -1, -1, 1, 1f, 0f);
+									SoundEngine.PlaySound(SoundID.Coins, -1, -1, 1, 1f, 0f);
 								}
 								if (Main.mouseItem.IsAir)
 								{
@@ -66,13 +67,13 @@ namespace SGAmod.UI
 		public virtual void PostOnRightClick()
 		{
 			if (!item.IsAir)
-			Main.PlaySound(SoundID.MenuTick, -1, -1, 0, 1f, 0f);
+			SoundEngine.PlaySound(SoundID.MenuTick, -1, -1, 0, 1f, 0f);
 		}
 
 		public virtual void PostOnClick(UIMouseEvent evt, UIElement e)
 		{
 			if (!item.IsAir)
-				Main.PlaySound(SoundID.Grab, -1, -1, 0, 1f, 0f);
+				SoundEngine.PlaySound(SoundID.Grab, -1, -1, 0, 1f, 0f);
 		}
 
 		private void UIInteractableItemPanel_OnClick(UIMouseEvent evt, UIElement e)

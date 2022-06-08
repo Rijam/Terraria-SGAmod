@@ -9,7 +9,7 @@ namespace SGAmod.Tiles
 {
 	public class VirulentOre: ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSolid[Type] = true;
@@ -23,7 +23,7 @@ namespace SGAmod.Tiles
 			soundType = 21;
 			soundStyle = 1;
 			dustType = 128;
-			drop = mod.ItemType("VirulentOre");
+			drop = Mod.Find<ModItem>("VirulentOre").Type;
 			minPick = 150;
 			mineResist = 5f;
 			ModTranslation name = CreateMapEntryName();

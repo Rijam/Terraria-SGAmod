@@ -9,7 +9,7 @@ using Terraria.GameContent.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -72,7 +72,7 @@ namespace SGAmod.Dimensions
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, Main.UIScaleMatrix);
 
             Vector2 loc = new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
-            Texture2D texx = ModContent.GetTexture("SGAmod/Items/WatchersOfNull");
+            Texture2D texx = ModContent.Request<Texture2D>("SGAmod/Items/WatchersOfNull");
             Vector2 offset = new Vector2(texx.Width, texx.Height / 13) / 2f;
             //if (SLWorld.progress != null)
             spriteBatch.Draw(texx, loc, new Rectangle(0, 0, texx.Width, texx.Height / 13), Color.White, 0, offset, Vector2.One * grow * 20f, SpriteEffects.None, 0f);
@@ -86,11 +86,11 @@ namespace SGAmod.Dimensions
 
             Effect RadialEffect = SGAmod.RadialEffect;
 
-            Texture2D mainTex = SGAmod.Instance.GetTexture("GreyHeart");//Main.projectileTexture[projectile.type];
+            Texture2D mainTex = SGAmod.Instance.Assets.Request<Texture2D>("GreyHeart").Value;//Main.projectileTexture[projectile.type];
 
-            RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("Space"));
+            RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Space").Value);
             RadialEffect.Parameters["alpha"].SetValue(1f);
-            RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.025f, Main.GlobalTime * 0.175f));
+            RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.025f, Main.GlobalTimeWrappedHourly * 0.175f));
             RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(3f, 1.5f));
             RadialEffect.Parameters["ringScale"].SetValue(0.85f);
             RadialEffect.Parameters["ringOffset"].SetValue(1f);
@@ -101,9 +101,9 @@ namespace SGAmod.Dimensions
 
             spriteBatch.Draw(mainTex, new Vector2(Main.screenWidth, Main.screenHeight) /2f, null, Color.White, 0, mainTex.Size() / 2f, Main.screenWidth/ 16f, default, 0);
 
-            RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("TiledPerlin"));
+            RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value);
             RadialEffect.Parameters["alpha"].SetValue(0.5f);
-            RadialEffect.Parameters["texOffset"].SetValue(new Vector2(Main.GlobalTime * 0.0125f, Main.GlobalTime * 0.205f));
+            RadialEffect.Parameters["texOffset"].SetValue(new Vector2(Main.GlobalTimeWrappedHourly * 0.0125f, Main.GlobalTimeWrappedHourly * 0.205f));
             RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(4.2f, 0.25f));
             RadialEffect.Parameters["ringScale"].SetValue(1.15f);
             RadialEffect.Parameters["ringOffset"].SetValue(1.25f);
@@ -134,7 +134,7 @@ namespace SGAmod.Dimensions
 
         public override Texture2D GetMapBackgroundImage()
         {
-            return SGAmod.Instance.GetTexture("SeedOfEvilMapBackground");
+            return SGAmod.Instance.Assets.Request<Texture2D>("SeedOfEvilMapBackground").Value;
         }
 
         public override int? Music
@@ -172,7 +172,7 @@ namespace SGAmod.Dimensions
                 for (int yy = -roomsize; yy <= roomsize; yy += 1)
                 {
                     Tile tile = Main.tile[point.X + xx, point.Y + yy];
-                    if (tile.type == TileID.Adamantite)
+                    if (tile.TileType == TileID.Adamantite)
                         return true;
                 }
             }
@@ -235,8 +235,8 @@ namespace SGAmod.Dimensions
                 {
                     prog.Message = ((x * y) + y) / (float)(width * height)*100f + "%";
                     float dist = (new Vector2(x, y) - center).LengthSquared();
-                    Main.tile[x, y].type = (BossRoom.Contains(x, y) || dist>(height* height) / 8f) ? TileID.Adamantite : TileID.CobaltBrick;
-                    Main.tile[x, y].active(true);
+                    Main.tile[x, y].TileType = (BossRoom.Contains(x, y) || dist>(height* height) / 8f) ? TileID.Adamantite : TileID.CobaltBrick;
+                    Main.tile[x, y].HasTile;
                 }
             }
 
@@ -272,15 +272,15 @@ namespace SGAmod.Dimensions
                 for (int y = 0; y < height; y += 1)
                 {
                     Tile tile = Main.tile[x, (height-1)-y];
-                    tile.type = TileID.CobaltBrick;
-                    tile.active(false);
+                    tile.TileType = TileID.CobaltBrick;
+                    tile.HasTile;
 
                     prog.Value = (((x + (y*x)) / (float)(width * height)) * 1f);
                     float dist = (new Vector2(x, y) - center).LengthSquared();
                     if (!(dist > (height * height) / 8f))
                     {
-                        tile.type = (ushort)ModContent.TileType<HardenedFabric>();
-                        tile.active(true);
+                        tile.TileType = (ushort)ModContent.TileType<HardenedFabric>();
+                        tile.HasTile;
                     }
                     int dister = (height * height) / 5;
 
@@ -289,11 +289,11 @@ namespace SGAmod.Dimensions
 
                         adder = (adder+1)%noiseDetail;
 
-                    if ((tile.wall == WallID.DirtUnsafe || tile.wall == WallID.DirtUnsafe1 || tile.wall == WallID.DirtUnsafe2 || tile.wall == WallID.DirtUnsafe3 || tile.wall == WallID.DirtUnsafe4) || (dist > noisy+(dister+(y*y)/4f)))
+                    if ((tile.WallType == WallID.DirtUnsafe || tile.WallType == WallID.DirtUnsafe1 || tile.WallType == WallID.DirtUnsafe2 || tile.WallType == WallID.DirtUnsafe3 || tile.WallType == WallID.DirtUnsafe4) || (dist > noisy+(dister+(y*y)/4f)))
                     {
-                        tile.type = (ushort)ModContent.TileType<HardenedFabric>();
-                        tile.wall = 0;
-                        tile.active(true);
+                        tile.TileType = (ushort)ModContent.TileType<HardenedFabric>();
+                        tile.WallType = 0;
+                        tile.HasTile;
                     }
 
                 }
@@ -471,10 +471,10 @@ namespace SGAmod.Dimensions
                             if (InsideMap(there2.X, there2.Y))
                             {
                                 Tile tileline = Main.tile[there2.X, there2.Y];
-                                if (tileline.active())
+                                if (tileline.HasTile)
                                 {
-                                    tileline.active(false);
-                                    tileline.type = 0;// TileID.AmberGemspark;
+                                    tileline.HasTile;
+                                    tileline.TileType = 0;// TileID.AmberGemspark;
                                 }
                             }
                         }
@@ -497,27 +497,27 @@ namespace SGAmod.Dimensions
                         {
                             Tile tileline = Main.tile[loc.X, loc.Y];
                             //tileline.type = TileID.Diamond;
-                            tileline.active(false);
+                            tileline.HasTile;
 
                             if (mazeRoom.gen > maxGen * 0.75)
                             {
-                                tileline.wall = 0;
+                                tileline.WallType = 0;
                                 continue;
                             }
 
                             if (mazeRoom.gen > maxGen * 0.5)
                             {
-                                tileline.wall = (ushort)SGAmod.Instance.WallType("CorruptionFakeWall");
+                                tileline.WallType = (ushort)SGAmod.Instance.Find<ModWall>("CorruptionFakeWall").Type;
                                 continue;
                             }
 
                             if (mazeRoom.gen > maxGen * 0.25)
                             {
-                                tileline.wall = (ushort)SGAmod.Instance.WallType("CrimsonFakeWall");
+                                tileline.WallType = (ushort)SGAmod.Instance.Find<ModWall>("CrimsonFakeWall").Type;
                                 continue;
                             }
 
-                            tileline.wall = (ushort)SGAmod.Instance.WallType("NullWall");
+                            tileline.WallType = (ushort)SGAmod.Instance.Find<ModWall>("NullWall").Type;
                             //WallID.Sets.
                             //tileline.color((byte)FakeOverworld.Paints.Negative);
                         }
@@ -555,8 +555,8 @@ namespace SGAmod.Dimensions
                             {
                                 Tile tileline = Main.tile[loc.X, loc.Y];
 
-                                tileline.type = TileID.DiamondGemspark;
-                                tileline.active(true);
+                                tileline.TileType = TileID.DiamondGemspark;
+                                tileline.HasTile;
                                 tileline.color((byte)Paints.Negative);
                             }
                         }
@@ -616,14 +616,14 @@ namespace SGAmod.Dimensions
                                     Tile tile = Main.tile[there.X + x, there.Y + y];
                                     if (i < 1)
                                     {
-                                        if (tile.active())
-                                            tile.type = type == 0 ? TileID.AmethystGemspark : TileID.AmberGemspark;
+                                        if (tile.HasTile)
+                                            tile.TileType = type == 0 ? TileID.AmethystGemspark : TileID.AmberGemspark;
                                     }
                                     else
                                     {
-                                        tile.active(false);
-                                        if (tile.wall == 0)
-                                            tile.wall = type == 0 ? WallID.AmethystGemsparkOff : WallID.AmberGemsparkOff;
+                                        tile.HasTile;
+                                        if (tile.WallType == 0)
+                                            tile.WallType = type == 0 ? WallID.AmethystGemsparkOff : WallID.AmberGemsparkOff;
                                     }
                                 }
                             }
@@ -651,12 +651,12 @@ namespace SGAmod.Dimensions
                         {
                             int num38 = lootroom.loc.X + num36;
                             int num39 = lootroom.loc.Y + num37;
-                            Main.tile[num38, num39].active(active: true);
+                            Main.tile[num38, num39].HasTile;
                             Main.tile[num38, num39].slope(0);
-                            Main.tile[num38, num39].halfBrick(halfBrick: false);
-                            Main.tile[num38, num39].type = 31;
-                            Main.tile[num38, num39].frameX = (short)(num36 * 18 + 36 * heart);
-                            Main.tile[num38, num39].frameY = (short)(num37 * 18 + 36 * 0);
+                            Main.tile[num38, num39].IsHalfBlock;
+                            Main.tile[num38, num39].TileType = 31;
+                            Main.tile[num38, num39].TileFrameX = (short)(num36 * 18 + 36 * heart);
+                            Main.tile[num38, num39].TileFrameY = (short)(num37 * 18 + 36 * 0);
                         }
                     }
                 }
@@ -695,8 +695,8 @@ namespace SGAmod.Dimensions
                 tileline.color((byte)Paints.Shadow);
                 //if (BossRoomInside.Contains(point.X, point.Y))
                 //{
-                tileline.active(false);
-                tileline.wall = tileline.wall = (ushort)SGAmod.Instance.WallType("NullWallBossArena");
+                tileline.HasTile;
+                tileline.WallType = tileline.WallType = (ushort)SGAmod.Instance.Find<ModWall>("NullWallBossArena").Type;
                 //}
             }
             if (roomsize < 5)
@@ -712,13 +712,13 @@ namespace SGAmod.Dimensions
                         if (InsideMap(point.X + xx, point.Y + yy))
                         {
                         Tile tileline = Main.tile[point.X + xx, point.Y + yy];
-                        tileline.active(false);
+                        tileline.HasTile;
 
                             if (BossRoom.Contains(point.X, point.Y))
                             {
-                                if (tileline.wall != (ushort)SGAmod.Instance.WallType("NullWall") && tileline.wall != (ushort)SGAmod.Instance.WallType("NullWallBossArena"))
+                                if (tileline.WallType != (ushort)SGAmod.Instance.Find<ModWall>("NullWall") .Type&& tileline.WallType != (ushort)SGAmod.Instance.Find<ModWall>("NullWallBossArena").Type)
                                 {
-                                    tileline.wall = (ushort)SGAmod.Instance.WallType("NullWall");
+                                    tileline.WallType = (ushort)SGAmod.Instance.Find<ModWall>("NullWall").Type;
                                 }
                             }
                         }

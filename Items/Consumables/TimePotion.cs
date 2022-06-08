@@ -25,7 +25,7 @@ namespace SGAmod.Items.Consumables
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.SGAPly().CooldownStacks.Count + 2 < player.SGAPly().MaxCooldownStacks && !player.HasBuff(mod.BuffType("MatrixBuff"));
+			return player.SGAPly().CooldownStacks.Count + 2 < player.SGAPly().MaxCooldownStacks && !player.HasBuff(Mod.Find<ModBuff>("MatrixBuff").Type);
 		}
 
 		public override bool ConsumeItem(Player player)
@@ -33,7 +33,7 @@ namespace SGAmod.Items.Consumables
 			return true;
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			player.SGAPly().AddCooldownStack(60 * 150, 3);
 			return true;
@@ -41,35 +41,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = mod.BuffType("MatrixBuff");
-			item.buffTime = 60 * 60;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = Mod.Find<ModBuff>("MatrixBuff").Type;
+			Item.buffTime = 60 * 60;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LesserRestorationPotion);
-			recipe.AddIngredient(ItemID.StrangeBrew);
-			recipe.AddIngredient(ItemID.AncientCloth, 2);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 4);
-			recipe.AddIngredient(mod.ItemType("Entrophite"), 40);
-			recipe.AddIngredient(ItemID.DD2KoboldBanner);
-			recipe.AddIngredient(ItemID.FossilOre, 10);
-			recipe.AddIngredient(ItemID.Amber, 3);
-			recipe.AddTile(TileID.AlchemyTable);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.LesserRestorationPotion).AddIngredient(ItemID.StrangeBrew).AddIngredient(ItemID.AncientCloth, 2).AddIngredient(mod.ItemType("VirulentBar"), 4).AddIngredient(mod.ItemType("Entrophite"), 40).AddIngredient(ItemID.DD2KoboldBanner).AddIngredient(ItemID.FossilOre, 10).AddIngredient(ItemID.Amber, 3).AddTile(TileID.AlchemyTable).Register();
 		}
 	}
 
@@ -168,17 +157,17 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
 			//projectile.hide = true;
-			projectile.timeLeft = 10;
-			projectile.penetrate = -1;
-			aiType = ProjectileID.WoodenArrowFriendly;
-			projectile.damage = 0;
+			Projectile.timeLeft = 10;
+			Projectile.penetrate = -1;
+			AIType = ProjectileID.WoodenArrowFriendly;
+			Projectile.damage = 0;
 		}
 
 		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
@@ -195,18 +184,18 @@ namespace SGAmod.Items.Consumables
 		{
 
 
-			projectile.localAI[0] += 1f;
+			Projectile.localAI[0] += 1f;
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
-			int buffid = player.FindBuffIndex(mod.BuffType("MatrixBuff"));
+			int buffid = player.FindBuffIndex(Mod.Find<ModBuff>("MatrixBuff").Type);
 
 				if (player != null && player.active)
 			{
 
 				SGAPlayer modply = player.GetModPlayer<SGAPlayer>();
 
-				projectile.scale = projectile.timeLeft / 60f;
+				Projectile.scale = Projectile.timeLeft / 60f;
 
 				if (player.dead || buffid < 0)
 				{
@@ -215,23 +204,23 @@ namespace SGAmod.Items.Consumables
 				else
 				{
 
-					projectile.timeLeft = Math.Min(projectile.timeLeft + 2, 60);
-					projectile.ai[0] = 256;
+					Projectile.timeLeft = Math.Min(Projectile.timeLeft + 2, 60);
+					Projectile.ai[0] = 256;
 
 
 					Vector2 mousePos = Main.MouseWorld;
 
-					if (projectile.owner == Main.myPlayer)
+					if (Projectile.owner == Main.myPlayer)
 					{
 						Vector2 diff = mousePos - player.Center;
 						diff.Normalize();
 						//projectile.velocity = player.velocity;
-						projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-						projectile.netUpdate = true;
+						Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+						Projectile.netUpdate = true;
 					}
 
-					projectile.velocity = default(Vector2);
-					projectile.Center = (player.Center);
+					Projectile.velocity = default(Vector2);
+					Projectile.Center = (player.Center);
 
 					float counterx = 0;
 
@@ -243,11 +232,11 @@ namespace SGAmod.Items.Consumables
 							NPC proj = Main.npc[i];
 							if (proj != null && proj.active)
 							{
-								if (!proj.townNPC && (proj.Center - projectile.Center).Length() < projectile.ai[0])
+								if (!proj.townNPC && (proj.Center - Projectile.Center).Length() < Projectile.ai[0])
 								{
 									//proj.position -= proj.velocity * 0.75f;
 									proj.GetGlobalNPC<SGAnpcs>().TimeSlow += 3;
-									if (projectile.ai[1] < 1)
+									if (Projectile.ai[1] < 1)
 									{
 
 										if (proj.boss)
@@ -267,14 +256,14 @@ namespace SGAmod.Items.Consumables
 
 						counterx = 0;
 
-						int[] nonolist = { mod.ProjectileType("HellionCascadeShot"), mod.ProjectileType("HellionCascadeShot2") };
+						int[] nonolist = { Mod.Find<ModProjectile>("HellionCascadeShot").Type, Mod.Find<ModProjectile>("HellionCascadeShot2") .Type};
 
 						for (int i = 0; i < Main.maxProjectiles; i += 1)
 						{
 							Projectile proj = Main.projectile[i];
 							if (proj != null && proj.active)
 							{
-								if (proj.hostile && (proj.Center - projectile.Center).Length() < projectile.ai[0])
+								if (proj.hostile && (proj.Center - Projectile.Center).Length() < Projectile.ai[0])
 								{
 									if (nonolist.Any(type => type != proj.type))
 									{
@@ -299,19 +288,19 @@ namespace SGAmod.Items.Consumables
 			}
 			else
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 
 		}
 
 		public static void DrawDistort(SGAPlayer sga)
 		{
-			if (sga.player.ownedProjectileCounts[ModContent.ProjectileType<Items.Consumables.TimeEffect>()] > 0)
+			if (sga.Player.ownedProjectileCounts[ModContent.ProjectileType<Items.Consumables.TimeEffect>()] > 0)
 			{
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, default, default, default, Main.GameViewMatrix.TransformationMatrix);
 
-				Projectile[] array = (Main.projectile.Where(testby => testby.active && testby.owner == sga.player.whoAmI && testby.type == ModContent.ProjectileType<Items.Consumables.TimeEffect>())).ToArray();
+				Projectile[] array = (Main.projectile.Where(testby => testby.active && testby.owner == sga.Player.whoAmI && testby.type == ModContent.ProjectileType<Items.Consumables.TimeEffect>())).ToArray();
 				if (array.Length > 0)
 				{
 
@@ -327,13 +316,13 @@ namespace SGAmod.Items.Consumables
 
 					//shader.UseImage(SGAmod.Instance.GetTexture("Fire"), 1, SamplerState.AnisotropicWrap);
 					//shader.Apply();
-					shader.Shader.Parameters["distortionTexture"].SetValue(SGAmod.Instance.GetTexture("Fire"));
+					shader.Shader.Parameters["distortionTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Fire").Value);
 					shader.Shader.Parameters["uTargetPosition"].SetValue(position);
 					shader.Shader.Parameters["uScreenResolution"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
 					shader.Shader.Parameters["uColor"].SetValue(new Vector3(2.25f, 10f * percent, 0f));
 					shader.Shader.Parameters["uIntensity"].SetValue(1f);
 					shader.Shader.Parameters["uOpacity"].SetValue(percent);
-					shader.Shader.Parameters["uTime"].SetValue(Main.GlobalTime / 4f);
+					shader.Shader.Parameters["uTime"].SetValue(Main.GlobalTimeWrappedHourly / 4f);
 					shader.Shader.CurrentTechnique.Passes["TimeDistort"].Apply();
 
 					Items.Consumables.TimeEffect.queueRenderTargetUpdate = 5;
@@ -344,10 +333,10 @@ namespace SGAmod.Items.Consumables
 					Main.spriteBatch.End();
 					Main.spriteBatch.Begin(default, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.TransformationMatrix);
 
-					int buffid = sga.player.FindBuffIndex(SGAmod.Instance.BuffType("MatrixBuff"));
+					int buffid = sga.Player.FindBuffIndex(SGAmod.Instance.Find<ModBuff>("MatrixBuff").Type);
 					float timeleft = 0f;
 					if (buffid > -1)
-						timeleft = (float)sga.player.buffTime[buffid];
+						timeleft = (float)sga.Player.buffTime[buffid];
 
 
 					for (int i = 0; i < 360; i += 360 / 12)
@@ -368,17 +357,17 @@ namespace SGAmod.Items.Consumables
 		public override bool PreDrawExtras(SpriteBatch spriteBatch)
 		{
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			SGAPlayer modplayer = player.GetModPlayer<SGAPlayer>();
 
-			int buffid = player.FindBuffIndex(mod.BuffType("MatrixBuff"));
+			int buffid = player.FindBuffIndex(Mod.Find<ModBuff>("MatrixBuff").Type);
 			float timeleft = 0f;
 			if (buffid > -1)
 				timeleft = (float)player.buffTime[buffid];
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/MatrixArrow");
-			Main.spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White * projectile.scale, MathHelper.ToRadians(timeleft * (360 / 60)) + MathHelper.ToRadians(-90), new Vector2(0, tex.Height / 2), new Vector2(2, 2) * projectile.scale, SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White * projectile.scale, MathHelper.ToRadians(timeleft * (360 / 60)) / 60f + MathHelper.ToRadians(-90), new Vector2(0, tex.Height / 2), new Vector2(1, 1) * projectile.scale, SpriteEffects.None, 0f);
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/MatrixArrow");
+			Main.spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.scale, MathHelper.ToRadians(timeleft * (360 / 60)) + MathHelper.ToRadians(-90), new Vector2(0, tex.Height / 2), new Vector2(2, 2) * Projectile.scale, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.scale, MathHelper.ToRadians(timeleft * (360 / 60)) / 60f + MathHelper.ToRadians(-90), new Vector2(0, tex.Height / 2), new Vector2(1, 1) * Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

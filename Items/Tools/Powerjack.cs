@@ -17,27 +17,27 @@ namespace SGAmod.Items.Tools
         /*public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
 
-            Color c = Main.hslToRgb((float)(Main.GlobalTime/4)%1f, 0.4f, 0.45f);
+            Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly/4)%1f, 0.4f, 0.45f);
             string potion="[i:" + ItemID.RedPotion + "]";
             tooltips.Add(new TooltipLine(mod,"IDG Debug Item", potion+Idglib.ColorText(c,"Mister Creeper's dev weapon")+potion));
         }*/
 
 		public override void SetDefaults()
 		{
-			item.damage = 25;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 12;
-			item.useAnimation = 24;
-			item.hammer = 80;
-			item.useStyle = 1;
-			item.knockBack = 8;
-			item.value = 10000;
-			item.rare = 6;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useTurn = true;
+			Item.damage = 25;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 12;
+			Item.useAnimation = 24;
+			Item.hammer = 80;
+			Item.useStyle = 1;
+			Item.knockBack = 8;
+			Item.value = 10000;
+			Item.rare = 6;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useTurn = true;
 		}
 
 	}

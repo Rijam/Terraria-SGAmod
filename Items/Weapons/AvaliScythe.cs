@@ -12,6 +12,7 @@ using SGAmod.Items.Weapons;
 using SGAmod.HavocGear.Items.Weapons;
 
 using SGAmod.Effects;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -24,29 +25,29 @@ namespace SGAmod.Items.Weapons
 			DisplayName.SetDefault("Avali Scythe");
 			Tooltip.SetDefault("Spins a duo-scythe around the player that speeds up over time" +
 				"\nAfter holding for a short while, release to throw the weapon\nWhen thrown, Does up to double the damage and deals throwing damage" + "\n'The weapon of the fallen dragon'");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 25;
-			item.crit = 10;
-			item.melee = true;
-			item.width = 34;
-			item.height = 24;
-			item.useTime = 12;
-			item.useAnimation = 12;
-			item.useStyle = 5;
-			item.knockBack = 8;
-			item.value = 100000;
-			item.rare = 5;
-			item.shootSpeed = 8f;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.shoot = mod.ProjectileType("AvaliScytheProjectile");
-			item.shootSpeed = 7f;
-			item.UseSound = SoundID.Item8;
-			item.channel = true;
+			Item.damage = 25;
+			Item.crit = 10;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 34;
+			Item.height = 24;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
+			Item.useStyle = 5;
+			Item.knockBack = 8;
+			Item.value = 100000;
+			Item.rare = 5;
+			Item.shootSpeed = 8f;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.shoot = Mod.Find<ModProjectile>("AvaliScytheProjectile").Type;
+			Item.shootSpeed = 7f;
+			Item.UseSound = SoundID.Item8;
+			Item.channel = true;
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
@@ -54,11 +55,11 @@ namespace SGAmod.Items.Weapons
 			if (GetType() == typeof(AvaliScythe))
 			if (!Main.gameMenu)
 			{
-				Texture2D texGlow = ModContent.GetTexture("SGAmod/Items/GlowMasks/AvaliScythe_Glow");
-				Texture2D tex = Main.itemTexture[item.type];
+				Texture2D texGlow = ModContent.Request<Texture2D>("SGAmod/Items/GlowMasks/AvaliScythe_Glow");
+				Texture2D tex = Main.itemTexture[Item.type];
 				Vector2 textureOrigin = new Vector2(texGlow.Width / 2, texGlow.Height / 2);
-				spriteBatch.Draw(tex, item.position+new Vector2(16,-12) - Main.screenPosition, null, lightColor, rotation, textureOrigin, scale, SpriteEffects.None, 0f);
-				spriteBatch.Draw(texGlow, item.position + new Vector2(16, -12) - Main.screenPosition, null, Color.White, rotation, textureOrigin, scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, Item.position+new Vector2(16,-12) - Main.screenPosition, null, lightColor, rotation, textureOrigin, scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texGlow, Item.position + new Vector2(16, -12) - Main.screenPosition, null, Color.White, rotation, textureOrigin, scale, SpriteEffects.None, 0f);
 					return false;
                 }
 			return true;
@@ -79,12 +80,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("AdvancedPlating"), 8);
-			recipe.AddRecipeGroup("SGAmod:Tier4Bars", 6);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("AdvancedPlating"), 8).AddRecipeGroup("SGAmod:Tier4Bars", 6).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -110,17 +106,17 @@ namespace SGAmod.Items.Weapons
 		{
 
 			Vector2[] oldPos = new Vector2[2];
-			oldPos[0] = projectile.Center + new Vector2(48, 0);
+			oldPos[0] = Projectile.Center + new Vector2(48, 0);
 			oldPos[0] = oldPos[0].RotatedBy(MathHelper.ToRadians(45));
-			oldPos[0] = oldPos[0].RotatedBy(projectile.rotation);
+			oldPos[0] = oldPos[0].RotatedBy(Projectile.rotation);
 			oldPos[0].Normalize();
 			oldPos[0] *= 48f;
 			oldPos[1] = oldPos[0].RotatedBy(MathHelper.ToRadians(180));
 
 			foreach (Vector2 position in oldPos)
 			{
-				projHitbox.X = (int)(projectile.Center.X + position.X);
-				projHitbox.Y = (int)(projectile.Center.Y + position.Y);
+				projHitbox.X = (int)(Projectile.Center.X + position.X);
+				projHitbox.Y = (int)(Projectile.Center.Y + position.Y);
 				if (projHitbox.Intersects(targetHitbox))
 				{
 					return true;
@@ -132,18 +128,18 @@ namespace SGAmod.Items.Weapons
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/Items/Weapons/AvaliScythe");
-			Texture2D texGlow = ModContent.GetTexture("SGAmod/Items/GlowMasks/AvaliScythe_Glow");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Items/Weapons/AvaliScythe");
+			Texture2D texGlow = ModContent.Request<Texture2D>("SGAmod/Items/GlowMasks/AvaliScythe_Glow");
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height) / 2f;
 
 			//oldPos.Length - 1
 			for (int k = oldRot.Length - 1; k >= 0; k -= 1)
 			{
-				Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
+				Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
 				//Color color = Color.Lerp(Color.Lime, lightColor, (float)k / (oldPos.Length + 1));
 				float alphaz = (1f - (float)(k + 1) / (float)(oldRot.Length + 2)) * 1f;
-				spriteBatch.Draw(tex, drawPos, null, lightColor * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
-				spriteBatch.Draw(texGlow, drawPos, null, Color.White * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, null, lightColor * alphaz, oldRot[k], drawOrigin, Projectile.scale, Projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+				spriteBatch.Draw(texGlow, drawPos, null, Color.White * alphaz, oldRot[k], drawOrigin, Projectile.scale, Projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 			}
 			return false;
 		}
@@ -152,15 +148,15 @@ namespace SGAmod.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0f;
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.melee = true;
-			projectile.tileCollide = false;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0f;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
 			drawHeldProjInFrontOfHeldItemAndArms = false;
 		}
 
@@ -180,72 +176,72 @@ namespace SGAmod.Items.Weapons
 			{
 				oldRot[k] = oldRot[k - 1];
 			}
-			oldRot[0] = projectile.rotation;
+			oldRot[0] = Projectile.rotation;
 
-			Player basep = Main.player[projectile.owner];
+			Player basep = Main.player[Projectile.owner];
 
 			if (basep == null || basep.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
-			if ((!basep.channel || basep.dead || letItGo) && projectile.ai[1] < 1)
+			if ((!basep.channel || basep.dead || letItGo) && Projectile.ai[1] < 1)
 			{
-				if (projectile.ai[0] < 10)
+				if (Projectile.ai[0] < 10)
 				{
-					projectile.Kill();
+					Projectile.Kill();
 					return;
 
 
 				}
 				else
 				{
-					projectile.ai[1] = 1;
-					projectile.velocity *= projectile.ai[0] * throwMulti * basep.Throwing().thrownVelocity;
-					projectile.timeLeft = 300+(GetType() == typeof(CyberScytheProjectile) ? 100 : 0);
-					projectile.melee = false;
-					projectile.Throwing().thrown = true;
-					projectile.damage = (int)(projectile.damage * basep.Throwing().thrownDamage);
+					Projectile.ai[1] = 1;
+					Projectile.velocity *= Projectile.ai[0] * throwMulti * basep.Throwing().thrownVelocity;
+					Projectile.timeLeft = 300+(GetType() == typeof(CyberScytheProjectile) ? 100 : 0);
+					// projectile.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+					Projectile.Throwing().DamageType = DamageClass.Throwing;
+					Projectile.damage = (int)(Projectile.damage * basep.Throwing().thrownDamage);
 					basep.itemAnimation = 60;
 					basep.itemTime = 60;
-					Main.PlaySound(SoundID.Item71, basep.Center);
-					projectile.damage = (int)(projectile.damage * (1 + (projectile.ai[0] / 15f)));
-					projectile.netUpdate = true;
+					SoundEngine.PlaySound(SoundID.Item71, basep.Center);
+					Projectile.damage = (int)(Projectile.damage * (1 + (Projectile.ai[0] / 15f)));
+					Projectile.netUpdate = true;
 				}
 			}
 
-			if (projectile.ai[1] < 1)
+			if (Projectile.ai[1] < 1)
 			{
 
-				subdamage = projectile.damage;
-				projectile.ai[0] = Math.Min(projectile.ai[0] + chargeUpRate, maxSpin);
+				subdamage = Projectile.damage;
+				Projectile.ai[0] = Math.Min(Projectile.ai[0] + chargeUpRate, maxSpin);
 				basep.itemAnimation = 5;
 				basep.itemTime = 5;
-				projectile.timeLeft = projectile.extraUpdates + 2;
+				Projectile.timeLeft = Projectile.extraUpdates + 2;
 
-				if (projectile.owner == Main.myPlayer)
+				if (Projectile.owner == Main.myPlayer)
 				{
 					Vector2 mousePos = Main.MouseWorld;
 					Vector2 diff = mousePos - basep.Center;
 					diff.Normalize();
-					projectile.velocity = diff;
+					Projectile.velocity = diff;
 					basep.direction = Main.MouseWorld.X > basep.position.X ? 1 : -1;
-					projectile.netUpdate = true;
-					projectile.Center = mousePos;
+					Projectile.netUpdate = true;
+					Projectile.Center = mousePos;
 				}
 
-				basep.heldProj = projectile.whoAmI;
+				basep.heldProj = Projectile.whoAmI;
 
-				projectile.position -= projectile.velocity;
-				basep.bodyFrame.Y = basep.bodyFrame.Height * (2 + (((int)((projectile.localAI[0] * spinMulti) / 40)) % 3));
-				projectile.Center = basep.Center;
+				Projectile.position -= Projectile.velocity;
+				basep.bodyFrame.Y = basep.bodyFrame.Height * (2 + (((int)((Projectile.localAI[0] * spinMulti) / 40)) % 3));
+				Projectile.Center = basep.Center;
 			}
-			projectile.localAI[0] += spinMulti * (projectile.ai[0] + 5f) * projectile.direction;
-			projectile.localAI[1] += (1 + projectile.ai[0] / 8);
+			Projectile.localAI[0] += spinMulti * (Projectile.ai[0] + 5f) * Projectile.direction;
+			Projectile.localAI[1] += (1 + Projectile.ai[0] / 8);
 
 			PlaySound();
 
-			projectile.rotation = MathHelper.ToRadians(projectile.localAI[0]);
+			Projectile.rotation = MathHelper.ToRadians(Projectile.localAI[0]);
 
 		}
 
@@ -259,7 +255,7 @@ namespace SGAmod.Items.Weapons
 			DisplayName.SetDefault("Cyber Scythe");
 			Tooltip.SetDefault("Spins a duo-Cybernetic Scythe around the player\nThe blades expand to reach your mouse cursor's distance\nDoes more damage further out and hits more often as it charges up" +
 				"\nAfter holding for a short while, release to throw the weapon\nWhen thrown, Does throwing damage and deals more\nConsumes Electric Charge; requires more the longer you charge it up");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 		public override string Texture
 		{
@@ -275,37 +271,29 @@ namespace SGAmod.Items.Weapons
 
         public override void SetDefaults()
 		{
-			item.damage = 250;
-			item.melee = true;
-			item.width = 34;
-			item.height = 24;
-			item.crit = 15;
-			item.useTime = 12;
-			item.useAnimation = 12;
-			item.useStyle = 5;
-			item.knockBack = 8;
-			item.value = 5000000;
-			item.rare = ItemRarityID.Red;
-			item.shootSpeed = 8f;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.shoot = mod.ProjectileType("CyberScytheProjectile");
-			item.shootSpeed = 7f;
-			item.UseSound = SoundID.Item8;
-			item.channel = true;
+			Item.damage = 250;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 34;
+			Item.height = 24;
+			Item.crit = 15;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
+			Item.useStyle = 5;
+			Item.knockBack = 8;
+			Item.value = 5000000;
+			Item.rare = ItemRarityID.Red;
+			Item.shootSpeed = 8f;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.shoot = Mod.Find<ModProjectile>("CyberScytheProjectile").Type;
+			Item.shootSpeed = 7f;
+			Item.UseSound = SoundID.Item8;
+			Item.channel = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("RedPhasebrand"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("LunarRoyalGel"), 15);
-			recipe.AddIngredient(mod.ItemType("AdvancedPlating"), 8);
-			recipe.AddIngredient(ItemID.LunarBar, 6);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("RedPhasebrand"), 1).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("LunarRoyalGel"), 15).AddIngredient(mod.ItemType("AdvancedPlating"), 8).AddIngredient(ItemID.LunarBar, 6).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -332,16 +320,16 @@ namespace SGAmod.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0f;
-			projectile.width = 48;
-			projectile.height = 48;
-			projectile.melee = true;
-			projectile.tileCollide = false;
-			projectile.extraUpdates = 4;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0f;
+			Projectile.width = 48;
+			Projectile.height = 48;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
+			Projectile.extraUpdates = 4;
 			drawHeldProjInFrontOfHeldItemAndArms = false;
 		}
 
@@ -357,19 +345,19 @@ namespace SGAmod.Items.Weapons
 
 		public override void AI()
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 
 			if (!start)
             {
 				start = true;
 				for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.Pi)
 				{
-					Projectile projectile2 = Projectile.NewProjectileDirect(projectile.Center,i.ToRotationVector2(), ModContent.ProjectileType<CyberScytheProjectileEdge>(), projectile.damage, projectile.knockBack, projectile.owner, 0, projectile.whoAmI);
+					Projectile projectile2 = Projectile.NewProjectileDirect(Projectile.Center,i.ToRotationVector2(), ModContent.ProjectileType<CyberScytheProjectileEdge>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 0, Projectile.whoAmI);
 				}
 
 			}
 
-			if (owner!=null && !owner.SGAPly().ConsumeElectricCharge((int)projectile.ai[0]/4, 30) && projectile.ai[1]<1)
+			if (owner!=null && !owner.SGAPly().ConsumeElectricCharge((int)Projectile.ai[0]/4, 30) && Projectile.ai[1]<1)
 			{
 				letItGo = true;
 				return;
@@ -380,10 +368,10 @@ namespace SGAmod.Items.Weapons
 
 		protected override void PlaySound()
 		{
-			if (projectile.localAI[1] > spinSoundDelay)
+			if (Projectile.localAI[1] > spinSoundDelay)
 			{
-				projectile.localAI[1] = 0;
-				Main.PlaySound(SoundID.Zombie, (int)projectile.Center.X, (int)projectile.Center.Y, 66, 1f, -0.25f+(projectile.ai[0] / 30f));
+				Projectile.localAI[1] = 0;
+				SoundEngine.PlaySound(SoundID.Zombie, (int)Projectile.Center.X, (int)Projectile.Center.Y, 66, 1f, -0.25f+(Projectile.ai[0] / 30f));
 			}
 		}
 
@@ -393,14 +381,14 @@ namespace SGAmod.Items.Weapons
 			for (float u = 0; u < MathHelper.TwoPi; u += MathHelper.Pi)
 			{
 				Vector2 oldPos = new Vector2(1f, 0);
-				oldPos = oldPos.RotatedBy(u + (projectile.rotation + (0f)));
+				oldPos = oldPos.RotatedBy(u + (Projectile.rotation + (0f)));
 				oldPos.Normalize();
 				oldPos *= 24f;
 
 				Vector2 torot = oldPos;
 				torot.Normalize();
 
-				int thisoned = Projectile.NewProjectile(projectile.Center + oldPos, torot * 8f, ProjectileID.ScutlixLaser, (int)(projectile.damage / 3), knockback, Main.myPlayer);
+				int thisoned = Projectile.NewProjectile(Projectile.Center + oldPos, torot * 8f, ProjectileID.ScutlixLaser, (int)(Projectile.damage / 3), knockback, Main.myPlayer);
 				//Main.projectile[thisoned].usesLocalNPCImmunity = true;
 				//Main.projectile[thisoned].localNPCHitCooldown = -1;
 				Main.projectile[thisoned].penetrate = 2;
@@ -445,29 +433,29 @@ namespace SGAmod.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0f;
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.melee = true;
-			projectile.tileCollide = false;
-			projectile.extraUpdates = 4;
-			projectile.timeLeft = 10;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = 10;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0f;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
+			Projectile.extraUpdates = 4;
+			Projectile.timeLeft = 10;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 10;
 			drawHeldProjInFrontOfHeldItemAndArms = false;
 		}
 
 		public override void AI()
 		{
-			Player owner = Main.player[projectile.owner];
-			master = Main.projectile[(int)projectile.ai[1]];
-			projectile.timeLeft = 10;
+			Player owner = Main.player[Projectile.owner];
+			master = Main.projectile[(int)Projectile.ai[1]];
+			Projectile.timeLeft = 10;
 			if (!owner.active || owner.dead || !master.active || master.type != ModContent.ProjectileType<CyberScytheProjectile>())
-				projectile.active = false;
+				Projectile.active = false;
 
 				/*for (int i = 0; i < 20; i += 1)
 				{
@@ -480,38 +468,38 @@ namespace SGAmod.Items.Weapons
 				if (owner != null)
             {
 
-				if (projectile.localAI[0] % (projectile.extraUpdates + 1) == 0)
+				if (Projectile.localAI[0] % (Projectile.extraUpdates + 1) == 0)
 				{
 
 					if (Main.netMode != NetmodeID.Server && master.ai[1] < 1)
 					{
 						float speedrate = (1000f / (((master.ai[0]*2f) * owner.meleeSpeed) + 1));
-						projectile.ai[0] += ((Main.MouseWorld - owner.MountedCenter).Length() - projectile.ai[0]) / speedrate;
-						projectile.ai[0] = Math.Max(Math.Min(160, master.ai[0] * 20), Math.Min(projectile.ai[0], 600f / owner.meleeSpeed));
-						projectile.netUpdate = true;
+						Projectile.ai[0] += ((Main.MouseWorld - owner.MountedCenter).Length() - Projectile.ai[0]) / speedrate;
+						Projectile.ai[0] = Math.Max(Math.Min(160, master.ai[0] * 20), Math.Min(Projectile.ai[0], 600f / owner.meleeSpeed));
+						Projectile.netUpdate = true;
 					}
 				}
 				if (master.ai[1] > 0)
                 {
-					if (!projectile.ignoreWater)
+					if (!Projectile.ignoreWater)
 					{
-						projectile.localAI[1] = projectile.ai[0];
-						projectile.ignoreWater = true;
+						Projectile.localAI[1] = Projectile.ai[0];
+						Projectile.ignoreWater = true;
 					}
 
-					projectile.ai[0] /= 1.004f;
+					Projectile.ai[0] /= 1.004f;
                 }
                 else
                 {
-					projectile.localNPCHitCooldown = (int)Math.Max(80f/(1+master.ai[0]/2),4);
+					Projectile.localNPCHitCooldown = (int)Math.Max(80f/(1+master.ai[0]/2),4);
 				}
 
-				projectile.localAI[0] += 1;
-				float angle = master.rotation+projectile.velocity.ToRotation()+((MathHelper.Pi/20f)* (float)projectile.numUpdates);
-				projectile.rotation = angle;
+				Projectile.localAI[0] += 1;
+				float angle = master.rotation+Projectile.velocity.ToRotation()+((MathHelper.Pi/20f)* (float)Projectile.numUpdates);
+				Projectile.rotation = angle;
 				Vector2 vector = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-				projectile.Center = master.Center + vector * projectile.ai[0];
+				Projectile.Center = master.Center + vector * Projectile.ai[0];
 
 
 			}
@@ -520,7 +508,7 @@ namespace SGAmod.Items.Weapons
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-			damage = (int)(damage*(1f + (projectile.ai[0] / 300f)));
+			damage = (int)(damage*(1f + (Projectile.ai[0] / 300f)));
 		}
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -528,10 +516,10 @@ namespace SGAmod.Items.Weapons
 			if (master != null)
 			{
 
-				float angle2 = master.rotation + projectile.velocity.ToRotation();
+				float angle2 = master.rotation + Projectile.velocity.ToRotation();
 				angle2 -= master.direction * 0.1f;
 				Vector2 vector2 = new Vector2((float)Math.Cos(angle2), (float)Math.Sin(angle2));
-				Vector2 center2 = master.Center + vector2 * (projectile.ai[0]);//+Math.Min(48,projectile.ai[0]/1.75f));
+				Vector2 center2 = master.Center + vector2 * (Projectile.ai[0]);//+Math.Min(48,projectile.ai[0]/1.75f));
 
 				Vector2 goto2 = center2;
 				Vector2 prev2 = goto2;
@@ -564,8 +552,8 @@ namespace SGAmod.Items.Weapons
 					point = Vector2.Lerp(center2, master.Center, fraction);
 
 					float scaler = (float)Math.Sin(fraction * Math.PI);
-					float timer1 = (float)Math.Sin(Main.GlobalTime*17f + (fraction * 24f* div)) * (scaler * 8);
-					float timer2 = (float)Math.Sin(Main.GlobalTime*6f + (fraction * 78f* div)) * (scaler * 30);
+					float timer1 = (float)Math.Sin(Main.GlobalTimeWrappedHourly*17f + (fraction * 24f* div)) * (scaler * 8);
+					float timer2 = (float)Math.Sin(Main.GlobalTimeWrappedHourly*6f + (fraction * 78f* div)) * (scaler * 30);
 
 					//timer2 *= projectile.ai[0] / 300f;
 
@@ -588,7 +576,7 @@ namespace SGAmod.Items.Weapons
 						prevcoords = new Vector3[2] { drawbottom + left, drawbottom + right};
 					}
 
-					float timer = Main.GlobalTime/99f;
+					float timer = Main.GlobalTimeWrappedHourly/99f;
 
 					Color color = Color.Lerp(Color.Magenta, Color.MediumAquamarine, fraction);
 					Color color2 = Color.Lerp(Color.Magenta, Color.MediumAquamarine, fractionPlus);
@@ -626,11 +614,11 @@ namespace SGAmod.Items.Weapons
 
 				for (float i = 0; i < 8; i += 0.5f)
 				{
-					float angle = master.rotation + projectile.velocity.ToRotation() + ((-MathHelper.Pi / 40f) * (float)i)*master.direction;
+					float angle = master.rotation + Projectile.velocity.ToRotation() + ((-MathHelper.Pi / 40f) * (float)i)*master.direction;
 					Vector2 vector = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-					Vector2 center = master.Center + vector * projectile.ai[0];
-					Texture2D tex = Main.projectileTexture[projectile.type];
-					spriteBatch.Draw(tex, center - Main.screenPosition, null, lightColor*(1f-(i/ 8f)), angle, new Vector2(14, master.direction < 0 ? 14 : tex.Height-14), projectile.scale, master.direction < 0 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
+					Vector2 center = master.Center + vector * Projectile.ai[0];
+					Texture2D tex = Main.projectileTexture[Projectile.type];
+					spriteBatch.Draw(tex, center - Main.screenPosition, null, lightColor*(1f-(i/ 8f)), angle, new Vector2(14, master.direction < 0 ? 14 : tex.Height-14), Projectile.scale, master.direction < 0 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
 				}
 			}
 				return false;
@@ -648,33 +636,29 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 18;
-			item.crit = 0;
-			item.melee = true;
-			item.width = 34;
-			item.height = 24;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 5;
-			item.knockBack = 1;
-			item.value = 100000;
-			item.rare = 4;
-			item.shootSpeed = 8f;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.shoot = mod.ProjectileType("LaserLanceProjectile");
-			item.shootSpeed = 7f;
-			item.UseSound = SoundID.Item1;
-			item.channel = true;
+			Item.damage = 18;
+			Item.crit = 0;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 34;
+			Item.height = 24;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 5;
+			Item.knockBack = 1;
+			Item.value = 100000;
+			Item.rare = 4;
+			Item.shootSpeed = 8f;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.shoot = Mod.Find<ModProjectile>("LaserLanceProjectile").Type;
+			Item.shootSpeed = 7f;
+			Item.UseSound = SoundID.Item1;
+			Item.channel = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 10);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.MeteoriteBar, 10).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -690,29 +674,29 @@ namespace SGAmod.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0f;
-			projectile.width = 36;
-			projectile.height = 36;
-			projectile.melee = true;
-			projectile.tileCollide = false;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0f;
+			Projectile.width = 36;
+			Projectile.height = 36;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
 			drawHeldProjInFrontOfHeldItemAndArms = false;
 		}
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
-			if (projectile.ai[0] > 5f)
+			if (Projectile.ai[0] > 5f)
 			{
-				Vector2 oldPos = projectile.Center + new Vector2(0, -60);
-				oldPos = oldPos.RotatedBy(projectile.rotation-MathHelper.PiOver2);
+				Vector2 oldPos = Projectile.Center + new Vector2(0, -60);
+				oldPos = oldPos.RotatedBy(Projectile.rotation-MathHelper.PiOver2);
 				oldPos.Normalize();
 				oldPos *= 64f;
 
-				projHitbox.X = (int)(projectile.Center.X + oldPos.X - 25);
-				projHitbox.Y = (int)(projectile.Center.Y + oldPos.Y - 25);
+				projHitbox.X = (int)(Projectile.Center.X + oldPos.X - 25);
+				projHitbox.Y = (int)(Projectile.Center.Y + oldPos.Y - 25);
 				projHitbox.Width = 50;
 				projHitbox.Width = 50;
 				if (projHitbox.Intersects(targetHitbox))
@@ -726,39 +710,39 @@ namespace SGAmod.Items.Weapons
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 
-			Vector2 oldPos = projectile.Center + new Vector2(0, -60);
-			oldPos = oldPos.RotatedBy(projectile.rotation - MathHelper.PiOver2);
+			Vector2 oldPos = Projectile.Center + new Vector2(0, -60);
+			oldPos = oldPos.RotatedBy(Projectile.rotation - MathHelper.PiOver2);
 			oldPos.Normalize();
 			oldPos *= 140f;
 
 			Vector2 torot = oldPos;
 			torot.Normalize();
 
-			int thisoned = Projectile.NewProjectile(projectile.Center + oldPos, torot * 8f, ProjectileID.ScutlixLaser, (int)(projectile.damage / 2), knockback, Main.myPlayer);
+			int thisoned = Projectile.NewProjectile(Projectile.Center + oldPos, torot * 8f, ProjectileID.ScutlixLaser, (int)(Projectile.damage / 2), knockback, Main.myPlayer);
 			//Main.projectile[thisoned].usesLocalNPCImmunity = true;
 			//Main.projectile[thisoned].localNPCHitCooldown = -1;
 			Main.projectile[thisoned].penetrate = 2;
 			Main.projectile[thisoned].knockBack = 0f;
 			IdgProjectile.Sync(thisoned);
 
-			Main.PlaySound(SoundID.Item91, projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item91, Projectile.Center);
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/Items/Weapons/LaserLance");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Items/Weapons/LaserLance");
 			Vector2 drawOrigin = new Vector2(tex.Width / 2f, tex.Height + 4);
 
-			int len = Math.Min(oldRot.Length, 1 + (int)projectile.ai[0]);
+			int len = Math.Min(oldRot.Length, 1 + (int)Projectile.ai[0]);
 
 			//oldPos.Length - 1
 			for (int k = (len - 1); k >= 0; k -= 1)
 			{
-				Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
+				Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
 				//Color color = Color.Lerp(Color.Lime, lightColor, (float)k / (oldPos.Length + 1));
 				float alphaz = (1f - (float)(k + 1) / (float)(len + 2)) * 1f;
-				spriteBatch.Draw(tex, drawPos, null, lightColor * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, null, lightColor * alphaz, oldRot[k], drawOrigin, Projectile.scale, Projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 			}
 			return false;
 		}
@@ -774,58 +758,58 @@ namespace SGAmod.Items.Weapons
 			{
 				oldRot[k] = oldRot[k - 1];
 			}
-			oldRot[0] = projectile.rotation;
+			oldRot[0] = Projectile.rotation;
 
-			Player basep = Main.player[projectile.owner];
+			Player basep = Main.player[Projectile.owner];
 
 			if (basep == null || basep.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
-			if ((!basep.channel || basep.dead) && projectile.ai[1] < 1)
+			if ((!basep.channel || basep.dead) && Projectile.ai[1] < 1)
 			{
 
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
 
 
-			if (projectile.ai[1] < 1)
+			if (Projectile.ai[1] < 1)
 			{
-				projectile.ai[0] = Math.Min(projectile.ai[0] + 0.1f, 16f);
+				Projectile.ai[0] = Math.Min(Projectile.ai[0] + 0.1f, 16f);
 				basep.itemAnimation = 5;
 				basep.itemTime = 5;
-				projectile.timeLeft = 30;
+				Projectile.timeLeft = 30;
 			}
-			if (projectile.ai[1] < 1)
+			if (Projectile.ai[1] < 1)
 			{
-				if (projectile.owner == Main.myPlayer)
+				if (Projectile.owner == Main.myPlayer)
 				{
 					Vector2 mousePos = Main.MouseWorld;
 					Vector2 diff = mousePos - basep.Center;
 					diff.Normalize();
-					projectile.velocity = diff;
+					Projectile.velocity = diff;
 					basep.direction = Main.MouseWorld.X > basep.position.X ? 1 : -1;
-					projectile.netUpdate = true;
-					projectile.Center = mousePos;
+					Projectile.netUpdate = true;
+					Projectile.Center = mousePos;
 				}
-				basep.heldProj = projectile.whoAmI;
+				basep.heldProj = Projectile.whoAmI;
 
-				projectile.position -= projectile.velocity;
+				Projectile.position -= Projectile.velocity;
 				//basep.bodyFrame.Y = basep.bodyFrame.Height * (2 + (((int)(projectile.localAI[0] / 40)) % 3));
-				basep.itemRotation = ((projectile.rotation + MathHelper.ToRadians(-45)).ToRotationVector2()).ToRotation();
-				projectile.Center = basep.Center;
+				basep.itemRotation = ((Projectile.rotation + MathHelper.ToRadians(-45)).ToRotationVector2()).ToRotation();
+				Projectile.Center = basep.Center;
 			}
 
-			projectile.localAI[1] += (1 + projectile.ai[0] / 8);
-			projectile.localAI[0] += (projectile.ai[0] + 5f);
-			if (projectile.localAI[1] > 60)
+			Projectile.localAI[1] += (1 + Projectile.ai[0] / 8);
+			Projectile.localAI[0] += (Projectile.ai[0] + 5f);
+			if (Projectile.localAI[1] > 60)
 			{
-				projectile.localAI[1] = 0;
-				Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 15, 1f, projectile.ai[0] / 30f);
+				Projectile.localAI[1] = 0;
+				SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 15, 1f, Projectile.ai[0] / 30f);
 			}
-			projectile.rotation = MathHelper.ToRadians(projectile.localAI[0] * projectile.direction);
+			Projectile.rotation = MathHelper.ToRadians(Projectile.localAI[0] * Projectile.direction);
 			//projectile.damage = (int)(subdamage * (1+(projectile.ai[0] / 15f)));
 
 		}
@@ -845,39 +829,33 @@ namespace SGAmod.HavocGear.Items.Weapons
 			DisplayName.SetDefault("Red Phasebrand");
 			Tooltip.SetDefault("Spins a duo-phase Phasesaber around the player that speeds up over time\nShoots lasers from both sides on hit" +
 				"\nAfter holding for a short while, release to throw the weapon\nWhen thrown, Does more damage based on charge and deals throwing damage" + "\n'The Darkside of close combat...'");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 35;
-			item.melee = true;
-			item.width = 34;
-			item.height = 24;
-			item.useTime = 12;
-			item.useAnimation = 12;
-			item.useStyle = 5;
-			item.knockBack = 8;
-			item.value = 100000;
-			item.rare = 5;
-			item.shootSpeed = 8f;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.shoot = mod.ProjectileType("RedPhasebrandProjectile");
-			item.shootSpeed = 7f;
-			item.UseSound = SoundID.Item8;
-			item.channel = true;
+			Item.damage = 35;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 34;
+			Item.height = 24;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
+			Item.useStyle = 5;
+			Item.knockBack = 8;
+			Item.value = 100000;
+			Item.rare = 5;
+			Item.shootSpeed = 8f;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.shoot = Mod.Find<ModProjectile>("RedPhasebrandProjectile").Type;
+			Item.shootSpeed = 7f;
+			Item.UseSound = SoundID.Item8;
+			Item.channel = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("AvaliScythe"), 1);
-			recipe.AddIngredient(mod.ItemType("LaserLance"), 1);
-			recipe.AddIngredient(ItemID.RedPhasesaber, 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("AvaliScythe"), 1).AddIngredient(mod.ItemType("LaserLance"), 1).AddIngredient(ItemID.RedPhasesaber, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -901,36 +879,36 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.light = 0f;
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.melee = true;
-			projectile.tileCollide = false;
-			projectile.extraUpdates = 1;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.light = 0f;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
+			Projectile.extraUpdates = 1;
 			drawHeldProjInFrontOfHeldItemAndArms = false;
 		}
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
-			if (projectile.ai[0] < 10)
+			if (Projectile.ai[0] < 10)
 				return false;
 
 			Vector2[] oldPos = new Vector2[2];
-			oldPos[0] = projectile.Center + new Vector2(48, 0);
-			oldPos[0] = oldPos[0].RotatedBy(MathHelper.ToRadians(45 + (projectile.direction > 0 ? 90 : 0)));
-			oldPos[0] = oldPos[0].RotatedBy(projectile.rotation);
+			oldPos[0] = Projectile.Center + new Vector2(48, 0);
+			oldPos[0] = oldPos[0].RotatedBy(MathHelper.ToRadians(45 + (Projectile.direction > 0 ? 90 : 0)));
+			oldPos[0] = oldPos[0].RotatedBy(Projectile.rotation);
 			oldPos[0].Normalize();
 			oldPos[0] *= 48f;
 			oldPos[1] = oldPos[0].RotatedBy(MathHelper.ToRadians(180));
 
 			foreach (Vector2 position in oldPos)
 			{
-				projHitbox.X = (int)(projectile.Center.X + position.X);
-				projHitbox.Y = (int)(projectile.Center.Y + position.Y);
+				projHitbox.X = (int)(Projectile.Center.X + position.X);
+				projHitbox.Y = (int)(Projectile.Center.Y + position.Y);
 				if (projHitbox.Intersects(targetHitbox))
 				{
 					return true;
@@ -941,10 +919,10 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		protected override void PlaySound()
 		{
-			if (projectile.localAI[1] > spinSoundDelay)
+			if (Projectile.localAI[1] > spinSoundDelay)
 			{
-				projectile.localAI[1] = 0;
-				Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 15, 1f, projectile.ai[0] / 40f);
+				Projectile.localAI[1] = 0;
+				SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 15, 1f, Projectile.ai[0] / 40f);
 			}
 		}
 
@@ -954,14 +932,14 @@ namespace SGAmod.HavocGear.Items.Weapons
 			for (float u = 0; u < MathHelper.TwoPi; u += MathHelper.Pi)
 			{
 				Vector2 oldPos = new Vector2(1f, 0);
-				oldPos = oldPos.RotatedBy(u + (projectile.rotation + (0f)));
+				oldPos = oldPos.RotatedBy(u + (Projectile.rotation + (0f)));
 				oldPos.Normalize();
 				oldPos *= 24f;
 
 				Vector2 torot = oldPos;
 				torot.Normalize();
 
-				int thisoned = Projectile.NewProjectile(projectile.Center + oldPos, torot * 8f, ProjectileID.ScutlixLaser, (int)(projectile.damage / 3), knockback, Main.myPlayer);
+				int thisoned = Projectile.NewProjectile(Projectile.Center + oldPos, torot * 8f, ProjectileID.ScutlixLaser, (int)(Projectile.damage / 3), knockback, Main.myPlayer);
 				//Main.projectile[thisoned].usesLocalNPCImmunity = true;
 				//Main.projectile[thisoned].localNPCHitCooldown = -1;
 				Main.projectile[thisoned].penetrate = 2;
@@ -972,22 +950,22 @@ namespace SGAmod.HavocGear.Items.Weapons
 				IdgProjectile.Sync(thisoned);
 			}
 
-			Main.PlaySound(SoundID.Item91, projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item91, Projectile.Center);
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 			Vector2 drawOrigin = new Vector2(tex.Width / 2, tex.Height) / 2f;
 
 			//oldPos.Length - 1
 			for (int k = oldRot.Length - 1; k >= 0; k -= 1)
 			{
-				Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
+				Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
 				//Color color = Color.Lerp(Color.Lime, lightColor, (float)k / (oldPos.Length + 1));
 				float alphaz = (1f - (float)(k + 1) / (float)(oldRot.Length + 2)) * 1f;
-				spriteBatch.Draw(tex, drawPos, new Rectangle(0, 0, tex.Width / 2, tex.Height), lightColor * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, new Rectangle(0, 0, tex.Width / 2, tex.Height), lightColor * alphaz, oldRot[k], drawOrigin, Projectile.scale, Projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 				//spriteBatch.Draw(tex, drawPos, new Rectangle(tex.Width / 2, 0, tex.Width / 2, tex.Height), Color.White * MathHelper.Clamp(projectile.ai[0] / 15f, 0f, 1f) * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 			}
 			return false;
@@ -996,17 +974,17 @@ namespace SGAmod.HavocGear.Items.Weapons
 		public void DrawAdditive(SpriteBatch spriteBatch)
 		{
 
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 			Vector2 drawOrigin = new Vector2(tex.Width / 2, tex.Height) / 2f;
 
 			//oldPos.Length - 1
 			for (int k = oldRot.Length - 1; k >= 0; k -= 1)
 			{
-				Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
+				Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 0f);
 				//Color color = Color.Lerp(Color.Lime, lightColor, (float)k / (oldPos.Length + 1));
 				float alphaz = (1f - (float)(k + 1) / (float)(oldRot.Length + 2)) * 1f;
 				//spriteBatch.Draw(tex, drawPos, new Rectangle(0, 0, tex.Width / 2, tex.Height), lightColor * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
-				spriteBatch.Draw(tex, drawPos, new Rectangle(tex.Width / 2, 0, tex.Width / 2, tex.Height), Color.White * MathHelper.Clamp(projectile.ai[0] / 15f, 0f, 1f) * alphaz, oldRot[k], drawOrigin, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, new Rectangle(tex.Width / 2, 0, tex.Width / 2, tex.Height), Color.White * MathHelper.Clamp(Projectile.ai[0] / 15f, 0f, 1f) * alphaz, oldRot[k], drawOrigin, Projectile.scale, Projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 			}
 		}
 	}

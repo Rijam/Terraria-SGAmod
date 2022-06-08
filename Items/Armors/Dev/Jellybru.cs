@@ -29,21 +29,21 @@ namespace SGAmod.Items.Armors.Dev
 		}
 		public override void InitEffects()
 		{
-			item.defense = 8;
-			item.rare = ItemRarityID.Purple;
+			Item.defense = 8;
+			Item.rare = ItemRarityID.Purple;
 		}
 
 		public static void SetBonus(SGAPlayer sgaplayer)
 		{
 			if (sgaplayer.jellybruSet)
 			{
-				Player player = sgaplayer.player;
+				Player player = sgaplayer.Player;
 
 				float thepercent = 0.5f;
 
 				int percentLife = (int)((player.statLifeMax2) * thepercent);
 
-				percentLife = (int)((percentLife * 2) * player.magicDamage);
+				percentLife = (int)((percentLife * 2) * player.GetDamage(DamageClass.Magic));
 
 				sgaplayer.energyShieldAmmountAndRecharge.Item2 += percentLife;
 				//Main.NewText(sgaplayer.energyShieldReservation);
@@ -68,13 +68,13 @@ namespace SGAmod.Items.Armors.Dev
 
 		public static Color IDGGlow(Player player, int index)
 		{
-			return Main.hslToRgb(((Main.GlobalTime + (index / 2f)) * 1.25f) % 1f, 0.8f, 0.75f) * 0.75f;
+			return Main.hslToRgb(((Main.GlobalTimeWrappedHourly + (index / 2f)) * 1.25f) % 1f, 0.8f, 0.75f) * 0.75f;
 		}
 
 		public override void AddEffects(Player player)
 		{
-			player.magicDamage += 0.14f;
-			player.magicCrit += 14;
+			player.GetDamage(DamageClass.Magic) += 0.14f;
+			player.GetCritChance(DamageClass.Magic) += 14;
 			player.statManaMax2 += 50;
 			player.manaRegenBonus += player.SGAPly().EnergyDepleted ? 250 : 100;
 			player.manaRegenDelayBonus += 2;
@@ -83,37 +83,37 @@ namespace SGAmod.Items.Armors.Dev
 
 		public override List<TooltipLine> AddText(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "+14% magic damage and crit chance, +50 Mana"));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "Mana regen is greatly improved, Regen delay is reduced"));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.Red, "30% Increased DoT damage taken")));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "--When Shield Down--")));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "Mana regen is improved to extreme levels!")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "+14% magic damage and crit chance, +50 Mana"));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "Mana regen is greatly improved, Regen delay is reduced"));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.Red, "30% Increased DoT damage taken")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "--When Shield Down--")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "Mana regen is improved to extreme levels!")));
 			return tooltips;
 		}
 
 		public override void UpdateEquip(Player player)
 		{
-			if (!item.vanity)
+			if (!Item.vanity)
 			{
 				AddEffects(player);
 			}
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 1;
-			item.defense = 0;
-			item.vanity = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 1;
+			Item.defense = 0;
+			Item.vanity = true;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			if (!item.vanity)
+			if (!Item.vanity)
 				tooltips = AddText(tooltips);
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "Great for impersonating..."));
-			Color c = Main.hslToRgb((float)(Main.GlobalTime / 4) % 1f, 0.4f, 0.45f);
-			tooltips.Add(new TooltipLine(mod, "Jellybru Dev Item", Idglib.ColorText(c, "Jellybru's dev armor")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "Great for impersonating..."));
+			Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 4) % 1f, 0.4f, 0.45f);
+			tooltips.Add(new TooltipLine(Mod, "Jellybru Dev Item", Idglib.ColorText(c, "Jellybru's dev armor")));
 		}
 	}
 
@@ -131,23 +131,23 @@ namespace SGAmod.Items.Armors.Dev
 			}
 			public override void SetDefaults()
 			{
-				item.width = 18;
-				item.height = 18;
-				item.value = 10000;
-				item.rare = 1;
-				item.defense = 0;
-				item.vanity = true;
+				Item.width = 18;
+				Item.height = 18;
+				Item.value = 10000;
+				Item.rare = 1;
+				Item.defense = 0;
+				Item.vanity = true;
 			}
 			public override void InitEffects()
 			{
-				item.defense = 10;
-				item.rare = ItemRarityID.Purple;
-				item.lifeRegen = 3;
+				Item.defense = 10;
+				Item.rare = ItemRarityID.Purple;
+				Item.lifeRegen = 3;
 			}
 			public override void AddEffects(Player player)
 			{
 			SGAPlayer sgaply = player.SGAPly();
-				player.magicDamage += 0.16f;
+				player.GetDamage(DamageClass.Magic) += 0.16f;
 				player.manaCost *= 0.80f;
 				player.statManaMax2 += 100;
 			player.SGAPly().DoTResist += 0.50f;
@@ -161,11 +161,11 @@ namespace SGAmod.Items.Armors.Dev
 		}
 		public override List<TooltipLine> AddText(List<TooltipLine> tooltips)
 			{
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "+16% magic damage, +100 Mana"));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "magic cost reduced by 20%, minorly increased Life Regen"));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.Red, "50% Increased DoT damage taken")));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "--When Shield Down--")));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "Gain the powers of the nebula pillar!")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "+16% magic damage, +100 Mana"));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "magic cost reduced by 20%, minorly increased Life Regen"));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.Red, "50% Increased DoT damage taken")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "--When Shield Down--")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "Gain the powers of the nebula pillar!")));
 			return tooltips;
 			}
 
@@ -180,25 +180,25 @@ namespace SGAmod.Items.Armors.Dev
 			}
 			public override void SetDefaults()
 			{
-				item.width = 18;
-				item.height = 18;
-				item.value = 10000;
-				item.rare = 1;
-				item.defense = 0;
-				item.vanity = true;
+				Item.width = 18;
+				Item.height = 18;
+				Item.value = 10000;
+				Item.rare = 1;
+				Item.defense = 0;
+				Item.vanity = true;
 			}
 
 			public override void InitEffects()
 			{
-			item.defense = 6;
-			item.rare = ItemRarityID.Purple;
+			Item.defense = 6;
+			Item.rare = ItemRarityID.Purple;
 		}
 		public override void AddEffects(Player player)
 		{
 
 			SGAPlayer sgaplayer = player.SGAPly();
 
-			player.magicDamage += 0.15f;
+			player.GetDamage(DamageClass.Magic) += 0.15f;
 			player.statManaMax2 += 50;
 			player.moveSpeed += sgaplayer.EnergyDepleted ? 6f : 2f;
 			player.accRunSpeed += sgaplayer.EnergyDepleted ? 6f : 2f;
@@ -207,11 +207,11 @@ namespace SGAmod.Items.Armors.Dev
 		}
 		public override List<TooltipLine> AddText(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "+15% magic damage, +50 Mana"));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", "Movement and horizontal flight speed increased"));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.Red, "20% Increased DoT damage taken")));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "--When Shield Down--")));
-			tooltips.Add(new TooltipLine(mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "Gain a great speed increase!")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "+15% magic damage, +50 Mana"));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", "Movement and horizontal flight speed increased"));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.Red, "20% Increased DoT damage taken")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "--When Shield Down--")));
+			tooltips.Add(new TooltipLine(Mod, "Jellybru", Idglib.ColorText(Color.PaleTurquoise, "Gain a great speed increase!")));
 			return tooltips;
 		}
 	}

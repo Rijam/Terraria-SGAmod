@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Idglibrary;
 using SGAmod.Dusts;
+using Terraria.Audio;
 
 
 namespace SGAmod.HavocGear.Projectiles
@@ -18,27 +19,27 @@ namespace SGAmod.HavocGear.Projectiles
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mangrove Orb");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 1;
-			projectile.timeLeft = 320;
-			projectile.alpha = 100;
-			projectile.magic = true;
-			projectile.light = 0.4f;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.extraUpdates = 1;
-			aiType = ProjectileID.AmethystBolt;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 1;
+			Projectile.timeLeft = 320;
+			Projectile.alpha = 100;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.light = 0.4f;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.extraUpdates = 1;
+			AIType = ProjectileID.AmethystBolt;
 		}
 	}
 
@@ -58,92 +59,92 @@ namespace SGAmod.HavocGear.Projectiles
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mangrove Orb");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 1;
-			projectile.timeLeft = 320;
-			projectile.alpha = 100;
-			projectile.light = 0.4f;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.extraUpdates = 1;
-			aiType = ProjectileID.AmethystBolt;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 1;
+			Projectile.timeLeft = 320;
+			Projectile.alpha = 100;
+			Projectile.light = 0.4f;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.extraUpdates = 1;
+			AIType = ProjectileID.AmethystBolt;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.penetrate--;
-			if (projectile.penetrate <= 0)
+			Projectile.penetrate--;
+			if (Projectile.penetrate <= 0)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 			else
 			{
-				if (projectile.velocity.X != oldVelocity.X)
+				if (Projectile.velocity.X != oldVelocity.X)
 				{
-					projectile.velocity.X = -oldVelocity.X;
+					Projectile.velocity.X = -oldVelocity.X;
 				}
-				if (projectile.velocity.Y != oldVelocity.Y)
+				if (Projectile.velocity.Y != oldVelocity.Y)
 				{
-					projectile.velocity.Y = -oldVelocity.Y;
+					Projectile.velocity.Y = -oldVelocity.Y;
 				}
-				Main.PlaySound(SoundID.Item10, projectile.position);
+				SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 			}
 			return false;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-			for (int k = 0; k < projectile.oldPos.Length; k++)
+			Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+			for (int k = 0; k < Projectile.oldPos.Length; k++)
 			{
-				Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-				Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-				spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+				Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+				Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+				spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			}
 			return true;
 		}
 
 		public override void AI()
 		{
-			if (projectile.timeLeft < 200)
-				projectile.aiStyle = 1;
-			Lighting.AddLight(projectile.position, 0.0f, 0.3f, 0.1f);
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			if (Projectile.timeLeft < 200)
+				Projectile.aiStyle = 1;
+			Lighting.AddLight(Projectile.position, 0.0f, 0.3f, 0.1f);
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 
 			if (Main.rand.Next(3) == 0)
 			{
-				int dustIndex = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, ModContent.DustType<Dusts.MangroveDust>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 200, default(Color), 0.7f);
-				Main.dust[dustIndex].velocity += projectile.velocity * 0.3f;
+				int dustIndex = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, ModContent.DustType<Dusts.MangroveDust>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 200, default(Color), 0.7f);
+				Main.dust[dustIndex].velocity += Projectile.velocity * 0.3f;
 				Main.dust[dustIndex].velocity *= 0.2f;
 			}
 
-			projectile.ai[0] = projectile.ai[0] + 1;
-			if (projectile.ai[0] < 2)
+			Projectile.ai[0] = Projectile.ai[0] + 1;
+			if (Projectile.ai[0] < 2)
 			{
-				keepspeed = (projectile.velocity).Length();
+				keepspeed = (Projectile.velocity).Length();
 			}
 			if (target2 == null || !target2.active)
-				target2 = Main.npc[Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), true, true, true, projectile)];
+				target2 = Main.npc[Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), true, true, true, Projectile)];
 			if (target2 != null)
 			{
-				if ((target2.Center - projectile.Center).Length() < 800f)
+				if ((target2.Center - Projectile.Center).Length() < 800f)
 				{
-					if (projectile.ai[0] > (beginhoming))
+					if (Projectile.ai[0] > (beginhoming))
 					{
-						projectile.velocity = projectile.velocity + (projectile.DirectionTo(target2.Center) * ((float)keepspeed * homing));
-						projectile.velocity.Normalize();
-						projectile.velocity = projectile.velocity * (float)keepspeed;
+						Projectile.velocity = Projectile.velocity + (Projectile.DirectionTo(target2.Center) * ((float)keepspeed * homing));
+						Projectile.velocity.Normalize();
+						Projectile.velocity = Projectile.velocity * (float)keepspeed;
 					}
 				}
 

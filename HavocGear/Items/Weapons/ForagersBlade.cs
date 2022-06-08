@@ -11,18 +11,18 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			base.SetDefaults();
 
-            item.damage = 14;
-            item.width = 32;
-			item.height = 32;
-            item.melee = true;
-            item.useTurn = true;
-            item.rare = 0;
-            item.useStyle = 1;
-            item.useAnimation = 24;
-           	item.knockBack = 5;
-            item.useTime = 20;
-            item.consumable = false;
-            item.UseSound = SoundID.Item1;
+            Item.damage = 14;
+            Item.width = 32;
+			Item.height = 32;
+            Item.DamageType = DamageClass.Melee;
+            Item.useTurn = true;
+            Item.rare = 0;
+            Item.useStyle = 1;
+            Item.useAnimation = 24;
+           	Item.knockBack = 5;
+            Item.useTime = 20;
+            Item.consumable = false;
+            Item.UseSound = SoundID.Item1;
         }
 
         public override void SetStaticDefaults()

@@ -12,18 +12,18 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			base.SetDefaults();
 
-            item.damage = 50;
-            item.width = 50;
-			item.height = 58;
-            item.melee = true;
-            item.useTurn = true;
-            item.rare = 4;
-            item.useStyle = 1;
-            item.useAnimation = 26;
-           	item.knockBack = 1;
-            item.useTime = 36;
-            item.consumable = false;
-            item.UseSound = SoundID.Item1;
+            Item.damage = 50;
+            Item.width = 50;
+			Item.height = 58;
+            Item.DamageType = DamageClass.Melee;
+            Item.useTurn = true;
+            Item.rare = 4;
+            Item.useStyle = 1;
+            Item.useAnimation = 26;
+           	Item.knockBack = 1;
+            Item.useTime = 36;
+            Item.consumable = false;
+            Item.UseSound = SoundID.Item1;
         }
 
     		public override void MeleeEffects(Player player, Rectangle hitbox)
@@ -53,7 +53,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            Projectile.NewProjectile(target.Center.X, target.Center.Y, Main.rand.Next(-3, 4), Main.rand.Next(-3, 0), mod.ProjectileType("MudBlob"), item.damage - 30, 0f, Main.myPlayer, 0f, 0f);
+            Projectile.NewProjectile(target.Center.X, target.Center.Y, Main.rand.Next(-3, 4), Main.rand.Next(-3, 0), Mod.Find<ModProjectile>("MudBlob").Type, Item.damage - 30, 0f, Main.myPlayer, 0f, 0f);
         }
 
     }

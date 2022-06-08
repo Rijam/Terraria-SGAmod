@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using Idglibrary;
 
 using SGAmod.NPCs.Cratrosity;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -20,18 +21,18 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 70;
-			item.melee = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = 1;
-			item.knockBack = 3;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = 7;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 70;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = 1;
+			Item.knockBack = 3;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = 7;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)
@@ -71,24 +72,24 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 40;
-			item.magic = true;
-			item.width = 34;
-			item.mana = 8;
-			item.height = 24;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 5;
-			item.knockBack = 6;
-			item.value = 100000;
-			item.rare = ItemRarityID.Lime;
-			item.shootSpeed = 8f;
-			item.noMelee = true;
-			item.shoot = 14;
-			item.UseSound = SoundID.Item8;
-			item.autoReuse = true;
-			item.useTurn = false;
-			Item.staff[item.type] = true;
+			Item.damage = 40;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 34;
+			Item.mana = 8;
+			Item.height = 24;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 5;
+			Item.knockBack = 6;
+			Item.value = 100000;
+			Item.rare = ItemRarityID.Lime;
+			Item.shootSpeed = 8f;
+			Item.noMelee = true;
+			Item.shoot = 14;
+			Item.UseSound = SoundID.Item8;
+			Item.autoReuse = true;
+			Item.useTurn = false;
+			Item.staff[Item.type] = true;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -122,7 +123,7 @@ namespace SGAmod.Items.Weapons
 					if ((double)num13 < 0.0) num13 *= -1f;
 					if ((double)num13 < 20.0) num13 = 20f;
 					float num14 = (float)Math.Sqrt((double)num12 * (double)num12 + (double)num13 * (double)num13);
-					float num15 = item.shootSpeed / num14;
+					float num15 = Item.shootSpeed / num14;
 					float num16 = num12 * num15;
 					float num17 = num13 * num15;
 					float morespeed = 0.75f + ((float)taketype * 0.2f);
@@ -131,8 +132,8 @@ namespace SGAmod.Items.Weapons
 					int thisone = Projectile.NewProjectile(vector2_1.X, vector2_1.Y, SpeedX, SpeedY, (int)typesproj[taketype, 0], (int)(typesproj[taketype, 1] * (float)damage), knockBack, Main.myPlayer, 0.0f, 0f);
 					Main.projectile[thisone].friendly = true;
 					Main.projectile[thisone].hostile = false;
-					Main.projectile[thisone].magic = true;
-					Main.projectile[thisone].ranged = false;
+					Main.projectile[thisone].DamageType = DamageClass.Magic;
+					// Main.projectile[thisone].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 					IdgProjectile.AddOnHitBuff(thisone, BuffID.Midas, 60 * 10);
 				}
 
@@ -162,19 +163,19 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.SnowmanCannon);
-			item.damage = 40;
-			item.width = 48;
-			item.height = 48;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.knockBack = 6;
-			item.value = 100000;
-			item.ranged = true;
-			item.rare = 7;
-			item.shootSpeed = 14f;
-			item.noMelee = true;
-			item.useAmmo = AmmoID.Rocket;
+			Item.CloneDefaults(ItemID.SnowmanCannon);
+			Item.damage = 40;
+			Item.width = 48;
+			Item.height = 48;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.knockBack = 6;
+			Item.value = 100000;
+			Item.DamageType = DamageClass.Ranged;
+			Item.rare = 7;
+			Item.shootSpeed = 14f;
+			Item.noMelee = true;
+			Item.useAmmo = AmmoID.Rocket;
 		}
 
 		public override Vector2? HoldoutOffset()
@@ -194,11 +195,11 @@ namespace SGAmod.Items.Weapons
 			{
 				Vector2 perturbedSpeed = (new Vector2(speedX, speedY) * speed).RotatedBy((MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) / 100f))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
 				position = position.RotatedBy(rooffset, player.MountedCenter);
-				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("JackpotRocket"), damage, knockBack, player.whoAmI);
+				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("JackpotRocket").Type, damage, knockBack, player.whoAmI);
 				Main.projectile[proj].friendly = true;
 				Main.projectile[proj].hostile = false;
 				Main.projectile[proj].timeLeft = 600;
-				Main.projectile[proj].knockBack = item.knockBack;
+				Main.projectile[proj].knockBack = Item.knockBack;
 			}
 			return false;
 		}
@@ -226,26 +227,26 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.Throwing().thrown = true;
-			item.damage = 75;
-			item.shootSpeed = 3f;
-			item.shoot = mod.ProjectileType("AvariceCoin");
-			item.useTurn = true;
+			Item.useStyle = 1;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.damage = 75;
+			Item.shootSpeed = 3f;
+			Item.shoot = Mod.Find<ModProjectile>("AvariceCoin").Type;
+			Item.useTurn = true;
 			//ProjectileID.CultistBossLightningOrbArc
-			item.width = 8;
-			item.height = 28;
-			item.maxStack = 1;
-			item.knockBack = 9;
-			item.consumable = false;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 10;
-			item.useTime = 10;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
-			item.value = Item.buyPrice(0, 3, 0, 0);
-			item.rare = 7;
+			Item.width = 8;
+			Item.height = 28;
+			Item.maxStack = 1;
+			Item.knockBack = 9;
+			Item.consumable = false;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 10;
+			Item.useTime = 10;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.autoReuse = true;
+			Item.value = Item.buyPrice(0, 3, 0, 0);
+			Item.rare = 7;
 		}
 
 
@@ -269,13 +270,13 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 18;
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 300;
-			projectile.penetrate = 3;
-			projectile.tileCollide = true;
-			projectile.friendly = true;
-			projectile.hostile = false;
+			Projectile.aiStyle = 18;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 300;
+			Projectile.penetrate = 3;
+			Projectile.tileCollide = true;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 			guyihit = -1;
 			cooldown = -1;
 		}
@@ -313,35 +314,35 @@ namespace SGAmod.Items.Weapons
 			if (guyihit < 1)
 				guyihit = target.whoAmI;
 			cooldown = 15;
-			projectile.tileCollide = false;
-			projectile.damage /= 2;
-			target.immune[projectile.owner] = 2;
+			Projectile.tileCollide = false;
+			Projectile.damage /= 2;
+			target.immune[Projectile.owner] = 2;
 			target.AddBuff(BuffID.Midas, 60 * 10);
-			if (projectile.penetrate < 3)
+			if (Projectile.penetrate < 3)
 			target.AddBuff(BuffID.ShadowFlame, 60 * 10);
-			if (projectile.penetrate<2)
+			if (Projectile.penetrate<2)
 				target.AddBuff(ModContent.BuffType<Buffs.Microtransactions>(), 60 * 10);
-			projectile.netUpdate = true;
+			Projectile.netUpdate = true;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type = fakeid;
+			Projectile.type = fakeid;
 			return true;
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 			cooldown -= 1;
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 			if (guyihit > -1)
 			{
 				if (cooldown == 1)
 				{
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-					projectile.Center = Main.npc[guyihit].Center + (randomcircle * 256f);
-					projectile.velocity = -randomcircle * 8f;
+					Projectile.Center = Main.npc[guyihit].Center + (randomcircle * 256f);
+					Projectile.velocity = -randomcircle * 8f;
 				}
 				if (Main.npc[guyihit].active == false || Main.npc[guyihit].life < 1)
 				{
@@ -359,36 +360,36 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Prosperity Rod");
 			Tooltip.SetDefault("Summons Midas Portals to shower your enemies in wealth, painfully\nOrdering your minions to attack a target will move the center of the circle to the target\nThe portals will gain an extra weaker attack VS the closest enemy\nAttacks inflict Midas\n'money money, it acts so funny...'");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 30;
-			item.knockBack = 3f;
-			item.mana = 10;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 36;
-			item.useAnimation = 36;
-			item.useStyle = 1;
-			item.value = Item.buyPrice(0, 4, 0, 0);
-			item.rare = 7;
-			item.UseSound = SoundID.Item44;
+			Item.damage = 30;
+			Item.knockBack = 3f;
+			Item.mana = 10;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 36;
+			Item.useAnimation = 36;
+			Item.useStyle = 1;
+			Item.value = Item.buyPrice(0, 4, 0, 0);
+			Item.rare = 7;
+			Item.UseSound = SoundID.Item44;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = mod.BuffType("MidasMinionBuff");
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = Mod.Find<ModBuff>("MidasMinionBuff").Type;
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = mod.ProjectileType("MidasPortal");
+			Item.shoot = Mod.Find<ModProjectile>("MidasPortal").Type;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			// This is needed so the buff that keeps your minion alive and allows you to despawn it properly applies
-			player.AddBuff(item.buffType, 2);
+			player.AddBuff(Item.buffType, 2);
 
 			return true;
 		}
@@ -411,31 +412,31 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Midas Portal");
 			// Sets the amount of frames this minion has on its spritesheet
-			Main.projFrames[projectile.type] = 1;
+			Main.projFrames[Projectile.type] = 1;
 			// This is necessary for right-click targeting
-			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 
 			// These below are needed for a minion
 			// Denotes that this projectile is a pet or minion
-			Main.projPet[projectile.type] = true;
+			Main.projPet[Projectile.type] = true;
 			// This is needed so your minion can properly spawn when summoned and replaced when other minions are summoned
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
 			// Don't mistake this with "if this is true, then it will automatically home". It is just for damage reduction for certain NPCs
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public sealed override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.tileCollide = false;
-			projectile.friendly = true;
-			projectile.minion = true;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.minion = true;
 			// Amount of slots this minion occupies from the total minion slots available to the player (more on that later)
-			projectile.minionSlots = 1f;
+			Projectile.minionSlots = 1f;
 			// Needed so the minion doesn't despawn on collision with enemies or tiles
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
 		}
 
 
@@ -465,19 +466,19 @@ namespace SGAmod.Items.Weapons
 			//return;
 
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			if (player.dead || !player.active)
 			{
 				player.ClearBuff(ModContent.BuffType<MidasMinionBuff>());
 			}
 			if (player.HasBuff(ModContent.BuffType<MidasMinionBuff>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 			Vector2 gothere = player.Center;
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 
-			int target2 = Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), true, true, true, projectile);
+			int target2 = Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), true, true, true, Projectile);
 			NPC them = Main.npc[target2];
 			NPC oldthem = null;
 
@@ -490,19 +491,19 @@ namespace SGAmod.Items.Weapons
 
 			if (them != null && them.active)
 			{
-				if ((them.Center - projectile.Center).Length() < 500 && Collision.CanHitLine(new Vector2(projectile.Center.X, projectile.Center.Y), 1, 1, new Vector2(them.Center.X, them.Center.Y), 1, 1) && them.CanBeChasedBy())
+				if ((them.Center - Projectile.Center).Length() < 500 && Collision.CanHitLine(new Vector2(Projectile.Center.X, Projectile.Center.Y), 1, 1, new Vector2(them.Center.X, them.Center.Y), 1, 1) && them.CanBeChasedBy())
 				{
-					projectile.ai[0] += 1;
+					Projectile.ai[0] += 1;
 
-					if (projectile.ai[0] % 20 == 0)
+					if (Projectile.ai[0] % 20 == 0)
 					{
-						Main.PlaySound(18, (int)projectile.Center.X, (int)projectile.Center.Y, 0, 1f, 0.25f);
-						int thisoned = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<GlowingGoldCoin>(), projectile.damage, projectile.knockBack, Main.player[projectile.owner].whoAmI);
+						SoundEngine.PlaySound(18, (int)Projectile.Center.X, (int)Projectile.Center.Y, 0, 1f, 0.25f);
+						int thisoned = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<GlowingGoldCoin>(), Projectile.damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
 						Main.projectile[thisoned].minion = true;
-						Main.projectile[thisoned].velocity = (them.Center - projectile.Center);
+						Main.projectile[thisoned].velocity = (them.Center - Projectile.Center);
 						Main.projectile[thisoned].velocity.Normalize(); Main.projectile[thisoned].velocity *= 12f; Main.projectile[thisoned].velocity = Main.projectile[thisoned].velocity.RotateRandom(MathHelper.ToRadians(15));
 						Main.projectile[thisoned].penetrate = 1;
-						Main.projectile[thisoned].ranged = false;
+						// Main.projectile[thisoned].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 						Main.projectile[thisoned].friendly = true;
 						Main.projectile[thisoned].hostile = false;
 						Main.projectile[thisoned].netUpdate = true;
@@ -514,18 +515,18 @@ namespace SGAmod.Items.Weapons
 
 				if (oldthem != null)
 				{
-					if ((oldthem.Center - projectile.Center).Length() < 500 && Collision.CanHitLine(new Vector2(projectile.Center.X, projectile.Center.Y), 1, 1, new Vector2(oldthem.Center.X, oldthem.Center.Y), 1, 1) && oldthem.CanBeChasedBy())
+					if ((oldthem.Center - Projectile.Center).Length() < 500 && Collision.CanHitLine(new Vector2(Projectile.Center.X, Projectile.Center.Y), 1, 1, new Vector2(oldthem.Center.X, oldthem.Center.Y), 1, 1) && oldthem.CanBeChasedBy())
 					{
 
-						if (projectile.ai[0] % 35 == 0)
+						if (Projectile.ai[0] % 35 == 0)
 						{
-							Main.PlaySound(18, (int)projectile.Center.X, (int)projectile.Center.Y, 0, 0.75f, -0.5f);
-							int thisoned = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<GlowingSilverCoin>(), (int)((float)projectile.damage * 0.75f), projectile.knockBack, Main.player[projectile.owner].whoAmI);
+							SoundEngine.PlaySound(18, (int)Projectile.Center.X, (int)Projectile.Center.Y, 0, 0.75f, -0.5f);
+							int thisoned = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<GlowingSilverCoin>(), (int)((float)Projectile.damage * 0.75f), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
 							Main.projectile[thisoned].minion = true;
-							Main.projectile[thisoned].velocity = (oldthem.Center - projectile.Center);
+							Main.projectile[thisoned].velocity = (oldthem.Center - Projectile.Center);
 							Main.projectile[thisoned].velocity.Normalize(); Main.projectile[thisoned].velocity *= 10f; Main.projectile[thisoned].velocity = Main.projectile[thisoned].velocity.RotateRandom(MathHelper.ToRadians(15));
 							Main.projectile[thisoned].penetrate = 1;
-							Main.projectile[thisoned].ranged = false;
+							// Main.projectile[thisoned].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 							Main.projectile[thisoned].friendly = true;
 							Main.projectile[thisoned].hostile = false;
 							Main.projectile[thisoned].netUpdate = true;
@@ -539,9 +540,9 @@ namespace SGAmod.Items.Weapons
 
 			}
 
-			int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 124);
+			int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 124);
 			Main.dust[dust].scale = 0.7f;
-			Main.dust[dust].velocity = projectile.velocity * 0.2f;
+			Main.dust[dust].velocity = Projectile.velocity * 0.2f;
 			Main.dust[dust].noGravity = true;
 
 			float us = 0f;
@@ -552,10 +553,10 @@ namespace SGAmod.Items.Weapons
 				Projectile currentProjectile = Main.projectile[i];
 				if (currentProjectile.active // Make sure the projectile is active
 				&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
-				&& currentProjectile.type == projectile.type)
+				&& currentProjectile.type == Projectile.type)
 				{ // Make sure the projectile is of the same type as this javelin
 
-					if (i == projectile.whoAmI)
+					if (i == Projectile.whoAmI)
 						us = maxus;
 					maxus += 1f;
 
@@ -569,18 +570,18 @@ namespace SGAmod.Items.Weapons
 			Vector2 here = new Vector2((float)Math.Cos(angles), (float)Math.Sin(angles)) * dist;
 			Vector2 where = gothere + here;
 
-			if ((where - projectile.Center).Length() > 8f)
+			if ((where - Projectile.Center).Length() > 8f)
 			{
-				projectile.velocity += (where - projectile.Center) * 0.005f;
-				projectile.velocity *= 0.975f;
+				Projectile.velocity += (where - Projectile.Center) * 0.005f;
+				Projectile.velocity *= 0.975f;
 			}
-			float maxspeed = Math.Min(projectile.velocity.Length(), 16);
-			projectile.velocity.Normalize();
-			projectile.velocity *= maxspeed;
+			float maxspeed = Math.Min(Projectile.velocity.Length(), 16);
+			Projectile.velocity.Normalize();
+			Projectile.velocity *= maxspeed;
 
 
 
-			Lighting.AddLight(projectile.Center, Color.Yellow.ToVector3() * 0.78f);
+			Lighting.AddLight(Projectile.Center, Color.Yellow.ToVector3() * 0.78f);
 
 		}
 
@@ -595,19 +596,19 @@ namespace SGAmod.Items.Weapons
 			Texture2D tex = SGAmod.ExtraTextures[95];
 
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-			Color color = Color.Lerp((projectile.GetAlpha(lightColor) * 0.5f), Color.White, 0.5f); //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-			int timing = (int)(projectile.localAI[0] / 8f);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+			Color color = Color.Lerp((Projectile.GetAlpha(lightColor) * 0.5f), Color.White, 0.5f); //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+			int timing = (int)(Projectile.localAI[0] / 8f);
 			timing %= 4;
 			timing *= ((tex.Height) / 4);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), color, projectile.velocity.X * 0.04f, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), color, Projectile.velocity.X * 0.04f, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			return false;
 		}
 
 	}
 	public class MidasMinionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Midas Portal");
 			Description.SetDefault("Portals from Planes of Wealth will fight for you");
@@ -623,7 +624,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			if (player.ownedProjectileCounts[mod.ProjectileType("MidasPortal")] > 0)
+			if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("MidasPortal").Type] > 0)
 			{
 				player.buffTime[buffIndex] = 18000;
 			}
@@ -640,39 +641,34 @@ namespace SGAmod.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Fortune Falchion");
-			Tooltip.SetDefault("Sucks in nearby money when held\nHitting enemies debuffed with Midas increases the money they drop by 5% of the weapon's value\n^This stacks for each hit\nEquiping the [i:" + mod.ItemType("IdolOfMidas") + "] greatly improves this weapon's effects");
+			Tooltip.SetDefault("Sucks in nearby money when held\nHitting enemies debuffed with Midas increases the money they drop by 5% of the weapon's value\n^This stacks for each hit\nEquiping the [i:" + Mod.Find<ModItem>("IdolOfMidas") .Type+ "] greatly improves this weapon's effects");
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 32;
-			item.melee = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 1;
-			item.knockBack = 3;
-			item.value = Item.buyPrice(0, 2, 0, 0);
-			item.rare = ItemRarityID.LightPurple;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 32;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 1;
+			Item.knockBack = 3;
+			Item.value = Item.buyPrice(0, 2, 0, 0);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.FalconBlade, 1);
-			recipe.AddRecipeGroup("SGAmod:Tier4Bars", 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.FalconBlade, 1).AddRecipeGroup("SGAmod:Tier4Bars", 10).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 		public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
 		{
 			if (target.HasBuff(BuffID.Midas))
 			{
-				target.value += (int)(item.value * (player.SGAPly().MidasIdol > 0 ? 0.20f : 0.05f));
+				target.value += (int)(Item.value * (player.SGAPly().MidasIdol > 0 ? 0.20f : 0.05f));
 			}
 		}
 
@@ -689,8 +685,8 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.friendly = true;
-			projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 		}
 		public override string Texture
 		{

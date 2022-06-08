@@ -59,7 +59,7 @@ namespace SGAmod
 					for (int x = 0; x < width; x++)
 					{
 						float dist = (new Vector2(x, y) - new Vector2(width / 2, height / 2)).Length();
-						float alg = ((-Main.GlobalTime + ((float)(dist) / 0.5f)) / 1f);
+						float alg = ((-Main.GlobalTimeWrappedHourly + ((float)(dist) / 0.5f)) / 1f);
 						dataColors[x + y * width] = (Main.hslToRgb(alg % 1f, 0.75f, 0.5f));
 					}
 				}
@@ -78,8 +78,8 @@ namespace SGAmod
 				float scaleBased = 200f/width;
 				if (HellionSky.spinornah)
 				{
-					Main.spriteBatch.Draw(beam, new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f), null, color * Math.Min(1f, tempcolor) * 0.25f, Main.GlobalTime / 4f, new Vector2(beam.Width / 2, beam.Height / 2), new Vector2(Main.screenWidth, Main.screenHeight) / new Vector2(1920, 1080) * 12f* scaleBased, SpriteEffects.None, 0f);
-					Main.spriteBatch.Draw(beam, new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f), null, color * Math.Min(1f, tempcolor) * 0.25f, -Main.GlobalTime / 4f, new Vector2(beam.Width / 2, beam.Height / 2), new Vector2(Main.screenWidth, Main.screenHeight) / new Vector2(1920, 1080) * 12f * scaleBased, SpriteEffects.None, 0f);
+					Main.spriteBatch.Draw(beam, new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f), null, color * Math.Min(1f, tempcolor) * 0.25f, Main.GlobalTimeWrappedHourly / 4f, new Vector2(beam.Width / 2, beam.Height / 2), new Vector2(Main.screenWidth, Main.screenHeight) / new Vector2(1920, 1080) * 12f* scaleBased, SpriteEffects.None, 0f);
+					Main.spriteBatch.Draw(beam, new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f), null, color * Math.Min(1f, tempcolor) * 0.25f, -Main.GlobalTimeWrappedHourly / 4f, new Vector2(beam.Width / 2, beam.Height / 2), new Vector2(Main.screenWidth, Main.screenHeight) / new Vector2(1920, 1080) * 12f * scaleBased, SpriteEffects.None, 0f);
 
 				}
 				else
@@ -111,7 +111,7 @@ namespace SGAmod
 					amax = 0.25f;
 				}
 
-				if (nullg.npc.ai[1]< 99700 && nullg.npc.ai[1]>30000)
+				if (nullg.NPC.ai[1]< 99700 && nullg.NPC.ai[1]>30000)
 				{
 					amax = 0.60f;
 				}
@@ -121,8 +121,8 @@ namespace SGAmod
 				amax = 1f;
 			}
 
-			int hellcount = NPC.CountNPCS((SGAmod.Instance).NPCType("Hellion")) + NPC.CountNPCS((SGAmod.Instance).NPCType("HellionFinal"));
-			acolor = Main.hslToRgb((Main.GlobalTime / 10f) % 1, 0.81f, 0.5f);
+			int hellcount = NPC.CountNPCS((SGAmod.Instance).Find<ModNPC>("Hellion").Type) + NPC.CountNPCS((SGAmod.Instance).Find<ModNPC>("HellionFinal").Type);
+			acolor = Main.hslToRgb((Main.GlobalTimeWrappedHourly / 10f) % 1, 0.81f, 0.5f);
 			SGAmod.HellionSkyalpha = MathHelper.Clamp(hellcount > 0 ? (SGAmod.HellionSkyalpha + 0.015f / 5f) : SGAmod.HellionSkyalpha - (0.015f/5f), 0f, amax);
 		}
 
@@ -133,8 +133,8 @@ namespace SGAmod
 
 		public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
 		{
-			double thevalue = Main.GlobalTime * 2.0;
-			double movespeed = Main.GlobalTime * 0.2;
+			double thevalue = Main.GlobalTimeWrappedHourly * 2.0;
+			double movespeed = Main.GlobalTimeWrappedHourly * 0.2;
 
 			//NPC theboss=Main.npc[NPC.FindFirstNPC((SGAmod.Instance).NPCType("Asterism"))];
 			//float valie=((float)theboss.life/(float)theboss.lifeMax);
@@ -147,7 +147,7 @@ namespace SGAmod
 			//deathShader.Apply(null);
 			if (maxDepth >= 0 && minDepth < 0)
 			{
-				Texture2D texa = ModContent.GetTexture("SGAmod/noise");
+				Texture2D texa = ModContent.Request<Texture2D>("SGAmod/noise");
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
@@ -206,8 +206,8 @@ namespace SGAmod
 
 		public override void Update(GameTime gameTime)
 		{
-			acolor = Main.hslToRgb((Main.GlobalTime / 10f) % 1, 0.81f, 0.5f);
-			SGAmod.ProgramSkyAlpha = MathHelper.Clamp(NPC.CountNPCS((SGAmod.Instance).NPCType("SPinkyTrue")) > 0 && SGAmod.ProgramSkyAlpha>0 ? SGAmod.ProgramSkyAlpha + 0.005f : SGAmod.ProgramSkyAlpha - 0.005f, 0f, 1f);
+			acolor = Main.hslToRgb((Main.GlobalTimeWrappedHourly / 10f) % 1, 0.81f, 0.5f);
+			SGAmod.ProgramSkyAlpha = MathHelper.Clamp(NPC.CountNPCS((SGAmod.Instance).Find<ModNPC>("SPinkyTrue").Type) > 0 && SGAmod.ProgramSkyAlpha>0 ? SGAmod.ProgramSkyAlpha + 0.005f : SGAmod.ProgramSkyAlpha - 0.005f, 0f, 1f);
 		}
 
 		private float GetIntensity()
@@ -222,8 +222,8 @@ namespace SGAmod
 
 		public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
 		{
-			double thevalue = Main.GlobalTime * 2.0;
-			double movespeed = Main.GlobalTime * 0.2;
+			double thevalue = Main.GlobalTimeWrappedHourly * 2.0;
+			double movespeed = Main.GlobalTimeWrappedHourly * 0.2;
 
 			//NPC theboss=Main.npc[NPC.FindFirstNPC((SGAmod.Instance).NPCType("Asterism"))];
 			//float valie=((float)theboss.life/(float)theboss.lifeMax);
@@ -242,7 +242,7 @@ namespace SGAmod
 			{
 				if (maxDepth >= singles[i,0] && minDepth < singles[i,1])
 				{
-					Texture2D texa = ModContent.GetTexture("SGAmod/noise");
+					Texture2D texa = ModContent.Request<Texture2D>("SGAmod/noise");
 
 					int sizechunk = texa.Width;
 					for (int y = 0; y < Main.screenHeight + sizechunk; y += sizechunk)
@@ -258,7 +258,7 @@ namespace SGAmod
 							ArmorShaderData shader = GameShaders.Armor.GetShaderFromItemId(ItemID.ShadowDye); shader.Apply(null);
 							shader = GameShaders.Armor.GetShaderFromItemId(ItemID.MidnightRainbowDye);
 							shader.Apply(null);
-							spriteBatch.Draw(texa, new Rectangle(x - ((int)(Main.GlobalTime* movedir[i] * 30) % sizechunk * 3), y, sizechunk, sizechunk), (acolor) * (thecoloralpha * SGAmod.ProgramSkyAlpha* alphaz[i]));
+							spriteBatch.Draw(texa, new Rectangle(x - ((int)(Main.GlobalTimeWrappedHourly* movedir[i] * 30) % sizechunk * 3), y, sizechunk, sizechunk), (acolor) * (thecoloralpha * SGAmod.ProgramSkyAlpha* alphaz[i]));
 						}
 					}
 				}
@@ -279,9 +279,9 @@ namespace SGAmod
 				shader2.UseOpacity(SGAmod.ProgramSkyAlpha);
 				shader2.Apply(null, new DrawData?(value28));
 
-				spriteBatch.Draw(sun, new Vector2(Main.screenWidth / 2, Main.screenHeight / 8), null, Main.hslToRgb((Main.GlobalTime/3f)%1f,1f,0.75f)*1 * SGAmod.ProgramSkyAlpha, MathHelper.PiOver2, new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(5f, 5f) * SGAmod.ProgramSkyAlpha, SpriteEffects.None, 0f);
-				spriteBatch.Draw(sun, new Vector2(Main.screenWidth / 2, Main.screenHeight / 8), null, Main.hslToRgb((Main.GlobalTime / 3f) % 1f, 1f, 0.75f) * 0.5f * SGAmod.ProgramSkyAlpha, 0, new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(5f, 5f) * SGAmod.ProgramSkyAlpha, SpriteEffects.None, 0f);
-				spriteBatch.Draw(sun, new Vector2(Main.screenWidth / 2, Main.screenHeight / 8), null, Main.hslToRgb((Main.GlobalTime / 3f) % 1f, 1f, 0.75f) * 0.5f * SGAmod.ProgramSkyAlpha, MathHelper.PiOver4, new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(5f, 5f) * SGAmod.ProgramSkyAlpha, SpriteEffects.None, 0f);
+				spriteBatch.Draw(sun, new Vector2(Main.screenWidth / 2, Main.screenHeight / 8), null, Main.hslToRgb((Main.GlobalTimeWrappedHourly/3f)%1f,1f,0.75f)*1 * SGAmod.ProgramSkyAlpha, MathHelper.PiOver2, new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(5f, 5f) * SGAmod.ProgramSkyAlpha, SpriteEffects.None, 0f);
+				spriteBatch.Draw(sun, new Vector2(Main.screenWidth / 2, Main.screenHeight / 8), null, Main.hslToRgb((Main.GlobalTimeWrappedHourly / 3f) % 1f, 1f, 0.75f) * 0.5f * SGAmod.ProgramSkyAlpha, 0, new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(5f, 5f) * SGAmod.ProgramSkyAlpha, SpriteEffects.None, 0f);
+				spriteBatch.Draw(sun, new Vector2(Main.screenWidth / 2, Main.screenHeight / 8), null, Main.hslToRgb((Main.GlobalTimeWrappedHourly / 3f) % 1f, 1f, 0.75f) * 0.5f * SGAmod.ProgramSkyAlpha, MathHelper.PiOver4, new Vector2(sun.Width / 2f, sun.Height / 2f), new Vector2(5f, 5f) * SGAmod.ProgramSkyAlpha, SpriteEffects.None, 0f);
 			}
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);

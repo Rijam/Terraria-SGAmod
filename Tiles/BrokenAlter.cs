@@ -10,7 +10,7 @@ namespace SGAmod.Tiles
 {
     public class BrokenAlter : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileSolidTop[Type] = true;
@@ -31,7 +31,7 @@ namespace SGAmod.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 16, 32, mod.ItemType("BrokenAlter"));
+            Item.NewItem(i * 16, j * 16, 16, 32, Mod.Find<ModItem>("BrokenAlter").Type);
         }
     }
 }

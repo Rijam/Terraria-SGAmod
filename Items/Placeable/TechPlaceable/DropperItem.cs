@@ -16,32 +16,26 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
         public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.buyPrice(silver: 10);
-			item.rare = 1;
-			item.createTile = mod.TileType("DropperTile");
-			item.placeStyle = 0;
-			item.mech = true;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(silver: 10);
+			Item.rare = 1;
+			Item.createTile = Mod.Find<ModTile>("DropperTile").Type;
+			Item.placeStyle = 0;
+			Item.mech = true;
 		}
         public override string Texture => "SGAmod/Items/Placeable/TechPlaceable/DropperItem";
 
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 3);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 3);
-			recipe.AddIngredient(ItemID.IronCrate, 1);
-			recipe.AddTile(TileID.HeavyWorkBench);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(mod.ItemType("UnmanedBar"), 3).AddIngredient(mod.ItemType("NoviteBar"), 3).AddIngredient(ItemID.IronCrate, 1).AddTile(TileID.HeavyWorkBench).Register();
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Items.Weapons
 {
@@ -14,22 +15,22 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			base.SetDefaults();
 
-			item.damage = 24;
-			item.width = 19;
-			item.height = 22;
-			item.melee = true;
-			item.rare = 2;
-			item.useStyle = 1;
-			item.useAnimation = 25;
-			item.autoReuse = true;
-			item.useTime = 26;
-			item.useTurn = true;
-			item.knockBack = 9;
-			item.value = 1000;
-			item.shoot = 10;
-			item.shootSpeed = 10f;
-			item.consumable = false;
-			item.UseSound = SoundID.Item1;
+			Item.damage = 24;
+			Item.width = 19;
+			Item.height = 22;
+			Item.DamageType = DamageClass.Melee;
+			Item.rare = 2;
+			Item.useStyle = 1;
+			Item.useAnimation = 25;
+			Item.autoReuse = true;
+			Item.useTime = 26;
+			Item.useTurn = true;
+			Item.knockBack = 9;
+			Item.value = 1000;
+			Item.shoot = 10;
+			Item.shootSpeed = 10f;
+			Item.consumable = false;
+			Item.UseSound = SoundID.Item1;
 		}
 
 		public override void SetStaticDefaults()
@@ -40,14 +41,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ClayBlock, 30);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 2);
-			recipe.AddIngredient(ItemID.Gel, 15);
-			recipe.AddIngredient(ItemID.Vine, 2);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.ClayBlock, 30).AddIngredient(mod.ItemType("BottledMud"), 2).AddIngredient(ItemID.Gel, 15).AddIngredient(ItemID.Vine, 2).AddTile(TileID.Anvils).Register();
 		}
 		private bool HasClay(Player player)
         {
@@ -91,27 +85,27 @@ namespace SGAmod.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.MudBall);
-			projectile.aiStyle = -1;
-			projectile.timeLeft = 300;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.penetrate = 1;
-			projectile.melee = true;
-			aiType = 0;
+			Projectile.CloneDefaults(ProjectileID.MudBall);
+			Projectile.aiStyle = -1;
+			Projectile.timeLeft = 300;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.penetrate = 1;
+			Projectile.DamageType = DamageClass.Melee;
+			AIType = 0;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.aiStyle = -1;
-			Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			Projectile.aiStyle = -1;
+			SoundEngine.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 			for (int num315 = 0; num315 < 15; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Dirt, projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 15f), 50, Color.SandyBrown, 1.5f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Dirt, Projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), Projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 15f), 50, Color.SandyBrown, 1.5f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.7f;
@@ -122,16 +116,16 @@ namespace SGAmod.Projectiles
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			if (!target.friendly)
-				projectile.Kill();
+				Projectile.Kill();
 		}
 
 		public override void AI()
 		{
-			projectile.rotation += ((projectile.velocity.Length()/16f) * Math.Sign(-0.1f + (projectile.velocity.X * 1.1f)))*0.1f;
-			projectile.velocity.Y += 0.25f;
+			Projectile.rotation += ((Projectile.velocity.Length()/16f) * Math.Sign(-0.1f + (Projectile.velocity.X * 1.1f)))*0.1f;
+			Projectile.velocity.Y += 0.25f;
 			for (int num315 = 0; num315 < 2; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Dirt, 0f, 0f, 50, Color.SandyBrown, 1.0f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Dirt, 0f, 0f, 50, Color.SandyBrown, 1.0f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.3f;
@@ -154,17 +148,17 @@ namespace SGAmod.Projectiles
         public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.width = 24;
-			projectile.height = 24;
+			Projectile.width = 24;
+			Projectile.height = 24;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.aiStyle = -1;
-			Main.PlaySound(SoundID.Shatter, (int)projectile.position.X, (int)projectile.position.Y, 0);
+			Projectile.aiStyle = -1;
+			SoundEngine.PlaySound(SoundID.Shatter, (int)Projectile.position.X, (int)Projectile.position.Y, 0);
 			for (int num315 = 0; num315 < 15; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Dirt, projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 15f), 50, Color.SandyBrown, 1.5f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Dirt, Projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), Projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 15f), 50, Color.SandyBrown, 1.5f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.7f;
@@ -174,7 +168,7 @@ namespace SGAmod.Projectiles
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 2000)); randomcircle.Normalize();
 				float velincrease = Main.rand.NextFloat(2f,6f);
-				int thisone = Projectile.NewProjectile(projectile.Center.X - projectile.velocity.X, projectile.Center.Y - projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ModContent.ProjectileType<ClayBall>(), (int)(projectile.damage * 0.5f), projectile.knockBack, projectile.owner, 0.0f, 0f);
+				int thisone = Projectile.NewProjectile(Projectile.Center.X - Projectile.velocity.X, Projectile.Center.Y - Projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ModContent.ProjectileType<ClayBall>(), (int)(Projectile.damage * 0.5f), Projectile.knockBack, Projectile.owner, 0.0f, 0f);
 			}
 
 			return true;

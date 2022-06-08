@@ -14,25 +14,25 @@ namespace SGAmod.Items.Placeable
 		private string bossSprite = "SGAmod/Invisible";
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.buyPrice(gold: 1);
-			item.rare = 1;
-			item.createTile = mod.TileType("BossTrophies");
-			item.placeStyle = placeStyle;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(gold: 1);
+			Item.rare = 1;
+			Item.createTile = Mod.Find<ModTile>("BossTrophies").Type;
+			Item.placeStyle = placeStyle;
 		}
         public override string Texture => trophySprite;
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-			Texture2D texture = ModContent.GetTexture(bossSprite);
+			Texture2D texture = ModContent.Request<Texture2D>(bossSprite);
 			Vector2 slotSize = new Vector2(52f, 52f);
 			position -= slotSize * Main.inventoryScale / 2f - frame.Size() * scale / 2f;
 			Vector2 drawPos = position + slotSize * Main.inventoryScale / 2f;
@@ -53,56 +53,56 @@ namespace SGAmod.Items.Placeable
 
 		public override bool Autoload(ref string name)
         {
-			mod.AddItem("MaggotBanner", new SGABanner("Maggot"));
-			mod.AddItem("MaggotFlyBanner", new SGABanner("MaggotFly"));
-			mod.AddItem("BlackLeechBanner", new SGABanner("BlackLeech"));
-			mod.AddItem("DankMimicBanner", new SGABanner("DankMimic"));
-			mod.AddItem("DankSlimeBanner", new SGABanner("DankSlime"));
-			mod.AddItem("FlyBanner", new SGABanner("Fly"));
-			mod.AddItem("FlySwarmBanner", new SGABanner("FlySwarm"));
-			mod.AddItem("GiantLizardBanner", new SGABanner("GiantLizard"));
-			mod.AddItem("IceFairyBanner", new SGABanner("IceFairy"));
-			mod.AddItem("MudBallBanner", new SGABanner("MudBall"));
-			mod.AddItem("MudMummyBanner", new SGABanner("MudMummy"));
-			mod.AddItem("SandscorchedGolemBanner", new SGABanner("SandscorchedGolem"));
-			mod.AddItem("SandscorchedSlimeBanner", new SGABanner("SandscorchedSlime"));
-			mod.AddItem("SwampBatBanner", new SGABanner("SwampBat"));
-			mod.AddItem("SwampJellyBanner", new SGABanner("SwampJelly"));
-			mod.AddItem("TidalElementalBanner", new SGABanner("TidalElemental"));
-			mod.AddItem("SkeletonCrossbowerBanner", new SGABanner("SkeletonCrossbower"));
-			mod.AddItem("SkeletonGunnerBanner", new SGABanner("SkeletonGunner"));
-			mod.AddItem("DungeonBatBanner", new SGABanner("DungeonBat"));
-			mod.AddItem("ChaosCasterBanner", new SGABanner("ChaosCaster"));
-			mod.AddItem("EvilCasterBanner", new SGABanner("EvilCaster"));
-			mod.AddItem("FastSkeletonBanner", new SGABanner("FastSkeleton"));
-			mod.AddItem("FlamingSkullBanner", new SGABanner("FlamingSkull"));
-			mod.AddItem("HellCasterBanner", new SGABanner("HellCaster"));
-			mod.AddItem("LaserSkeletonBanner", new SGABanner("LaserSkeleton"));
-			mod.AddItem("RuneCasterBanner", new SGABanner("RuneCaster"));
+			Mod.AddItem("MaggotBanner", new SGABanner("Maggot"));
+			Mod.AddItem("MaggotFlyBanner", new SGABanner("MaggotFly"));
+			Mod.AddItem("BlackLeechBanner", new SGABanner("BlackLeech"));
+			Mod.AddItem("DankMimicBanner", new SGABanner("DankMimic"));
+			Mod.AddItem("DankSlimeBanner", new SGABanner("DankSlime"));
+			Mod.AddItem("FlyBanner", new SGABanner("Fly"));
+			Mod.AddItem("FlySwarmBanner", new SGABanner("FlySwarm"));
+			Mod.AddItem("GiantLizardBanner", new SGABanner("GiantLizard"));
+			Mod.AddItem("IceFairyBanner", new SGABanner("IceFairy"));
+			Mod.AddItem("MudBallBanner", new SGABanner("MudBall"));
+			Mod.AddItem("MudMummyBanner", new SGABanner("MudMummy"));
+			Mod.AddItem("SandscorchedGolemBanner", new SGABanner("SandscorchedGolem"));
+			Mod.AddItem("SandscorchedSlimeBanner", new SGABanner("SandscorchedSlime"));
+			Mod.AddItem("SwampBatBanner", new SGABanner("SwampBat"));
+			Mod.AddItem("SwampJellyBanner", new SGABanner("SwampJelly"));
+			Mod.AddItem("TidalElementalBanner", new SGABanner("TidalElemental"));
+			Mod.AddItem("SkeletonCrossbowerBanner", new SGABanner("SkeletonCrossbower"));
+			Mod.AddItem("SkeletonGunnerBanner", new SGABanner("SkeletonGunner"));
+			Mod.AddItem("DungeonBatBanner", new SGABanner("DungeonBat"));
+			Mod.AddItem("ChaosCasterBanner", new SGABanner("ChaosCaster"));
+			Mod.AddItem("EvilCasterBanner", new SGABanner("EvilCaster"));
+			Mod.AddItem("FastSkeletonBanner", new SGABanner("FastSkeleton"));
+			Mod.AddItem("FlamingSkullBanner", new SGABanner("FlamingSkull"));
+			Mod.AddItem("HellCasterBanner", new SGABanner("HellCaster"));
+			Mod.AddItem("LaserSkeletonBanner", new SGABanner("LaserSkeleton"));
+			Mod.AddItem("RuneCasterBanner", new SGABanner("RuneCaster"));
 
-			mod.AddItem("CopperWraithTrophy", new BossTrophy(0, trophySprite: "SGAmod/Items/Placeable/CopperWraithTrophy"));
-			mod.AddItem("CaliburnATrophy", new BossTrophy(1, trophySprite: "SGAmod/Items/Placeable/CaliburnATrophy"));
-			mod.AddItem("CaliburnBTrophy", new BossTrophy(2, trophySprite: "SGAmod/Items/Placeable/CaliburnBTrophy"));
-			mod.AddItem("CaliburnCTrophy", new BossTrophy(3, trophySprite: "SGAmod/Items/Placeable/CaliburnCTrophy"));
-			mod.AddItem("SpiderQueenTrophy", new BossTrophy(4, trophySprite: "SGAmod/Items/Placeable/SpiderQueenTrophy"));
-			mod.AddItem("MurkTrophy", new BossTrophy(5, trophySprite: "SGAmod/Items/Placeable/MurkTrophy"));
+			Mod.AddItem("CopperWraithTrophy", new BossTrophy(0, trophySprite: "SGAmod/Items/Placeable/CopperWraithTrophy"));
+			Mod.AddItem("CaliburnATrophy", new BossTrophy(1, trophySprite: "SGAmod/Items/Placeable/CaliburnATrophy"));
+			Mod.AddItem("CaliburnBTrophy", new BossTrophy(2, trophySprite: "SGAmod/Items/Placeable/CaliburnBTrophy"));
+			Mod.AddItem("CaliburnCTrophy", new BossTrophy(3, trophySprite: "SGAmod/Items/Placeable/CaliburnCTrophy"));
+			Mod.AddItem("SpiderQueenTrophy", new BossTrophy(4, trophySprite: "SGAmod/Items/Placeable/SpiderQueenTrophy"));
+			Mod.AddItem("MurkTrophy", new BossTrophy(5, trophySprite: "SGAmod/Items/Placeable/MurkTrophy"));
 
-			mod.AddItem("CirnoTrophy", new BossTrophy(6, trophySprite: "SGAmod/Items/Placeable/CirnoTrophy"));
-			mod.AddItem("CobaltWraithTrophy", new BossTrophy(7, trophySprite: "SGAmod/Items/Placeable/CobaltWraithTrophy"));
-			mod.AddItem("SharkvernTrophy", new BossTrophy(8, trophySprite: "SGAmod/Items/Placeable/SharkvernTrophy"));
-			mod.AddItem("CratrosityTrophy", new BossTrophy(9, trophySprite: "SGAmod/Items/Placeable/CratrosityTrophy"));
-			mod.AddItem("TwinPrimeDestroyersTrophy", new BossTrophy(10, bossSprite: "SGAmod/Items/Placeable/BossTrophy_TPD"));
-			mod.AddItem("DoomHarbingerTrophy", new BossTrophy(11, trophySprite: "SGAmod/Items/Placeable/DoomHarbingerTrophy"));
+			Mod.AddItem("CirnoTrophy", new BossTrophy(6, trophySprite: "SGAmod/Items/Placeable/CirnoTrophy"));
+			Mod.AddItem("CobaltWraithTrophy", new BossTrophy(7, trophySprite: "SGAmod/Items/Placeable/CobaltWraithTrophy"));
+			Mod.AddItem("SharkvernTrophy", new BossTrophy(8, trophySprite: "SGAmod/Items/Placeable/SharkvernTrophy"));
+			Mod.AddItem("CratrosityTrophy", new BossTrophy(9, trophySprite: "SGAmod/Items/Placeable/CratrosityTrophy"));
+			Mod.AddItem("TwinPrimeDestroyersTrophy", new BossTrophy(10, bossSprite: "SGAmod/Items/Placeable/BossTrophy_TPD"));
+			Mod.AddItem("DoomHarbingerTrophy", new BossTrophy(11, trophySprite: "SGAmod/Items/Placeable/DoomHarbingerTrophy"));
 
-			mod.AddItem("LuminiteWraithTrophy", new BossTrophy(12, trophySprite: "SGAmod/Items/Placeable/LuminiteWraithTrophy"));
-			mod.AddItem("CratrogeddonTrophy", new BossTrophy(13, trophySprite: "SGAmod/Items/Placeable/CratrogeddonTrophy"));
-			mod.AddItem("SupremePinkyTrophy", new BossTrophy(14, trophySprite: "SGAmod/Items/Placeable/SupremePinkyTrophy"));
-			mod.AddItem("HellionTrophy", new BossTrophy(15, trophySprite: "SGAmod/Items/Placeable/HellionTrophy"));
-			mod.AddItem("PhaethonTrophy", new BossTrophy(16, trophySprite: "SGAmod/Items/Placeable/PhaethonTrophy"));
+			Mod.AddItem("LuminiteWraithTrophy", new BossTrophy(12, trophySprite: "SGAmod/Items/Placeable/LuminiteWraithTrophy"));
+			Mod.AddItem("CratrogeddonTrophy", new BossTrophy(13, trophySprite: "SGAmod/Items/Placeable/CratrogeddonTrophy"));
+			Mod.AddItem("SupremePinkyTrophy", new BossTrophy(14, trophySprite: "SGAmod/Items/Placeable/SupremePinkyTrophy"));
+			Mod.AddItem("HellionTrophy", new BossTrophy(15, trophySprite: "SGAmod/Items/Placeable/HellionTrophy"));
+			Mod.AddItem("PhaethonTrophy", new BossTrophy(16, trophySprite: "SGAmod/Items/Placeable/PhaethonTrophy"));
 
-			mod.AddItem("PrismicBansheeTrophy", new BossTrophy(17, trophySprite: "SGAmod/Items/Placeable/PrismicBansheeTrophy"));
-			mod.AddItem("TinWraithTrophy", new BossTrophy(18, trophySprite: "SGAmod/Items/Placeable/TinWraithTrophy"));
-			mod.AddItem("PalladiumWraithTrophy", new BossTrophy(19, trophySprite: "SGAmod/Items/Placeable/PalladiumWraithTrophy"));
+			Mod.AddItem("PrismicBansheeTrophy", new BossTrophy(17, trophySprite: "SGAmod/Items/Placeable/PrismicBansheeTrophy"));
+			Mod.AddItem("TinWraithTrophy", new BossTrophy(18, trophySprite: "SGAmod/Items/Placeable/TinWraithTrophy"));
+			Mod.AddItem("PalladiumWraithTrophy", new BossTrophy(19, trophySprite: "SGAmod/Items/Placeable/PalladiumWraithTrophy"));
 
 			return false;
         }

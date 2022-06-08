@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.Valkyrie
 {
@@ -31,26 +32,26 @@ namespace SGAmod.Items.Armors.Valkyrie
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0,50,0,0);
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 20;
-			item.lifeRegen = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0,50,0,0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 20;
+			Item.lifeRegen = 2;
 		}
 
 		public static void ActivateRagnorok(SGAPlayer sgaply)
 		{
 			if (sgaply.AddCooldownStack(60 * 150,2))
 			{
-				sgaply.player.AddBuff(ModContent.BuffType<RagnarokBuff>(), (int)(120*System.Math.Min(sgaply.player.lifeRegen, sgaply.player.lifeRegenTime * 0.01f)));
-				SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_EtherianPortalOpen, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y);
+				sgaply.Player.AddBuff(ModContent.BuffType<RagnarokBuff>(), (int)(120*System.Math.Min(sgaply.Player.lifeRegen, sgaply.Player.lifeRegenTime * 0.01f)));
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y);
 				if (sound != null)
 				{
 					sound.Pitch = 0.85f;
 				}
 
-				SoundEffectInstance sound2 = Main.PlaySound(SoundID.Zombie, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y, 35);
+				SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.Zombie, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y, 35);
 				if (sound2 != null)
 				{
 					sound2.Pitch = -0.5f;
@@ -58,10 +59,10 @@ namespace SGAmod.Items.Armors.Valkyrie
 
 				for (int i = 0; i < 50; i += 1)
 				{
-					int dust = Dust.NewDust(sgaply.player.Hitbox.TopLeft() + new Vector2(0, -8), sgaply.player.Hitbox.Width, sgaply.player.Hitbox.Height + 8, DustID.AncientLight);
+					int dust = Dust.NewDust(sgaply.Player.Hitbox.TopLeft() + new Vector2(0, -8), sgaply.Player.Hitbox.Width, sgaply.Player.Hitbox.Height + 8, DustID.AncientLight);
 					Main.dust[dust].scale = 2f;
 					Main.dust[dust].noGravity = true;
-					Main.dust[dust].velocity = (sgaply.player.velocity * Main.rand.NextFloat(0.75f, 1f)) + Vector2.UnitX.RotatedBy(-MathHelper.PiOver2 + Main.rand.NextFloat(-1.2f, 1.2f)) * Main.rand.NextFloat(1f, 3f);
+					Main.dust[dust].velocity = (sgaply.Player.velocity * Main.rand.NextFloat(0.75f, 1f)) + Vector2.UnitX.RotatedBy(-MathHelper.PiOver2 + Main.rand.NextFloat(-1.2f, 1.2f)) * Main.rand.NextFloat(1f, 3f);
 				}
 			}
 		}
@@ -70,7 +71,7 @@ namespace SGAmod.Items.Armors.Valkyrie
 		{
 			if (sgaplayer.valkyrieSet.Item1)
 			{
-				Player player = sgaplayer.player;
+				Player player = sgaplayer.Player;
 
 				if (!sgaplayer.valkyrieSet.Item3)
 				sgaplayer.valkyrieSet.Item2 += (System.Math.Min(player.lifeRegen, player.lifeRegenTime * 0.01f) - sgaplayer.valkyrieSet.Item2)/30f;
@@ -85,7 +86,7 @@ namespace SGAmod.Items.Armors.Valkyrie
 		{
 			if (sgaplayer.valkyrieSet.Item1)
 			{
-				Player player = sgaplayer.player;
+				Player player = sgaplayer.Player;
 
 				if (!player.Male)
 					player.wingTimeMax = (int)(player.wingTimeMax * 1.20f);
@@ -101,27 +102,20 @@ namespace SGAmod.Items.Armors.Valkyrie
 
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 			player.Throwing().thrownVelocity += 0.25f;
 			player.Throwing().thrownDamage += 0.15f;
 			player.Throwing().thrownCrit += 20;
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ && !Main.dayTime)
 				sgaplayer.armorglowmasks[0] = "SGAmod/Items/Armors/Valkyrie/" + Name + "_Head";
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<AuroraTearAwoken>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<IlluminantEssence>(), 25);
-			recipe.AddIngredient(ModContent.ItemType<StarMetalBar>(), 12);
-			recipe.AddIngredient(ModContent.ItemType<LuminiteWraithNotch>(), 1);
-			recipe.AddTile(ModContent.TileType<LuminousAlter>());
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<AuroraTearAwoken>(), 1).AddIngredient(ModContent.ItemType<IlluminantEssence>(), 25).AddIngredient(ModContent.ItemType<StarMetalBar>(), 12).AddIngredient(ModContent.ItemType<LuminiteWraithNotch>(), 1).AddTile(ModContent.TileType<LuminousAlter>()).Register();
 		}
 	}
 
@@ -135,12 +129,12 @@ namespace SGAmod.Items.Armors.Valkyrie
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 50, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 30;
-			item.lifeRegen = 3;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 50, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 30;
+			Item.lifeRegen = 3;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -152,7 +146,7 @@ namespace SGAmod.Items.Armors.Valkyrie
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ && !Main.dayTime)
 			{
 				sgaplayer.armorglowmasks[1] = "SGAmod/Items/Armors/Valkyrie/" + Name + "_Body";
@@ -178,17 +172,17 @@ namespace SGAmod.Items.Armors.Valkyrie
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 50, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 15;
-			item.lifeRegen = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 50, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 15;
+			Item.lifeRegen = 2;
 		}
 		private void SGAPlayer_PostPostUpdateEquipsEvent(SGAPlayer player)
 		{
-			if (!Main.dayTime && player.player.armor[2].type == ModContent.ItemType<ValkyrieLeggings>())
-				player.player.wingTimeMax = (int)(player.player.wingTimeMax * 1.15f);
+			if (!Main.dayTime && player.Player.armor[2].type == ModContent.ItemType<ValkyrieLeggings>())
+				player.Player.wingTimeMax = (int)(player.Player.wingTimeMax * 1.15f);
 		}
 
 		public override void UpdateEquip(Player player)
@@ -200,7 +194,7 @@ namespace SGAmod.Items.Armors.Valkyrie
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ && !Main.dayTime)
 				sgaplayer.armorglowmasks[3] = "SGAmod/Items/Armors/Valkyrie/" + Name + "_Legs";
 		}
@@ -208,7 +202,7 @@ namespace SGAmod.Items.Armors.Valkyrie
 
 	public class RagnarokBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ragnarök");
 			Description.SetDefault("The end is close!");

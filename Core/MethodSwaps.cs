@@ -26,6 +26,7 @@ using Terraria.Utilities;
 using System.IO;
 using SGAmod.Credits;
 using System.Diagnostics;
+using Terraria.GameContent;
 
 namespace SGAmod
 {
@@ -39,7 +40,7 @@ namespace SGAmod
 
 			On.Terraria.Player.NinjaDodge += Player_NinjaDodge;
 			On.Terraria.Player.CheckDrowning += Player_CheckDrowning;
-			On.Terraria.Player.AddBuff += Player_AddBuff;
+			//On.Terraria.Player.AddBuff += Player_AddBuff; //I'm going to comment out all of the detours that don't automatically work
 			On.Terraria.Player.Teleport += Player_Teleport;
 			On.Terraria.Player.Update += Player_Update;
 			On.Terraria.Player.UpdateLifeRegen += Player_UpdateLifeRegen;
@@ -53,20 +54,20 @@ namespace SGAmod
 
 			On.Terraria.Main.DrawDust += Main_DrawAdditive;
 			On.Terraria.Main.DrawProjectiles += Main_DrawProjectiles;
-            On.Terraria.Main.DrawPlayers += Main_DrawPlayers;
+            //On.Terraria.Main.DrawPlayers += Main_DrawPlayers;
             On.Terraria.Main.CheckMonoliths += Main_CheckMonoliths;
-			On.Terraria.Main.DrawBuffIcon += Main_DrawBuffIcon;
-			On.Terraria.Main.PlaySound_int_int_int_int_float_float += Main_PlaySound;
+			//On.Terraria.Main.DrawBuffIcon += Main_DrawBuffIcon;
+			//On.Terraria.Main.PlaySound_int_int_int_int_float_float += Main_PlaySound;
 			On.Terraria.Main.SetDisplayMode += RecreateRenderTargetsOnScreenChange;
 			On.Terraria.GameContent.Events.DD2Event.SpawnMonsterFromGate += CrucibleArenaMaster.DD2PortalOverrides;
 			On.Terraria.GameContent.UI.Elements.UICharacterListItem.DrawSelf += Menu_UICharacterListItem;
 
-            On.Terraria.Item.SetDefaults += ApplyThrowingToUThrowing;
+            //On.Terraria.Item.SetDefaults += ApplyThrowingToUThrowing;
             On.Terraria.Projectile.SetDefaults += ApplyThrowingToUThrowingButForProjectiles;
 			On.Terraria.GameInput.PlayerInput.UpdateMainMouse += ApplyDrunkAiming;
 
 			//Unused until more relevant
-			On.Terraria.GameContent.UI.Elements.UIWorldListItem.ctor += CtorModWorlData;
+			//On.Terraria.GameContent.UI.Elements.UIWorldListItem.ctor += CtorModWorlData;
             On.Terraria.GameContent.UI.Elements.UIWorldListItem.DrawSelf += Menu_UICWorldListItem;
             On.Terraria.GameContent.UI.States.UIWorldSelect.ctor += UIWorldSelect_ClearData;
             On.Terraria.DataStructures.PlayerDeathReason.ByOther += DrowningInSpaceIsNotReallyAThing;
@@ -84,7 +85,7 @@ namespace SGAmod
 			if (SGAConfig.Instance.QuestionableDetours)
 			{
 				SGAmod.Instance.Logger.Debug("Loading Monogame detours, these can be disabled in configs");
-				On.Terraria.Main.DoUpdate += OverrideCreditsUpdate;
+				//On.Terraria.Main.DoUpdate += OverrideCreditsUpdate;
 				On.Terraria.Main.Draw += Main_Draw;
 			}
 
@@ -101,15 +102,15 @@ namespace SGAmod
 			SGAPlayer.DrunkAiming();
 		}
 
-        private static void ApplyThrowingToUThrowing(On.Terraria.Item.orig_SetDefaults orig, Item self, int Type, bool noMatCheck)
+        /*private static void ApplyThrowingToUThrowing(On.Terraria.Item.orig_SetDefaults orig, Item self, int Type, bool noMatCheck)
         {
 			//Just a little work around to throwing so I don't have to re-write the whole mod
 			orig(self, Type, noMatCheck);
 			if (self != null && self.Throwing().thrown)
             {
-				self.thrown = true;
+				self.DamageType = DamageClass.Throwing;
             }
-		}
+		}*/
 
 		private static void ApplyThrowingToUThrowingButForProjectiles(On.Terraria.Projectile.orig_SetDefaults orig, Projectile self, int Type)
 		{
@@ -117,7 +118,7 @@ namespace SGAmod
 			orig(self, Type);
 			if (self != null && self.Throwing().thrown)
 			{
-				self.thrown = true;
+				self.DamageType = DamageClass.Throwing;
 			}
 		}
 
@@ -224,12 +225,12 @@ namespace SGAmod
             {
 				int fatigue = sgaply.potionFatigue;
 				if (fatigue < 1)
-					orig(drawBuffText, i, b, x, y);
+					//orig(drawBuffText, i, b, x, y); //Doesn't take 5 arguments or something
 
 				if (SGAmod.BuffsThatHavePotions.Where(testby => testby == b).Count()>0 && !Main.buffNoTimeDisplay[b])
 				{
-					Texture2D extra = Main.extraTexture[80];
-				Texture2D buffTex = Main.buffTexture[b];
+					Texture2D extra = (Texture2D)Terraria.GameContent.TextureAssets.Extra[80];
+				Texture2D buffTex = (Texture2D)Terraria.GameContent.TextureAssets.Buff[b];
 					float alpha = MathHelper.Clamp(fatigue / 10000f, 0f, 1f);
 				int frameHeight = extra.Height / 4;
 
@@ -239,8 +240,8 @@ namespace SGAmod
 
 					for (int zz = 0; zz < 30; zz += 1)
 					{
-						int frame = (int)((Main.GlobalTime * 8f)+rando.Next(4) + i * 2f) % 4;
-						float progress = (rando.NextFloat(0, 100) + Main.GlobalTime * 25)%100;
+						int frame = (int)((Main.GlobalTimeWrappedHourly * 8f)+rando.Next(4) + i * 2f) % 4;
+						float progress = (rando.NextFloat(0, 100) + Main.GlobalTimeWrappedHourly * 25)%100;
 						Vector2 offset = new Vector2(rando.Next(-16, 16), rando.Next(8, 16));
 						effects.Add((offset, progress, frame));
 					}
@@ -260,7 +261,7 @@ namespace SGAmod
 					}
 				}
 			}
-			return orig(drawBuffText, i, b, x, y);
+			return 0;//orig(drawBuffText, i, b, x, y);
         }
 
 
@@ -313,7 +314,7 @@ namespace SGAmod
 				return;
 			}
 			
-			orig(self, gameTime);
+			orig(self, ref gameTime);
 
 			/*
 			 * if (SGAmod.DrawCreditsMouseTooltip)
@@ -392,11 +393,11 @@ namespace SGAmod
 					Vector2 newPos = sgaply.centerOverridePosition;
 					if ((newPos - self.Center).LengthSquared() < 2560000)
 					{
-						Vector2 oldPos = sgaply.player.MountedCenter;
-						sgaply.player.MountedCenter = newPos;
+						Vector2 oldPos = sgaply.Player.MountedCenter;
+						sgaply.Player.MountedCenter = newPos;
 
 						orig(self, i);
-						sgaply.player.MountedCenter = oldPos;
+						sgaply.Player.MountedCenter = oldPos;
 						return;
 					}
 				}
@@ -453,7 +454,7 @@ namespace SGAmod
 
 		public static bool BlockManifest(Item inv)
 		{
-			if (inv != null && inv.modItem != null && inv.modItem is IManifestedItem)
+			if (inv != null && inv.ModItem != null && inv.ModItem is IManifestedItem)
 				return true;
 			return false;
 		}
@@ -558,7 +559,7 @@ namespace SGAmod
 		readonly static Dictionary<UIWorldListItem, TagCompound> SGAmodData = new Dictionary<UIWorldListItem, TagCompound>();
 		private static void CtorModWorlData(On.Terraria.GameContent.UI.Elements.UIWorldListItem.orig_ctor orig, UIWorldListItem self, WorldFileData data, int snapPointIndex)
 		{
-			orig(self, data, snapPointIndex);
+			//orig(self, data, snapPointIndex);
 
 			if (!SGAConfigClient.Instance.PlayerWorldData)
 				return;
@@ -607,16 +608,16 @@ namespace SGAmod
 				if (floors > 0)
 				{
 					string text = "Floors completed: " + (floors < 0 ? "None" : "" + (int)floors);
-					lenn = new Vector2(-Main.fontMouseText.MeasureString(text).X - 8, 5);
-					Utils.DrawBorderString(spriteBatch, text, pos + new Vector2(-Main.fontMouseText.MeasureString(text).X - 8, 5), Color.DeepSkyBlue);
+					//lenn = new Vector2(-Main.fontMouseText.MeasureString(text).X - 8, 5); //Replace Main.fontMouseText with FontAssets.MouseText. Didn't want to bother fixing what was wrong with MeasureString
+					//Utils.DrawBorderString(spriteBatch, text, pos + new Vector2(-Main.fontMouseText.MeasureString(text).X - 8, 5), Color.DeepSkyBlue);
 				}
 
 				if (cheat)
-					Utils.DrawBorderString(spriteBatch, "CHEAT", pos + new Vector2(-Main.fontMouseText.MeasureString("CHEAT").X - 8, 5)+new Vector2(lenn.X,0), Color.Red);
+					//Utils.DrawBorderString(spriteBatch, "CHEAT", pos + new Vector2(-Main.fontMouseText.MeasureString("CHEAT").X - 8, 5)+new Vector2(lenn.X,0), Color.Red);
 
 				if (darknessUnlocked)
 				{
-					Texture2D DarknessText = ModContent.GetTexture("SGAmod/Items/WatchersOfNull");
+					Texture2D DarknessText = (Texture2D)ModContent.Request<Texture2D>("SGAmod/Items/WatchersOfNull"); //Requires cast now for some reason
 					spriteBatch.Draw(DarknessText, pos2 - new Vector2(self.IsFavorite ? 24 : 48, 16), new Rectangle(0, 0, DarknessText.Width, DarknessText.Height / 13), Color.White, 0, new Vector2(DarknessText.Width, DarknessText.Height/13)/2f, 1f, SpriteEffects.None, 0f);
 				}
 
@@ -656,9 +657,9 @@ namespace SGAmod
 			if (sgaPly.nightmareplayer)
 			{
 				Color color1 = new Color(204, 130, 204);
-				Texture2D tex = Main.inventoryBack10Texture;
+				Texture2D tex = (Texture2D)TextureAssets.InventoryBack10;
 				Color acolor = Color.Lerp(color1, Color.White, 0.5f);
-				Color color3 = Color.Lerp(color1, Color.Lerp(color1, Color.DarkMagenta, 0.33f), 0.50f + (float)Math.Sin(Main.GlobalTime * 2f) / 2f);
+				Color color3 = Color.Lerp(color1, Color.Lerp(color1, Color.DarkMagenta, 0.33f), 0.50f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f) / 2f);
 				spriteBatch.Draw(tex, origin + new Vector2(440, 0), new Rectangle(0, 0, 16, 27), acolor, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 				int i;
 				for (i = 16; i < 128 + 16; i += 16)
@@ -669,7 +670,7 @@ namespace SGAmod
 				Utils.DrawBorderString(spriteBatch, "NIGHTMARE", origin + new Vector2(454, 5), color3);
 
 				//Hmmm color hearts
-				spriteBatch.Draw(SGAmod.Instance.GetTexture("GreyHeart"), origin + new Vector2(80, 37), color3 * (0.50f + (float)Math.Cos(Main.GlobalTime * 2f) / 2f));
+				spriteBatch.Draw(SGAmod.Instance.Assets.Request<Texture2D>("GreyHeart").Value, origin + new Vector2(80, 37), color3 * (0.50f + (float)Math.Cos(Main.GlobalTimeWrappedHourly * 2f) / 2f));
 			}
 
 			if (sgaPly.SatanPlayer)
@@ -686,16 +687,16 @@ namespace SGAmod
 
 			if (drakenUnlocked)
 			{
-				Texture2D DergonHeadTex = ModContent.GetTexture("SGAmod/NPCs/TownNPCs/Dergon_Head");
+				Texture2D DergonHeadTex = (Texture2D)ModContent.Request<Texture2D>("SGAmod/NPCs/TownNPCs/Dergon_Head");
 				CalculatedStyle style = self.GetDimensions();
 				Vector2 offset = style.Position() + new Vector2(style.Width, style.Height);
-				float heartBeat = (Main.GlobalTime) % 1f;
-				if (Main.GlobalTime%2>=1)
-					heartBeat = 1f-((Main.GlobalTime) % 1f);
+				float heartBeat = (Main.GlobalTimeWrappedHourly) % 1f;
+				if (Main.GlobalTimeWrappedHourly%2>=1)
+					heartBeat = 1f-((Main.GlobalTimeWrappedHourly) % 1f);
 
 				Vector2 drawerPos = offset - new Vector2(self.IsFavorite ? 16 : 48, 16);
 
-				spriteBatch.Draw(Main.heartTexture, drawerPos, null, Color.White, 0, Main.heartTexture.Size()/2f, 1.5f+MathHelper.SmoothStep(-1f,1f,(heartBeat) /2f), SpriteEffects.None, 0f);
+				spriteBatch.Draw((Texture2D)TextureAssets.Heart, drawerPos, null, Color.White, 0, TextureAssets.Heart.Size()/2f, 1.5f+MathHelper.SmoothStep(-1f,1f,(heartBeat) /2f), SpriteEffects.None, 0f);
 				spriteBatch.Draw(DergonHeadTex, drawerPos, null, Color.White, 0, DergonHeadTex.Size()/2f, 1f, SpriteEffects.None, 0f);
 
 			}
@@ -703,22 +704,22 @@ namespace SGAmod
 		}
 		//More of the above!
 		//At this rate I honestly don't care anymore, I've already been repeatedly shafted by other people
-		static private bool NoPlacingManifestedItemOnItemFrame(On.Terraria.Player.orig_ItemFitsItemFrame orig, Player self, Item i) => !(i.modItem is IManifestedItem) && orig(self, i);
+		static private bool NoPlacingManifestedItemOnItemFrame(On.Terraria.Player.orig_ItemFitsItemFrame orig, Player self, Item i) => !(i.ModItem is IManifestedItem) && orig(self, i);
 
-		static private bool NoPlacingManifestedItemOnItemRack(On.Terraria.Player.orig_ItemFitsWeaponRack orig, Player self, Item i) => !(i.modItem is IManifestedItem) && orig(self, i);
+		static private bool NoPlacingManifestedItemOnItemRack(On.Terraria.Player.orig_ItemFitsWeaponRack orig, Player self, Item i) => !(i.ModItem is IManifestedItem) && orig(self, i);
 
 		static private void ManifestedPriority(On.Terraria.Player.orig_dropItemCheck orig, Player self)
 		{
 
-			if (Main.mouseItem.type > ItemID.None && !Main.playerInventory && Main.mouseItem.modItem != null && Main.mouseItem.modItem is IManifestedItem)
+			if (Main.mouseItem.type > ItemID.None && !Main.playerInventory && Main.mouseItem.ModItem != null && Main.mouseItem.ModItem is IManifestedItem)
 			{
 				for (int k = 49; k > 0; k--)
 				{
 					Item item = self.inventory[k];
-					if (!(self.inventory[k].modItem is IManifestedItem) || k == 0)
+					if (!(self.inventory[k].ModItem is IManifestedItem) || k == 0)
 					{
 						//Not so fast!
-						int index = Item.NewItem(self.position, item.type, item.stack, false, item.prefix, false, false);
+						int index = Item.NewItem(null, self.position, item.type, item.stack, false, item.prefix, false, false); //Passing null for IEntitySource works, but it may break other functionality
 						Main.item[index] = item.Clone();
 						Main.item[index].position = self.position;
 						item.TurnToAir();
@@ -731,7 +732,7 @@ namespace SGAmod
 
 		static private void DontDropManifestedItems(On.Terraria.Player.orig_DropSelectedItem orig, Player self)
 		{
-			if (self.inventory[self.selectedItem].modItem is IManifestedItem || Main.mouseItem.modItem is IManifestedItem) return;
+			if (self.inventory[self.selectedItem].ModItem is IManifestedItem || Main.mouseItem.ModItem is IManifestedItem) return;
 			else orig(self);
 		}
 
@@ -821,11 +822,11 @@ namespace SGAmod
 			{
 				if (Main.rand.Next(3) == 0 && sgaply.AddCooldownStack(time))
 				{
-					Projectile.NewProjectile(self.Center, Vector2.Zero, ModContent.ProjectileType<Items.Accessories.PhaethonEyeProcEffect>(), 0, 0, self.whoAmI);
+					Projectile.NewProjectile(null, self.Center, Vector2.Zero, ModContent.ProjectileType<Items.Accessories.PhaethonEyeProcEffect>(), 0, 0, self.whoAmI);
 					return;
 				}
 			}
-			orig(self, buff, time, quiet);
+			//orig(self, buff, time, quiet);
 
 		}
 
@@ -854,21 +855,21 @@ namespace SGAmod
 			Main.spriteBatch.Begin(default, BlendState.Additive, SamplerState.PointWrap, default, default, default, Main.GameViewMatrix.TransformationMatrix);
 
 			for (int k = 0; k < Main.maxProjectiles; k++) //projectiles
-				if (Main.projectile[k].active && Main.projectile[k].modProjectile is IDrawAdditive)
-					(Main.projectile[k].modProjectile as IDrawAdditive).DrawAdditive(Main.spriteBatch);
+				if (Main.projectile[k].active && Main.projectile[k].ModProjectile is IDrawAdditive)
+					(Main.projectile[k].ModProjectile as IDrawAdditive).DrawAdditive(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 		}
 
 
-		private static void Main_DrawPlayers(On.Terraria.Main.orig_DrawPlayers orig, Main self)
+		/*private static void Main_DrawPlayers(On.Terraria.Main.orig_DrawPlayers orig, Main self)
 		{
 			orig(self);
 			if (SGAPocketDim.WhereAmI != null)
 			{
 				SGAPocketDim.PassDraws(3);
 			}
-		}
+		}*/
 
 		static private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
 		{
@@ -884,7 +885,7 @@ namespace SGAmod
 					NPC npc = Main.npc[i];
 					if (npc.active)
 					{
-						if (npc.modNPC != null && npc.modNPC is NPCs.Sharkvern.SharkvernCloudMiniboss cloud)
+						if (npc.ModNPC != null && npc.ModNPC is NPCs.Sharkvern.SharkvernCloudMiniboss cloud)
 						{
 							cloud.Draw(Main.spriteBatch, Lighting.GetColor((int)npc.Center.X >> 4, (int)npc.Center.Y >> 4, Color.White));
 						}
@@ -905,7 +906,7 @@ namespace SGAmod
 					Projectile projectile = Main.projectile[i];
 					if (projectile.active)
 					{
-						if (projectile.modProjectile != null && projectile.modProjectile is Items.Weapons.SeriousSam.LavaRocks Lava)
+						if (projectile.ModProjectile != null && projectile.ModProjectile is Items.Weapons.SeriousSam.LavaRocks Lava)
 						{
 							Lava.DrawLava();
 						}
@@ -921,12 +922,12 @@ namespace SGAmod
 			}
 
 		}
-		static private SoundEffectInstance Main_PlaySound(On.Terraria.Main.orig_PlaySound_int_int_int_int_float_float orig, int type, int x = -1, int y = -1, int Style = 1, float volumeScale = 1f, float pitchOffset = 0f)
+		/*static private SoundEffectInstance Main_PlaySound(On.Terraria.Main.orig_PlaySound_int_int_int_int_float_float orig, int type, int x = -1, int y = -1, int Style = 1, float volumeScale = 1f, float pitchOffset = 0f)
 		{
 			Dimensions.NPCs.NullWatcher.SoundChecks(new Vector2(x, y));
 			return orig(type, x, y, Style, volumeScale, pitchOffset);
 
-		}
+		}*/
 
 
 		private static void Main_DrawTiles(On.Terraria.Main.orig_DrawTiles orig, Main self, bool solidOnly, int waterStyleOverride)
@@ -962,7 +963,7 @@ namespace SGAmod
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(1, 1, 1));
 			}
-			orig(self, solidOnly, waterStyleOverride);
+			//orig(self, solidOnly, waterStyleOverride);
 
 			SGAmod.BeforeTilesToDraw = new List<CustomSpecialDrawnTiles>(SGAmod.BeforeTiles);
 			SGAmod.BeforeTilesAdditiveToDraw = new List<CustomSpecialDrawnTiles>(SGAmod.BeforeTilesAdditive);

@@ -36,7 +36,7 @@ namespace SGAmod
             return true;
 
             if (projectile.Throwing().thrown)
-                projectile.thrown = true;
+                projectile.DamageType = DamageClass.Throwing;
                     return true;
         }
 #endif
@@ -57,8 +57,8 @@ namespace SGAmod
         public override GlobalItem Clone(Item item, Item itemClone)
         {
             UThrowingWeapon myClone = (UThrowingWeapon)base.Clone(item, itemClone);
-            myClone.thrown = item.thrown;
-            myClone.thrown = thrown;
+            myClone.DamageType = item.thrown;
+            myClone.DamageType = thrown;
             return myClone;
         }
 
@@ -71,22 +71,22 @@ namespace SGAmod
             if (weapon.thrown)
             {
                 // Get the vanilla damage tooltip
-                TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.mod == "Terraria");
+                TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.Mod == "Terraria");
                 if (tt != null)
                 {
                     // We want to grab the last word of the tooltip, which is the translated word for 'damage' (depending on what langauge the player is using)
                     // So we split the string by whitespace, and grab the last word from the returned arrays to get the damage word, and the first to get the damage shown in the tooltip
-                    string[] splitText = tt.text.Split(' ');
+                    string[] splitText = tt.Text.Split(' ');
                     string damageValue = splitText.First();
                     string damageWord = splitText.Last();
                     // Change the tooltip text
-                    tt.text = damageValue + " (U)Thrown " + damageWord;
+                    tt.Text = damageValue + " (U)Thrown " + damageWord;
                 }
                 // Get the vanilla crit tooltip
-                tt = tooltips.FirstOrDefault(x => x.Name == "CritChance" && x.mod == "Terraria");
+                tt = tooltips.FirstOrDefault(x => x.Name == "CritChance" && x.Mod == "Terraria");
                 if (tt != null)
                 {
-                    string[] thetext = tt.text.Split(' ');
+                    string[] thetext = tt.Text.Split(' ');
                     string newline = "";
                     List<string> valuez = new List<string>();
                     int counter = 0;
@@ -103,7 +103,7 @@ namespace SGAmod
                     {
                         newline += text3;
                     }
-                    tt.text = newline;
+                    tt.Text = newline;
                 }
             }
             #endregion
@@ -208,7 +208,7 @@ namespace SGAmod
                         stuff.Add("Tossable");
                         stuff.Add("Impacting");
                         stuff.Add("Olympian");
-                        return sga.PrefixType(stuff[Main.rand.Next(0, stuff.Count)]);
+                        return sga.Find<ModPrefix>(stuff[Main.rand.Next(0, stuff.Count)]).Type;
                     }
                 }
                 switch (rand.Next(13))
@@ -273,7 +273,7 @@ namespace SGAmod
         public static bool thrown(this Item item)
         {
             return item.thrown;
-            if (item.modItem == null)
+            if (item.ModItem == null)
                 return false;
             return item.GetGlobalItem<UThrowingWeapon>().thrown;
         }
@@ -281,7 +281,7 @@ namespace SGAmod
         {
             return projectile.thrown;
             #region oldcode
-            if (projectile.modProjectile == null)
+            if (projectile.ModProjectile == null)
                 return false;
             return projectile.GetGlobalProjectile<UThrowingProjectile>().thrown;
             #endregion
@@ -324,24 +324,24 @@ namespace SGAmod
         {
             get
             {
-                return player.thrownCost33;
+                return Player.thrownCost33;
             }
 
             set
             {
-                player.thrownCost33 = value;
+                Player.thrownCost33 = value;
             }
         }
         public bool thrownCost50
         {
             get
             {
-                return player.thrownCost50;
+                return Player.thrownCost50;
             }
 
             set
             {
-                player.thrownCost50 = value;
+                Player.thrownCost50 = value;
             }
         }
 
@@ -349,12 +349,12 @@ namespace SGAmod
         {
             get
             {
-                return player.thrownVelocity;
+                return Player.thrownVelocity;
             }
 
             set
             {
-                player.thrownVelocity = value;
+                Player.thrownVelocity = value;
             }
         }
             
@@ -362,24 +362,24 @@ namespace SGAmod
         {
             get
             {
-                return player.thrownDamage;
+                return Player.GetDamage(DamageClass.Throwing);
             }
 
             set
             {
-                player.thrownDamage = value;
+                Player.GetDamage(DamageClass.Throwing) = value;
             }
         }
         public int thrownCrit
         {
             get
             {
-                return player.thrownCrit;
+                return Player.GetCritChance(DamageClass.Throwing);
             }
 
             set
             {
-                player.thrownCrit = value;
+                Player.GetCritChance(DamageClass.Throwing) = value;
             }
         }
 
@@ -401,22 +401,22 @@ namespace SGAmod
             float pre5 = thrownVelocity;
 
             //Modded
-            thrownCrit += player.thrownCrit - 4;
-            thrownDamage += player.thrownDamage - 1f;
-            if (player.thrownCost33 == true)
+            thrownCrit += Player.GetCritChance(DamageClass.Throwing) - 4;
+            thrownDamage += Player.GetDamage(DamageClass.Throwing) - 1f;
+            if (Player.thrownCost33 == true)
                 thrownCost33 = true;
-            if (player.thrownCost50 == true)
+            if (Player.thrownCost50 == true)
                 thrownCost50 = true;
-            thrownVelocity += player.thrownVelocity - 1f;
+            thrownVelocity += Player.thrownVelocity - 1f;
 
             //Vanilla
-            player.thrownCrit += pre1-4;
-            player.thrownDamage += pre2 - 1f;
+            Player.GetCritChance(DamageClass.Throwing) += pre1-4;
+            Player.GetDamage(DamageClass.Throwing) += pre2 - 1f;
             if (pre3 == true)
-                player.thrownCost33 = true;
+                Player.thrownCost33 = true;
             if (pre4 == true)
-                player.thrownCost50 = true;
-            player.thrownVelocity += pre5 - 1f;
+                Player.thrownCost50 = true;
+            Player.thrownVelocity += pre5 - 1f;
         }
 #endif
         #endregion

@@ -15,23 +15,23 @@ namespace SGAmod.HavocGear.Projectiles
     	public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Jaws");
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 240f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 15f;
-			ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 3f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 240f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 15f;
+			ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 3f;
 		}
        
 	    public override void SetDefaults()
         {
         	Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Amarok);
-			projectile.extraUpdates = 0;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = 99;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.scale = 1f;
+			Projectile.extraUpdates = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = 99;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.scale = 1f;
         }
 
 		public override void SendExtraAI(System.IO.BinaryWriter writer)
@@ -61,27 +61,27 @@ namespace SGAmod.HavocGear.Projectiles
 				if (spinners[k] == -6)
 				{
 					spinners[k] = 1;
-					int newb = Projectile.NewProjectile(projectile.Center, new Vector2(0f, 0f), ModContent.ProjectileType<SnappyTooth>(), (int)(projectile.damage * 1f), projectile.knockBack, Main.myPlayer, 0f, (float)Main.player[projectile.owner].whoAmI);
+					int newb = Projectile.NewProjectile(Projectile.Center, new Vector2(0f, 0f), ModContent.ProjectileType<SnappyTooth>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer, 0f, (float)Main.player[Projectile.owner].whoAmI);
 					Main.projectile[newb].penetrate = 4;
-					Main.projectile[newb].ranged = false;
-					Main.projectile[newb].melee = true;
+					// Main.projectile[newb].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+					Main.projectile[newb].DamageType = DamageClass.Melee;
 					Main.projectile[newb].usesIDStaticNPCImmunity = true;
 					Main.projectile[newb].idStaticNPCHitCooldown = 10;
 					Main.projectile[newb].netUpdate = true;
 					orbitors[k] = Main.projectile[newb];
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 				else
 				{
 					if (orbitors[k] != null)
 					{
-						if (orbitors[k].type == mod.ProjectileType("SnappyTooth"))
+						if (orbitors[k].type == Mod.Find<ModProjectile>("SnappyTooth").Type)
 						{
 							double anglez = (k / ((double)5f));
 							double angle = ((float)(started / 5f)) + 2.0 * Math.PI * anglez;
 							Vector2 loc = new Vector2(-1f + (float)((Math.Cos(angle) * 16f)), (float)((Math.Sin(angle) * 16f)));
-							Vector2 gohere = projectile.Center + loc;
-							orbitors[k].Center = gohere + projectile.velocity;
+							Vector2 gohere = Projectile.Center + loc;
+							orbitors[k].Center = gohere + Projectile.velocity;
 							orbitors[k].timeLeft = 3;
 							orbitors[k].velocity = loc * 0.05f;
 

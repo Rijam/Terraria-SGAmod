@@ -22,9 +22,9 @@ using Terraria.GameContent.UI;
 using Idglibrary;
 using System.IO;
 using System.Diagnostics;
-using CalamityMod;
-using CalamityMod.CalPlayer;
-using CalamityMod.World;
+//using CalamityMod;
+//using CalamityMod.CalPlayer;
+//using CalamityMod.World;
 using SGAmod.NPCs;
 using SGAmod.NPCs.Wraiths;
 using SGAmod.NPCs.Hellion;
@@ -109,7 +109,7 @@ namespace SGAmod
 				int vec2 = reader.ReadInt32();
 				Player ply = Main.player[reader.ReadInt32()];
 				NPC.SpawnOnPlayer(ply.whoAmI, crate);
-				if (crate == NPCType("CratrosityPML"))
+				if (crate == ModContent.NPCType<CratrosityPML>())
 				{
 					//SgaLib.Chat("Test1",255,255,255);
 
@@ -142,7 +142,7 @@ namespace SGAmod
 				int ai4 = reader.ReadInt32();
 
 				//NPC.NewNPC(wherex, wherey, ModContent.NPCType<CaliburnGuardian>(), 0, ai1, ai2, ai3, ai4);
-				NPC.NewNPC(wherex, wherey, npc, 0, ai1, ai2, ai3, ai4);
+				NPC.NewNPC(null, wherex, wherey, npc, 0, ai1, ai2, ai3, ai4); //again passing null here may not be the correct solution
 				Player ply = Main.player[reader.ReadInt32()];
 				return;
 
@@ -248,7 +248,7 @@ namespace SGAmod
 
 				if (player >= 0 && player < Main.maxPlayers)
 				{
-					SGAPlayer sgaplayer = Main.player[player].GetModPlayer(this, typeof(SGAPlayer).Name) as SGAPlayer;
+					SGAPlayer sgaplayer = Main.player[player].GetModPlayer<SGAPlayer>();
 					sgaplayer.ammoLeftInClip = ammoLeftInClip;
 					sgaplayer.ammoLeftInClipMax = ammoLeftInClipMax;
 					sgaplayer.ammoLeftInClipMaxLastHeld = ammoLeftInClipMaxLastHeld;

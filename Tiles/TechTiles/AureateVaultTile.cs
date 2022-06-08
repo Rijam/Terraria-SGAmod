@@ -15,6 +15,7 @@ using Terraria.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Tiles.TechTiles
 {
@@ -35,7 +36,7 @@ namespace SGAmod.Tiles.TechTiles
 				Main.LocalPlayer.AddBuff(ModContent.BuffType<Buffs.GildingAuraBuff>(),3);
 			}
         }
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
 		{
 			TileID.Sets.DrawsWalls[Type] = true;
 			Main.tileFrameImportant[Type] = true;
@@ -78,7 +79,7 @@ namespace SGAmod.Tiles.TechTiles
 			b = 0;
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			/*Main.playerInventory = true;
 			Main.mouseRightRelease = false;
@@ -90,7 +91,7 @@ namespace SGAmod.Tiles.TechTiles
 			Main.LocalPlayer.talkNPC = -1;
 			Main.npcShop = 0;
 			Main.playerInventory = true;*/
-			Main.PlaySound(SoundID.DoorOpen);
+			SoundEngine.PlaySound(SoundID.DoorOpen);
 
 			Recipe.FindRecipes();
 
@@ -107,7 +108,7 @@ namespace SGAmod.Tiles.TechTiles
 		// - ((tile.frameX / 36) % 2)
 		public static Point GetRealAureateVaultCorner(Point here, Tile tile)
 		{
-			Point coords = new Point(here.X - ((tile.frameX) % 36) / 18, here.Y - ((tile.frameY) % 36) / 18);
+			Point coords = new Point(here.X - ((tile.TileFrameX) % 36) / 18, here.Y - ((tile.TileFrameY) % 36) / 18);
 			return coords;
 
 		}
@@ -138,12 +139,12 @@ namespace SGAmod.Tiles.TechTiles
 			Tile tile = Framing.GetTileSafely(i, j);
 			Point coords = GetRealAureateVaultCorner(new Point(i, j), tile);
 
-			if (tile.type == ModContent.TileType<ChestHopperTile>())
+			if (tile.TileType == ModContent.TileType<ChestHopperTile>())
 				ModContent.GetInstance<ChestHopperTE>().Kill(coords.X, coords.Y);
 
 			if (item > 0)
 			{
-				if (((tile.frameX) % 36) / 18 == 0 && ((tile.frameY) % 36) / 18 == 0)
+				if (((tile.TileFrameX) % 36) / 18 == 0 && ((tile.TileFrameY) % 36) / 18 == 0)
 					Item.NewItem(coords.X * 16, coords.Y * 16, 32, 32, item);
 			}
 
@@ -154,7 +155,7 @@ namespace SGAmod.Tiles.TechTiles
 			Point there = new Point(x, y);
 			Tile tile = Framing.GetTileSafely(there.X, there.Y);
 
-			if (Main.tile[x, y].type == base.Type && there == GetRealAureateVaultCorner(there, tile))
+			if (Main.tile[x, y].TileType == base.Type && there == GetRealAureateVaultCorner(there, tile))
             {
                 if (nextSpecialDrawIndex < Main.specX.Length)
                 {
@@ -170,9 +171,9 @@ namespace SGAmod.Tiles.TechTiles
 			Point there = new Point(i, j);
 			Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 			Tile tile = Framing.GetTileSafely(i, j);
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
-				if (tile.frameX == 0 && tile.frameY == 0)
+				if (tile.TileFrameX == 0 && tile.TileFrameY == 0)
 				{
 
 					//Main.spriteBatch.End();
@@ -183,13 +184,13 @@ namespace SGAmod.Tiles.TechTiles
 					int texHeight = coinTexture.Height / 8;
 					Vector2 offset = new Vector2(coinTexture.Width, texHeight / 8) / 2f;
 
-					Vector2 baseoffset = zerooroffset+(new Point(i + 1, j + 1).ToVector2() * 16) + new Vector2(0, (float)Math.Sin(Main.GlobalTime / 2f) * 3f);
+					Vector2 baseoffset = zerooroffset+(new Point(i + 1, j + 1).ToVector2() * 16) + new Vector2(0, (float)Math.Sin(Main.GlobalTimeWrappedHourly / 2f) * 3f);
 
 					List<(Vector3,int)> orderedValues = new List<(Vector3, int)>();
 
 					for (int index = 0; index < 10; index += 1)
 					{
-						float time = Main.GlobalTime;
+						float time = Main.GlobalTimeWrappedHourly;
 
 						float percent = rando.NextFloat(1f);
 						float rate = rando.NextFloat(0.20f)+0.90f;
@@ -219,13 +220,13 @@ namespace SGAmod.Tiles.TechTiles
 						spriteBatch.Draw(coinTexture, baseoffset + new Vector2(tuple.Item1.X, tuple.Item1.Y) - Main.screenPosition, rect, Color.White, 0, offset, 0.75f + tuple.Item1.Z * 0.25f, SpriteEffects.None, 0f);
 					}
 
-					Texture2D tex = ModContent.GetTexture("SGAmod/Items/Placeable/TechPlaceable/AureateVaultItem");
+					Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Items/Placeable/TechPlaceable/AureateVaultItem");
 					spriteBatch.Draw(tex, baseoffset - Main.screenPosition, null, Color.White, 0, tex.Size() / 2f, 1, SpriteEffects.None, 0f);
 
 					for (int ii = 0; ii < 20; ii += 1)
 					{
 						Texture2D texstar = Main.starTexture[rando.Next(Main.starTexture.Length)];
-						spriteBatch.Draw(texstar, baseoffset + new Vector2(rando.NextFloat(-12, 12), rando.NextFloat(-16, 16)) - Main.screenPosition, null, Color.PaleGoldenrod*0.50f, Main.star[rando.Next(Main.star.Length)].rotation, texstar.Size() / 2f, rando.NextFloat(0.40f, 0.40f) * MathHelper.Clamp(((float)Math.Sin(Main.GlobalTime * rando.NextFloat(3.8f, 5.5f)) * rando.NextFloat(2f, 3f)),0f,1f), SpriteEffects.None, 0f);
+						spriteBatch.Draw(texstar, baseoffset + new Vector2(rando.NextFloat(-12, 12), rando.NextFloat(-16, 16)) - Main.screenPosition, null, Color.PaleGoldenrod*0.50f, Main.star[rando.Next(Main.star.Length)].rotation, texstar.Size() / 2f, rando.NextFloat(0.40f, 0.40f) * MathHelper.Clamp(((float)Math.Sin(Main.GlobalTimeWrappedHourly * rando.NextFloat(3.8f, 5.5f)) * rando.NextFloat(2f, 3f)),0f,1f), SpriteEffects.None, 0f);
 					}
 
 					foreach ((Vector3, int) tuple in orderedValues)

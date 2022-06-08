@@ -9,6 +9,7 @@ using Terraria.Enums;
 using Idglibrary;
 using SGAmod.Effects;
 using System.Linq;
+using Terraria.Audio;
 
 namespace SGAmod.Projectiles
 {
@@ -19,25 +20,25 @@ namespace SGAmod.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Moonlight Wave");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 20;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = 8;
-            projectile.alpha = 40;
-            projectile.timeLeft = 500;
-            projectile.light = 0.75f;
-            projectile.extraUpdates = 1;
-            projectile.ignoreWater = true;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 6;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = 8;
+            Projectile.alpha = 40;
+            Projectile.timeLeft = 500;
+            Projectile.light = 0.75f;
+            Projectile.extraUpdates = 1;
+            Projectile.ignoreWater = true;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 6;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -53,7 +54,7 @@ namespace SGAmod.Projectiles
             basicEffect.Texture = SGAmod.ExtraTextures[21];*/
             /*effect.Parameters["WorldViewProjection"].SetValue(WVP.View(Main.GameViewMatrix.Zoom) * WVP.Projection());
             effect.Parameters["imageTexture"].SetValue(SGAmod.ExtraTextures[21]);
-            effect.Parameters["coordOffset"].SetValue(new Vector2(0, Main.GlobalTime * -1f));
+            effect.Parameters["coordOffset"].SetValue(new Vector2(0, Main.GlobalTimeWrappedHourly * -1f));
             effect.Parameters["coordMultiplier"].SetValue(1f);
             effect.Parameters["strength"].SetValue(1f);
             string pass = "DefaultPass";
@@ -131,38 +132,38 @@ namespace SGAmod.Projectiles
 
             */
 
-            for (int i = 0; i < projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
+            for (int i = 0; i < Projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
             {
-                if (projectile.oldPos[i] == default)
-                    projectile.oldPos[i] = projectile.position;
+                if (Projectile.oldPos[i] == default)
+                    Projectile.oldPos[i] = Projectile.position;
             }
 
             TrailHelper trail = new TrailHelper("BasicEffectPass", Main.extraTexture[21]);
-            trail.projsize = projectile.Hitbox.Size() / 2f;
-            trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
+            trail.projsize = Projectile.Hitbox.Size() / 2f;
+            trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
             trail.trailThickness = 13;
             trail.trailThicknessIncrease = 15;
-            trail.DrawTrail(projectile.oldPos.ToList(),projectile.Center);
+            trail.DrawTrail(Projectile.oldPos.ToList(),Projectile.Center);
 
 
 
-            Texture2D texture = Main.projectileTexture[mod.ProjectileType(this.GetType().Name)];
+            Texture2D texture = Main.projectileTexture[Mod.Find<ModProjectile>(this.GetType().Name).Type];
             Vector2 origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
 
-            spriteBatch.Draw(texture, projectile.Center + new Vector2(1, 0) - Main.screenPosition, null, Color.White, projectile.rotation, origin, new Vector2(1f, 1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(texture, Projectile.Center + new Vector2(1, 0) - Main.screenPosition, null, Color.White, Projectile.rotation, origin, new Vector2(1f, 1f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
             return false;
         }
 
         public override bool PreKill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item94, projectile.Center);
-            Main.PlaySound(SoundID.Item89, projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item89, Projectile.Center);
             for (float num475 = -6 - extraparticles; num475 < 6 + extraparticles; num475 += 0.3f)
             {
-                float anglehalf = (float)(((double)projectile.velocity.ToRotation()) + 2.0 * Math.PI);
-                Vector2 startloc2 = projectile.velocity;
+                float anglehalf = (float)(((double)Projectile.velocity.ToRotation()) + 2.0 * Math.PI);
+                Vector2 startloc2 = Projectile.velocity;
                 startloc2.Normalize();
-                Vector2 startloc = (projectile.Center + (startloc2 * 12f));
+                Vector2 startloc = (Projectile.Center + (startloc2 * 12f));
                 int dust = Dust.NewDust(new Vector2(startloc.X, startloc.Y), 0, 0, 185);
 
                 float anglehalf2 = anglehalf + ((float)Math.PI / 2f);
@@ -171,7 +172,7 @@ namespace SGAmod.Projectiles
                 Main.dust[dust].scale = 2f - Math.Abs(num475) / 4f;
                 Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
                 Main.dust[dust].velocity = (randomcircle / 3f);
-                Main.dust[dust].velocity += (projectile.velocity * num475);
+                Main.dust[dust].velocity += (Projectile.velocity * num475);
                 Main.dust[dust].noGravity = true;
             }
 
@@ -180,14 +181,14 @@ namespace SGAmod.Projectiles
 
         public override void AI()
         {
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y * projectile.spriteDirection, (double)projectile.velocity.X * projectile.spriteDirection) + 1.57f;
+            Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y * Projectile.spriteDirection, (double)Projectile.velocity.X * Projectile.spriteDirection) + 1.57f;
 
             for (float num475 = -2; num475 < 3; num475 += 2)
             {
-                float anglehalf = (float)(((double)projectile.velocity.ToRotation()) + 2.0 * Math.PI);
-                Vector2 startloc2 = projectile.velocity;
+                float anglehalf = (float)(((double)Projectile.velocity.ToRotation()) + 2.0 * Math.PI);
+                Vector2 startloc2 = Projectile.velocity;
                 startloc2.Normalize();
-                Vector2 startloc = (projectile.Center + (startloc2 * 8f));
+                Vector2 startloc = (Projectile.Center + (startloc2 * 8f));
                 int dust = Dust.NewDust(new Vector2(startloc.X, startloc.Y), 0, 0, 185);
 
                 float anglehalf2 = anglehalf + ((float)Math.PI / 2f);
@@ -196,7 +197,7 @@ namespace SGAmod.Projectiles
                 Main.dust[dust].scale = 1.2f - Math.Abs(num475) / 5f;
                 Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
                 Main.dust[dust].velocity = (randomcircle / 3f);
-                Main.dust[dust].velocity += projectile.velocity / 2f;
+                Main.dust[dust].velocity += Projectile.velocity / 2f;
                 Main.dust[dust].noGravity = true;
             }
 
@@ -204,11 +205,11 @@ namespace SGAmod.Projectiles
             for (float num475 = -2f; num475 < 3f; num475 += 4f)
             {
 
-                float anglehalf = (float)(((double)projectile.velocity.ToRotation()) + 2.0 * Math.PI);
-                Vector2 startloc = (projectile.Center + (projectile.velocity * 1f));
+                float anglehalf = (float)(((double)Projectile.velocity.ToRotation()) + 2.0 * Math.PI);
+                Vector2 startloc = (Projectile.Center + (Projectile.velocity * 1f));
                 int dust = Dust.NewDust(new Vector2(startloc.X, startloc.Y), 0, 0, 185);
                 Main.dust[dust].scale = 1f;
-                Main.dust[dust].velocity = projectile.velocity;
+                Main.dust[dust].velocity = Projectile.velocity;
                 Main.dust[dust].noGravity = true;
                 if (Math.Abs(num475) > 0)
                 {
@@ -222,13 +223,13 @@ namespace SGAmod.Projectiles
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
-            target.AddBuff(mod.BuffType("MoonLightCurse"), 60 * 8);
+            target.AddBuff(Mod.Find<ModBuff>("MoonLightCurse").Type, 60 * 8);
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             if (this.GetType() == typeof(MoonlightWaveLv2))
-                target.AddBuff(mod.BuffType("MoonLightCurse"), 60 * 5);
+                target.AddBuff(Mod.Find<ModBuff>("MoonLightCurse").Type, 60 * 5);
         }
 
     }
@@ -239,34 +240,34 @@ namespace SGAmod.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Moonlight Wave");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 30;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 30;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 42;
-            projectile.height = 42;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = 12;
-            projectile.alpha = 40;
-            projectile.timeLeft = 500;
-            projectile.light = 1.15f;
-            projectile.extraUpdates = 1;
-            projectile.ignoreWater = true;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 6;
+            Projectile.width = 42;
+            Projectile.height = 42;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = 12;
+            Projectile.alpha = 40;
+            Projectile.timeLeft = 500;
+            Projectile.light = 1.15f;
+            Projectile.extraUpdates = 1;
+            Projectile.ignoreWater = true;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 6;
         }
 
         public override void AI()
         {
             base.AI();
-            if (projectile.ai[0] < 1)
+            if (Projectile.ai[0] < 1)
             {
-                projectile.ai[0] = 1;
-                Main.PlaySound(SoundID.Item30, projectile.Center);
+                Projectile.ai[0] = 1;
+                SoundEngine.PlaySound(SoundID.Item30, Projectile.Center);
             }
         }
 
@@ -280,56 +281,56 @@ namespace SGAmod.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Moonlight Wave");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 40;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 40;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 52;
-            projectile.height = 52;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.alpha = 40;
-            projectile.timeLeft = 600;
-            projectile.light = 1.5f;
-            projectile.extraUpdates = 1;
-            projectile.ignoreWater = true;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 30;
-            Main.PlaySound(SoundID.Item119, projectile.Center);
+            Projectile.width = 52;
+            Projectile.height = 52;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 40;
+            Projectile.timeLeft = 600;
+            Projectile.light = 1.5f;
+            Projectile.extraUpdates = 1;
+            Projectile.ignoreWater = true;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 30;
+            SoundEngine.PlaySound(SoundID.Item119, Projectile.Center);
         }
 
         public override bool PreKill(int timeLeft)
         {
             base.PreKill(timeLeft);
-            Main.PlaySound(SoundID.Item124, projectile.Center);
-            Main.PlaySound(SoundID.NPCDeath60, projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item124, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.NPCDeath60, Projectile.Center);
             return true;
         }
 
         public override void AI()
         {
             base.AI();
-            if (projectile.ai[0] < 1)
+            if (Projectile.ai[0] < 1)
             {
-                projectile.ai[0] = 1;
-                keepspeed = (projectile.velocity).Length();
-                Main.PlaySound(SoundID.Item119, projectile.Center);
+                Projectile.ai[0] = 1;
+                keepspeed = (Projectile.velocity).Length();
+                SoundEngine.PlaySound(SoundID.Item119, Projectile.Center);
             }
 
-            projectile.spriteDirection = (projectile.velocity.X > 0).ToDirectionInt();
+            Projectile.spriteDirection = (Projectile.velocity.X > 0).ToDirectionInt();
 
-            NPC target = Main.npc[Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), false, true, true, projectile)];
+            NPC target = Main.npc[Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), false, true, true, Projectile)];
             if (target != null)
             {
-                if ((target.Center - projectile.Center).Length() < 1000f)
+                if ((target.Center - Projectile.Center).Length() < 1000f)
                 {
-                    projectile.velocity = projectile.velocity + (projectile.DirectionTo(target.Center) * ((float)keepspeed * homing));
-                    projectile.velocity.Normalize();
-                    projectile.velocity = projectile.velocity * (float)keepspeed;
+                    Projectile.velocity = Projectile.velocity + (Projectile.DirectionTo(target.Center) * ((float)keepspeed * homing));
+                    Projectile.velocity.Normalize();
+                    Projectile.velocity = Projectile.velocity * (float)keepspeed;
                 }
             }
 

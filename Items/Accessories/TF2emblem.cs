@@ -10,6 +10,7 @@ using Idglibrary;
 using System.IO;
 using Terraria.ModLoader.IO;
 using System.Linq;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Accessories
 {
@@ -38,7 +39,7 @@ namespace SGAmod.Items.Accessories
 				for (int i = 0; i < player.armor.Length; i += 1)
 				{
 					Item testby = player.armor[i];
-					if (testby?.modItem is TF2Emblem && (matchtype < 0 || testby.type == matchtype))
+					if (testby?.ModItem is TF2Emblem && (matchtype < 0 || testby.type == matchtype))
 					{
 						index = i;
 						break;
@@ -51,7 +52,7 @@ namespace SGAmod.Items.Accessories
 				for (int i = 0; i < player.inventory.Length; i += 1)
 				{
 					Item testby = player.inventory[i];
-					if (testby?.modItem is TF2Emblem && (matchtype < 0 || testby.type == matchtype))
+					if (testby?.ModItem is TF2Emblem && (matchtype < 0 || testby.type == matchtype))
 					{
 						index = i;
 						break;
@@ -61,7 +62,7 @@ namespace SGAmod.Items.Accessories
 
 			if (index>-1)
 			{
-				return lookataccessories ? player.armor[index]?.modItem as TF2Emblem : player.inventory[index]?.modItem as TF2Emblem;
+				return lookataccessories ? player.armor[index]?.ModItem as TF2Emblem : player.inventory[index]?.ModItem as TF2Emblem;
 			}
 			return null;
 		}
@@ -85,11 +86,11 @@ namespace SGAmod.Items.Accessories
         {
 			try
 			{
-				if (recipe.createItem?.modItem is TF2Emblem)
+				if (recipe.createItem?.ModItem is TF2Emblem)
 				{
 					foreach (Item item in recipe.requiredItem)
 					{
-						if (item?.modItem is TF2Emblem tf2emblemrequired)
+						if (item?.ModItem is TF2Emblem tf2emblemrequired)
 						{
 							//foreach (Item item2 in Main.LocalPlayer.inventory.Where(testby => testby.type == item.type))
 							//{
@@ -113,10 +114,10 @@ namespace SGAmod.Items.Accessories
 			bool canequip = true;
 			for (int x = 3; x < 8 + player.extraAccessorySlots; x++)
 			{
-				if (player.armor[x].modItem != null)
+				if (player.armor[x].ModItem != null)
 				{
 					int myType = (player.armor[x]).type;
-					Type myclass = player.armor[x].modItem.GetType();
+					Type myclass = player.armor[x].ModItem.GetType();
 					if (myclass.BaseType == typeof(TF2Emblem) || myclass == typeof(TF2Emblem) || myclass.IsSubclassOf(typeof(TF2Emblem)))
 					{
 
@@ -136,11 +137,11 @@ namespace SGAmod.Items.Accessories
 
 				if (dofanfare)
 				{
-					if (item.owner >= 0 && item.owner < 255)
+					if (Item.owner >= 0 && Item.owner < 255)
 					{
-						Player player = Main.player[item.owner];
+						Player player = Main.player[Item.owner];
 						Projectile.NewProjectile(player.Center, Vector2.UnitY * -5f, ProjectileID.ConfettiGun, 0, 0);
-						Main.PlaySound(SGAmod.Instance.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/achievement_earned"), player.Center);
+						SoundEngine.PlaySound(SGAmod.Instance.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/achievement_earned"), player.Center);
 					}
 
 				}
@@ -151,7 +152,7 @@ namespace SGAmod.Items.Accessories
 		{
 			writer.Write(xp.Item1);
 		}
-		public override void NetRecieve(BinaryReader reader)
+		public override void NetReceive(BinaryReader reader)
 		{
 			xp.Item1 = reader.ReadInt32();
 			CapXpIfCapped();
@@ -176,33 +177,33 @@ namespace SGAmod.Items.Accessories
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			if (xp.Item2)
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", Idglib.ColorText(Main.hslToRgb((Main.GlobalTime * 3f) % 1f, 1f, 0.75f), "MAXED!")));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", Idglib.ColorText(Main.hslToRgb((Main.GlobalTimeWrappedHourly * 3f) % 1f, 1f, 0.75f), "MAXED!")));
 			else
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", "Contract Xp: " + xp.Item1 + "/" + XpRequiredToMax + " (" + XpPercent * 100f + "%)"));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", "Contract Xp: " + xp.Item1 + "/" + XpRequiredToMax + " (" + XpPercent * 100f + "%)"));
 
 			if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl))
 			{
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "Emblems gain experience as you slay enemies, gradually gaining their stats")));
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "XP gained is relative to the ammount of money enemies would drop")));
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "At max experience, they fully gain their listed stats")));
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "Emblems can only be crafted into their higher ranks at max experience")));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "Emblems gain experience as you slay enemies, gradually gaining their stats")));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "XP gained is relative to the ammount of money enemies would drop")));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "At max experience, they fully gain their listed stats")));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "Emblems can only be crafted into their higher ranks at max experience")));
 			}
 			else
 			{
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "(hold down LEFT CONTROL for more info)")));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", Idglib.ColorText(Color.Orange, "(hold down LEFT CONTROL for more info)")));
 			}
-			tooltips.Add(new TooltipLine(mod, "Tf2Elem", "You may wear only one TF2 Emblem at a time"));
+			tooltips.Add(new TooltipLine(Mod, "Tf2Elem", "You may wear only one TF2 Emblem at a time"));
 			if (GetType() != typeof(TF2Emblem))
-				tooltips.Add(new TooltipLine(mod, "Tf2Elem", "Includes all bonuses from lower tier emblems"));
+				tooltips.Add(new TooltipLine(Mod, "Tf2Elem", "Includes all bonuses from lower tier emblems"));
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 
 		public virtual void GrantBuffs(Player player, bool hideVisual)
@@ -231,11 +232,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 		public static void GrantForkedBuffs(TF2Emblem thisguy, Player player, bool hideVisual)
 		{
@@ -250,13 +251,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<TF2Emblem>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.BiomassBar>(), 6);
-			recipe.AddIngredient(ItemID.HealingPotion, 30);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<TF2Emblem>(), 1).AddIngredient(ModContent.ItemType<HavocGear.Items.BiomassBar>(), 6).AddIngredient(ItemID.HealingPotion, 30).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -271,11 +266,11 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 		public static void GrantForkedBuffs(TF2Emblem thisguy,Player player, bool hideVisual)
 		{
@@ -291,13 +286,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<TF2Emblem>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.BiomassBar>(), 6);
-			recipe.AddIngredient(ItemID.ManaPotion, 30);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<TF2Emblem>(), 1).AddIngredient(ModContent.ItemType<HavocGear.Items.BiomassBar>(), 6).AddIngredient(ItemID.ManaPotion, 30).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -313,11 +302,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 7, 50, 0);
-			item.rare = 7;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 7, 50, 0);
+			Item.rare = 7;
+			Item.accessory = true;
 		}
 		public override void GrantBuffs(Player player, bool hideVisual)
 		{
@@ -335,13 +324,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<TF2EmblemRed>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<TF2EmblemBlu>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Consumables.DivineShower>(), 3);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<TF2EmblemRed>(), 1).AddIngredient(ModContent.ItemType<TF2EmblemBlu>(), 1).AddIngredient(ModContent.ItemType<Consumables.DivineShower>(), 3).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -357,11 +340,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(1, 0, 0, 0);
-			item.rare = 9;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(1, 0, 0, 0);
+			Item.rare = 9;
+			Item.accessory = true;
 		}
 
 		public override void GrantBuffs(Player player, bool hideVisual)
@@ -398,14 +381,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<TF2EmblemCommando>(), 1);
-			recipe.AddIngredient(ItemID.DestroyerEmblem, 1);
-			recipe.AddIngredient(ModContent.ItemType<PrismalBar>(), 6);
-			recipe.AddIngredient(ItemID.CrystalBall, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<TF2EmblemCommando>(), 1).AddIngredient(ItemID.DestroyerEmblem, 1).AddIngredient(ModContent.ItemType<PrismalBar>(), 6).AddIngredient(ItemID.CrystalBall, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -422,11 +398,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = 12;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = 12;
+			Item.accessory = true;
 		}
 		public override void GrantBuffs(Player player, bool hideVisual)
 		{
@@ -452,16 +428,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType <TF2EmblemAssassin>(), 1);
-			recipe.AddIngredient(ModContent.ItemType <MVMUpgrade>(), 1);
-			recipe.AddIngredient(ItemID.ManaCrystal, 3);
-			recipe.AddIngredient(ModContent.ItemType <StarMetalBar>(), 16);
-			recipe.AddIngredient(ModContent.ItemType <LunarRoyalGel>(), 15);
-			recipe.AddIngredient(ModContent.ItemType <MoneySign>(), 10);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType <TF2EmblemAssassin>(), 1).AddIngredient(ModContent.ItemType <MVMUpgrade>(), 1).AddIngredient(ItemID.ManaCrystal, 3).AddIngredient(ModContent.ItemType <StarMetalBar>(), 16).AddIngredient(ModContent.ItemType <LunarRoyalGel>(), 15).AddIngredient(ModContent.ItemType <MoneySign>(), 10).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}

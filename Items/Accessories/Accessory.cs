@@ -16,6 +16,7 @@ using SGAmod.Buffs;
 using Terraria.Utilities;
 using System.Linq;
 using SGAmod.Items.Mounts;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Accessories
 {
@@ -29,28 +30,23 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.faceSlot = 6;
-			item.rare += 1;
-			item.value = Item.sellPrice(0, 2, 50, 0); ;
-			item.accessory = true;
+			Item.CloneDefaults(ItemID.ManaFlower);
+			Item.width = 24;
+			Item.height = 24;
+			Item.faceSlot = 6;
+			Item.rare += 1;
+			Item.value = Item.sellPrice(0, 2, 50, 0); ;
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.restorationFlower = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.JungleRose, 1);
-			recipe.AddIngredient(ItemID.RestorationPotion, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.JungleRose, 1).AddIngredient(ItemID.RestorationPotion, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -64,29 +60,24 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.faceSlot = 6;
-			item.rare += 1;
-			item.value = Item.sellPrice(0, 2, 50, 0); ;
-			item.accessory = true;
+			Item.CloneDefaults(ItemID.ManaFlower);
+			Item.width = 24;
+			Item.height = 24;
+			Item.faceSlot = 6;
+			Item.rare += 1;
+			Item.value = Item.sellPrice(0, 2, 50, 0); ;
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.LifeFlower = true;
 			player.lavaRose = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ObsidianRose, 1);
-			recipe.AddIngredient(ItemID.HealingPotion, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.ObsidianRose, 1).AddIngredient(ItemID.HealingPotion, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -101,13 +92,13 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.LightPurple;
-			item.faceSlot = 6;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.accessory = true;
+			Item.CloneDefaults(ItemID.ManaFlower);
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.faceSlot = 6;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -119,15 +110,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ManaFlower, 1);
-			recipe.AddIngredient(mod.ItemType("LifeFlower"), 1);
-			recipe.AddIngredient(mod.ItemType("RestorationFlower"), 1);
-			recipe.AddIngredient(ItemID.LifeforcePotion, 1);
-			recipe.AddIngredient(ItemID.DD2EnergyCrystal, 15);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.ManaFlower, 1).AddIngredient(mod.ItemType("LifeFlower"), 1).AddIngredient(mod.ItemType("RestorationFlower"), 1).AddIngredient(ItemID.LifeforcePotion, 1).AddIngredient(ItemID.DD2EnergyCrystal, 15).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -144,19 +127,19 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Cyan;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Cyan;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.kbGlove = true;
 			player.meleeSpeed += 0.15f;
-			player.meleeDamage += 0.15f;
-			player.meleeCrit += 10;
+			player.GetDamage(DamageClass.Melee) += 0.15f;
+			player.GetCritChance(DamageClass.Melee) += 10;
 			player.magmaStone = true;
 			player.armorPenetration += 5;
 			player.SGAPly().glacialStone = true;
@@ -164,17 +147,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.FireGauntlet, 1);
-			recipe.AddIngredient(ModContent.ItemType<GlacialStone>(), 1);
-			recipe.AddIngredient(ItemID.SharkToothNecklace, 1);
-			recipe.AddIngredient(ItemID.DestroyerEmblem, 1);
-			recipe.AddIngredient(ModContent.ItemType<PrismalBar>(), 12);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SharkTooth>(), 50);
-			recipe.AddIngredient(ModContent.ItemType<Fridgeflame>(), 8);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.FireGauntlet, 1).AddIngredient(ModContent.ItemType<GlacialStone>(), 1).AddIngredient(ItemID.SharkToothNecklace, 1).AddIngredient(ItemID.DestroyerEmblem, 1).AddIngredient(ModContent.ItemType<PrismalBar>(), 12).AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SharkTooth>(), 50).AddIngredient(ModContent.ItemType<Fridgeflame>(), 8).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 	}
 
@@ -189,12 +162,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Purple;
-			item.value = Item.sellPrice(0, 25, 0, 0);
-			item.accessory = true;
-			item.stringColor = 27;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Purple;
+			Item.value = Item.sellPrice(0, 25, 0, 0);
+			Item.accessory = true;
+			Item.stringColor = 27;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -207,15 +180,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<PrismalGuantlet>(), 1);
-			recipe.AddIngredient(ItemID.LunarBar, 12);
-			recipe.AddIngredient(ItemID.YoyoBag, 1);
-			recipe.AddIngredient(ItemID.RainbowString, 1);
-			recipe.AddIngredient(ModContent.ItemType<YoyoTricks>(), 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<PrismalGuantlet>(), 1).AddIngredient(ItemID.LunarBar, 12).AddIngredient(ItemID.YoyoBag, 1).AddIngredient(ItemID.RainbowString, 1).AddIngredient(ModContent.ItemType<YoyoTricks>(), 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -229,12 +194,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.sellPrice(0, 20, 0, 0);
-			item.accessory = true;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.sellPrice(0, 20, 0, 0);
+			Item.accessory = true;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -245,18 +210,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("MudAbsorber"), 1);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 15);
-			recipe.AddIngredient(mod.ItemType("DankCore"), 2);
-			recipe.AddIngredient(mod.ItemType("DankWoodHelm"), 1);
-			recipe.AddIngredient(mod.ItemType("DankWoodChest"), 1);
-			recipe.AddIngredient(mod.ItemType("DankLegs"), 1);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 10);
-			recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("MudAbsorber"), 1).AddIngredient(mod.ItemType("BottledMud"), 15).AddIngredient(mod.ItemType("DankCore"), 2).AddIngredient(mod.ItemType("DankWoodHelm"), 1).AddIngredient(mod.ItemType("DankWoodChest"), 1).AddIngredient(mod.ItemType("DankLegs"), 1).AddIngredient(mod.ItemType("VirulentBar"), 10).AddIngredient(ItemID.ChlorophyteBar, 10).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -272,12 +226,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.lifeRegen = 3;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.lifeRegen = 3;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -289,14 +243,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NeckONerves"), 1);
-			recipe.AddIngredient(ItemID.CharmofMyths, 1);
-			recipe.AddIngredient(ItemID.StarVeil, 1);
-			recipe.AddIngredient(ItemID.HallowedBar, 6);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NeckONerves"), 1).AddIngredient(ItemID.CharmofMyths, 1).AddIngredient(ItemID.StarVeil, 1).AddIngredient(ItemID.HallowedBar, 6).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -311,36 +258,27 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 28;
-			item.value = Item.sellPrice(gold: 5);
-			item.rare = -12;
-			item.expert = true;
-			item.accessory = true;
-			item.damage = 1;
-			item.summon = true;
-			item.shieldSlot = 5;
-			item.backSlot = 9;
-			item.knockBack = 1f;
-			item.backSlot = 9;
+			Item.width = 24;
+			Item.height = 28;
+			Item.value = Item.sellPrice(gold: 5);
+			Item.rare = -12;
+			Item.expert = true;
+			Item.accessory = true;
+			Item.damage = 1;
+			Item.DamageType = DamageClass.Summon;
+			Item.shieldSlot = 5;
+			Item.backSlot = 9;
+			Item.knockBack = 1f;
+			Item.backSlot = 9;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HiveBackpack, 1);
-			recipe.AddIngredient(ItemID.HoneyComb, 1);
-			recipe.AddIngredient(ItemID.CrispyHoneyBlock, 10);
-			recipe.AddIngredient(ItemID.BeeWax, 10);
-			recipe.AddIngredient(ItemID.HoneyBucket, 2);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 10);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.HiveBackpack, 1).AddIngredient(ItemID.HoneyComb, 1).AddIngredient(ItemID.CrispyHoneyBlock, 10).AddIngredient(ItemID.BeeWax, 10).AddIngredient(ItemID.HoneyBucket, 2).AddIngredient(mod.ItemType("VirulentBar"), 10).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
 		{
-			flat = (float)((player.statDefense * 0.2) * (0.5f + ((player.minionDamage - 1f) * 8f)));
+			flat = (float)((player.statDefense * 0.2) * (0.5f + ((player.GetDamage(DamageClass.Summon) - 1f) * 8f)));
 			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -349,7 +287,7 @@ namespace SGAmod.Items.Accessories
 			if (!hideVisual)
 				player.GetModPlayer<SGAPlayer>().beefieldtoggle = 5;
 
-			player.minionDamage += 0.1f;
+			player.GetDamage(DamageClass.Summon) += 0.1f;
 
 			player.strongBees = true;
 			//Item shield = new Item();
@@ -358,7 +296,7 @@ namespace SGAmod.Items.Accessories
 
 			float flat = 0f;
 			if (GetType() == typeof(PortableHive))
-				flat = (float)((player.statDefense * 0.2) * (0.5f + ((player.minionDamage - 1f) * 8f)));
+				flat = (float)((player.statDefense * 0.2) * (0.5f + ((player.GetDamage(DamageClass.Summon) - 1f) * 8f)));
 
 			if (1f + (flat * 1f) > player.GetModPlayer<SGAPlayer>().beedamagemul)
 				player.GetModPlayer<SGAPlayer>().beedamagemul = 1f + (flat * 1f);
@@ -379,15 +317,15 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.lifeRegen = 5;
-			item.rare = 12;
-			item.damage = 1;
-			item.summon = true;
-			item.value = Item.sellPrice(5, 0, 0, 0);
-			item.accessory = true;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.lifeRegen = 5;
+			Item.rare = 12;
+			Item.damage = 1;
+			Item.DamageType = DamageClass.Summon;
+			Item.value = Item.sellPrice(5, 0, 0, 0);
+			Item.accessory = true;
+			Item.expert = true;
 			/*for (int i = 0; i < effects.Length; i += 1)
 			{
 				effects[i] = i*2f;
@@ -415,9 +353,9 @@ namespace SGAmod.Items.Accessories
 				Double Azngle = i;
 				Vector2 here = new Vector2((float)Math.Cos(Azngle), (float)Math.Sin(Azngle)) * (i * 2f);
 				float scaler = (1f - (float)((float)i / (float)effects.Length));
-				spriteBatch.Draw(inner, position + (new Vector2(14f, 14f)) + here, null, Color.Lerp(drawColor, Color.MediumPurple, 0.25f) * scaler, Main.GlobalTime *= (i % 2 == 0 ? -1f : 1f), new Vector2(inner.Width / 2, inner.Height / 2), scale * scaler, SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, position + (new Vector2(14f, 14f)) + here, null, Color.Lerp(drawColor, Color.MediumPurple, 0.25f) * scaler, Main.GlobalTimeWrappedHourly *= (i % 2 == 0 ? -1f : 1f), new Vector2(inner.Width / 2, inner.Height / 2), scale * scaler, SpriteEffects.None, 0f);
 			}
-			spriteBatch.Draw(Main.itemTexture[item.type], position + new Vector2(14f, 14f), frame, drawColor, 0, new Vector2(inner.Width / 2, inner.Height / 2), scale * 1.5f * Main.essScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], position + new Vector2(14f, 14f), frame, drawColor, 0, new Vector2(inner.Width / 2, inner.Height / 2), scale * 1.5f * Main.essScale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			return false;
@@ -427,16 +365,16 @@ namespace SGAmod.Items.Accessories
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.DarkMagenta, Color.SteelBlue, 0.5f + (float)Math.Sin(Main.GlobalTime * 2f));
+					line.OverrideColor = Color.Lerp(Color.DarkMagenta, Color.SteelBlue, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f));
 				}
 			}
 		}
 
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
 		{
-			flat = (float)((player.statDefense * 0.10) * (1.1f + (player.minionDamage - 1f) * 50f));
+			flat = (float)((player.statDefense * 0.10) * (1.1f + (player.GetDamage(DamageClass.Summon) - 1f) * 50f));
 			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 		}
 
@@ -451,7 +389,7 @@ namespace SGAmod.Items.Accessories
 			{
 				player.GetModPlayer<SGAPlayer>().beefield = 3;
 			}
-			float flat = (float)((player.statDefense * 0.25) * (2f + (player.minionDamage - 1f) * 50f));
+			float flat = (float)((player.statDefense * 0.25) * (2f + (player.GetDamage(DamageClass.Summon) - 1f) * 50f));
 
 			if (1f + (flat * 1f) > player.GetModPlayer<SGAPlayer>().beedamagemul)
 				player.GetModPlayer<SGAPlayer>().beedamagemul = 1f + (flat * 1f);
@@ -460,25 +398,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<BloodCharmPendant>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<LifeforceQuintessence>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Havoc>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<PortableHive>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<LunarRoyalGel>(), 25);
-			recipe.AddIngredient(ModContent.ItemType<MoneySign>(), 15);
-			recipe.AddIngredient(ModContent.ItemType<EldritchTentacle>(), 20);
-			recipe.AddIngredient(ModContent.ItemType<ByteSoul>(), 50);
-			/*recipe.AddIngredient(ItemID.ShroomiteBar, 30);
-			recipe.AddIngredient(ItemID.SpectreBar, 30);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 30);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 30);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 30);
-			recipe.AddIngredient(mod.ItemType("Entrophite"), 250);
-			recipe.AddIngredient(mod.ItemType("StygianCore"), 4);*/
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<BloodCharmPendant>(), 1).AddIngredient(ModContent.ItemType<LifeforceQuintessence>(), 1).AddIngredient(ModContent.ItemType<Havoc>(), 1).AddIngredient(ModContent.ItemType<PortableHive>(), 1).AddIngredient(ModContent.ItemType<LunarRoyalGel>(), 25).AddIngredient(ModContent.ItemType<MoneySign>(), 15).AddIngredient(ModContent.ItemType<EldritchTentacle>(), 20).AddIngredient(ModContent.ItemType<ByteSoul>(), 50).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -492,11 +412,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.LightRed;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -506,7 +426,7 @@ namespace SGAmod.Items.Accessories
 
 			Tile mytile = Framing.GetTileSafely(x_edge, y_bottom_edge);
 
-			if (mytile.active() && player.velocity.Y == 0)
+			if (mytile.HasTile && player.velocity.Y == 0)
 			{
 				player.GetModPlayer<SGAPlayer>().GeyserInABottle = true;
 
@@ -516,14 +436,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.GeyserTrap, 1);
-			recipe.AddIngredient(ItemID.Obsidian, 10);
-			recipe.AddIngredient(ItemID.CloudinaBottle, 1);
-			recipe.AddIngredient(ItemID.LavaBucket, 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.GeyserTrap, 1).AddIngredient(ItemID.Obsidian, 10).AddIngredient(ItemID.CloudinaBottle, 1).AddIngredient(ItemID.LavaBucket, 1).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -538,11 +451,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.buyPrice(0, 50, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.buyPrice(0, 50, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -565,11 +478,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.buyPrice(0, 50, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.buyPrice(0, 50, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -589,16 +502,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 52;
-			item.rare = ItemRarityID.LightPurple;
-			item.value = Item.buyPrice(gold: 10);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 52;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.value = Item.buyPrice(gold: 10);
+			Item.accessory = true;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -623,17 +536,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 52;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.sellPrice(0, 25, 0, 0); ;
-			item.accessory = true;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 52;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.sellPrice(0, 25, 0, 0); ;
+			Item.accessory = true;
+			Item.expert = true;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "sacrificedMoney", Main.LocalPlayer.SGAPly().MoneyCollected));
+			tooltips.Add(new TooltipLine(Mod, "sacrificedMoney", Main.LocalPlayer.SGAPly().MoneyCollected));
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -664,20 +577,20 @@ namespace SGAmod.Items.Accessories
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.DarkRed, Color.Gold, 0.5f + (float)Math.Sin(Main.GlobalTime * 1f));
+					line.OverrideColor = Color.Lerp(Color.DarkRed, Color.Gold, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 1f));
 				}
 			}
 		}
 		public override void SetDefaults()
 		{
-			item.value = 3000000;
-			item.rare = ItemRarityID.Purple;
-			item.width = 24;
-			item.height = 24;
-			item.accessory = true;
-			item.expert = true;
+			Item.value = 3000000;
+			Item.rare = ItemRarityID.Purple;
+			Item.width = 24;
+			Item.height = 24;
+			Item.accessory = true;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -690,21 +603,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<IdolOfMidas>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < SybariteGem>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < AvariceRing>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < EALogo>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < OmniMagnet>(), 1);
-			recipe.AddIngredient(ModContent.ItemType <MoneySign>(), 15);
-			recipe.AddIngredient(ModContent.ItemType <Entrophite>(), 200);
-			recipe.AddIngredient(ModContent.ItemType <StygianCore>(), 3);
-			recipe.AddIngredient(ModContent.ItemType <CalamityRune>(), 2);
-			recipe.AddIngredient(ItemID.GoldDust, 200);
-			recipe.AddIngredient(ItemID.PlatinumCoin, 10);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<IdolOfMidas>(), 1).AddIngredient(ModContent.ItemType < SybariteGem>(), 1).AddIngredient(ModContent.ItemType < AvariceRing>(), 1).AddIngredient(ModContent.ItemType < EALogo>(), 1).AddIngredient(ModContent.ItemType < OmniMagnet>(), 1).AddIngredient(ModContent.ItemType <MoneySign>(), 15).AddIngredient(ModContent.ItemType <Entrophite>(), 200).AddIngredient(ModContent.ItemType <StygianCore>(), 3).AddIngredient(ModContent.ItemType <CalamityRune>(), 2).AddIngredient(ItemID.GoldDust, 200).AddIngredient(ItemID.PlatinumCoin, 10).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -721,13 +620,13 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.value = 1500000;
-			item.rare = ItemRarityID.Red;
-			item.width = 24;
-			item.defense = 5;
-			item.height = 24;
-			item.accessory = true;
-			item.waistSlot = 10;
+			Item.value = 1500000;
+			Item.rare = ItemRarityID.Red;
+			Item.width = 24;
+			Item.defense = 5;
+			Item.height = 24;
+			Item.accessory = true;
+			Item.waistSlot = 10;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -751,17 +650,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LunarBar, 6);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 32);
-			recipe.AddIngredient(mod.ItemType("PlasmaCell"), 3);
-			recipe.AddIngredient(mod.ItemType("PrismalCore"), 1);
-			recipe.AddIngredient(mod.ItemType("PlasmaPack"), 1);
-			recipe.AddIngredient(mod.ItemType("JindoshBuckler"), 1);
-			recipe.AddIngredient(mod.ItemType("FridgeFlamesCanister"), 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.LunarBar, 6).AddIngredient(mod.ItemType("StarMetalBar"), 32).AddIngredient(mod.ItemType("PlasmaCell"), 3).AddIngredient(mod.ItemType("PrismalCore"), 1).AddIngredient(mod.ItemType("PlasmaPack"), 1).AddIngredient(mod.ItemType("JindoshBuckler"), 1).AddIngredient(mod.ItemType("FridgeFlamesCanister"), 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -777,11 +666,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Green;
-			item.value = Item.sellPrice(0, 0, 2, 0); ;
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Green;
+			Item.value = Item.sellPrice(0, 0, 2, 0); ;
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -791,15 +680,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:EvilJavelins", 1);
-			recipe.AddIngredient(mod.ItemType("IceJavelin"), 1);
-			recipe.AddIngredient(mod.ItemType("StoneJavelin"), 1);
-			recipe.AddIngredient(mod.ItemType("AmberJavelin"), 1);
-			recipe.AddIngredient(ItemID.RopeCoil, 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddRecipeGroup("SGAmod:EvilJavelins", 1).AddIngredient(mod.ItemType("IceJavelin"), 1).AddIngredient(mod.ItemType("StoneJavelin"), 1).AddIngredient(mod.ItemType("AmberJavelin"), 1).AddIngredient(ItemID.RopeCoil, 1).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -813,11 +694,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Pink;
-			item.value = Item.sellPrice(0, 0, 2, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Pink;
+			Item.value = Item.sellPrice(0, 0, 2, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -827,17 +708,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:EvilJavelins", 1);
-			recipe.AddIngredient(mod.ItemType("IceJavelin"), 1);
-			recipe.AddIngredient(mod.ItemType("StoneJavelin"), 1);
-			recipe.AddIngredient(mod.ItemType("AmberJavelin"), 1);
-			recipe.AddIngredient(mod.ItemType("ShadowJavelin"), 1);
-			recipe.AddIngredient(mod.ItemType("PearlWoodJavelin"), 1);
-			recipe.AddIngredient(ItemID.RopeCoil, 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddRecipeGroup("SGAmod:EvilJavelins", 1).AddIngredient(mod.ItemType("IceJavelin"), 1).AddIngredient(mod.ItemType("StoneJavelin"), 1).AddIngredient(mod.ItemType("AmberJavelin"), 1).AddIngredient(mod.ItemType("ShadowJavelin"), 1).AddIngredient(mod.ItemType("PearlWoodJavelin"), 1).AddIngredient(ItemID.RopeCoil, 1).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -852,11 +723,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.LightPurple;
-			item.value = Item.buyPrice(0, 0, 20, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.value = Item.buyPrice(0, 0, 20, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -869,15 +740,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("JavelinSpearHeadBundle"), 1);
-			recipe.AddIngredient(mod.ItemType("JavelinBaseBundle"), 1);
-			recipe.AddIngredient(mod.ItemType("Jabbawacky"), 1);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 10);
-			recipe.AddIngredient(ItemID.RopeCoil, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("JavelinSpearHeadBundle"), 1).AddIngredient(mod.ItemType("JavelinBaseBundle"), 1).AddIngredient(mod.ItemType("Jabbawacky"), 1).AddIngredient(mod.ItemType("VirulentBar"), 10).AddIngredient(ItemID.RopeCoil, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -888,20 +751,20 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Fiery Heart");
 			Tooltip.SetDefault("'The best friendships burn the brightest...'\nAll attacks inflict a short amount of Daybroken\nAs you gain more Total Expertise, this increases even further\nYou gain max life based on Total Expertise");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 4));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(8, 4));
 		}
 		public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 40;
-			item.value = 100000;
-			item.rare = -12;
-			item.expert = true;
-			item.accessory = true;
-			item.defense = 0;
+			Item.width = 40;
+			Item.height = 40;
+			Item.value = 100000;
+			Item.rare = -12;
+			Item.expert = true;
+			Item.accessory = true;
+			Item.defense = 0;
 			//item.damage = 1;
-			item.summon = true;
-			item.knockBack = 1f;
+			Item.DamageType = DamageClass.Summon;
+			Item.knockBack = 1f;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -919,16 +782,16 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 40;
-			item.value = 500000;
-			item.rare = -12;
-			item.expert = true;
-			item.accessory = true;
-			item.defense = 0;
+			Item.width = 40;
+			Item.height = 40;
+			Item.value = 500000;
+			Item.rare = -12;
+			Item.expert = true;
+			Item.accessory = true;
+			Item.defense = 0;
 			//item.damage = 1;
-			item.summon = true;
-			item.knockBack = 1f;
+			Item.DamageType = DamageClass.Summon;
+			Item.knockBack = 1f;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -951,7 +814,7 @@ namespace SGAmod.Items.Accessories
 
 			for (float i = 0; i < 1f; i += 0.20f)
 			{
-				spriteBatch.Draw(inner, drawPos, null, Color.White * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.75f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 1.75f * (((Main.GlobalTime / 2f) + i) % 1f)), SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, drawPos, null, Color.White * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.75f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 1.75f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f)), SpriteEffects.None, 0f);
 			}
 			//Main.spriteBatch.End();
 			//Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
@@ -960,39 +823,33 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Fieryheart"), 1);
-			recipe.AddIngredient(mod.ItemType("HopeHeart"), 10);
-			recipe.AddIngredient(ItemID.LihzahrdDoor);
-			recipe.AddTile(TileID.LihzahrdAltar);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Fieryheart"), 1).AddIngredient(mod.ItemType("HopeHeart"), 10).AddIngredient(ItemID.LihzahrdDoor).AddTile(TileID.LihzahrdAltar).Register();
 		}
 	}
 	public class Rainbowheart : Blazingheart
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("[i: " + item.type + "]");
+			DisplayName.SetDefault("[i: " + Item.type + "]");
 			Tooltip.SetDefault("'Our fires burn hotter than the golden sun'\nRadiation Resistance now also allow you to resist Limbo Fading\nAll effects of the Blazing Heart and Alkalescent Heart");
 		}
 		public override string Texture => "SGAmod/GreyHeart";
 		public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 40;
-			item.value = 1500000;
-			item.rare = -12;
-			item.expert = true;
-			item.accessory = true;
-			item.defense = 0;
+			Item.width = 40;
+			Item.height = 40;
+			Item.value = 1500000;
+			Item.rare = -12;
+			Item.expert = true;
+			Item.accessory = true;
+			Item.defense = 0;
 			//item.damage = 1;
-			item.summon = true;
-			item.knockBack = 1f;
+			Item.DamageType = DamageClass.Summon;
+			Item.knockBack = 1f;
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb(Main.GlobalTime % 1f, 1f, 0.75f);
+			return Main.hslToRgb(Main.GlobalTimeWrappedHourly % 1f, 1f, 0.75f);
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1006,7 +863,7 @@ namespace SGAmod.Items.Accessories
 		{
 
 			Texture2D inner = Main.itemTexture[ModContent.ItemType<AssemblyStar>()];
-			Texture2D inner2 = Main.itemTexture[item.type];
+			Texture2D inner2 = Main.itemTexture[Item.type];
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
@@ -1014,8 +871,8 @@ namespace SGAmod.Items.Accessories
 			Effect hallowed = SGAmod.HallowedEffect;
 
 			hallowed.Parameters["prismAlpha"].SetValue(1f);
-			hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("Perlin"));
-			hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTime / 1f, Main.GlobalTime / 2f));
+			hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Perlin").Value);
+			hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTimeWrappedHourly / 1f, Main.GlobalTimeWrappedHourly / 2f));
 			hallowed.Parameters["overlayAlpha"].SetValue(1f);
 			hallowed.Parameters["overlayStrength"].SetValue(new Vector3(2.5f, 2.5f, 0f));
 			hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -1029,14 +886,14 @@ namespace SGAmod.Items.Accessories
 
 			for (float i = 0; i < 1f; i += 0.20f)
 			{
-				spriteBatch.Draw(inner, drawPos, null, Color.White * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.75f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 1.75f * (((Main.GlobalTime / 2f) + i) % 1f)), SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, drawPos, null, Color.White * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.75f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 1.75f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f)), SpriteEffects.None, 0f);
 				hallowed.Parameters["prismColor"].SetValue(Main.hslToRgb(i % 1f, 1f, 0.75f).ToVector3());
-				hallowed.Parameters["alpha"].SetValue((1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.75f);
+				hallowed.Parameters["alpha"].SetValue((1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.75f);
 				hallowed.CurrentTechnique.Passes["Prism"].Apply();
 			}
 
-			hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("Perlin"));
-			hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTime / 4f, 0, Main.GlobalTime / 4f));
+			hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Perlin").Value);
+			hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTimeWrappedHourly / 4f, 0, Main.GlobalTimeWrappedHourly / 4f));
 			hallowed.Parameters["overlayAlpha"].SetValue(0.5f);
 			hallowed.Parameters["overlayStrength"].SetValue(new Vector3(-2.5f, 0f, 0f));
 			hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -1058,14 +915,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Blazingheart"), 1);
-			recipe.AddIngredient(mod.ItemType("AlkalescentHeart"), 1);
-			recipe.AddIngredient(mod.ItemType("AncientFabricItem"), 25);
-			recipe.AddIngredient(mod.ItemType("StygianCore"), 1);
-			recipe.AddTile(TileID.LihzahrdAltar);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Blazingheart"), 1).AddIngredient(mod.ItemType("AlkalescentHeart"), 1).AddIngredient(mod.ItemType("AncientFabricItem"), 25).AddIngredient(mod.ItemType("StygianCore"), 1).AddTile(TileID.LihzahrdAltar).Register();
 		}
 	}
 	public class LunarSlimeHeart : ModItem
@@ -1078,20 +928,20 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 28;
-			item.value = Item.sellPrice(platinum: 1);
-			item.rare = -12;
-			item.expert = true;
-			item.accessory = true;
-			item.damage = 1;
-			item.knockBack = 1f;
+			Item.width = 24;
+			Item.height = 28;
+			Item.value = Item.sellPrice(platinum: 1);
+			Item.rare = -12;
+			Item.expert = true;
+			Item.accessory = true;
+			Item.damage = 1;
+			Item.knockBack = 1f;
 		}
 
 
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
 		{
-			flat = (float)(player.statDefense * (player.minionDamage + player.rangedDamage + player.meleeDamage + player.Throwing().thrownDamage + player.magicDamage));
+			flat = (float)(player.statDefense * (player.GetDamage(DamageClass.Summon) + player.GetDamage(DamageClass.Ranged) + player.GetDamage(DamageClass.Melee) + player.Throwing().thrownDamage + player.GetDamage(DamageClass.Magic)));
 			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1110,7 +960,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1122,12 +972,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 32;
-			item.height = 32;
-			item.value = 1500000;
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = 1500000;
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 	}
 	public class BrokenImmortalityCore : ModItem
@@ -1140,13 +990,13 @@ namespace SGAmod.Items.Accessories
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return lightColor = Main.hslToRgb((Main.GlobalTime / 15f) % 1f, 0.85f, 0.45f);
+			return lightColor = Main.hslToRgb((Main.GlobalTimeWrappedHourly / 15f) % 1f, 0.85f, 0.45f);
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.GetModPlayer<SGAPlayer>().BIP = true;
-			if (!player.HasBuff(mod.BuffType("BIPBuff")))
+			if (!player.HasBuff(Mod.Find<ModBuff>("BIPBuff").Type))
 				player.statDefense += 1000;
 		}
 
@@ -1157,26 +1007,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			//recipe.AddIngredient(mod.ItemType("ByteSoul"), 100);
-			recipe.AddIngredient(mod.ItemType("ByteSoul"), 50);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 50);
-			recipe.AddIngredient(mod.ItemType("WraithFragment4"), 100);
-			recipe.AddIngredient(mod.ItemType("EldritchTentacle"), 25);
-			recipe.AddIngredient(ItemID.FallenStar, 15);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ByteSoul"), 50).AddIngredient(mod.ItemType("WraithFragment3"), 50).AddIngredient(mod.ItemType("WraithFragment4"), 100).AddIngredient(mod.ItemType("EldritchTentacle"), 25).AddIngredient(ItemID.FallenStar, 15).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 32;
-			item.height = 32;
-			item.value = 1500000;
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = 1500000;
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 	}
 
@@ -1205,18 +1046,18 @@ namespace SGAmod.Items.Accessories
 					player.SGAPly().DoTResist *= 0.75f;
                 }
 			}
-			player.buffImmune[mod.BuffType("ThermalBlaze")] = true;
+			player.buffImmune[Mod.Find<ModBuff>("ThermalBlaze").Type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.accessory = true;
-			item.height = 14;
-			item.value = 500000;
-			item.rare = ItemRarityID.LightPurple;
-			item.expert = false;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = 500000;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.expert = false;
 		}
 	}
 
@@ -1231,20 +1072,20 @@ namespace SGAmod.Items.Accessories
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.buffImmune[mod.BuffType("AcidBurn")] = true;
+			player.buffImmune[Mod.Find<ModBuff>("AcidBurn").Type] = true;
 			player.GetModPlayer<IdgPlayer>().radresist += 0.25f;
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = 5000;
-			item.rare = ItemRarityID.Green;
-			item.expert = false;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = 5000;
+			Item.rare = ItemRarityID.Green;
+			Item.expert = false;
 		}
 	}
 	public class AlkalescentHeart : ModItem
@@ -1264,14 +1105,14 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = Item.buyPrice(0, 2, 0, 0);
-			item.rare = ItemRarityID.Green;
-			item.expert = true;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = Item.buyPrice(0, 2, 0, 0);
+			Item.rare = ItemRarityID.Green;
+			Item.expert = true;
 		}
 	}
 	public class UndyingValor : ModItem
@@ -1280,20 +1121,20 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Undying Valor");
 			Tooltip.SetDefault("'The Caliburns lend you the strength to keep fighting to the end'\nAll damage taken is converted into a DoT stack");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 
 		public override string Texture => "Terraria/Item_3857";
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.defense = 0;
-			item.accessory = true;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.height = 16;
-			item.expert = true;
-			item.rare = ItemRarityID.Quest;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.height = 16;
+			Item.expert = true;
+			Item.rare = ItemRarityID.Quest;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1305,9 +1146,9 @@ namespace SGAmod.Items.Accessories
 		{
 			if (!Main.gameMenu)
 			{
-				Texture2D texture = mod.GetTexture("Glow");
+				Texture2D texture = Mod.Assets.Request<Texture2D>("Glow").Value;
 
-				Texture2D[] tex1 = { mod.GetTexture("Items/Weapons/Caliburn/CaliburnTypeA"), mod.GetTexture("Items/Weapons/Caliburn/CaliburnTypeB"), mod.GetTexture("Items/Weapons/Caliburn/CaliburnTypeC") };
+				Texture2D[] tex1 = { Mod.Assets.Request<Texture2D>("Items/Weapons/Caliburn/CaliburnTypeA").Value, Mod.Assets.Request<Texture2D>("Items/Weapons/Caliburn/CaliburnTypeB").Value, Mod.Assets.Request<Texture2D>("Items/Weapons/Caliburn/CaliburnTypeC") .Value};
 
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
 
@@ -1316,13 +1157,13 @@ namespace SGAmod.Items.Accessories
 
 				for (int i = 0; i < 3; i += 1)
 				{
-					valuesz2.Add((i, (((i / 3f) * MathHelper.TwoPi)+ Main.GlobalTime)));
+					valuesz2.Add((i, (((i / 3f) * MathHelper.TwoPi)+ Main.GlobalTimeWrappedHourly)));
 				}
 
 
 				for (int i = 0; i < 50; i += 1)
 				{
-					valuesz.Add(((i / 50f) + Main.GlobalTime / 2f) % 1f);
+					valuesz.Add(((i / 50f) + Main.GlobalTimeWrappedHourly / 2f) % 1f);
 				}
 
 
@@ -1336,13 +1177,13 @@ namespace SGAmod.Items.Accessories
 					float scalezx = 1f + (float)Math.Sin(fot.Item2) / 5f;
 					if (scalezx <= 1f)
 					{
-						spriteBatch.Draw(tex1[fot.Item1], item.Center + (Vector2.UnitX.RotatedBy(fot.Item2)*new Vector2(24f,5f)).RotatedBy(item.velocity.X / 6f) - Main.screenPosition, null, Color.White, -MathHelper.PiOver4+(item.velocity.X / 6f) + (float)Math.Sin((scalezx-1f)) * 0.75f, tex1[fot.Item1].Size()/2f, scalezx * 0.60f, SpriteEffects.None, 0f);
+						spriteBatch.Draw(tex1[fot.Item1], Item.Center + (Vector2.UnitX.RotatedBy(fot.Item2)*new Vector2(24f,5f)).RotatedBy(Item.velocity.X / 6f) - Main.screenPosition, null, Color.White, -MathHelper.PiOver4+(Item.velocity.X / 6f) + (float)Math.Sin((scalezx-1f)) * 0.75f, tex1[fot.Item1].Size()/2f, scalezx * 0.60f, SpriteEffects.None, 0f);
 					}
 				}
 
 				foreach (float fot in valuesz)
                 {
-					spriteBatch.Draw(texture, item.Center + new Vector2(0, 0) - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTime-fot*1.5f)%1f,1f,0.65f) * (1f-fot), item.velocity.X/6f, textureOrigin, new Vector2(1f, 1.75f) * (fot* fot), SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture, Item.Center + new Vector2(0, 0) - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTimeWrappedHourly-fot*1.5f)%1f,1f,0.65f) * (1f-fot), Item.velocity.X/6f, textureOrigin, new Vector2(1f, 1.75f) * (fot* fot), SpriteEffects.None, 0f);
 				}
 
 				foreach ((int, float) fot in valuesz2)
@@ -1350,7 +1191,7 @@ namespace SGAmod.Items.Accessories
 					float scalezx = 1f + (float)Math.Sin(fot.Item2) / 5f;
 					if (scalezx > 1f)
 					{
-						spriteBatch.Draw(tex1[fot.Item1], item.Center + (Vector2.UnitX.RotatedBy(fot.Item2) * new Vector2(24f, 5f)).RotatedBy(item.velocity.X / 6f) - Main.screenPosition, null, Color.White, -MathHelper.PiOver4 + (item.velocity.X / 6f) + (float)Math.Sin((scalezx - 1f)) * 0.75f, tex1[fot.Item1].Size() / 2f, scalezx*0.60f, SpriteEffects.None, 0f);
+						spriteBatch.Draw(tex1[fot.Item1], Item.Center + (Vector2.UnitX.RotatedBy(fot.Item2) * new Vector2(24f, 5f)).RotatedBy(Item.velocity.X / 6f) - Main.screenPosition, null, Color.White, -MathHelper.PiOver4 + (Item.velocity.X / 6f) + (float)Math.Sin((scalezx - 1f)) * 0.75f, tex1[fot.Item1].Size() / 2f, scalezx*0.60f, SpriteEffects.None, 0f);
 					}
 				}
 
@@ -1361,9 +1202,9 @@ namespace SGAmod.Items.Accessories
 		{
 			if (!Main.gameMenu)
 			{
-				Texture2D texture = mod.GetTexture("Glow");
+				Texture2D texture = Mod.Assets.Request<Texture2D>("Glow").Value;
 
-				Texture2D[] tex1 = { mod.GetTexture("Items/Weapons/Caliburn/CaliburnTypeA"), mod.GetTexture("Items/Weapons/Caliburn/CaliburnTypeB"), mod.GetTexture("Items/Weapons/Caliburn/CaliburnTypeC") };
+				Texture2D[] tex1 = { Mod.Assets.Request<Texture2D>("Items/Weapons/Caliburn/CaliburnTypeA").Value, Mod.Assets.Request<Texture2D>("Items/Weapons/Caliburn/CaliburnTypeB").Value, Mod.Assets.Request<Texture2D>("Items/Weapons/Caliburn/CaliburnTypeC") .Value};
 
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
 
@@ -1372,7 +1213,7 @@ namespace SGAmod.Items.Accessories
 
 				for (int i = 0; i < 3; i += 1)
 				{
-					valuesz2.Add((i, (((i / 3f) * MathHelper.TwoPi) + Main.GlobalTime)));
+					valuesz2.Add((i, (((i / 3f) * MathHelper.TwoPi) + Main.GlobalTimeWrappedHourly)));
 				}
 
 				position = position + new Vector2(13f, 13f) * Main.inventoryScale;
@@ -1381,7 +1222,7 @@ namespace SGAmod.Items.Accessories
 
 				for (int i = 0; i < 50; i += 1)
 				{
-					valuesz.Add(((i / 50f) + Main.GlobalTime / 2f) % 1f);
+					valuesz.Add(((i / 50f) + Main.GlobalTimeWrappedHourly / 2f) % 1f);
 				}
 
 
@@ -1401,7 +1242,7 @@ namespace SGAmod.Items.Accessories
 
 				foreach (float fot in valuesz)
 				{
-					spriteBatch.Draw(texture, position + new Vector2(0, 0), null, Main.hslToRgb((Main.GlobalTime - fot * 1.5f) % 1f, 1f, 0.65f) * (1f - fot), 0, textureOrigin, new Vector2(1f, 1.75f) * (fot * fot), SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture, position + new Vector2(0, 0), null, Main.hslToRgb((Main.GlobalTimeWrappedHourly - fot * 1.5f) % 1f, 1f, 0.65f) * (1f - fot), 0, textureOrigin, new Vector2(1f, 1.75f) * (fot * fot), SpriteEffects.None, 0f);
 				}
 
 				foreach ((int, float) fot in valuesz2)
@@ -1423,20 +1264,20 @@ namespace SGAmod.Items.Accessories
 			DisplayName.SetDefault("Shadowspirit's Eye");
 			Tooltip.SetDefault("'an eye of Phaethon, grants its wearing protection of the cosmos...'" +
 				"\nGrants a 1/3 chance of converting debuffs into Action Cooldown Stacks\nLethal damage is converted into an Action Cooldown Stack\nGrants ALL sense potion effects (hide to disable)\nUpgrades the Caliburn Compass to detect Rare creatures from anywhere\nVisual buffs work while in inventory");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 
 		public override string Texture => "SGAmod/Doom_Harbinger_Resprite_pupil";
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 16;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = ItemRarityID.Quest;
-			item.expert = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 16;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = ItemRarityID.Quest;
+			Item.expert = true;
 		}
 
         public override void UpdateInventory(Player player)
@@ -1464,10 +1305,10 @@ namespace SGAmod.Items.Accessories
 		{
 			if (!Main.gameMenu)
 			{
-				Texture2D texture = Main.itemTexture[item.type];
+				Texture2D texture = Main.itemTexture[Item.type];
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-				spriteBatch.Draw(texture, item.Center + new Vector2(0, 0) - Main.screenPosition, null, Color.White * 0.75f, 0f, textureOrigin, 2.25f - Main.essScale, SpriteEffects.None, 0f);
-				spriteBatch.Draw(texture, item.Center + new Vector2(0, 0) - Main.screenPosition, null, Color.White * 0.75f, 0f, textureOrigin, 0.75f * Main.essScale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, Item.Center + new Vector2(0, 0) - Main.screenPosition, null, Color.White * 0.75f, 0f, textureOrigin, 2.25f - Main.essScale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, Item.Center + new Vector2(0, 0) - Main.screenPosition, null, Color.White * 0.75f, 0f, textureOrigin, 0.75f * Main.essScale, SpriteEffects.None, 0f);
 			}
 			return false;
 		}
@@ -1475,7 +1316,7 @@ namespace SGAmod.Items.Accessories
 		{
 			if (!Main.gameMenu)
 			{
-				Texture2D texture = Main.itemTexture[item.type];
+				Texture2D texture = Main.itemTexture[Item.type];
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
 				Vector2 loc = position + new Vector2(13f, 13f) * Main.inventoryScale;
 				spriteBatch.Draw(texture, loc, null, Color.White * 0.75f, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
@@ -1505,25 +1346,25 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 90;
-			aiType = 0;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 90;
+			AIType = 0;
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
-			projectile.ai[0] += 1;
-			if (projectile.ai[0] == 1)
+			Projectile.ai[0] += 1;
+			if (Projectile.ai[0] == 1)
 			{
-				Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = Main.PlaySound(SoundID.NPCHit, (int)projectile.Center.X, (int)projectile.Center.Y, 5);
+				Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.NPCHit, (int)Projectile.Center.X, (int)Projectile.Center.Y, 5);
 
 				if (snd != null)
 				{
@@ -1533,30 +1374,30 @@ namespace SGAmod.Items.Accessories
 
 			Vector2 wegohere = player.MountedCenter;
 
-			projectile.Center = wegohere;
+			Projectile.Center = wegohere;
 
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 			Vector2 size = tex.Size() / 2f;
 
-			UnifiedRandom unirand = new UnifiedRandom(projectile.whoAmI);
+			UnifiedRandom unirand = new UnifiedRandom(Projectile.whoAmI);
 
 			for (int i = 0; i < 16; i += 1)
 			{
-				float percent = 1f - (projectile.timeLeft / 90f);
-				float dist = percent * (72f - ((72f / (1f + (projectile.ai[0]) * 2f))) + unirand.NextFloat(32, 160f) + (float)Math.Pow(MathHelper.Clamp(projectile.ai[0] - 50, 0f, 1000), 1.1));
+				float percent = 1f - (Projectile.timeLeft / 90f);
+				float dist = percent * (72f - ((72f / (1f + (Projectile.ai[0]) * 2f))) + unirand.NextFloat(32, 160f) + (float)Math.Pow(MathHelper.Clamp(Projectile.ai[0] - 50, 0f, 1000), 1.1));
 
-				float angle = unirand.NextFloat(MathHelper.TwoPi) - ((percent * (projectile.ai[0] - 20f)) * (unirand.NextFloat(0.01f, 0.2f)));
+				float angle = unirand.NextFloat(MathHelper.TwoPi) - ((percent * (Projectile.ai[0] - 20f)) * (unirand.NextFloat(0.01f, 0.2f)));
 
 
 				for (float f = 0; f < 0.1f; f += 0.01f)
 				{
 					Vector2 offseteffect = Vector2.One.RotatedBy(angle - f) * dist;
 
-					spriteBatch.Draw(tex, projectile.Center + offseteffect - Main.screenPosition, null, Color.White * 0.60f * MathHelper.Clamp((float)Math.Sin(percent * MathHelper.Pi) * 2f, 0f, 1f) * (1f - (f * 10f)), angle, size, new Vector2(1f, 1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+					spriteBatch.Draw(tex, Projectile.Center + offseteffect - Main.screenPosition, null, Color.White * 0.60f * MathHelper.Clamp((float)Math.Sin(percent * MathHelper.Pi) * 2f, 0f, 1f) * (1f - (f * 10f)), angle, size, new Vector2(1f, 1f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 				}
 			}
 
@@ -1574,11 +1415,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1608,12 +1449,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
@@ -1652,33 +1493,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LunarOre, 20);
-			recipe.AddIngredient(ModContent.ItemType<StarMetalBar>(), 16);
-			recipe.AddIngredient(ItemID.LeadBar, 10);
-			recipe.AddIngredient(ItemID.Leather, 20);
-			recipe.AddIngredient(ItemID.SWATHelmet, 1);
-			recipe.AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
-			
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LunarOre, 50);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 25);
-			recipe.AddIngredient(ItemID.LeadBar, 10);
-			recipe.AddIngredient(ItemID.TatteredCloth, 5);
-			recipe.AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.LunarOre, 20).AddIngredient(ModContent.ItemType<StarMetalBar>(), 16).AddIngredient(ItemID.LeadBar, 10).AddIngredient(ItemID.Leather, 20).AddIngredient(ItemID.SWATHelmet, 1).AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>()).Register();
+			CreateRecipe(1).AddIngredient(ItemID.LunarOre, 50).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 25).AddIngredient(ItemID.LeadBar, 10).AddIngredient(ItemID.TatteredCloth, 5).AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>()).Register();
 		}
 	}
 
@@ -1696,7 +1521,7 @@ namespace SGAmod.Items.Accessories
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime / 5f) % 1f, 0.50f, 0.75f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly / 5f) % 1f, 0.50f, 0.75f);
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1706,12 +1531,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.LightRed;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.LightRed;
+			Item.accessory = true;
 		}
 	}
 
@@ -1737,22 +1562,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Glass, 20);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 10);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 8);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Glass, 20).AddIngredient(mod.ItemType("Fridgeflame"), 10).AddIngredient(mod.ItemType("CryostalBar"), 8).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -1765,18 +1584,18 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 90;
-			projectile.extraUpdates = 2;
-			projectile.usesIDStaticNPCImmunity = true;
-			projectile.idStaticNPCHitCooldown = 10;
-			projectile.coldDamage = true;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 90;
+			Projectile.extraUpdates = 2;
+			Projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 10;
+			Projectile.coldDamage = true;
 		}
 
 		public override string Texture
@@ -1789,7 +1608,7 @@ namespace SGAmod.Items.Accessories
 			int i = Main.rand.Next(0, 2);
 			//for (int i = 0; i < 1; i += 1)
 			//{
-			int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 185, projectile.velocity.X * (i * 0.5f), projectile.velocity.Y * (i * 0.5f), 20, default(Color), 1.75f);
+			int DustID2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 185, Projectile.velocity.X * (i * 0.5f), Projectile.velocity.Y * (i * 0.5f), 20, default(Color), 1.75f);
 			Main.dust[DustID2].noGravity = true;
 			//}
 
@@ -1813,11 +1632,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Orange;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -1829,13 +1648,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<ManaBattery>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 12);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 6);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<ManaBattery>(), 3).AddIngredient(ModContent.ItemType<VialofAcid>(), 12).AddIngredient(ModContent.ItemType<NoviteBar>(), 6).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -1864,23 +1677,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(silver: 50);
-			item.rare = ItemRarityID.LightRed;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(silver: 50);
+			Item.rare = ItemRarityID.LightRed;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Glass, 10);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 3);
-			recipe.AddIngredient(mod.ItemType("ManaBattery"), 1);
-			recipe.AddIngredient(mod.ItemType("VialofAcid"), 12);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Glass, 10).AddIngredient(ItemID.MeteoriteBar, 3).AddIngredient(mod.ItemType("ManaBattery"), 1).AddIngredient(mod.ItemType("VialofAcid"), 12).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 
@@ -1894,7 +1700,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
@@ -1910,26 +1716,18 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 32;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 32;
-			item.value = Item.sellPrice(gold: 5);
-			item.rare = ItemRarityID.Lime;
-			item.expert = false;
+			Item.maxStack = 1;
+			Item.width = 32;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 32;
+			Item.value = Item.sellPrice(gold: 5);
+			Item.rare = ItemRarityID.Lime;
+			Item.expert = false;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LifeCrystal, 1);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 5);
-			recipe.AddIngredient(ItemID.SoulofNight, 15);
-			recipe.AddIngredient(mod.ItemType("Entrophite"), 75);
-			recipe.AddIngredient(mod.ItemType("StygianCore"), 2);
-			recipe.AddTile(TileID.CrystalBall);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.LifeCrystal, 1).AddIngredient(mod.ItemType("OmniSoul"), 5).AddIngredient(ItemID.SoulofNight, 15).AddIngredient(mod.ItemType("Entrophite"), 75).AddIngredient(mod.ItemType("StygianCore"), 2).AddTile(TileID.CrystalBall).Register();
 		}
 
 	}
@@ -1951,11 +1749,11 @@ namespace SGAmod.Items.Accessories
 
 		private void SGAPlayer_PostPostUpdateEquipsEvent(SGAPlayer sgaply)
 		{
-			if (sgaply.player.velocity.Y != 0 && sgaply.player.controlDown && !sgaply.player.controlJump && sgaply.gravBoots == true)
+			if (sgaply.Player.velocity.Y != 0 && sgaply.Player.controlDown && !sgaply.Player.controlJump && sgaply.gravBoots == true)
 			{
-				if (sgaply.player.gravity >= Player.defaultGravity)
-					sgaply.player.maxFallSpeed += 5;
-				sgaply.player.gravity = sgaply.player.gravity < Player.defaultGravity ? Player.defaultGravity : sgaply.player.gravity + 1;
+				if (sgaply.Player.gravity >= Player.defaultGravity)
+					sgaply.Player.maxFallSpeed += 5;
+				sgaply.Player.gravity = sgaply.Player.gravity < Player.defaultGravity ? Player.defaultGravity : sgaply.Player.gravity + 1;
 			}
 		}
 
@@ -1966,24 +1764,18 @@ namespace SGAmod.Items.Accessories
 
         public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.LightPurple;
-			item.expert = false;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.expert = false;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 12);
-			recipe.AddIngredient(ModContent.ItemType<Glowrock>(), 50);
-			recipe.AddIngredient(ItemID.GravitationPotion, 1);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.MeteoriteBar, 12).AddIngredient(ModContent.ItemType<Glowrock>(), 50).AddIngredient(ItemID.GravitationPotion, 1).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -2008,9 +1800,9 @@ namespace SGAmod.Items.Accessories
         {
             if (player.demonsteppers)
             {
-				player.player.buffImmune[BuffID.OnFire] = false;
-				player.player.buffImmune[BuffID.Chilled] = true;
-				player.player.buffImmune[BuffID.Frozen] = true;
+				player.Player.buffImmune[BuffID.OnFire] = false;
+				player.Player.buffImmune[BuffID.Chilled] = true;
+				player.Player.buffImmune[BuffID.Frozen] = true;
 			}
         }
 
@@ -2054,47 +1846,31 @@ namespace SGAmod.Items.Accessories
 			{
 				s = key;
 			}
-			tooltips.Add(new TooltipLine(mod, "DemonSteppersSpeed", "Toggle the speed/frog leg boost with the 'Walk Mode' hotkey (" + s+")"));
-			if (item.wingSlot>0)
+			tooltips.Add(new TooltipLine(Mod, "DemonSteppersSpeed", "Toggle the speed/frog leg boost with the 'Walk Mode' hotkey (" + s+")"));
+			if (Item.wingSlot>0)
             {
-				tooltips.Add(new TooltipLine(mod, "DemonSteppersSpeed", "Also effects the flying speed"));
+				tooltips.Add(new TooltipLine(Mod, "DemonSteppersSpeed", "Also effects the flying speed"));
 			}
 		}
 
         public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = Item.sellPrice(gold: 25);
-			item.rare = ItemRarityID.Lime;
-			item.expert = false;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = Item.sellPrice(gold: 25);
+			Item.rare = ItemRarityID.Lime;
+			Item.expert = false;
 			if (GetType() == typeof(DemonSteppers))
             {
-				boots = item.shoeSlot;
+				boots = Item.shoeSlot;
 			}
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<GravityStabilizerBoots>(), 1);
-			recipe.AddIngredient(ItemID.FrostsparkBoots, 1);
-			recipe.AddIngredient(ItemID.LavaWaders, 1);
-			recipe.AddRecipeGroup("SGAmod:HorseshoeBalloons", 1);
-			recipe.AddIngredient(ItemID.FrogLeg, 1);
-			recipe.AddIngredient(ItemID.HandWarmer, 1);
-			recipe.AddIngredient(ModContent.ItemType < AmberGlowSkull>(), 1);
-			recipe.AddIngredient(ModContent.ItemType <CobaltHorseshoe>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < PrimordialSkull>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < Entrophite>(), 100);
-			recipe.AddIngredient(ModContent.ItemType < StygianCore>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 40);
-			recipe.AddIngredient(ItemID.HellstoneBar, 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<GravityStabilizerBoots>(), 1).AddIngredient(ItemID.FrostsparkBoots, 1).AddIngredient(ItemID.LavaWaders, 1).AddRecipeGroup("SGAmod:HorseshoeBalloons", 1).AddIngredient(ItemID.FrogLeg, 1).AddIngredient(ItemID.HandWarmer, 1).AddIngredient(ModContent.ItemType < AmberGlowSkull>(), 1).AddIngredient(ModContent.ItemType <CobaltHorseshoe>(), 1).AddIngredient(ModContent.ItemType < PrimordialSkull>(), 1).AddIngredient(ModContent.ItemType < Entrophite>(), 100).AddIngredient(ModContent.ItemType < StygianCore>(), 3).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 40).AddIngredient(ItemID.HellstoneBar, 10).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -2113,21 +1889,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 32;
-			item.height = 32;
-			item.value = Item.sellPrice(gold: 3);
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = Item.sellPrice(gold: 3);
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.FragmentNebula, 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.FragmentNebula, 10).AddIngredient(mod.ItemType("StarMetalBar"), 10).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -2147,32 +1918,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 32;
-			item.height = 32;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.Lime;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.Lime;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HeartLantern, 1);
-			recipe.AddIngredient(ItemID.HeartreachPotion, 5);
-			recipe.AddIngredient(ItemID.HallowedBar, 10);
-			recipe.AddIngredient(ItemID.ChlorophyteBar, 3);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HeartLantern, 1);
-			recipe.AddIngredient(ItemID.LifeFruit, 5);
-			recipe.AddIngredient(ItemID.HallowedBar, 10);
-			recipe.AddIngredient(ItemID.ChlorophyteBar, 3);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.HeartLantern, 1).AddIngredient(ItemID.HeartreachPotion, 5).AddIngredient(ItemID.HallowedBar, 10).AddIngredient(ItemID.ChlorophyteBar, 3).AddTile(TileID.MythrilAnvil).Register();
+			CreateRecipe(1).AddIngredient(ItemID.HeartLantern, 1).AddIngredient(ItemID.LifeFruit, 5).AddIngredient(ItemID.HallowedBar, 10).AddIngredient(ItemID.ChlorophyteBar, 3).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 	public class OmniMagnet : ModItem
@@ -2196,24 +1952,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 32;
-			item.height = 32;
-			item.value = Item.sellPrice(gold: 75);
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = Item.sellPrice(gold: 75);
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("CobaltMagnet"), 1);
-			recipe.AddIngredient(mod.ItemType("BoosterMagnet"), 1);			
-			recipe.AddIngredient(mod.ItemType("HeartreachMagnet"), 1);
-			recipe.AddIngredient(ItemID.GreedyRing, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalBar"), 12).AddIngredient(mod.ItemType("CobaltMagnet"), 1).AddIngredient(mod.ItemType("BoosterMagnet"), 1).AddIngredient(mod.ItemType("HeartreachMagnet"), 1).AddIngredient(ItemID.GreedyRing, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -2227,19 +1975,19 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 
 		public override void Tooltipsfunc(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "saddletext", "'and now, the 4th seal is broken'"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "grants 50% increased Apocalyptical Strength"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "And 3% throwing Apocalyptical Chance while mounted"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", Idglib.ColorText(Color.Red, "But your damage taken is slightly increased")));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "'and now, the 4th seal is broken'"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "grants 50% increased Apocalyptical Strength"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "And 3% throwing Apocalyptical Chance while mounted"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", Idglib.ColorText(Color.Red, "But your damage taken is slightly increased")));
 		}
 
 		public override void OnWear(SGAPlayer player)
@@ -2259,19 +2007,19 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 
 		public override void Tooltipsfunc(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "saddletext", "'then the 2nd seal was broken'"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "grants 50% increased Apocalyptical Strength"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "And 3% melee Apocalyptical Chance while mounted"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", Idglib.ColorText(Color.Red, "But enemy spawn rates are increased")));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "'then the 2nd seal was broken'"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "grants 50% increased Apocalyptical Strength"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "And 3% melee Apocalyptical Chance while mounted"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", Idglib.ColorText(Color.Red, "But enemy spawn rates are increased")));
 		}
 
 		public override void OnWear(SGAPlayer player)
@@ -2291,25 +2039,25 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 		public override void Tooltipsfunc(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "saddletext", "'The 1st seal is broken'"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "Grants 50% increased Apocalyptical Strength"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "And 3% magic Apocalyptical Chance while mounted"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", Idglib.ColorText(Color.Red, "But may inflict bleeding randomly")));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "'The 1st seal is broken'"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "Grants 50% increased Apocalyptical Strength"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "And 3% magic Apocalyptical Chance while mounted"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", Idglib.ColorText(Color.Red, "But may inflict bleeding randomly")));
 
 		}
 
 		public override void OnWear(SGAPlayer player)
 		{
 			if (Main.rand.Next(0, 300) == 1)
-				player.player.AddBuff(BuffID.Bleeding, 200);
+				player.Player.AddBuff(BuffID.Bleeding, 200);
 			player.apocalypticalChance[2] += 3.0;
 		}
 	}
@@ -2324,19 +2072,19 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 
 		public virtual void Tooltipsfunc(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "saddletext", "'Thus the 3nd seal was broken'"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "Grants 50% increased Apocalyptical Strength"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", "And 3% ranged Apocalyptical Chance while mounted"));
-			tooltips.Add(new TooltipLine(mod, "saddletext", Idglib.ColorText(Color.Red, "But will nullify the effects of Well Fed")));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "'Thus the 3nd seal was broken'"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "Grants 50% increased Apocalyptical Strength"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", "And 3% ranged Apocalyptical Chance while mounted"));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", Idglib.ColorText(Color.Red, "But will nullify the effects of Well Fed")));
 
 		}
 
@@ -2345,19 +2093,19 @@ namespace SGAmod.Items.Accessories
 			if (GetType() == typeof(DarkApocalypse))
 				Tooltipsfunc(tooltips);
 
-			tooltips.Add(new TooltipLine(mod, "saddletext", Idglib.ColorText(Color.Red, "Limited to 1 saddle at a time")));
-			tooltips.Add(new TooltipLine(mod, "saddletext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", Idglib.ColorText(Color.Red, "Limited to 1 saddle at a time")));
+			tooltips.Add(new TooltipLine(Mod, "saddletext", SGAGlobalItem.apocalypticaltext));
 		}
 
 		public virtual void OnWear(SGAPlayer player)
 		{
-			player.player.buffImmune[BuffID.WellFed] = true;
+			player.Player.buffImmune[BuffID.WellFed] = true;
 			player.apocalypticalChance[1] += 3.0;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (player.mount.Active)
 			{
 				OnWear(sgaplayer);
@@ -2370,9 +2118,9 @@ namespace SGAmod.Items.Accessories
 			bool canequip = true;
 			for (int x = 3; x < 8 + player.extraAccessorySlots; x++)
 			{
-				if (player.armor[x].modItem != null)
+				if (player.armor[x].ModItem != null)
 				{
-					Type myclass = player.armor[x].modItem.GetType();
+					Type myclass = player.armor[x].ModItem.GetType();
 					if (myclass.BaseType == typeof(DarkApocalypse) || myclass == typeof(DarkApocalypse))
 					{
 
@@ -2387,19 +2135,8 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SlimySaddle, 1);
-			recipe.AddIngredient(ModContent.ItemType<WovenEntrophite>(), 50);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HardySaddle, 1);
-			recipe.AddIngredient(ModContent.ItemType<WovenEntrophite>(), 40);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.SlimySaddle, 1).AddIngredient(ModContent.ItemType<WovenEntrophite>(), 50).AddTile(TileID.MythrilAnvil).Register();
+			CreateRecipe(1).AddIngredient(ItemID.HardySaddle, 1).AddIngredient(ModContent.ItemType<WovenEntrophite>(), 40).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -2410,7 +2147,7 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Cataclysmic Catalyst");
 			Tooltip.SetDefault("'You wield power not even The Council could ever have...'\n2% (5% at max health) increased Apocalyptical Chance, 50% increased Apocalyptical Strength\n10% chance to dodge attacks that would kill you\nJust Blocks against contact damage trigger Apocalypticals");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 20));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(8, 20));
 		}
 
 		public override string Texture
@@ -2447,13 +2184,13 @@ namespace SGAmod.Items.Accessories
 				}
 			}
 
-			tooltips.Add(new TooltipLine(mod, "Saddletext", "--You copy the Saddle of your weapon's damage type--"));
+			tooltips.Add(new TooltipLine(Mod, "Saddletext", "--You copy the Saddle of your weapon's damage type--"));
 			if (defined)
 			{
-				(itz.modItem as DarkApocalypse).Tooltipsfunc(tooltips);
+				(itz.ModItem as DarkApocalypse).Tooltipsfunc(tooltips);
 			}
 
-			tooltips.Add(new TooltipLine(mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2483,7 +2220,7 @@ namespace SGAmod.Items.Accessories
 				}
 				if (Main.LocalPlayer.HeldItem.Throwing() != null)
 				{
-					if (!Main.LocalPlayer.HeldItem.IsAir && ((Main.LocalPlayer.HeldItem.modItem != null && Main.LocalPlayer.HeldItem.Throwing().thrown) || Main.LocalPlayer.HeldItem.thrown))
+					if (!Main.LocalPlayer.HeldItem.IsAir && ((Main.LocalPlayer.HeldItem.ModItem != null && Main.LocalPlayer.HeldItem.Throwing().thrown) || Main.LocalPlayer.HeldItem.thrown))
 					{
 						itz.SetDefaults(ModContent.ItemType<GreenApocalypse>());
 						defined = true;
@@ -2494,36 +2231,24 @@ namespace SGAmod.Items.Accessories
 
 			if (defined)
 			{
-				(itz.modItem as DarkApocalypse).UpdateAccessory(player, hideVisual);
+				(itz.ModItem as DarkApocalypse).UpdateAccessory(player, hideVisual);
 			}
 
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 24;
-			item.height = 32;
-			item.value = 2000000;
-			item.rare = ItemRarityID.Purple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 24;
+			Item.height = 32;
+			Item.value = 2000000;
+			Item.rare = ItemRarityID.Purple;
+			Item.accessory = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DarkApocalypse>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<FireApocalypse>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<GreenApocalypse>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<WhiteApocalypse>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<DiesIraeStone>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<OmegaSigil>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<MoneySign>(), 15);
-			recipe.AddIngredient(ModContent.ItemType<StygianCore>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<WovenEntrophite>(), 100);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DarkApocalypse>(), 1).AddIngredient(ModContent.ItemType<FireApocalypse>(), 1).AddIngredient(ModContent.ItemType<GreenApocalypse>(), 1).AddIngredient(ModContent.ItemType<WhiteApocalypse>(), 1).AddIngredient(ModContent.ItemType<DiesIraeStone>(), 1).AddIngredient(ModContent.ItemType<OmegaSigil>(), 1).AddIngredient(ModContent.ItemType<MoneySign>(), 15).AddIngredient(ModContent.ItemType<StygianCore>(), 3).AddIngredient(ModContent.ItemType<WovenEntrophite>(), 100).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 	public class MVMUpgrade : ModItem
@@ -2536,11 +2261,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2562,11 +2287,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 25, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 25, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2579,13 +2304,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("IronBar", 1);
-			recipe.AddIngredient(ItemID.Chain, 2);
-			recipe.AddIngredient(ItemID.Leather, 3);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddRecipeGroup("IronBar", 1).AddIngredient(ItemID.Chain, 2).AddIngredient(ItemID.Leather, 3).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -2675,11 +2394,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Orange;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override string Texture
@@ -2698,8 +2417,8 @@ namespace SGAmod.Items.Accessories
 			{
 				Texture2D texture = Main.itemTexture[ItemID.GuideVoodooDoll];
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-				spriteBatch.Draw(texture, item.Center + new Vector2(-6, 0) - Main.screenPosition, null, lightColor, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
-				spriteBatch.Draw(Main.itemTexture[ItemID.ClothierVoodooDoll], item.Center + new Vector2(6, 0) - Main.screenPosition, null, lightColor, 0f, textureOrigin, 1f, SpriteEffects.FlipHorizontally, 0f);
+				spriteBatch.Draw(texture, Item.Center + new Vector2(-6, 0) - Main.screenPosition, null, lightColor, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(Main.itemTexture[ItemID.ClothierVoodooDoll], Item.Center + new Vector2(6, 0) - Main.screenPosition, null, lightColor, 0f, textureOrigin, 1f, SpriteEffects.FlipHorizontally, 0f);
 			}
 			return false;
 		}
@@ -2720,13 +2439,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WhiteString, 2);
-			recipe.AddIngredient(ItemID.GuideVoodooDoll, 1);
-			recipe.AddIngredient(ItemID.ClothierVoodooDoll, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.WhiteString, 2).AddIngredient(ItemID.GuideVoodooDoll, 1).AddIngredient(ItemID.ClothierVoodooDoll, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -2742,11 +2455,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Orange;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2775,11 +2488,11 @@ namespace SGAmod.Items.Accessories
 
         public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2791,19 +2504,14 @@ namespace SGAmod.Items.Accessories
 		{
 			if (sgaply.voidEmbrancers)
 			{
-				sgaply.player.statDefense += (int)(sgaply.player.GetModPlayer<IdgPlayer>().radationAmmount / 10f);
-				sgaply.player.statDefense += (int)((sgaply.player.statLifeMax2 - sgaply.player.statLife) / 25);
+				sgaply.Player.statDefense += (int)(sgaply.Player.GetModPlayer<IdgPlayer>().radationAmmount / 10f);
+				sgaply.Player.statDefense += (int)((sgaply.Player.statLifeMax2 - sgaply.Player.statLife) / 25);
 			}
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<UnmanedBar>(), 8);
-			recipe.AddIngredient(ModContent.ItemType<WovenEntrophite>(), 40);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<UnmanedBar>(), 8).AddIngredient(ModContent.ItemType<WovenEntrophite>(), 40).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -2818,11 +2526,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Orange;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2843,12 +2551,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.lifeRegen = 1;
-			item.rare = ItemRarityID.LightRed;
-			item.value = Item.buyPrice(0, 10, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.lifeRegen = 1;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = Item.buyPrice(0, 10, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2861,21 +2569,8 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BandofStarpower, 1);
-			recipe.AddIngredient(ItemID.BandofRegeneration, 1);
-			recipe.AddIngredient(mod.ItemType("RingOfRespite"), 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.PanicNecklace, 1);
-			recipe.AddIngredient(ItemID.BandofRegeneration, 1);
-			recipe.AddIngredient(mod.ItemType("RingOfRespite"), 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.BandofStarpower, 1).AddIngredient(ItemID.BandofRegeneration, 1).AddIngredient(mod.ItemType("RingOfRespite"), 1).AddTile(TileID.TinkerersWorkbench).Register();
+			CreateRecipe(1).AddIngredient(ItemID.PanicNecklace, 1).AddIngredient(ItemID.BandofRegeneration, 1).AddIngredient(mod.ItemType("RingOfRespite"), 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -2891,11 +2586,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.sellPrice(0, 2, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.sellPrice(0, 2, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2910,14 +2605,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<BlinkTech>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Transformer>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<PlasmaCell>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<PrismalBar>(), 8);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<BlinkTech>(), 1).AddIngredient(ModContent.ItemType<Transformer>(), 1).AddIngredient(ModContent.ItemType<PlasmaCell>(), 2).AddIngredient(ModContent.ItemType<PrismalBar>(), 8).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -2933,11 +2621,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 2;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 2;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2959,11 +2647,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 2;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 2;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -2985,11 +2673,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 5;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 5;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3001,12 +2689,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("SecondCylinder"), 1);
-			recipe.AddIngredient(mod.ItemType("GunBarrelParts"), 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("SecondCylinder"), 1).AddIngredient(mod.ItemType("GunBarrelParts"), 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -3023,16 +2706,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 6;
-			item.value = Item.buyPrice(0, 10, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 6;
+			Item.value = Item.buyPrice(0, 10, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void HoldItem(Player player)
 		{
-			if (item.value == Item.buyPrice(0, 10, 0, 0))
+			if (Item.value == Item.buyPrice(0, 10, 0, 0))
 				Item.sellPrice(0, 2, 50, 0);
 		}
 
@@ -3060,12 +2743,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 3;
-			item.value = Item.sellPrice(0, 2, 0, 0);
-			item.accessory = true;
-			item.defense = 4;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 3;
+			Item.value = Item.sellPrice(0, 2, 0, 0);
+			Item.accessory = true;
+			Item.defense = 4;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3098,7 +2781,7 @@ namespace SGAmod.Items.Accessories
 					int slot = -1;
 					for (int l = 3; l < 8 + player.extraAccessorySlots; l++)
 					{
-						if (player.armor[l].type == item.type)
+						if (player.armor[l].type == Item.type)
 						{
 							slot = l;
 							break;
@@ -3118,13 +2801,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<CobaltHorseshoe>(), 1);
-			recipe.AddIngredient(ItemID.ShoeSpikes, 1);
-			recipe.AddIngredient(ItemID.Spike, 15);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<CobaltHorseshoe>(), 1).AddIngredient(ItemID.ShoeSpikes, 1).AddIngredient(ItemID.Spike, 15).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -3140,11 +2817,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 3;
-			item.value = Item.sellPrice(0, 2, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 3;
+			Item.value = Item.sellPrice(0, 2, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3160,12 +2837,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Sunglasses, 1);
-			recipe.AddRecipeGroup("SGAmod:Tier5Bars", 8);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Sunglasses, 1).AddRecipeGroup("SGAmod:Tier5Bars", 8).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -3181,11 +2853,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 7;
-			item.value = Item.sellPrice(0, 2, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 7;
+			Item.value = Item.sellPrice(0, 2, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3196,14 +2868,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("HighNoon"), 1);
-			recipe.AddRecipeGroup("SGAmod:IchorOrCursed", 12);
-			recipe.AddIngredient(mod.ItemType("Entrophite"), 50);
-			recipe.AddIngredient(mod.ItemType("StygianCore"), 2);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("HighNoon"), 1).AddRecipeGroup("SGAmod:IchorOrCursed", 12).AddIngredient(mod.ItemType("Entrophite"), 50).AddIngredient(mod.ItemType("StygianCore"), 2).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -3225,12 +2890,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.defense = 4;
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Cyan;
-			item.value = Item.sellPrice(0, 75, 0, 0);
-			item.accessory = true;
+			Item.defense = 4;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Cyan;
+			Item.value = Item.sellPrice(0, 75, 0, 0);
+			Item.accessory = true;
 		}
 
         public override bool Autoload(ref string name)
@@ -3262,12 +2927,12 @@ namespace SGAmod.Items.Accessories
 			{
 				s = key;
 			}
-			tooltips.Add(new TooltipLine(mod, "GunSlingerLegendTooltip", "Press the 'Gunslinger Legend' hotkey to challenge the enemy nearest your mouse curser to a duel (" + s + ")"));
-			tooltips.Add(new TooltipLine(mod, "GunSlingerLegendTooltip", "You do 75% increased damage against this target, but 75% reduced damage to anything else"));
-			tooltips.Add(new TooltipLine(mod, "GunSlingerLegendTooltip", Idglib.ColorText(Color.Orange, "Requires 1 Cooldown stack, adds 30 seconds")));
-			tooltips.Add(new TooltipLine(mod, "GunSlingerLegendTooltip", "Combines the Effects of:"));
-			tooltips.Add(new TooltipLine(mod, "GunSlingerLegendTooltip", "-Sparing Spurs and Peacekeeper's Duster"));
-			tooltips.Add(new TooltipLine(mod, "GunSlingerLegendTooltip", "-Gunsmith's Belt of Tools and Dueling Deity's Shades"));
+			tooltips.Add(new TooltipLine(Mod, "GunSlingerLegendTooltip", "Press the 'Gunslinger Legend' hotkey to challenge the enemy nearest your mouse curser to a duel (" + s + ")"));
+			tooltips.Add(new TooltipLine(Mod, "GunSlingerLegendTooltip", "You do 75% increased damage against this target, but 75% reduced damage to anything else"));
+			tooltips.Add(new TooltipLine(Mod, "GunSlingerLegendTooltip", Idglib.ColorText(Color.Orange, "Requires 1 Cooldown stack, adds 30 seconds")));
+			tooltips.Add(new TooltipLine(Mod, "GunSlingerLegendTooltip", "Combines the Effects of:"));
+			tooltips.Add(new TooltipLine(Mod, "GunSlingerLegendTooltip", "-Sparing Spurs and Peacekeeper's Duster"));
+			tooltips.Add(new TooltipLine(Mod, "GunSlingerLegendTooltip", "-Gunsmith's Belt of Tools and Dueling Deity's Shades"));
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3281,17 +2946,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PeacekeepersDuster"), 1);
-			recipe.AddIngredient(mod.ItemType("DuelingDeity"), 1);
-			recipe.AddIngredient(mod.ItemType("GunsmithsBeltofTools"), 1);
-			recipe.AddIngredient(mod.ItemType("SparingSpurs"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 20);
-			recipe.AddIngredient(ItemID.LunarBar, 15);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PeacekeepersDuster"), 1).AddIngredient(mod.ItemType("DuelingDeity"), 1).AddIngredient(mod.ItemType("GunsmithsBeltofTools"), 1).AddIngredient(mod.ItemType("SparingSpurs"), 1).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("StarMetalBar"), 20).AddIngredient(ItemID.LunarBar, 15).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -3308,11 +2963,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.LightRed;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3334,11 +2989,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.LightPurple;
-			item.value = Item.sellPrice(0, 8, 0, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.value = Item.sellPrice(0, 8, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -3351,16 +3006,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NinjaSash"), 1);
-			recipe.AddIngredient(mod.ItemType("ThrowerPouch"), 1);
-			recipe.AddIngredient(ItemID.Katana, 1);
-			recipe.AddIngredient(ItemID.SmokeBomb, 100);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 15);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 8);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NinjaSash"), 1).AddIngredient(mod.ItemType("ThrowerPouch"), 1).AddIngredient(ItemID.Katana, 1).AddIngredient(ItemID.SmokeBomb, 100).AddIngredient(mod.ItemType("OmniSoul"), 15).AddIngredient(mod.ItemType("VirulentBar"), 8).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -3375,11 +3021,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = 6;
-			item.value = Item.buyPrice(0, 60, 0, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = 6;
+			Item.value = Item.buyPrice(0, 60, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override Color? GetAlpha(Color lightColor)
@@ -3412,18 +3058,18 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 4;
-			item.handOnSlot = 11;
-			item.handOffSlot = 6;
-			item.shoeSlot = 14;
-			item.value = Item.sellPrice(0, 25, 0, 0);
-			item.accessory = true;
-			item.handOnSlot = 11;
-			item.handOffSlot = 6;
-			item.shoeSlot = 14;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 4;
+			Item.handOnSlot = 11;
+			Item.handOffSlot = 6;
+			Item.shoeSlot = 14;
+			Item.value = Item.sellPrice(0, 25, 0, 0);
+			Item.accessory = true;
+			Item.handOnSlot = 11;
+			Item.handOffSlot = 6;
+			Item.shoeSlot = 14;
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
@@ -3451,17 +3097,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("ShinSash"), 1);
-			recipe.AddIngredient(ItemID.MasterNinjaGear, 1);
-			recipe.AddIngredient(ItemID.Gi, 1);
-			recipe.AddIngredient(mod.ItemType("ShinobiShiv"), 1);
-			recipe.AddIngredient(mod.ItemType("JavelinBundle"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 16);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ShinSash"), 1).AddIngredient(ItemID.MasterNinjaGear, 1).AddIngredient(ItemID.Gi, 1).AddIngredient(mod.ItemType("ShinobiShiv"), 1).AddIngredient(mod.ItemType("JavelinBundle"), 1).AddIngredient(mod.ItemType("PrismalBar"), 12).AddIngredient(mod.ItemType("StarMetalBar"), 16).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -3496,12 +3132,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
 		}
 	}
 	public class RussianRoulette : ModItem
@@ -3519,12 +3155,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
 		}
 	}
 	public class CardDeckPersona : Weapons.Almighty.TheJoker
@@ -3542,12 +3178,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 	}
 
@@ -3574,7 +3210,7 @@ namespace SGAmod.Items.Accessories
 			return player.SGAPly().AddCooldownStack(60 * 60, 1);
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
 			List<int> possibleEvents = new List<int>();
 			possibleEvents.Add(0);
@@ -3638,18 +3274,18 @@ namespace SGAmod.Items.Accessories
 
         public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(silver: 50);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(silver: 50);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 
-			item.useStyle = ItemUseStyleID.EatingUsing;
-			item.UseSound = SoundID.Item3;
-			item.useAnimation = 15;
-			item.useTime = 15;
-			item.noMelee = true;
+			Item.useStyle = ItemUseStyleID.EatFood;
+			Item.UseSound = SoundID.Item3;
+			Item.useAnimation = 15;
+			Item.useTime = 15;
+			Item.noMelee = true;
 		}
 	}
 
@@ -3689,27 +3325,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 5);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 5);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<SnakeEyes>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<RussianRoulette>(), 1);
-            recipe.AddIngredient(ModContent.ItemType<CardDeckPersona>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<LiquidGambling>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<TerrariacoCrateBase>(), 1);
-			recipe.AddIngredient(ItemID.LockBox, 1);
-			recipe.AddIngredient(ItemID.Stake, 100);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<SnakeEyes>(), 1).AddIngredient(ModContent.ItemType<RussianRoulette>(), 1).AddIngredient(ModContent.ItemType<CardDeckPersona>(), 1).AddIngredient(ModContent.ItemType<LiquidGambling>(), 1).AddIngredient(ModContent.ItemType<TerrariacoCrateBase>(), 1).AddIngredient(ItemID.LockBox, 1).AddIngredient(ItemID.Stake, 100).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -3729,13 +3355,13 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.Blue;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.Blue;
 		}
 	}
 
@@ -3810,12 +3436,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 
 	}
@@ -3825,7 +3451,7 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Concussion Device");
 			Tooltip.SetDefault("'This device will provide a stronger blow to those who can normally take it'\nDo more damage the more knockback immunity an enemy has; Up to a max of 20%\nAdditionally: Effectiveness is improved by 5% of your attack's knockback");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 4));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
 		}
 
 		public override bool Autoload(ref string name)
@@ -3852,12 +3478,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 	}
 
@@ -3871,12 +3497,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 	}
 
@@ -3909,23 +3535,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.TallyCounter, 1);
-			recipe.AddIngredient(ItemID.TatteredCloth, 4);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.DankCore>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<TheBountyHunter>(), 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.TallyCounter, 1).AddIngredient(ItemID.TatteredCloth, 4).AddIngredient(ModContent.ItemType<HavocGear.Items.DankCore>(), 2).AddIngredient(ModContent.ItemType<TheBountyHunter>(), 1).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -3951,24 +3570,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 12);
-			recipe.AddIngredient(mod.ItemType("NoviteHelmet"), 1);
-			recipe.AddIngredient(mod.ItemType("NoviteChestplate"), 1);
-			recipe.AddIngredient(mod.ItemType("NoviteLeggings"), 1);
-			recipe.AddIngredient(ItemID.HallowedBar, 8);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NoviteBar"), 12).AddIngredient(mod.ItemType("NoviteHelmet"), 1).AddIngredient(mod.ItemType("NoviteChestplate"), 1).AddIngredient(mod.ItemType("NoviteLeggings"), 1).AddIngredient(ItemID.HallowedBar, 8).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 	}
 	public class NovusCore : ModItem
@@ -3992,24 +3603,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 12);
-			recipe.AddIngredient(mod.ItemType("UnmanedHood"), 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedBreastplate"), 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedLeggings"), 1);
-			recipe.AddIngredient(ItemID.HallowedBar, 8);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 12).AddIngredient(mod.ItemType("UnmanedHood"), 1).AddIngredient(mod.ItemType("UnmanedBreastplate"), 1).AddIngredient(mod.ItemType("UnmanedLeggings"), 1).AddIngredient(ItemID.HallowedBar, 8).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -4029,21 +3632,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(silver: 50);
-			item.rare = ItemRarityID.Blue;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(silver: 50);
+			Item.rare = ItemRarityID.Blue;
+			Item.accessory = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NoviteBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -4062,20 +3661,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(silver: 50);
-			item.rare = ItemRarityID.Blue;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(silver: 50);
+			Item.rare = ItemRarityID.Blue;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 	[AutoloadEquip(EquipType.Neck)]
@@ -4089,30 +3684,24 @@ namespace SGAmod.Items.Accessories
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.minionDamage += 0.10f;
+			player.GetDamage(DamageClass.Summon) += 0.10f;
 			(float, float) boost = (player.SGAPly().auraBoosts.Item1+1f, player.SGAPly().auraBoosts.Item2);
 			player.SGAPly().auraBoosts = boost;
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.Blue;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.Blue;
+			Item.accessory = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.CrystalShard, 25);
-			recipe.AddIngredient(ModContent.ItemType<CryostalBar>(), 8);
-			recipe.AddIngredient(ItemID.Chain, 2);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.CrystalShard, 25).AddIngredient(ModContent.ItemType<CryostalBar>(), 8).AddIngredient(ItemID.Chain, 2).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -4131,34 +3720,23 @@ namespace SGAmod.Items.Accessories
 			base.UpdateAccessory(player,hideVisual);
 			player.maxMinions += 2;
 			player.maxTurrets += 1;
-			player.minionDamage += 0.35f;
+			player.GetDamage(DamageClass.Summon) += 0.35f;
 			player.minionKB += 2f;
 			player.BoostAllDamage(-0.10f, -10);
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(silver: 50);
-			item.rare = ItemRarityID.Cyan;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(silver: 50);
+			Item.rare = ItemRarityID.Cyan;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<NovusSummoning>(), 1);
-			recipe.AddIngredient(ModContent.ItemType< NoviteChip>(), 1);
-			recipe.AddIngredient(ItemID.SummonerEmblem, 1);
-			recipe.AddIngredient(ItemID.PygmyNecklace, 1);
-			recipe.AddIngredient(ModContent.ItemType<PrismalBar>(), 10);
-			recipe.AddIngredient(ModContent.ItemType<AuraclesInsight>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 32);
-
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<NovusSummoning>(), 1).AddIngredient(ModContent.ItemType< NoviteChip>(), 1).AddIngredient(ItemID.SummonerEmblem, 1).AddIngredient(ItemID.PygmyNecklace, 1).AddIngredient(ModContent.ItemType<PrismalBar>(), 10).AddIngredient(ModContent.ItemType<AuraclesInsight>(), 1).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 32).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 	}
 
@@ -4181,13 +3759,13 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.Green;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.Green;
 		}
 	}
 
@@ -4232,9 +3810,9 @@ namespace SGAmod.Items.Accessories
 
 			get
 			{
-				Player player = Main.player[projectile.owner];
+				Player player = Main.player[Projectile.owner];
 
-				return (200f* (1f+(player.SGAPly().auraBoosts.Item1/2f)) * MathHelper.Clamp(projectile.timeLeft / (float)MaxTime, 0f, 1f));
+				return (200f* (1f+(player.SGAPly().auraBoosts.Item1/2f)) * MathHelper.Clamp(Projectile.timeLeft / (float)MaxTime, 0f, 1f));
 
 			}
 		}
@@ -4245,7 +3823,7 @@ namespace SGAmod.Items.Accessories
 
 			get
 			{
-				Player player = Main.player[projectile.owner];
+				Player player = Main.player[Projectile.owner];
 				return (int)(10f * (1f + (player.SGAPly().auraBoosts.Item1 / 2f)));
 			}
 
@@ -4259,43 +3837,43 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			projectile.width = 160;
-			projectile.height = 160;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.tileCollide = false;
-			projectile.alpha = 40;
-			projectile.timeLeft = 30;
-			projectile.extraUpdates = 0;
-			projectile.ignoreWater = true;
-			projectile.damage = 20;
+			Projectile.width = 160;
+			Projectile.height = 160;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.tileCollide = false;
+			Projectile.alpha = 40;
+			Projectile.timeLeft = 30;
+			Projectile.extraUpdates = 0;
+			Projectile.ignoreWater = true;
+			Projectile.damage = 20;
 		}
 
 		public override void AI()
 		{
 
-			if (projectile.timeLeft > 28)
+			if (Projectile.timeLeft > 28)
 			{
 				float realsize = (RingSize * 0.90f);
-				bool playerbased = projectile.ai[1] <= 0 && (projectile.owner < Main.maxPlayers && Main.player[projectile.owner].velocity.Length() < 0.05f);
-				bool projbased = projectile.ai[1] > 0 && Main.projectile[(int)projectile.ai[1] - 1].active && Main.projectile[(int)projectile.ai[1] - 1].sentry && Main.projectile[(int)projectile.ai[1] - 1].velocity.Length() < 0.25f;
+				bool playerbased = Projectile.ai[1] <= 0 && (Projectile.owner < Main.maxPlayers && Main.player[Projectile.owner].velocity.Length() < 0.05f);
+				bool projbased = Projectile.ai[1] > 0 && Main.projectile[(int)Projectile.ai[1] - 1].active && Main.projectile[(int)Projectile.ai[1] - 1].sentry && Main.projectile[(int)Projectile.ai[1] - 1].velocity.Length() < 0.25f;
 
 				if (playerbased || projbased)
 				{
-					Player playz = Main.player[projectile.owner];
+					Player playz = Main.player[Projectile.owner];
 					if (playz.SGAPly().bustlingFungus.Item1)
 					{
-						projectile.timeLeft = 30;
-						Projectile masterproj = projbased ? Main.projectile[(int)projectile.ai[1] - 1] : null;
+						Projectile.timeLeft = 30;
+						Projectile masterproj = projbased ? Main.projectile[(int)Projectile.ai[1] - 1] : null;
 
-						Entity ent = projbased ? (Entity)masterproj : (Entity)Main.player[projectile.owner];
-						projectile.Center = ent.Center;
+						Entity ent = projbased ? (Entity)masterproj : (Entity)Main.player[Projectile.owner];
+						Projectile.Center = ent.Center;
 					}
 
 
-					if (projectile.localAI[0] > MaxTime && projectile.timeLeft > 29)
+					if (Projectile.localAI[0] > MaxTime && Projectile.timeLeft > 29)
 					{
-						foreach (Player player in Main.player.Where(testby => testby.active && testby.IsAlliedPlayer(playz) && (testby.Center - projectile.Center).Length() < realsize))
+						foreach (Player player in Main.player.Where(testby => testby.active && testby.IsAlliedPlayer(playz) && (testby.Center - Projectile.Center).Length() < realsize))
 						{
 							player.SGAPly().postLifeRegenBoost += HealingRate;
 						}
@@ -4303,7 +3881,7 @@ namespace SGAmod.Items.Accessories
 				}
 			}
 
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 
 		}
 
@@ -4314,7 +3892,7 @@ namespace SGAmod.Items.Accessories
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D mainTex = Main.projectileTexture[projectile.type];
+			Texture2D mainTex = Main.projectileTexture[Projectile.type];
 			Effect RadialEffect = SGAmod.RadialEffect;
 
 			float alpha = 1f;
@@ -4324,29 +3902,29 @@ namespace SGAmod.Items.Accessories
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("SmallLaserHorz"));
+			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaserHorz").Value);
 			RadialEffect.Parameters["alpha"].SetValue(0.70f * alpha);
-			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.075f, 0.20f));
+			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.075f, 0.20f));
 			RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(1f, 2f));
 			RadialEffect.Parameters["ringScale"].SetValue(0.008f * alpha);
-			RadialEffect.Parameters["ringOffset"].SetValue(((projectile.timeLeft / (float)MaxSize)) * 0.9f);
+			RadialEffect.Parameters["ringOffset"].SetValue(((Projectile.timeLeft / (float)MaxSize)) * 0.9f);
 			RadialEffect.Parameters["ringColor"].SetValue(Color.Lime.ToVector3());
 			RadialEffect.Parameters["tunnel"].SetValue(false);
 
 			RadialEffect.CurrentTechnique.Passes["RadialAlpha"].Apply();
 
-			Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.Lime, 0, half, RingSize * 0.5f * MathHelper.Clamp(projectile.localAI[0] / (float)MaxTime, 0f, 1f), default, 0);
+			Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.Lime, 0, half, RingSize * 0.5f * MathHelper.Clamp(Projectile.localAI[0] / (float)MaxTime, 0f, 1f), default, 0);
 
 
-			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("SmallLaserHorz"));
+			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaserHorz").Value);
 			RadialEffect.Parameters["alpha"].SetValue(1.15f * alpha);
-			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, -Main.GlobalTime * 0.275f));
+			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, -Main.GlobalTimeWrappedHourly * 0.275f));
 			RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 5f));
 			RadialEffect.Parameters["ringScale"].SetValue(0.032f * alpha);
 
 			RadialEffect.CurrentTechnique.Passes["RadialAlpha"].Apply();
 
-			Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.Lime, 0, half, RingSize * 0.5f*MathHelper.Clamp(projectile.localAI[0]/ (float)MaxTime, 0f,1f), default, 0);
+			Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.Lime, 0, half, RingSize * 0.5f*MathHelper.Clamp(Projectile.localAI[0]/ (float)MaxTime, 0f,1f), default, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -4379,33 +3957,24 @@ namespace SGAmod.Items.Accessories
 			player.maxMinions += 1;
 			player.minionKB += 1;
 			player.dd2Accessory = true;//10%
-			player.minionDamage += 0.30f;
+			player.GetDamage(DamageClass.Summon) += 0.30f;
 			player.BoostAllDamage(-0.15f,-15);
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 26;
-			item.defense = 0;
-			item.accessory = true;
-			item.height = 14;
-			item.value = Item.buyPrice(0, 10, 0, 0);
-			item.expert = true;
-			item.rare = ItemRarityID.Cyan;
+			Item.maxStack = 1;
+			Item.width = 26;
+			Item.defense = 0;
+			Item.accessory = true;
+			Item.height = 14;
+			Item.value = Item.buyPrice(0, 10, 0, 0);
+			Item.expert = true;
+			Item.rare = ItemRarityID.Cyan;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<PrismalNecklace>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<BustlingFungus>(), 1);
-			recipe.AddRecipeGroup("SGAmod:DD2Accessories", 1);
-			recipe.AddIngredient(ItemID.ShinyStone, 1);
-			recipe.AddIngredient(ItemID.PapyrusScarab, 1);
-			recipe.AddIngredient(ModContent.ItemType<LunarRoyalGel>(), 12);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<PrismalNecklace>(), 1).AddIngredient(ModContent.ItemType<BustlingFungus>(), 1).AddRecipeGroup("SGAmod:DD2Accessories", 1).AddIngredient(ItemID.ShinyStone, 1).AddIngredient(ItemID.PapyrusScarab, 1).AddIngredient(ModContent.ItemType<LunarRoyalGel>(), 12).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 	}
 	public class PrismalCore : ModItem
@@ -4426,22 +3995,16 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 16);
-			recipe.AddIngredient(mod.ItemType("NoviteCore"), 1);
-			recipe.AddIngredient(mod.ItemType("NovusCore"), 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalBar"), 16).AddIngredient(mod.ItemType("NoviteCore"), 1).AddIngredient(mod.ItemType("NovusCore"), 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -4460,12 +4023,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 3);
-			item.rare = ItemRarityID.LightPurple;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 3);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
@@ -4495,9 +4058,9 @@ namespace SGAmod.Items.Accessories
         }
 		private void DoMoreDamageAndTakeLess(SGAPlayer player, PlayerDeathReason damageSource, ref int damage, ref int hitDirection, bool pvp, bool quiet, ref bool Crit, int cooldownCounter)
 		{
-			if (player != null && damageSource != null && player.refractor && (cooldownCounter < 0 || (cooldownCounter >= 0 && player.player.hurtCooldowns[cooldownCounter] <= 0)))
+			if (player != null && damageSource != null && player.refractor && (cooldownCounter < 0 || (cooldownCounter >= 0 && player.Player.hurtCooldowns[cooldownCounter] <= 0)))
 			{
-				Player ply = player.player;
+				Player ply = player.Player;
 				int damageTaken = (int)(damage * 0.75);
 				damage -= damageTaken;
 				int damageToDo = damage * 3;
@@ -4525,23 +4088,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<HeliosFocusCrystal>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 20);
-			recipe.AddIngredient(ItemID.LightShard, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<HeliosFocusCrystal>(), 2).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 20).AddIngredient(ItemID.LightShard, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 	}
 
@@ -4569,12 +4126,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(gold: 2);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(gold: 2);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 	}
 
@@ -4601,12 +4158,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.sellPrice(silver: 25);
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.sellPrice(silver: 25);
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
 		}
 
 	}
@@ -4628,12 +4185,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.buyPrice(gold: 2);
-			item.rare = ItemRarityID.Pink;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.buyPrice(gold: 2);
+			Item.rare = ItemRarityID.Pink;
+			Item.accessory = true;
 		}
 	}
 
@@ -4659,37 +4216,37 @@ namespace SGAmod.Items.Accessories
 				{
 					Main.tile[num2, num3] = new Tile();
 				}
-				if (!Main.tile[num2, num3].active() && Main.tile[num2, num3].liquid == 0 && Main.tile[num2, num3 + 1] != null && WorldGen.SolidTile(num2, num3 + 1))
+				if (!Main.tile[num2, num3].HasTile && Main.tile[num2, num3].liquid == 0 && Main.tile[num2, num3 + 1] != null && WorldGen.SolidTile(num2, num3 + 1))
 				{
-					Main.tile[num2, num3].frameY = 0;
+					Main.tile[num2, num3].TileFrameY = 0;
 					Main.tile[num2, num3].slope(0);
-					Main.tile[num2, num3].halfBrick(halfBrick: false);
-					if (Main.tile[num2, num3 + 1].type == TileID.Grass || Main.tile[num2, num3 + 1].type == TileID.JungleGrass || Main.tile[num2, num3 + 1].type == TileID.HallowedGrass)
+					Main.tile[num2, num3].IsHalfBlock;
+					if (Main.tile[num2, num3 + 1].TileType == TileID.Grass || Main.tile[num2, num3 + 1].TileType == TileID.JungleGrass || Main.tile[num2, num3 + 1].TileType == TileID.HallowedGrass)
 					{
 						if (Main.rand.Next(2) == 0)
 						{
-							Main.tile[num2, num3].active(active: true);
-							Main.tile[num2, num3].type = 3;
-							Main.tile[num2, num3].frameX = (short)(18 * Main.rand.Next(6, 11));
-							while (Main.tile[num2, num3].frameX == 144)
+							Main.tile[num2, num3].HasTile;
+							Main.tile[num2, num3].TileType = 3;
+							Main.tile[num2, num3].TileFrameX = (short)(18 * Main.rand.Next(6, 11));
+							while (Main.tile[num2, num3].TileFrameX == 144)
 							{
-								Main.tile[num2, num3].frameX = (short)(18 * Main.rand.Next(6, 11));
+								Main.tile[num2, num3].TileFrameX = (short)(18 * Main.rand.Next(6, 11));
 							}
 						}
 						else if (Main.rand.Next(6) == 0)
 						{
-							Main.tile[num2, num3].active(active: true);
-							Main.tile[num2, num3].type = (ushort)mod.TileType("ManaHerb");
-							Main.tile[num2, num3].frameX = (short)(18 * Main.rand.Next(9, 14));
+							Main.tile[num2, num3].HasTile;
+							Main.tile[num2, num3].TileType = (ushort)Mod.Find<ModTile>("ManaHerb").Type;
+							Main.tile[num2, num3].TileFrameX = (short)(18 * Main.rand.Next(9, 14));
 						}
 						else
 						{
-							Main.tile[num2, num3].active(active: true);
-							Main.tile[num2, num3].type = 73;
-							Main.tile[num2, num3].frameX = (short)(18 * Main.rand.Next(6, 21));
-							while (Main.tile[num2, num3].frameX == 144)
+							Main.tile[num2, num3].HasTile;
+							Main.tile[num2, num3].TileType = 73;
+							Main.tile[num2, num3].TileFrameX = (short)(18 * Main.rand.Next(6, 21));
+							while (Main.tile[num2, num3].TileFrameX == 144)
 							{
-								Main.tile[num2, num3].frameX = (short)(18 * Main.rand.Next(6, 21));
+								Main.tile[num2, num3].TileFrameX = (short)(18 * Main.rand.Next(6, 21));
 							}
 						}
 						if (Main.netMode == 1)
@@ -4742,24 +4299,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.buyPrice(gold: 2);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.buyPrice(gold: 2);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.FlowerBoots, 1);
-			recipe.AddIngredient(ModContent.ItemType<MagusSlippers>(), 1);
-			recipe.AddIngredient(ItemID.ManaCrystal, 1);
-			recipe.AddIngredient(ItemID.LightShard, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.FlowerBoots, 1).AddIngredient(ModContent.ItemType<MagusSlippers>(), 1).AddIngredient(ItemID.ManaCrystal, 1).AddIngredient(ItemID.LightShard, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 	}
 
@@ -4783,12 +4333,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.buyPrice(gold: 2);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.buyPrice(gold: 2);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 
 	}
@@ -4809,12 +4359,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.buyPrice(silver: 30);
-			item.rare = ItemRarityID.Orange;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.buyPrice(silver: 30);
+			Item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
 		}
 
     }
@@ -4837,33 +4387,23 @@ namespace SGAmod.Items.Accessories
 			player.manaMagnet = true;
 			if (!player.manaSick)
 			{
-				player.magicDamage += 0.20f;
-				player.magicCrit += 5;
+				player.GetDamage(DamageClass.Magic) += 0.20f;
+				player.GetCritChance(DamageClass.Magic) += 5;
 			}
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = Item.buyPrice(gold: 3);
-			item.rare = ItemRarityID.Red;
-			item.accessory = true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = Item.buyPrice(gold: 3);
+			Item.rare = ItemRarityID.Red;
+			Item.accessory = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DruidicSneakers>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<StarCollector>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<EnchantedShieldPolish>(), 1);
-			recipe.AddIngredient(ItemID.CelestialEmblem, 1);
-			recipe.AddIngredient(ItemID.Bunny, 1);
-			recipe.AddIngredient(ItemID.TaxCollectorsStickOfDoom, 1);
-			recipe.AddIngredient(ItemID.MagicHat, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DruidicSneakers>(), 1).AddIngredient(ModContent.ItemType<StarCollector>(), 1).AddIngredient(ModContent.ItemType<EnchantedShieldPolish>(), 1).AddIngredient(ItemID.CelestialEmblem, 1).AddIngredient(ItemID.Bunny, 1).AddIngredient(ItemID.TaxCollectorsStickOfDoom, 1).AddIngredient(ItemID.MagicHat, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -4880,11 +4420,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.buyPrice(0, 2, 50, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.buyPrice(0, 2, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -4908,15 +4448,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ArcticDivingGear, 1);
-			recipe.AddIngredient(ModContent.ItemType<PocketRocks>(), 1);
-			recipe.AddIngredient(ItemID.BreathingReed, 1);
-			recipe.AddIngredient(ItemID.SoulofLight, 4);
-			recipe.AddIngredient(ItemID.SoulofNight, 4);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.ArcticDivingGear, 1).AddIngredient(ModContent.ItemType<PocketRocks>(), 1).AddIngredient(ItemID.BreathingReed, 1).AddIngredient(ItemID.SoulofLight, 4).AddIngredient(ItemID.SoulofNight, 4).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 	}
@@ -4930,11 +4462,11 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -4948,13 +4480,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 50);
-			recipe.needLava = true;
-			recipe.needWater = true;
-			recipe.needHoney = true;
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("BottledMud"), 50).Register();
 		}
 	}
 	public class NoviteAirTank : ModItem
@@ -4980,21 +4506,21 @@ namespace SGAmod.Items.Accessories
             if (sgaply.airTank)
             {
 
-				float scaler = 1f + (sgaply.player.arcticDivingGear ? 0.5f : 0f) + (sgaply.terraDivingGear ? 0.75f : 0) + (sgaply.prismalDivingGear ? 0.75f : 0);
-				int defensegiven = (int)((sgaply.player.breathMax/20)*scaler);
+				float scaler = 1f + (sgaply.Player.arcticDivingGear ? 0.5f : 0f) + (sgaply.terraDivingGear ? 0.75f : 0) + (sgaply.prismalDivingGear ? 0.75f : 0);
+				int defensegiven = (int)((sgaply.Player.breathMax/20)*scaler);
 
-				sgaply.player.statDefense += Math.Max((int)((1f - ((float)sgaply.player.breath / (float)sgaply.player.breathMax)) * defensegiven), 0);
+				sgaply.Player.statDefense += Math.Max((int)((1f - ((float)sgaply.Player.breath / (float)sgaply.Player.breathMax)) * defensegiven), 0);
 
 			}
         }
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5009,11 +4535,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<NoviteBar>(), 8).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -5025,16 +4547,16 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Prismal Air Tank");
 			Tooltip.SetDefault("+5 max Breath Bubbles, "+ Language.GetTextValue("ItemTooltip.FlipperPotion")+ "\nGrants more defense per missing breat, becomes stronger with better breathing gear\nImproved Life and Mana regen while wet\nGrants an additional free Action Cooldown Stack while wet");
-			backItem = item.backSlot;
+			backItem = Item.backSlot;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.accessory = true;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5052,14 +4574,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<PrismalBar>(), 8);
-			recipe.AddIngredient(ModContent.ItemType<NoviteAirTank>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<BottledLiquidEssence>(), 1);
-			recipe.AddIngredient(ItemID.FlipperPotion, 5);
-			recipe.AddTile(mod.GetTile("PrismalStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<PrismalBar>(), 8).AddIngredient(ModContent.ItemType<NoviteAirTank>(), 1).AddIngredient(ModContent.ItemType<BottledLiquidEssence>(), 1).AddIngredient(ItemID.FlipperPotion, 5).AddTile(mod.GetTile("PrismalStation")).Register();
 		}
 	}
 
@@ -5079,12 +4594,12 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			item.backSlot = PrismalAirTank.backItem;
-			item.width = 18;
-			item.height = 24;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.accessory = true;
+			Item.backSlot = PrismalAirTank.backItem;
+			Item.width = 18;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5096,15 +4611,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<TerraDivingGear>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<PrismalAirTank>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<MurkyCharm>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 30);
-			recipe.AddIngredient(ModContent.ItemType<PrismalBar>(), 12);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<TerraDivingGear>(), 1).AddIngredient(ModContent.ItemType<PrismalAirTank>(), 1).AddIngredient(ModContent.ItemType<MurkyCharm>(), 1).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 30).AddIngredient(ModContent.ItemType<PrismalBar>(), 12).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 	}
 
@@ -5119,12 +4626,12 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare += 1;
-			item.value = Item.sellPrice(0, 0, 25, 0);
-			item.accessory = true;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare += 1;
+			Item.value = Item.sellPrice(0, 0, 25, 0);
+			Item.accessory = true;
+			Item.expert = true;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -5135,14 +4642,14 @@ namespace SGAmod.Items.Accessories
 				s = key;
 			}
 
-			tooltips.Add(new TooltipLine(mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "Press the 'Toggle Aiming Style' (" + s + ") Hotkey to toggle modes")));
+			tooltips.Add(new TooltipLine(Mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "Press the 'Toggle Aiming Style' (" + s + ") Hotkey to toggle modes")));
 		}
 
 		public override string Texture => "Terraria/UI/HotbarRadial_2";
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.gamePadAutoAim = 2;
 			//Terraria.GameContent.Events.DD2Event.LaneSpawnRate = 9;
 		}
@@ -5160,16 +4667,16 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.White;
-			item.value = Item.buyPrice(0, 0, 20, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.White;
+			Item.value = Item.buyPrice(0, 0, 20, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (player.statLife < player.statLifeMax2 / 2)
 			{
 				player.statDefense += 1;
@@ -5196,20 +4703,20 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Green;
-			item.value = Item.buyPrice(0, 1, 50, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Green;
+			Item.value = Item.buyPrice(0, 1, 50, 0);
+			Item.accessory = true;
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime / 4f) % 1f, 0.25f, 0.50f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly / 4f) % 1f, 0.25f, 0.50f);
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.jabALot = true;
 		}
 
@@ -5225,17 +4732,17 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.accessory = true;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.accessory = true;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.tpdcpu = true;
 			sgaplayer.actionCooldownRate -= 0.25f;
 			//Terraria.GameContent.Events.DD2Event.LaneSpawnRate = 9;
@@ -5254,11 +4761,11 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare = 2;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = 2;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5269,12 +4776,7 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.CobaltShield, 1);
-			recipe.AddIngredient(ItemID.ObsidianHorseshoe, 1);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.CobaltShield, 1).AddIngredient(ItemID.ObsidianHorseshoe, 1).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 	}
 
@@ -5289,16 +4791,16 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 24;
-			item.height = 24;
-			item.rare = 2;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = 2;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.accessory = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.aversionCharm = true;
 		}
 
@@ -5316,27 +4818,27 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.ManaFlower);
-			item.width = 12;
-			item.height = 24;
-			item.rare = 1;
-			item.value = Item.buyPrice(0, 0, 50, 0);
-			item.accessory = true;
+			Item.width = 12;
+			Item.height = 24;
+			Item.rare = 1;
+			Item.value = Item.buyPrice(0, 0, 50, 0);
+			Item.accessory = true;
 
-			item.useStyle = 1;
-			item.Throwing().thrown = true;
-			item.damage = 5;
-			item.shootSpeed = 10f;
-			item.shoot = ModContent.ProjectileType<Weapons.RockProj>();
-			item.useTurn = true;
+			Item.useStyle = 1;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.damage = 5;
+			Item.shootSpeed = 10f;
+			Item.shoot = ModContent.ProjectileType<Weapons.RockProj>();
+			Item.useTurn = true;
 			//ProjectileID.CultistBossLightningOrbArc
-			item.width = 12;
-			item.height = 24;
-			item.knockBack = 2;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 8;
-			item.useTime = 8;
-			item.noUseGraphic = true;
-			item.noMelee = true;
+			Item.width = 12;
+			Item.height = 24;
+			Item.knockBack = 2;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 8;
+			Item.useTime = 8;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5352,7 +4854,7 @@ namespace SGAmod.Items.Accessories
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			int probg = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, player.whoAmI);
-			Main.projectile[probg].Throwing().thrown = true;
+			Main.projectile[probg].Throwing().DamageType = DamageClass.Throwing;
 			Main.projectile[probg].friendly = true;
 			Main.projectile[probg].hostile = false;
 			Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(10));
@@ -5377,12 +4879,12 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 32;
-			item.value = 50000;
-			item.maxStack = 1;
-			item.accessory = true;
-			item.rare = ItemRarityID.Orange;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = 50000;
+			Item.maxStack = 1;
+			Item.accessory = true;
+			Item.rare = ItemRarityID.Orange;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5394,24 +4896,18 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("AdvancedPlating"), 8);
-			recipe.AddIngredient(mod.ItemType("LaserMarker"), 4);
-			recipe.AddIngredient(ItemID.WireBulb, 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("AdvancedPlating"), 8).AddIngredient(mod.ItemType("LaserMarker"), 4).AddIngredient(ItemID.WireBulb, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Texture2D inner = mod.GetTexture("Items/GlowMasks/FluidDisplacer_Glow");
+			Texture2D inner = Mod.Assets.Request<Texture2D>("Items/GlowMasks/FluidDisplacer_Glow").Value;
 
 			Vector2 slotSize = new Vector2(52f, 52f);
 			position -= slotSize * Main.inventoryScale / 2f - frame.Size() * scale / 2f;
 			Vector2 drawPos = position + slotSize * Main.inventoryScale / 2f;
 			Vector2 textureOrigin = new Vector2(inner.Width / 2, inner.Height / 2);
-			spriteBatch.Draw(Main.itemTexture[item.type], drawPos, null, drawColor, 0, Main.itemTexture[item.type].Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], drawPos, null, drawColor, 0, Main.itemTexture[Item.type].Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
@@ -5425,11 +4921,11 @@ namespace SGAmod.Items.Accessories
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
 
-			Vector2 position = item.Center - Main.screenPosition;
-			spriteBatch.Draw(Main.itemTexture[item.type], position, null, alphaColor, rotation, Main.itemTexture[item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
+			Vector2 position = Item.Center - Main.screenPosition;
+			spriteBatch.Draw(Main.itemTexture[Item.type], position, null, alphaColor, rotation, Main.itemTexture[Item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
-			Texture2D inner = mod.GetTexture("Items/GlowMasks/FluidDisplacer_Glow");
+			Texture2D inner = Mod.Assets.Request<Texture2D>("Items/GlowMasks/FluidDisplacer_Glow").Value;
 
 
 			Vector2 textureOrigin = new Vector2(inner.Width / 2, inner.Height / 2);
@@ -5452,21 +4948,21 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Granite Magnet");
 			Tooltip.SetDefault("Point at grounded items to attract them from a larger distance\nCan be held out like a torch and used normally by holding shift\nCan be worn to provide a minor increase to item grab radius and grab speed");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 12;
-			item.noUseGraphic = true;
-			item.value = Item.buyPrice(0, 0, 75, 0);
-			item.rare = ItemRarityID.Blue;
-			item.maxStack = 1;
-			item.accessory = true;
-			item.useTurn = false;
-			item.autoReuse = false;
-			item.noMelee = true;
+			Item.width = 32;
+			Item.height = 12;
+			Item.noUseGraphic = true;
+			Item.value = Item.buyPrice(0, 0, 75, 0);
+			Item.rare = ItemRarityID.Blue;
+			Item.maxStack = 1;
+			Item.accessory = true;
+			Item.useTurn = false;
+			Item.autoReuse = false;
+			Item.noMelee = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5482,21 +4978,21 @@ namespace SGAmod.Items.Accessories
 		{
 			DisplayName.SetDefault("Cobalt Magnet");
 			Tooltip.SetDefault("Point at grounded items to quickly attract them from a larger distance\nCan be held out like a torch and used normally by holding shift\nwhile worn:\n-minor increase to item grab radius and grab speed\n-Effects of Celestial Magnet");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 12;
-			item.noUseGraphic = true;
-			item.value = Item.buyPrice(0, 2, 5, 0);
-			item.rare = ItemRarityID.Pink;
-			item.maxStack = 1;
-			item.accessory = true;
-			item.useTurn = false;
-			item.autoReuse = false;
-			item.noMelee = true;
+			Item.width = 32;
+			Item.height = 12;
+			Item.noUseGraphic = true;
+			Item.value = Item.buyPrice(0, 2, 5, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.maxStack = 1;
+			Item.accessory = true;
+			Item.useTurn = false;
+			Item.autoReuse = false;
+			Item.noMelee = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -5507,14 +5003,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.CelestialMagnet, 1);
-			recipe.AddIngredient(ModContent.ItemType<GraniteMagnet>(), 1);
-			recipe.AddIngredient(ItemID.CobaltBar, 5);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 8);
-			recipe.AddTile(TileID.TinkerersWorkbench);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.CelestialMagnet, 1).AddIngredient(ModContent.ItemType<GraniteMagnet>(), 1).AddIngredient(ItemID.CobaltBar, 5).AddIngredient(ItemID.MeteoriteBar, 8).AddTile(TileID.TinkerersWorkbench).Register();
 		}
 
 
@@ -5545,7 +5034,7 @@ namespace SGAmod.Items.Accessories
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.light = 0.0f;
+			Projectile.light = 0.0f;
 		}
 
 		public override string Texture
@@ -5556,37 +5045,37 @@ namespace SGAmod.Items.Accessories
 		public override void AI()
 		{
 
-			Player player = Main.player[projectile.owner];
-			bool heldone = player.HeldItem.type != mod.ItemType(ItemName);
-			if (projectile.ai[0] > 0 || (player.HeldItem == null || heldone) || player.itemAnimation > 0 || player.dead)
+			Player player = Main.player[Projectile.owner];
+			bool heldone = player.HeldItem.type != Mod.Find<ModItem>(ItemName).Type;
+			if (Projectile.ai[0] > 0 || (player.HeldItem == null || heldone) || player.itemAnimation > 0 || player.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
 			else
 			{
-				if (projectile.timeLeft < 3)
-					projectile.timeLeft = 3;
+				if (Projectile.timeLeft < 3)
+					Projectile.timeLeft = 3;
 				Vector2 mousePos = Main.MouseWorld;
 
-				if (projectile.owner == Main.myPlayer)
+				if (Projectile.owner == Main.myPlayer)
 				{
 					Vector2 diff = mousePos - player.Center;
-					projectile.velocity = diff;
-					projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-					projectile.netUpdate = true;
-					projectile.Center = mousePos;
+					Projectile.velocity = diff;
+					Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+					Projectile.netUpdate = true;
+					Projectile.Center = mousePos;
 				}
-				int dir = projectile.direction;
+				int dir = Projectile.direction;
 				player.ChangeDir(dir);
 
-				Vector2 direction = (projectile.velocity);
+				Vector2 direction = (Projectile.velocity);
 				Vector2 directionmeasure = direction;
 
-				player.heldProj = projectile.whoAmI;
+				player.heldProj = Projectile.whoAmI;
 
-				projectile.velocity.Normalize();
-				projectile.rotation = projectile.velocity.ToRotation()-(MathHelper.Pi/2f)* dir;
+				Projectile.velocity.Normalize();
+				Projectile.rotation = Projectile.velocity.ToRotation()-(MathHelper.Pi/2f)* dir;
 
 				player.bodyFrame.Y = player.bodyFrame.Height * 3;
 				if (directionmeasure.Y - Math.Abs(directionmeasure.X) > 25)
@@ -5597,17 +5086,17 @@ namespace SGAmod.Items.Accessories
 					player.bodyFrame.Y = player.bodyFrame.Height * 5;
 				player.direction = (directionmeasure.X > 0).ToDirectionInt();
 
-				projectile.Center = player.Center + (projectile.velocity * 10f);
-				projectile.velocity *= 8f;
+				Projectile.Center = player.Center + (Projectile.velocity * 10f);
+				Projectile.velocity *= 8f;
 
-				Vector2 magnetHere = projectile.Center + Vector2.Normalize(projectile.velocity) * 48f;
+				Vector2 magnetHere = Projectile.Center + Vector2.Normalize(Projectile.velocity) * 48f;
 
 				foreach (Item item in Main.item)
 				{
 
 					Vector2 vectorItemToPlayer = magnetHere - item.Center;
-					Vector2 vectorItemToPlayer2 = projectile.Center - item.Center;
-					if (vectorItemToPlayer2.Length() < 600 && Vector2.Dot(Vector2.Normalize(vectorItemToPlayer2), Vector2.Normalize(projectile.velocity)) < -0.9f && Collision.CanHitLine(magnetHere, 1, 1, item.Center, 1, 1))
+					Vector2 vectorItemToPlayer2 = Projectile.Center - item.Center;
+					if (vectorItemToPlayer2.Length() < 600 && Vector2.Dot(Vector2.Normalize(vectorItemToPlayer2), Vector2.Normalize(Projectile.velocity)) < -0.9f && Collision.CanHitLine(magnetHere, 1, 1, item.Center, 1, 1))
 					{
 						Vector2 movement = vectorItemToPlayer.SafeNormalize(default(Vector2)) * (GetType() == typeof(CobaltMagnetProj) ? 1f : 0.45f);
 						item.velocity = item.velocity + movement;

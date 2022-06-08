@@ -16,6 +16,7 @@ using System.Linq;
 using SGAmod.Effects;
 using SGAmod.Items;
 using Terraria.Graphics.Effects;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs
 {
@@ -34,30 +35,30 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Pink 'Singularit'Y");
-			Main.npcFrameCount[npc.type] = 5;
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 5;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 64;
-			npc.height = 64;
-			npc.damage = 200;
-			npc.defense = 25;
-			npc.lifeMax = 200000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = 1;
-			npc.netAlways = true;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.aiStyle = -1;
-			npc.boss = true;
-			aiType = NPCID.BlueSlime;
-			animationType = NPCID.BlueSlime;
+			NPC.width = 64;
+			NPC.height = 64;
+			NPC.damage = 200;
+			NPC.defense = 25;
+			NPC.lifeMax = 200000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = 1;
+			NPC.netAlways = true;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.aiStyle = -1;
+			NPC.boss = true;
+			AIType = NPCID.BlueSlime;
+			AnimationType = NPCID.BlueSlime;
 			music = MusicID.Boss2;
-			bossBag = mod.ItemType("SPinkyBag");
-			npc.value = Item.buyPrice(0, 1, 0, 0);
+			bossBag = Mod.Find<ModItem>("SPinkyBag").Type;
+			NPC.value = Item.buyPrice(0, 1, 0, 0);
 			phase = 0;
 			attackPhaseTime = 1200;
 		}
@@ -82,7 +83,7 @@ namespace SGAmod.NPCs
 
 					if (returnval)
                     {
-						SPinkyTrue boss = (thetarget.modNPC as SPinkyTrue);
+						SPinkyTrue boss = (thetarget.ModNPC as SPinkyTrue);
 						float scale = boss.effectScale;
 						float scale2 = MathHelper.Clamp(-1+((thetarget.ai[0]-1000000)/250f),0f,1f);
 						float scale3 = MathHelper.Clamp(((thetarget.ai[0] - 1000000) / 500f), 0f, 1f);
@@ -124,7 +125,7 @@ namespace SGAmod.NPCs
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
-			if (npc.ai[0] < 400)
+			if (NPC.ai[0] < 400)
 				return false;
 
 			return base.CanHitPlayer(target, ref cooldownSlot);
@@ -134,7 +135,7 @@ namespace SGAmod.NPCs
         {
 			if (Main.netMode > 0)
 			{
-				ModPacket packet = mod.GetPacket();
+				ModPacket packet = Mod.GetPacket();
 				packet.Write((ushort)MessageType.UpdateLocalVars);
 				packet.Write(npc.whoAmI);
 				packet.WriteVector2(new Vector2(npc.localAI[0], npc.localAI[1]));
@@ -145,13 +146,13 @@ namespace SGAmod.NPCs
 
         public override bool CheckDead()
         {
-			if (npc.ai[0] < 1000300)
+			if (NPC.ai[0] < 1000300)
 			{
-				npc.life = 1337;
-				npc.active = true;
-				npc.ai[1] = 20;
+				NPC.life = 1337;
+				NPC.active = true;
+				NPC.ai[1] = 20;
 				stopmoving = 1000000;
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 				return false;
 			}
 			return true;
@@ -159,29 +160,29 @@ namespace SGAmod.NPCs
 
         private bool IntroDeal()
 		{
-			realcounter = (int)(npc.ai[0]) - 400;
+			realcounter = (int)(NPC.ai[0]) - 400;
 			getHitEffect -= 1f;
-			npc.ai[0] += 1;
-			npc.dontTakeDamage = false;
+			NPC.ai[0] += 1;
+			NPC.dontTakeDamage = false;
 			stopmoving -= 1;
-			npc.localAI[0] += 1f;
+			NPC.localAI[0] += 1f;
 
 
-			if (npc.ai[0]>295)
+			if (NPC.ai[0]>295)
 				generalcounter += 1;
 
 			if (soundz != null)
 				soundz.Pitch = Main.rand.NextFloat(-0.5f, 0.5f);
 
-			if (npc.ai[0] < 400)
+			if (NPC.ai[0] < 400)
 			{
-				if (npc.ai[0] < 300)
+				if (NPC.ai[0] < 300)
 					slimecalleffect += 1f;
 
-				if (npc.ai[0] == 2)
+				if (NPC.ai[0] == 2)
 				{
 					//npc.GivenName = "Not Goomza";
-					SoundEffectInstance sound2 = Main.PlaySound(SoundID.DD2_EtherianPortalOpen, npc.Center);
+					SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, NPC.Center);
 					if (sound2 != null)
 					{
 						sound2.Pitch = 0.75f;
@@ -189,68 +190,68 @@ namespace SGAmod.NPCs
 
 				}
 
-				if (npc.ai[0] < 300 && Main.rand.Next(80)<npc.ai[0])
+				if (NPC.ai[0] < 300 && Main.rand.Next(80)<NPC.ai[0])
                 {
 					Vector2 offset = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-					int dust = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y)+ offset*Main.rand.NextFloat(32f, npc.ai[0]>100 ? 32f : 96f), 0, 0, DustID.PurpleCrystalShard);
+					int dust = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y)+ offset*Main.rand.NextFloat(32f, NPC.ai[0]>100 ? 32f : 96f), 0, 0, DustID.PurpleCrystalShard);
 					Main.dust[dust].scale = 1.5f;
 					Main.dust[dust].velocity = Vector2.Normalize(-offset) * (float)(Main.rand.NextFloat(0.50f, 2.50f));
 					Main.dust[dust].noGravity = true;
 				}
 
-				if (npc.ai[0] == 100)
+				if (NPC.ai[0] == 100)
 				{
 					Main.NewText("<???> PINKY...", 255, 100, 255);
 				}
 
-				if (npc.ai[0] == 50)
+				if (NPC.ai[0] == 50)
                 {
-					SoundEffectInstance sound2 = Main.PlaySound(SoundID.DD2_DefeatScene, npc.Center);
+					SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.DD2_DefeatScene, NPC.Center);
 					if (sound2 != null)
 					{
 						sound2.Pitch = 0.75f;
 					}
 
 				}
-				if (npc.ai[0] == 100)
+				if (NPC.ai[0] == 100)
                 {
-					RippleBoom.MakeShockwave(npc.Center, 8f, 10f, 40f, 60, 1f,true);
+					RippleBoom.MakeShockwave(NPC.Center, 8f, 10f, 40f, 60, 1f,true);
 
 					for (int i = 0; i < 100; i += 1)
 					{
 						Vector2 offset = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-						int dust = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + offset * Main.rand.NextFloat(0f, 32f), 0, 0, DustID.PurpleCrystalShard);
+						int dust = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + offset * Main.rand.NextFloat(0f, 32f), 0, 0, DustID.PurpleCrystalShard);
 						Main.dust[dust].scale = 2f;
 						Main.dust[dust].velocity = Vector2.Normalize(offset) * (float)(Main.rand.NextFloat(8.00f, 32f));
 						Main.dust[dust].noGravity = true;
 					}
 
-					SGAmod.AddScreenShake(48f, 1600, npc.Center);
+					SGAmod.AddScreenShake(48f, 1600, NPC.Center);
 
-					foreach (Player p in Main.player.Where(testby => testby.active && testby.Distance(npc.Center) < 320))
+					foreach (Player p in Main.player.Where(testby => testby.active && testby.Distance(NPC.Center) < 320))
 					{
-						p.velocity += Vector2.Normalize(p.Center - npc.Center) * 24f;
+						p.velocity += Vector2.Normalize(p.Center - NPC.Center) * 24f;
 					}
 				}
 
-				if (npc.ai[0] == 200)
+				if (NPC.ai[0] == 200)
 				{
 					Main.NewText("<???> WILL NOT...", 255, 100, 255);
 				}
-				if (npc.ai[0] >= 0 && npc.ai[0] < 300 && getHitEffect<-5)
+				if (NPC.ai[0] >= 0 && NPC.ai[0] < 300 && getHitEffect<-5)
 					getHitEffect = 15f;
 
-				if (npc.ai[0] == 300)
+				if (NPC.ai[0] == 300)
 				{
 					SGAmod.ProgramSkyAlpha = Math.Max(SGAmod.ProgramSkyAlpha, 0.005f);
 					Main.NewText("<???> DIE!!!", 255, 100, 255);
-					RippleBoom.MakeShockwave(npc.Center, 12f, 10f, 60f, 60, 1.5f, true);
-					soundz = Main.PlaySound(SoundID.Roar, (int)npc.Center.X, (int)npc.Center.Y, 0);
+					RippleBoom.MakeShockwave(NPC.Center, 12f, 10f, 60f, 60, 1.5f, true);
+					soundz = SoundEngine.PlaySound(SoundID.Roar, (int)NPC.Center.X, (int)NPC.Center.Y, 0);
 
 					for (int i = 0; i < 200; i += 1)
 					{
 							Vector2 offset = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-							int dust = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + offset * Main.rand.NextFloat(0f, 96f), 0, 0, DustID.PurpleCrystalShard);
+							int dust = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + offset * Main.rand.NextFloat(0f, 96f), 0, 0, DustID.PurpleCrystalShard);
 							Main.dust[dust].scale = 2f;
 							Main.dust[dust].velocity = Vector2.Normalize(offset) * (float)(Main.rand.NextFloat(2.00f, 8f));
 							Main.dust[dust].noGravity = true;
@@ -259,22 +260,22 @@ namespace SGAmod.NPCs
 					Main.StartSlimeRain();
 				}
 
-				npc.dontTakeDamage = true;
+				NPC.dontTakeDamage = true;
 				return false;
 			}
 
 			drawdist += (1f - drawdist) * 0.01f;
 
-			P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active || Main.dayTime)
+			P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active || Main.dayTime)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead || Main.dayTime)
 				{
 					float speed = ((-0.25f));
-					npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-					npc.timeLeft = Math.Min(npc.timeLeft, 1);
+					NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+					NPC.timeLeft = Math.Min(NPC.timeLeft, 1);
 				}
 				return false;
 			}
@@ -283,29 +284,29 @@ namespace SGAmod.NPCs
 
 		public void SlimeCall(int callCount = 10)
         {
-			if (P.Distance(npc.Center)<1200)
+			if (P.Distance(NPC.Center)<1200)
 			stopmoving = 30;
 			if (slimecalleffect<60)
 			slimecalleffect += 1;
 
-			if (npc.ai[0] == 1700)
+			if (NPC.ai[0] == 1700)
 			{
 				if (aicounter<2)
 				aicounter = 2;
 			}
-			if (npc.ai[0] % 20 == 0)
+			if (NPC.ai[0] % 20 == 0)
             {
-				SoundEffectInstance sound2 = Main.PlaySound(SoundID.DD2_EtherianPortalSpawnEnemy, npc.Center);
+				SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalSpawnEnemy, NPC.Center);
 				if (sound2 != null)
 				{
 					sound2.Pitch = 0.75f;
 				}
 			}
 
-			if (npc.ai[0]%(10-phase) == 0)
+			if (NPC.ai[0]%(10-phase) == 0)
 			{
 
-				int num7 = NPC.NewNPC((int)npc.Center.X+Main.rand.Next(-800,800), (int)Main.screenPosition.Y-100,NPCID.BlueSlime);
+				int num7 = NPC.NewNPC((int)NPC.Center.X+Main.rand.Next(-800,800), (int)Main.screenPosition.Y-100,NPCID.BlueSlime);
 				Main.npc[num7].ai[0] = 1;
 				if (Main.rand.Next(200) == 0)
 				{
@@ -337,28 +338,28 @@ namespace SGAmod.NPCs
 			//for (int i = 0; i < callCount; i += 1)
 			//NPC.SlimeRainSpawns(P.whoAmI);
 
-			if (npc.ai[0] > 2000)
+			if (NPC.ai[0] > 2000)
             {
 				if (phase < 3)
 				{
-					npc.ai[0] = Main.rand.Next(905, 1200);
-					npc.ai[1] = 0;
+					NPC.ai[0] = Main.rand.Next(905, 1200);
+					NPC.ai[1] = 0;
 				}
                 else
                 {
 					Main.NewText("<SUPREME PINKY> WARNING, EVENT SINGULARITY FORMING!", 255, 100, 255);
-					npc.ai[0] = 5000;
-					npc.ai[1] = 10;
-					SoundEffectInstance sound2 = Main.PlaySound(SoundID.DD2_KoboldExplosion, npc.Center);
+					NPC.ai[0] = 5000;
+					NPC.ai[1] = 10;
+					SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion, NPC.Center);
 					if (sound2 != null)
 					{
 						sound2.Pitch = -0.25f;
 					}
 
-					soundz = Main.PlaySound(SoundID.Roar, (int)npc.Center.X, (int)npc.Center.Y, 2);
+					soundz = SoundEngine.PlaySound(SoundID.Roar, (int)NPC.Center.X, (int)NPC.Center.Y, 2);
 
 				}
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 			}
 
 		}
@@ -369,21 +370,21 @@ namespace SGAmod.NPCs
 			goThere = P.MountedCenter + Vector2.Normalize(P.velocity + new Vector2(0, -0.05f)) * 640f;
 			speed = new Vector2(0.25f, 0.45f);
 
-			if (npc.ai[0] < 2800)
+			if (NPC.ai[0] < 2800)
 			{
 				stopmoving = 30;
 			}
 			if (stopmoving > 0)
 				friction /= 2f;
 
-				if (npc.ai[0] == 2700)
+				if (NPC.ai[0] == 2700)
 			{
 
-				RippleBoom.MakeShockwave(npc.Center, 8f, 1f, 10f, 60, 3f, true);
-				soundz = Main.PlaySound(SoundID.Roar, (int)npc.Center.X, (int)npc.Center.Y, 0);
+				RippleBoom.MakeShockwave(NPC.Center, 8f, 1f, 10f, 60, 3f, true);
+				soundz = SoundEngine.PlaySound(SoundID.Roar, (int)NPC.Center.X, (int)NPC.Center.Y, 0);
 			}
 
-			if (npc.ai[0] > 2700 && npc.ai[0]%8==0 && npc.ai[0] < maxxer-40)
+			if (NPC.ai[0] > 2700 && NPC.ai[0]%8==0 && NPC.ai[0] < maxxer-40)
             {
 				foreach (NPC npc2 in SupremeArmy.OrderBy(testby => Main.rand.Next(100)).Where(testby => testby.ai[0] == 0 && testby.localAI[3]<-100))
                 {
@@ -396,7 +397,7 @@ namespace SGAmod.NPCs
 					UpdateSlime(npc2);
 					npc2.netUpdate = true;
 
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
 					if (sound != null)
 					{
 						sound.Pitch = -0.25f;
@@ -419,7 +420,7 @@ namespace SGAmod.NPCs
 			//for (int i = 0; i < callCount; i += 1)
 			//NPC.SlimeRainSpawns(P.whoAmI);
 
-			if (npc.ai[0] > maxxer)
+			if (NPC.ai[0] > maxxer)
 			{
 				/*if (SupremeArmy.Count > 8)
                 {
@@ -431,16 +432,16 @@ namespace SGAmod.NPCs
 				stopmoving = 60;
 				if (SupremeArmy.Count > 8)
 				{
-					npc.ai[0] = Main.rand.Next(905, 1100);
-					npc.ai[1] = 0;
+					NPC.ai[0] = Main.rand.Next(905, 1100);
+					NPC.ai[1] = 0;
 				}
 				else
 				{
-					npc.ai[0] = Main.rand.Next(405, 600);
-					npc.ai[1] = 0;
+					NPC.ai[0] = Main.rand.Next(405, 600);
+					NPC.ai[1] = 0;
 				}
 
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 			}
 
 		}
@@ -450,23 +451,23 @@ namespace SGAmod.NPCs
 			goThere = circleLoc;
 			speed = new Vector2(0.25f, 0.25f);
 
-			if (npc.Distance(circleLoc) < 32 && npc.ai[0]<6050)
-				npc.ai[0] = 6050;
+			if (NPC.Distance(circleLoc) < 32 && NPC.ai[0]<6050)
+				NPC.ai[0] = 6050;
 
-			if (npc.ai[0] > 6050)
+			if (NPC.ai[0] > 6050)
 			{
 				stopmoving = 120;
 			}
 			if (stopmoving > 0)
 				friction /= 2f;
 
-			if (npc.ai[0] == 6060 || npc.ai[0] == 6310)
+			if (NPC.ai[0] == 6060 || NPC.ai[0] == 6310)
 			{
 
-				RippleBoom.MakeShockwave(npc.Center, 8f, 1f, 10f, 60, 3f, true);
-				soundz = Main.PlaySound(SoundID.Roar, (int)npc.Center.X, (int)npc.Center.Y, 0);
+				RippleBoom.MakeShockwave(NPC.Center, 8f, 1f, 10f, 60, 3f, true);
+				soundz = SoundEngine.PlaySound(SoundID.Roar, (int)NPC.Center.X, (int)NPC.Center.Y, 0);
 
-				if (npc.ai[0] == 6060)
+				if (NPC.ai[0] == 6060)
 				{
 					List<NPC> armycommand = SupremeArmy.Where(testby => testby.ai[0] == 0).ToList();
 
@@ -485,7 +486,7 @@ namespace SGAmod.NPCs
 			}
 
 			//Teleport slimes
-			if (npc.ai[0] > 6300)
+			if (NPC.ai[0] > 6300)
 			{
 				List<NPC> armycommand = SupremeArmy.OrderBy(testby => Main.rand.Next(100)).Where(testby => testby.ai[0] == 4).ToList();
 
@@ -509,7 +510,7 @@ namespace SGAmod.NPCs
 						Projectile.NewProjectile(npc2.Center, Vector2.Normalize(there)*1f, ProjectileID.DemonScythe, 50, 0f);
 						Projectile.NewProjectile(npc2.Center + Vector2.Normalize(there)*64f, Vector2.Normalize(there), ModContent.ProjectileType<PinkyWarning>(), 5, 0f);
 
-						SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsysWrathShot, bex);
+						SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsysWrathShot, bex);
 						if (sound != null)
 						{
 							sound.Pitch = -0.25f;
@@ -524,7 +525,7 @@ namespace SGAmod.NPCs
 							Main.dust[dust].velocity = f.ToRotationVector2() * 4f;
 						}
 
-						npc.ai[0] = 6296;
+						NPC.ai[0] = 6296;
 						break;
 					}
 
@@ -532,7 +533,7 @@ namespace SGAmod.NPCs
 			}
 
 			//Slimes go BOOM! Laser light show!
-			if (npc.ai[0] > 6360)
+			if (NPC.ai[0] > 6360)
 			{
 				List<NPC> armycommand = SupremeArmy.OrderBy(testby => Main.rand.Next(10000)).Where(testby => testby.ai[0] == 5).ToList();
 
@@ -541,10 +542,10 @@ namespace SGAmod.NPCs
 					foreach (NPC npc2 in armycommand)
 					{
 						Vector2 bex = new Vector2(npc2.localAI[1],npc2.localAI[2]);
-						Vector2 wasHere = npc.Center;
+						Vector2 wasHere = NPC.Center;
 						npc2.Center = bex;
 
-						SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BallistaTowerShot, npc2.Center);
+						SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BallistaTowerShot, npc2.Center);
 						if (sound != null)
 						{
 							sound.Pitch = -0.25f;
@@ -562,9 +563,9 @@ namespace SGAmod.NPCs
 							Vector2 rotter = angle.ToRotationVector2();
 						}
 
-						npc.Center = npc2.Center;
+						NPC.Center = npc2.Center;
 
-						int proj=Projectile.NewProjectile(npc.Center, Vector2.Normalize(wasHere-npc.Center) * ((wasHere - npc.Center).Length()/2200f), SGAmod.Instance.ProjectileType("HellionBeam"), 100, 15f);
+						int proj=Projectile.NewProjectile(NPC.Center, Vector2.Normalize(wasHere-NPC.Center) * ((wasHere - NPC.Center).Length()/2200f), SGAmod.Instance.Find<ModProjectile>("HellionBeam").Type, 100, 15f);
 
 						Main.projectile[proj].timeLeft = 250;
 
@@ -574,7 +575,7 @@ namespace SGAmod.NPCs
 							NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc2.whoAmI, 100000, 0f, (float)1, 0, 0, 0);
 						}
 
-						npc.ai[0] = 6355;
+						NPC.ai[0] = 6355;
 						break;
 					}
 
@@ -584,27 +585,27 @@ namespace SGAmod.NPCs
 			//for (int i = 0; i < callCount; i += 1)
 			//NPC.SlimeRainSpawns(P.whoAmI);
 
-			if (npc.ai[0] == 6370)
+			if (NPC.ai[0] == 6370)
             {
-				soundz = Main.PlaySound(SoundID.Zombie, (int)npc.Center.X, (int)npc.Center.Y, 105);
+				soundz = SoundEngine.PlaySound(SoundID.Zombie, (int)NPC.Center.X, (int)NPC.Center.Y, 105);
 			}
 
-			if (npc.ai[0] > 6400)
+			if (NPC.ai[0] > 6400)
 			{
 
 				stopmoving = 60;
 				if (SupremeArmy.Count > 8)
 				{
-					npc.ai[0] = Main.rand.Next(905, 1100);
-					npc.ai[1] = 0;
+					NPC.ai[0] = Main.rand.Next(905, 1100);
+					NPC.ai[1] = 0;
 				}
 				else
 				{
-					npc.ai[0] = Main.rand.Next(405, 600);
-					npc.ai[1] = 0;
+					NPC.ai[0] = Main.rand.Next(405, 600);
+					NPC.ai[1] = 0;
 				}
 
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 			}
 
 		}
@@ -615,12 +616,12 @@ namespace SGAmod.NPCs
 			goThere = P.MountedCenter + Vector2.Normalize(P.velocity + new Vector2(0, -0.05f)) * 640f;
 			speed = new Vector2(0.25f, 0.45f);
 
-			npc.dontTakeDamage = true;
+			NPC.dontTakeDamage = true;
 
 			stopmoving = 30;
 			friction /= 2f;
 
-			if (npc.ai[0] == 3900)
+			if (NPC.ai[0] == 3900)
             {
 				phase += 1;
 				if (phase == 3)
@@ -633,46 +634,46 @@ namespace SGAmod.NPCs
 
 				slimecalleffect = 100;
 				getHitEffect = 200;
-				npc.ai[2] += 1;
-				RippleBoom.MakeShockwave(npc.Center, 8f, 1f, 10f, 60, 3f, true);
-				soundz = Main.PlaySound(SoundID.DD2_BetsyScream, (int)npc.Center.X, (int)npc.Center.Y);
+				NPC.ai[2] += 1;
+				RippleBoom.MakeShockwave(NPC.Center, 8f, 1f, 10f, 60, 3f, true);
+				soundz = SoundEngine.PlaySound(SoundID.DD2_BetsyScream, (int)NPC.Center.X, (int)NPC.Center.Y);
 			}
 
-			if (npc.ai[0] > maxxer)
+			if (NPC.ai[0] > maxxer)
 			{
 
-				npc.ai[0] = Main.rand.Next(1500, 1800);
-				npc.ai[1] = 0;
+				NPC.ai[0] = Main.rand.Next(1500, 1800);
+				NPC.ai[1] = 0;
 
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 			}
 
 		}
 
 		public void Dying()
 		{
-			npc.dontTakeDamage = true;
-			if (npc.ai[0] < 1000000)
+			NPC.dontTakeDamage = true;
+			if (NPC.ai[0] < 1000000)
             {
-				npc.ai[0] = 1000000;
+				NPC.ai[0] = 1000000;
 				if (soundfinish != null)
 				soundfinish.Stop();
 
-				Projectile.NewProjectile(npc.Center,Vector2.Zero, ModContent.ProjectileType<PinkyExplode>(), 50, 0f);
+				Projectile.NewProjectile(NPC.Center,Vector2.Zero, ModContent.ProjectileType<PinkyExplode>(), 50, 0f);
 
-				soundfinish = Main.PlaySound(SoundID.DD2_WinScene, npc.Center);
-				npc.netUpdate = true;
+				soundfinish = SoundEngine.PlaySound(SoundID.DD2_WinScene, NPC.Center);
+				NPC.netUpdate = true;
 			}
 			if (soundfinish != null)
 			{
-				soundfinish.Pitch = (npc.ai[0]-1000200)/300f;
+				soundfinish.Pitch = (NPC.ai[0]-1000200)/300f;
 			}
-			if (npc.ai[0] % 10 == 0)
+			if (NPC.ai[0] % 10 == 0)
 			{
-				SoundEffectInstance sound3 = Main.PlaySound(SoundID.DD2_EtherianPortalSpawnEnemy, npc.Center);
+				SoundEffectInstance sound3 = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalSpawnEnemy, NPC.Center);
 				if (sound3 != null)
 				{
-					sound3.Pitch = (npc.ai[0] - 1000200) / 300f;
+					sound3.Pitch = (NPC.ai[0] - 1000200) / 300f;
 					sound3.Volume = 0.15f;
 				}
 			}
@@ -681,23 +682,23 @@ namespace SGAmod.NPCs
 
 			for (int i = 0; i < 10; i += 1)
 			{
-				if (Main.rand.Next(200) < npc.ai[0] - 1000000 && npc.ai[0]<1000420)
+				if (Main.rand.Next(200) < NPC.ai[0] - 1000000 && NPC.ai[0]<1000420)
 				{
 					Vector2 offset = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-					int dust = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + offset * Main.rand.NextFloat(32f, 64f+(npc.ai[0]-1000000)*2f), 0, 0, DustID.PurpleCrystalShard);
+					int dust = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + offset * Main.rand.NextFloat(32f, 64f+(NPC.ai[0]-1000000)*2f), 0, 0, DustID.PurpleCrystalShard);
 					Main.dust[dust].scale = 1.5f;
 					Main.dust[dust].velocity = Vector2.Normalize(-offset) * (float)(Main.rand.NextFloat(0.50f, 2.50f));
 					Main.dust[dust].noGravity = true;
 				}
 			}
 
-			if (npc.ai[0] == 1000500)
+			if (NPC.ai[0] == 1000500)
 			{
-				RippleBoom.MakeShockwave(npc.Center, 12f, 3f, 20f, 200, 2f, true);
-				npc.StrikeNPCNoInteraction(100000, 0, 0, true, true);
+				RippleBoom.MakeShockwave(NPC.Center, 12f, 3f, 20f, 200, 2f, true);
+				NPC.StrikeNPCNoInteraction(100000, 0, 0, true, true);
 				if (Main.netMode != NetmodeID.SinglePlayer)
 				{
-					NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, 100000, 0f, (float)1, 0, 0, 0);
+					NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, NPC.whoAmI, 100000, 0f, (float)1, 0, 0, 0);
 				}
 
 			}
@@ -708,16 +709,16 @@ namespace SGAmod.NPCs
 		{
 			stopmoving = 10000;
 			effectScale = Math.Min(effectScale+1,3000);
-			if (npc.ai[0] % 90 == 0)
+			if (NPC.ai[0] % 90 == 0)
             {
-				RippleBoom.MakeShockwave(npc.Center, 8f, 1f, 10f, 60, 3f, true);
+				RippleBoom.MakeShockwave(NPC.Center, 8f, 1f, 10f, 60, 3f, true);
 			}
 			circlesize += (1600f - circlesize) / 1000f;
-			circleLoc += (npc.Center - circleLoc) / 400f;
+			circleLoc += (NPC.Center - circleLoc) / 400f;
 
 			if (soundfinish == null || soundfinish.State == SoundState.Stopped)
             {
-				soundfinish = Main.PlaySound(SoundID.DD2_BookStaffTwisterLoop, npc.Center);
+				soundfinish = SoundEngine.PlaySound(SoundID.DD2_BookStaffTwisterLoop, NPC.Center);
 				if (soundfinish != null)
 				{
 					soundfinish.Volume = 0.99f;
@@ -727,12 +728,12 @@ namespace SGAmod.NPCs
 				if (soundfinish != null)
 				soundfinish.Pitch = Math.Min((effectScale/3000f)-0.75f, 0.75f);
 
-			for (int i = 0; i < 1+Math.Min((npc.ai[0] - 5000)/2500f,3); i += 1)
+			for (int i = 0; i < 1+Math.Min((NPC.ai[0] - 5000)/2500f,3); i += 1)
 			{
-				if (npc.ai[0] % Math.Max((int)(10 - (npc.ai[0] - 5000) / 400f), 5) == 0 && npc.ai[0] > 5100)
+				if (NPC.ai[0] % Math.Max((int)(10 - (NPC.ai[0] - 5000) / 400f), 5) == 0 && NPC.ai[0] > 5100)
 				{
 					Vector2 offset = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-					Vector2 offsetpoint = npc.Center + offset * 2500;
+					Vector2 offsetpoint = NPC.Center + offset * 2500;
 					if (offsetpoint.Y < 12)
 						offsetpoint.Y = 12;
 
@@ -740,10 +741,10 @@ namespace SGAmod.NPCs
 				}
 			}
 
-				if (Main.rand.Next(200) < npc.ai[0]-5000)
+				if (Main.rand.Next(200) < NPC.ai[0]-5000)
 			{
 				Vector2 offset = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-				int dust = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + offset * Main.rand.NextFloat(32f, 128f), 0, 0, DustID.PurpleCrystalShard);
+				int dust = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + offset * Main.rand.NextFloat(32f, 128f), 0, 0, DustID.PurpleCrystalShard);
 				Main.dust[dust].scale = 1.5f;
 				Main.dust[dust].velocity = Vector2.Normalize(-offset) * (float)(Main.rand.NextFloat(0.50f, 2.50f));
 				Main.dust[dust].noGravity = true;
@@ -751,24 +752,24 @@ namespace SGAmod.NPCs
 
 				foreach(Player player in Main.player.Where(testby => testby.active))
             {
-				Vector2 pull = npc.Center - player.MountedCenter;
+				Vector2 pull = NPC.Center - player.MountedCenter;
 				player.position += Collision.TileCollision(player.position, Vector2.Normalize(pull)*Math.Min((effectScale / 600f), 5f), player.width, player.height);
-				if (player.Distance(npc.Center) < Math.Min(npc.ai[0]/10f,256f))
+				if (player.Distance(NPC.Center) < Math.Min(NPC.ai[0]/10f,256f))
                 {
 					player.Hurt(PlayerDeathReason.ByCustomReason(player.name+" became one with the Pink"), 100, 0,cooldownCounter: 1);
                 }
 			}
-			if (npc.ai[0] % 300 == 0 && npc.ai[0] > 5200)
+			if (NPC.ai[0] % 300 == 0 && NPC.ai[0] > 5200)
 			{
 
-				Projectile proj = Projectile.NewProjectileDirect(npc.Center, Vector2.Zero, ModContent.ProjectileType<PinkyRingAttack>(), 200, 0f);
+				Projectile proj = Projectile.NewProjectileDirect(NPC.Center, Vector2.Zero, ModContent.ProjectileType<PinkyRingAttack>(), 200, 0f);
 				if (proj != null)
                 {
 					proj.ai[0] = Main.rand.Next(0, 120);
 					proj.netUpdate = true;
 				}
 
-				SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsySummon,npc.Center);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsySummon,NPC.Center);
 				if (sound != null)
 					sound.Pitch += 0.50f;
 			}
@@ -781,16 +782,16 @@ namespace SGAmod.NPCs
 			if (generalcounter % 700 > 660)
 			{
 				//Dash Timer
-				npc.ai[3] = Main.rand.Next(300,500);
+				NPC.ai[3] = Main.rand.Next(300,500);
 				stopmoving = 60;
 			}
 
-			if (npc.ai[3] > 0 && npc.ai[3] < 500)
+			if (NPC.ai[3] > 0 && NPC.ai[3] < 500)
 			{
-				Vector2 norm = Vector2.Normalize(P.MountedCenter - npc.Center);
+				Vector2 norm = Vector2.Normalize(P.MountedCenter - NPC.Center);
 
 				//Dashing!
-				if (stopmoving > 50 && Vector2.Dot(Vector2.Normalize(P.MountedCenter - npc.Center), Vector2.Normalize(npc.velocity)) > -0.75f)
+				if (stopmoving > 50 && Vector2.Dot(Vector2.Normalize(P.MountedCenter - NPC.Center), Vector2.Normalize(NPC.velocity)) > -0.75f)
 				{
 					friction = Vector2.One;
 
@@ -807,7 +808,7 @@ namespace SGAmod.NPCs
 							UpdateSlime(npc2);
 							npc2.netUpdate = true;
 
-							SoundEffectInstance sound3 = Main.PlaySound(SoundID.DD2_BookStaffCast, npc2.Center);
+							SoundEffectInstance sound3 = SoundEngine.PlaySound(SoundID.DD2_BookStaffCast, npc2.Center);
 							if (sound3 != null)
 							{
 								sound3.Pitch = 0.25f;
@@ -832,21 +833,21 @@ namespace SGAmod.NPCs
 					friction = new Vector2(0.92f, 0.92f);
 				}
 
-				float speed = npc.velocity.Length();
-				npc.velocity = npc.velocity.ToRotation().AngleTowards(norm.ToRotation(), roter).ToRotationVector2()* speed;
+				float speed = NPC.velocity.Length();
+				NPC.velocity = NPC.velocity.ToRotation().AngleTowards(norm.ToRotation(), roter).ToRotationVector2()* speed;
 
 				if (Main.rand.Next(0, 2) == 1)
 				{
-					int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, DustID.PurpleCrystalShard);
+					int dust = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, DustID.PurpleCrystalShard);
 					Main.dust[dust].scale = 3f;
 					Main.dust[dust].noGravity = true;
-					Main.dust[dust].velocity = Vector2.Normalize(P.Center - npc.Center) * (float)(Main.rand.NextFloat(1f, 4f));
+					Main.dust[dust].velocity = Vector2.Normalize(P.Center - NPC.Center) * (float)(Main.rand.NextFloat(1f, 4f));
 				}
 				
 				//Warning effect
 				if (stopmoving == 20)
 				{
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsyWindAttack, (int)npc.Center.X, (int)npc.Center.Y);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsyWindAttack, (int)NPC.Center.X, (int)NPC.Center.Y);
 					if (sound != null)
 						sound.Pitch -= 0.50f;
 
@@ -854,7 +855,7 @@ namespace SGAmod.NPCs
 					float tempaim = dashaim;
 					for (float f = 0; f < 3000; f += 16f)
 					{
-						int dust = Dust.NewDust(new Vector2(npc.Center.X, npc.Center.Y) + tempaim.ToRotationVector2() * f, 0, 0, DustID.PurpleCrystalShard);
+						int dust = Dust.NewDust(new Vector2(NPC.Center.X, NPC.Center.Y) + tempaim.ToRotationVector2() * f, 0, 0, DustID.PurpleCrystalShard);
 						tempaim = tempaim.AngleTowards(norm.ToRotation(), roter);
 						Main.dust[dust].scale = 1.5f;
 						Main.dust[dust].noGravity = true;
@@ -863,12 +864,12 @@ namespace SGAmod.NPCs
 				}
 				if (stopmoving < 1)
 				{
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsyFlyingCircleAttack, (int)npc.Center.X, (int)npc.Center.Y);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsyFlyingCircleAttack, (int)NPC.Center.X, (int)NPC.Center.Y);
 					if (sound != null)
 						sound.Pitch -= 0.50f;
 
 					stopmoving = 80;
-					npc.velocity = dashaim.ToRotationVector2() * 64f;
+					NPC.velocity = dashaim.ToRotationVector2() * 64f;
 				}
 			}
 			else
@@ -893,7 +894,7 @@ namespace SGAmod.NPCs
 							UpdateSlime(npc2);
 							npc2.netUpdate = true;
 
-							SoundEffectInstance sound3 = Main.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
+							SoundEffectInstance sound3 = SoundEngine.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
 							if (sound3 != null)
 							{
 								sound3.Pitch = 0.25f;
@@ -913,11 +914,11 @@ namespace SGAmod.NPCs
 					return;
 				}
 
-				if (realcounter % 100 <= 60 && realcounter % 10 == 0 && realcounter > 60 && npc.ai[3]<-150)
+				if (realcounter % 100 <= 60 && realcounter % 10 == 0 && realcounter > 60 && NPC.ai[3]<-150)
 				{
 
-					List<Projectile> itz = Idglib.Shattershots(npc.Center, P.Center, new Vector2(0, 0), ProjectileID.NebulaBolt, 30, 15f, 40, 2, true, 0, true, 200);
-					SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 110);
+					List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.Center, new Vector2(0, 0), ProjectileID.NebulaBolt, 30, 15f, 40, 2, true, 0, true, 200);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 110);
 					if (sound != null)
 						sound.Pitch += 0.50f;
 				}
@@ -936,14 +937,14 @@ namespace SGAmod.NPCs
 					HPtest += npc.life;
 				}
 
-				if (Main.rand.NextFloat((npc.lifeMax * 0.04f) * (15f+(phase*5f))) > HPtest)
+				if (Main.rand.NextFloat((NPC.lifeMax * 0.04f) * (15f+(phase*5f))) > HPtest)
 				{
 					critical = true;
 					if (Main.rand.NextBool())
 					{
-						npc.ai[0] = 5600;
-						npc.ai[1] = 4;
-						npc.netUpdate = true;
+						NPC.ai[0] = 5600;
+						NPC.ai[1] = 4;
+						NPC.netUpdate = true;
 						return;
 					}
 				}
@@ -960,20 +961,20 @@ namespace SGAmod.NPCs
 					Main.NewText("<SUPREME PINKY> CODE PINK, CODE PINK!!!!", 255, 100, 255);
 				}
 
-				npc.ai[0] = 1600;
-				npc.ai[1] = 1;
-				npc.netUpdate = true;
+				NPC.ai[0] = 1600;
+				NPC.ai[1] = 1;
+				NPC.netUpdate = true;
 			}
             else
             {
 				if (SupremeArmy.Where(testby => testby.ai[0] == 0 && testby.localAI[3] < 0).ToList().Count > 10 || critical)
 				{
-					npc.ai[0] = 2660;
-					npc.ai[1] = 2;
-					npc.netUpdate = true;
+					NPC.ai[0] = 2660;
+					NPC.ai[1] = 2;
+					NPC.netUpdate = true;
 				}
 			}
-			npc.netUpdate = true;
+			NPC.netUpdate = true;
 		}
 
 		public void SupremeArmyCommand()
@@ -994,7 +995,7 @@ namespace SGAmod.NPCs
 						npc2.ai[0] += 1;
 					if (sganpc.PinkyMinion > 5)
 					{
-						if (npc.ai[1] == 10)
+						if (NPC.ai[1] == 10)
 						{
 							npc2.chaseable = false;
                         }
@@ -1056,7 +1057,7 @@ namespace SGAmod.NPCs
 								if (npc2.localAI[1] == -100)
 								{
 									List<Projectile> itz = Idglib.Shattershots(npc2.Center, P.Center, new Vector2(0, 0), ProjectileID.NebulaBolt, 30, 20f, 0, 1, true, 0, true, 200);
-									SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc2.Center.X, (int)npc2.Center.Y, 110);
+									SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)npc2.Center.X, (int)npc2.Center.Y, 110);
 									if (sound != null)
 										sound.Pitch += 0.50f;
 								}
@@ -1080,9 +1081,9 @@ namespace SGAmod.NPCs
 							npc2.localAI[1] = (int)npc2.localAI[1] + 1;
 							if (npc2.localAI[1] == -19)
 							{
-								npc2.localAI[2] = npc.velocity.ToRotation() + MathHelper.PiOver2;
+								npc2.localAI[2] = NPC.velocity.ToRotation() + MathHelper.PiOver2;
 							}
-							if ((npc.ai[3] > 1 && stopmoving > -5) && npc2.localAI[1] > -15 && npc2.localAI[1] < -13)
+							if ((NPC.ai[3] > 1 && stopmoving > -5) && npc2.localAI[1] > -15 && npc2.localAI[1] < -13)
 							{
 								npc2.localAI[1] = -15;
 							}
@@ -1103,7 +1104,7 @@ namespace SGAmod.NPCs
 								{
 									Idglib.Shattershots(npc2.Center, npc2.Center + (npc2.localAI[2] + ((MathHelper.TwoPi / anglesToShoot) * ii)).ToRotationVector2(), new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, 0, 1, true, 0, true, 200);
 									Idglib.Shattershots(npc2.Center, npc2.Center + (npc2.localAI[2] + ((MathHelper.TwoPi / anglesToShoot) * ii)).ToRotationVector2(), new Vector2(0, 0), ModContent.ProjectileType<PinkyWarning>(), 50, 2f, 0, 1, true, 0, true, 150);
-									SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc2.Center.X, (int)npc2.Center.Y, 71);
+									SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)npc2.Center.X, (int)npc2.Center.Y, 71);
 									if (sound != null)
 										sound.Pitch += 0.75f;
 								}
@@ -1119,7 +1120,7 @@ namespace SGAmod.NPCs
 								npc2.netUpdate = true;
 
 
-								SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
+								SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
 								if (sound != null)
 								{
 									sound.Pitch = -0.25f;
@@ -1134,7 +1135,7 @@ namespace SGAmod.NPCs
 									Main.dust[dust].velocity = f.ToRotationVector2() * 4f;
 								}
 
-								npc2.Center = npc.Center;
+								npc2.Center = NPC.Center;
 								npc2.netUpdate = true;
 
 							}
@@ -1151,7 +1152,7 @@ namespace SGAmod.NPCs
 
 							if (npc2.localAI[1] == 30)
 							{
-								SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
+								SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsysWrathShot, npc2.Center);
 								if (sound != null)
 								{
 									sound.Pitch = -0.25f;
@@ -1166,7 +1167,7 @@ namespace SGAmod.NPCs
 									Main.dust[dust].velocity = f.ToRotationVector2() * 4f;
 								}
 
-								npc2.Center = npc.Center;
+								npc2.Center = NPC.Center;
 								npc2.velocity = Vector2.Zero;
 								npc2.netUpdate = true;
 							}
@@ -1175,7 +1176,7 @@ namespace SGAmod.NPCs
 							if (npc2.localAI[1] == 80)
 							{
 								Idglib.Shattershots(npc2.Center, npc2.Center + angletoshootat, new Vector2(0, 0), ModContent.ProjectileType<PinkyWarning>(), 1, 2f, 0, 1, true, 0, true, 150);
-								SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc2.Center.X, (int)npc2.Center.Y, 71);
+								SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)npc2.Center.X, (int)npc2.Center.Y, 71);
 								if (sound != null)
 									sound.Pitch += 0.75f;
 							}
@@ -1215,9 +1216,9 @@ namespace SGAmod.NPCs
 
 
 						npc2.localAI[3] = MathHelper.Clamp(npc2.localAI[3] - 1, -1000, 10000);
-						float dister = rando.NextFloat(180f, 320f) * (npc.ai[3] > 0 && npc.ai[1] == 0 ? 0.1f : 1f);
+						float dister = rando.NextFloat(180f, 320f) * (NPC.ai[3] > 0 && NPC.ai[1] == 0 ? 0.1f : 1f);
 						Vector2 gothere = Vector2.UnitX.RotatedBy(sganpc.PinkyMinion * rando.NextFloat(0.025f, 0.12f) * (rando.NextBool() ? 1f : -1f)) * dister;
-						gothere += npc.Center + npc.velocity;
+						gothere += NPC.Center + NPC.velocity;
 
 						if ((gothere - npc2.Center).Length() > 200)
 						{
@@ -1226,15 +1227,15 @@ namespace SGAmod.NPCs
 							npc2.velocity *= 0.96f;
 						}
 						npc2.velocity *= 0.99f;
-						npc2.position += (npc.velocity) * (1f - (Math.Max(npc2.localAI[3], 0) / 120f));
+						npc2.position += (NPC.velocity) * (1f - (Math.Max(npc2.localAI[3], 0) / 120f));
 
 					}
 				}
 				else
 				{
-					if (npc.life>((int)npc.lifeMax*0.25f) && npc2.lifeMax > 1)
+					if (NPC.life>((int)NPC.lifeMax*0.25f) && npc2.lifeMax > 1)
 					{
-						Projectile.NewProjectile(npc2.Center,Vector2.Normalize(npc2.Center- npc.Center) *10f,ModContent.ProjectileType<PinkyMinionKilledProj>(),1000,0);
+						Projectile.NewProjectile(npc2.Center,Vector2.Normalize(npc2.Center- NPC.Center) *10f,ModContent.ProjectileType<PinkyMinionKilledProj>(),1000,0);
 					}
 
 					SupremeArmy.RemoveAt(i);
@@ -1260,32 +1261,32 @@ namespace SGAmod.NPCs
 			if (IntroDeal())
 			{
 				if (circleLoc == default)
-					circleLoc = npc.Center;
+					circleLoc = NPC.Center;
 
 				if (phase == 3)
                 {
-					npc.defense = 25 + SupremeArmy.Count*5;
+					NPC.defense = 25 + SupremeArmy.Count*5;
 				}
 
-				npc.ai[3] -= 1;
+				NPC.ai[3] -= 1;
 				//foreach(Player player in Main.player.Where(testby => testby.active))
 				Main.slimeRainKillCount = 0;
 
 				//Recruiter!
-				if (npc.ai[1] != 4)
+				if (NPC.ai[1] != 4)
 				{
 					foreach (NPC npc2 in Main.npc.Where(testby => testby.active && testby.life > 0 && testby.SGANPCs().PinkyMinion > 0 && testby.SGANPCs().PinkyMinion < 2))
 					{
 						//if (SupremeArmy.FirstOrDefault(testby2 => testby2.type == npc2.type) == default)
 						//{
-						npc2.life = (int)(npc.lifeMax * 0.030f);
-						npc2.lifeMax = (int)(npc.lifeMax * 0.030f);
+						npc2.life = (int)(NPC.lifeMax * 0.030f);
+						npc2.lifeMax = (int)(NPC.lifeMax * 0.030f);
 						npc2.knockBackResist = 0f;
 						npc2.SGANPCs().dotResist = 0.50f;
 						npc2.SGANPCs().pierceResist = 0.50f;
 						if (npc2.ai[0] != 1)
                         {
-							npc2.Center = npc.Center;
+							npc2.Center = NPC.Center;
                         }
 						npc2.ai[0] = 0;
 						//npc2.realLife = npc.whoAmI;
@@ -1321,67 +1322,67 @@ namespace SGAmod.NPCs
 				goThere = P.MountedCenter + new Vector2(0, -300);
 				friction = new Vector2(0.985f, 0.985f);
 				speed = new Vector2(0.45f, 0.45f);
-				center = npc.Center;
+				center = NPC.Center;
 
-				if (npc.ai[1] == 20)
+				if (NPC.ai[1] == 20)
 				{
 					Dying();
 					goto labeljump;
 				}
 
-				if (npc.ai[1] == 10)
+				if (NPC.ai[1] == 10)
 				{
 					VortexActive = true;
 					FinalAttack();
 					goto labeljump;
 				}
 
-				if (npc.ai[1] == 4)
+				if (NPC.ai[1] == 4)
 				{
 					SlimeKamakaze();
 					goto labeljump;
 				}
-				if (npc.ai[1] == 3)
+				if (NPC.ai[1] == 3)
 				{
 					PhaseShift();
 					goto labeljump;
 				}
-				if (npc.ai[1] == 2)
+				if (NPC.ai[1] == 2)
 				{
 					SlimeCommand();
 					goto labeljump;
 				}
 
-				if (npc.ai[1] == 1)
+				if (NPC.ai[1] == 1)
 				{
 					SlimeCall();
 					goto labeljump;
 				}
 
-				if (npc.ai[1] == 0)
+				if (NPC.ai[1] == 0)
 				{
 
-					bool phase1 = npc.life < (int)(npc.lifeMax * 0.75f) && phase == 0;
-					bool phase2 = npc.life < (int)(npc.lifeMax * 0.5f) && phase == 1;
-					bool phase3 = npc.life < (int)(npc.lifeMax * 0.25f) && phase == 2;
+					bool phase1 = NPC.life < (int)(NPC.lifeMax * 0.75f) && phase == 0;
+					bool phase2 = NPC.life < (int)(NPC.lifeMax * 0.5f) && phase == 1;
+					bool phase3 = NPC.life < (int)(NPC.lifeMax * 0.25f) && phase == 2;
 					if (phase1 || phase2 || phase3)
 					{
-						npc.ai[1] = 3;
-						npc.ai[0] = 3860;
+						NPC.ai[1] = 3;
+						NPC.ai[0] = 3860;
 						goto labeljump;
 					}
 
-					if (npc.Center.X < P.MountedCenter.X - 500)
-						npc.spriteDirection = 1;
-					if (npc.Center.X > P.MountedCenter.X + 500)
-						npc.spriteDirection = -1;
+					if (NPC.Center.X < P.MountedCenter.X - 500)
+						NPC.spriteDirection = 1;
+					if (NPC.Center.X > P.MountedCenter.X + 500)
+						NPC.spriteDirection = -1;
 
-					goThere = P.MountedCenter + new Vector2(npc.spriteDirection * 500, P.MountedCenter.Y-npc.Center.Y>0 ? -300 : 300);
+					goThere = P.MountedCenter + new Vector2(NPC.spriteDirection * 500, P.MountedCenter.Y-NPC.Center.Y>0 ? -300 : 300);
 					speed *= MathHelper.Clamp(realcounter / 40f, 0f, 1f);
 
-					if (npc.ai[3]<1)//Not dashing
+					if (NPC.ai[3]<1)//Not dashing
                     {
-						if (realcounter > attackPhaseTime && npc.ai[3]<500) 
+						if (realcounter > attackPhaseTime && NPC.ai[3]<500) 
 						{
 							PickAttack();
 						}
@@ -1394,18 +1395,18 @@ namespace SGAmod.NPCs
 				if (stopmoving < 1)
 				{
 					Vector2 flyhere = goThere- center;
-					npc.velocity += Vector2.Normalize(flyhere) * speed;
+					NPC.velocity += Vector2.Normalize(flyhere) * speed;
 				}
 
-				npc.velocity *= friction;
+				NPC.velocity *= friction;
 			}
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 			Texture2D texture = SGAmod.ExtraTextures[96];
-			Texture2D texture2 = ModContent.GetTexture("SGAmod/Items/LunarRoyalGel");
-			Texture2D texture3 = Main.npcTexture[npc.type];
+			Texture2D texture2 = ModContent.Request<Texture2D>("SGAmod/Items/LunarRoyalGel");
+			Texture2D texture3 = Main.npcTexture[NPC.type];
 			Texture2D inner = SGAmod.ExtraTextures[111];
 			float floater = MathHelper.Clamp(getHitEffect / 15f, 0f, 1f);
 
@@ -1416,8 +1417,8 @@ namespace SGAmod.NPCs
 
 			hallowed.Parameters["alpha"].SetValue(1);
 			hallowed.Parameters["prismAlpha"].SetValue(1f);
-			hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("Perlin"));
-			hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTime/1f, Main.GlobalTime / 2f));
+			hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Perlin").Value);
+			hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTimeWrappedHourly/1f, Main.GlobalTimeWrappedHourly / 2f));
 			hallowed.Parameters["overlayAlpha"].SetValue(0f);
 			hallowed.Parameters["overlayStrength"].SetValue(0f);
 			hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
@@ -1429,11 +1430,11 @@ namespace SGAmod.NPCs
             {
 				UnifiedRandom rando = new UnifiedRandom(proj.whoAmI * 753);
 				float alpha2 = Math.Min(proj.ai[0]/30f,1f);
-				hallowed.Parameters["prismColor"].SetValue((proj.modProjectile as SlimeProjectile).color.ToVector3());
+				hallowed.Parameters["prismColor"].SetValue((proj.ModProjectile as SlimeProjectile).color.ToVector3());
 				spriteBatch.Draw(inner, proj.Center - Main.screenPosition,
 					new Rectangle(0, 0, inner.Width, inner.Height / 2),
 					Color.White,
-					proj.ai[0]*(proj.ai[1]), drawOrigin2, npc.scale, SpriteEffects.None, 0f);
+					proj.ai[0]*(proj.ai[1]), drawOrigin2, NPC.scale, SpriteEffects.None, 0f);
 
 				hallowed.Parameters["alpha"].SetValue(alpha2);
 				hallowed.CurrentTechnique.Passes["Prism"].Apply();
@@ -1442,8 +1443,8 @@ namespace SGAmod.NPCs
 
 			if (slimecalleffect > 0)
 			{
-				UnifiedRandom rando2 = new UnifiedRandom(npc.whoAmI * 753);
-				float localtimer = npc.localAI[0]/90f;
+				UnifiedRandom rando2 = new UnifiedRandom(NPC.whoAmI * 753);
+				float localtimer = NPC.localAI[0]/90f;
 				for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 8f)
 				{
 					for (float i1 = 0; i1 < 1f; i1 += 0.05f)
@@ -1455,10 +1456,10 @@ namespace SGAmod.NPCs
 							Color color = Main.hslToRgb(rando2.NextFloat() % 1f, 1f, 0.65f);
 							hallowed.Parameters["prismColor"].SetValue(color.ToVector3());
 							Vector2 offset = (Vector2.One * (1f - (1f * ((((float)localtimer) + i) % 1f)))).RotatedBy((i + f) * (MathHelper.TwoPi));
-							spriteBatch.Draw(inner, npc.Center + (offset * 960f) - Main.screenPosition,
+							spriteBatch.Draw(inner, NPC.Center + (offset * 960f) - Main.screenPosition,
 								new Rectangle(0, 0, inner.Width, inner.Height / 2),
 								color * alpha,
-								rando2.NextFloat(MathHelper.TwoPi)+(i* MathHelper.TwoPi), drawOrigin2, npc.scale, SpriteEffects.None, 0f);
+								rando2.NextFloat(MathHelper.TwoPi)+(i* MathHelper.TwoPi), drawOrigin2, NPC.scale, SpriteEffects.None, 0f);
 
 							hallowed.Parameters["alpha"].SetValue(alpha);
 							hallowed.CurrentTechnique.Passes["Prism"].Apply();
@@ -1470,10 +1471,10 @@ namespace SGAmod.NPCs
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 			
-			if (npc.ai[0] > 295)
+			if (NPC.ai[0] > 295)
 			{
-				float sizer = 32f * MathHelper.Clamp((npc.ai[0] - 295) / 20f, 0f, 1f);
-				UnifiedRandom rando = new UnifiedRandom(npc.whoAmI * 753);
+				float sizer = 32f * MathHelper.Clamp((NPC.ai[0] - 295) / 20f, 0f, 1f);
+				UnifiedRandom rando = new UnifiedRandom(NPC.whoAmI * 753);
 
 				for (float ix = 0; ix < 24; ix += 1f)
 				{
@@ -1485,13 +1486,13 @@ namespace SGAmod.NPCs
 					float i = (generalcounter / 2f);
 					Matrix matrix = Matrix.CreateRotationZ((i * rando3[0]) + rando2[0]) * Matrix.CreateRotationY((i * rando3[1]) + rando2[1]) * Matrix.CreateRotationX((i * rando3[2]) + rando2[2]);
 
-					spriteBatch.Draw(texture3, Vector2.Transform(vex, matrix) + npc.Center - Main.screenPosition, npc.frame, drawColor*MathHelper.Clamp((npc.ai[0] - 295) / 20f, 0f, 1f), rando.NextFloat(MathHelper.TwoPi) + (npc.velocity.X / 30f), new Vector2(texture3.Width, texture3.Height / 5f) / 2f, npc.scale * 1f, SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture3, Vector2.Transform(vex, matrix) + NPC.Center - Main.screenPosition, NPC.frame, drawColor*MathHelper.Clamp((NPC.ai[0] - 295) / 20f, 0f, 1f), rando.NextFloat(MathHelper.TwoPi) + (NPC.velocity.X / 30f), new Vector2(texture3.Width, texture3.Height / 5f) / 2f, NPC.scale * 1f, SpriteEffects.None, 0f);
 				}
 			}
 
 			if (generalcounter > 0)
 			{
-				float sizer = 64f * MathHelper.Clamp((npc.ai[0] - 295) / 20f, 0f, 1f);
+				float sizer = 64f * MathHelper.Clamp((NPC.ai[0] - 295) / 20f, 0f, 1f);
 				float dister = 1f;
 				//for (float dister = 0f; dister < 0f; dister += 0.05f)
 				//{
@@ -1501,9 +1502,9 @@ namespace SGAmod.NPCs
 						{
 							float dist = MathHelper.Clamp(generalcounter / 60f, 0f, 2 + z);
 							float timez = generalcounter;
-							float angle = i + (generalcounter * (npc.direction > 0 ? 0.1f : -0.1f)) * z;
+							float angle = i + (generalcounter * (NPC.direction > 0 ? 0.1f : -0.1f)) * z;
 							Vector2 drawOrigin = new Vector2(texture2.Width, texture2.Height / 6) / 2f;
-							spriteBatch.Draw(texture2, npc.Center+(npc.velocity* dister) + (Vector2.UnitX.RotatedBy(angle)) * sizer - Main.screenPosition, new Rectangle(0, ((int)((timez / 5f) % 6)) * ((texture2.Height) / 6), texture2.Width, (texture2.Height - 1) / 6), drawColor*dister, npc.velocity.X / 30f, drawOrigin, npc.scale, SpriteEffects.None, 0f);
+							spriteBatch.Draw(texture2, NPC.Center+(NPC.velocity* dister) + (Vector2.UnitX.RotatedBy(angle)) * sizer - Main.screenPosition, new Rectangle(0, ((int)((timez / 5f) % 6)) * ((texture2.Height) / 6), texture2.Width, (texture2.Height - 1) / 6), drawColor*dister, NPC.velocity.X / 30f, drawOrigin, NPC.scale, SpriteEffects.None, 0f);
 						}
 					}
 				//}
@@ -1511,7 +1512,7 @@ namespace SGAmod.NPCs
 
 			//Vortex!
 
-			if (npc.ai[0] > 5000)
+			if (NPC.ai[0] > 5000)
 			{
 				Texture2D tex2 = Main.itemTexture[ModContent.ItemType<StygianCore>()];
 				Main.spriteBatch.End();
@@ -1523,23 +1524,23 @@ namespace SGAmod.NPCs
 					hallowed.Parameters["alpha"].SetValue(0.750f);
 					hallowed.Parameters["prismColor"].SetValue(Color.White.ToVector3());
 					hallowed.Parameters["prismAlpha"].SetValue(0f);
-					hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("TiledPerlin"));
-					hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTime / 1f, Main.GlobalTime / 2f));
-					hallowed.Parameters["overlayAlpha"].SetValue(Math.Min((npc.ai[0] - 5000) / 60f, 20f));
+					hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("TiledPerlin").Value);
+					hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTimeWrappedHourly / 1f, Main.GlobalTimeWrappedHourly / 2f));
+					hallowed.Parameters["overlayAlpha"].SetValue(Math.Min((NPC.ai[0] - 5000) / 60f, 20f));
 					hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f, 0.50f, 1f));
 					hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
 					hallowed.Parameters["rainbowScale"].SetValue(1f);
 					hallowed.Parameters["overlayScale"].SetValue(new Vector2(1f, 1f));
 					hallowed.CurrentTechnique.Passes["Prism"].Apply();
 
-					spriteBatch.Draw(tex2, npc.Center - Main.screenPosition, null, Color.White, (i*MathHelper.PiOver2), tex2.Size() / 2f, new Vector2(1f, 1f) * Math.Min((effectScale) / 300f, 10f), SpriteEffects.None, 0f);
+					spriteBatch.Draw(tex2, NPC.Center - Main.screenPosition, null, Color.White, (i*MathHelper.PiOver2), tex2.Size() / 2f, new Vector2(1f, 1f) * Math.Min((effectScale) / 300f, 10f), SpriteEffects.None, 0f);
 				}
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 			}
 
-			spriteBatch.Draw(texture, npc.Center - Main.screenPosition, null, Color.Magenta * 0.8f * floater, npc.rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), new Vector2(2f, 2f) * floater, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, Color.Magenta * 0.8f * floater, NPC.rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), new Vector2(2f, 2f) * floater, SpriteEffects.None, 0f);
 
 
 			return false;
@@ -1590,40 +1591,40 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Supreme Pinky");
-			Main.npcFrameCount[npc.type] = 5;
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 5;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 16;
-			npc.height = 16;
-			npc.damage = 100;
-			npc.defense = 50;
-			npc.lifeMax = 50000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = 1;
-			npc.netAlways = true;
-			npc.boss = true;
-			aiType = NPCID.BlueSlime;
-			animationType = NPCID.BlueSlime;
-			npc.noTileCollide = false;
-			npc.noGravity = false;
+			NPC.width = 16;
+			NPC.height = 16;
+			NPC.damage = 100;
+			NPC.defense = 50;
+			NPC.lifeMax = 50000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = 1;
+			NPC.netAlways = true;
+			NPC.boss = true;
+			AIType = NPCID.BlueSlime;
+			AnimationType = NPCID.BlueSlime;
+			NPC.noTileCollide = false;
+			NPC.noGravity = false;
 			music = MusicID.Boss2;
 			//bossBag = mod.ItemType("SPinkyBag");
-			npc.value = Item.buyPrice(0, 1, 0, 0);
+			NPC.value = Item.buyPrice(0, 1, 0, 0);
 		}
 
 		public int owner
 		{
 			get
 			{
-				return (int)npc.ai[0];
+				return (int)NPC.ai[0];
 			}
 			set
 			{
-				npc.ai[0] = value;
+				NPC.ai[0] = value;
 			}
 		}
 
@@ -1638,7 +1639,7 @@ namespace SGAmod.NPCs
 		{
 			if (Main.expertMode)
 			{
-				if (npc.boss)
+				if (NPC.boss)
 					target.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("RadiationThree").Type, 60 * 5);
 				else
 					target.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("RadiationTwo").Type, 60 * 10);
@@ -1664,11 +1665,11 @@ namespace SGAmod.NPCs
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {
 			Texture2D texture = SGAmod.ExtraTextures[96];
-			Texture2D texture2 = ModContent.GetTexture("SGAmod/Items/LunarRoyalGel");
-			Texture2D texture3 = Main.npcTexture[npc.type];
+			Texture2D texture2 = ModContent.Request<Texture2D>("SGAmod/Items/LunarRoyalGel");
+			Texture2D texture3 = Main.npcTexture[NPC.type];
 			float floater = MathHelper.Clamp(getHitEffect / 15f, 0f, 1f);
 
-			spriteBatch.Draw(texture3, npc.Center - Main.screenPosition, npc.frame, drawColor, npc.velocity.X / 30f, new Vector2(texture3.Width, texture3.Height/5f)/2f, npc.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture3, NPC.Center - Main.screenPosition, NPC.frame, drawColor, NPC.velocity.X / 30f, new Vector2(texture3.Width, texture3.Height/5f)/2f, NPC.scale, SpriteEffects.None, 0f);
 
 
 			if (GetType() == typeof(SPinkyClone) || generalcounter > 0)
@@ -1677,13 +1678,13 @@ namespace SGAmod.NPCs
 				{
 					float dist = MathHelper.Clamp(generalcounter / 60f, 0f, 1f);
 					float timez = generalcounter;
-					float angle = i + (generalcounter * (npc.direction > 0 ? 0.1f : -0.1f));
+					float angle = i + (generalcounter * (NPC.direction > 0 ? 0.1f : -0.1f));
 					Vector2 drawOrigin = new Vector2(texture2.Width, texture2.Height / 6) / 2f;
-					spriteBatch.Draw(texture2, npc.Center + (Vector2.UnitX.RotatedBy(angle)) * 32f - Main.screenPosition, new Rectangle(0, ((int)((timez / 5f) % 6)) * ((texture2.Height) / 6), texture2.Width, (texture2.Height - 1) / 6), drawColor, npc.velocity.X / 30f, drawOrigin, npc.scale, SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture2, NPC.Center + (Vector2.UnitX.RotatedBy(angle)) * 32f - Main.screenPosition, new Rectangle(0, ((int)((timez / 5f) % 6)) * ((texture2.Height) / 6), texture2.Width, (texture2.Height - 1) / 6), drawColor, NPC.velocity.X / 30f, drawOrigin, NPC.scale, SpriteEffects.None, 0f);
 				}
 			}
 
-			spriteBatch.Draw(texture, npc.Center - Main.screenPosition, null, Color.Magenta * 0.8f * floater, npc.rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), new Vector2(1f, 1f) * floater, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, Color.Magenta * 0.8f * floater, NPC.rotation, new Vector2(texture.Width / 2f, texture.Height / 2f), new Vector2(1f, 1f) * floater, SpriteEffects.None, 0f);
 
 
 			return false;
@@ -1695,7 +1696,7 @@ namespace SGAmod.NPCs
 			Texture2D texture = SGAmod.ExtraTextures[96];
 			if (GetType() == typeof(SPinkyClone) || !(drawdist > 0f))
 				return;
-			float inrc = Main.GlobalTime / 30f;
+			float inrc = Main.GlobalTimeWrappedHourly / 30f;
 
 			List<Vector2> vects = new List<Vector2>();
 			int maxDetail = 120;
@@ -1707,20 +1708,20 @@ namespace SGAmod.NPCs
 				vects.Add(circleLoc+thisloc);
 			}
 
-			TrailHelper trail = new TrailHelper("DefaultPass", mod.GetTexture("noise"));
+			TrailHelper trail = new TrailHelper("DefaultPass", Mod.Assets.Request<Texture2D>("noise").Value);
 			trail.color = delegate (float percent)
 			{
 				return Color.Magenta;
 			};
 
 			trail.projsize = Vector2.Zero;
-			trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
+			trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
 			trail.trailThickness = 64;
 			trail.trailThicknessIncrease = 0;
 			trail.doFade = false;
 			trail.connectEnds = true;
 			trail.strength = drawdist;
-			trail.DrawTrail(vects, npc.Center);
+			trail.DrawTrail(vects, NPC.Center);
 
 		}
 
@@ -1732,40 +1733,40 @@ namespace SGAmod.NPCs
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
 			if (GetType() == typeof(SPinkyTrue))
-				npc.lifeMax = (int)(npc.lifeMax * 0.750f);
+				NPC.lifeMax = (int)(NPC.lifeMax * 0.750f);
 			else
-				npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+				NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 		public override void NPCLoot()
 		{
 			if (GetType() == typeof(SPinkyTrue))
             {
-				npc.DropBossBags();
+				NPC.DropBossBags();
 				goto Ded;
 
 			}
-			if (npc.boss)
+			if (NPC.boss)
 			{
 				if (Main.expertMode)
 				{
 					if (!SGAWorld.downedSPinky || TheWholeExperience.Check())
 					{
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SPinkyBagFake"));
+						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("SPinkyBagFake").Type);
                     }
                     else
                     {
-						NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<SPinkyTrue>());
+						NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<SPinkyTrue>());
                     }
 					return;
 				}
 				else
 				{
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LunarRoyalGel"), 30);
-                    Items.Armors.Illuminant.IlluminantHelmet.IlluminantArmorDrop(1, npc.Center);
+					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("LunarRoyalGel").Type, 30);
+                    Items.Armors.Illuminant.IlluminantHelmet.IlluminantArmorDrop(1, NPC.Center);
 					if (Main.rand.Next(7) == 0)
 					{
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Armors.Vanity.SupremePinkyMask>());
+						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<Items.Armors.Vanity.SupremePinkyMask>());
 					}
 				}
 			}
@@ -1811,7 +1812,7 @@ namespace SGAmod.NPCs
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
-            return new Rectangle((int)npc.Center.X-8, (int)npc.Center.Y - 8,16,16).Intersects(target.Hitbox);
+            return new Rectangle((int)NPC.Center.X-8, (int)NPC.Center.Y - 8,16,16).Intersects(target.Hitbox);
         }
 
         public override void HitEffect(int hitDirection, double damage)
@@ -1876,27 +1877,27 @@ namespace SGAmod.NPCs
 
 		public override void AI()
 		{
-			if (npc.aiStyle != 15)
+			if (NPC.aiStyle != 15)
 			{
-				npc.width = 64;
-				npc.height = 64;
-				npc.scale = 1;
+				NPC.width = 64;
+				NPC.height = 64;
+				NPC.scale = 1;
 			}
 			getHitEffect -= 1f;
-			P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active || Main.dayTime)
+			P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active || Main.dayTime)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead || Main.dayTime)
 				{
 					float speed = ((-10f));
-					npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-					npc.active = false;
+					NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+					NPC.active = false;
 					if (father > 0)
 					{
 						Main.npc[father].active = false;
-						Main.npc[father].velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
+						Main.npc[father].velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
 
 					}
 
@@ -1905,33 +1906,33 @@ namespace SGAmod.NPCs
 			}
 			else
 			{
-				if (float.IsNaN(npc.Center.X))
+				if (float.IsNaN(NPC.Center.X))
                 {
-					npc.Center = P.Center + new Vector2(0, -200);
+					NPC.Center = P.Center + new Vector2(0, -200);
                 }
 
 				if (GetType() == typeof(SPinky))
-					npc.GivenName = "Supreme Pinky";
+					NPC.GivenName = "Supreme Pinky";
 				else
-					npc.GivenName = "Doppelgangers";
+					NPC.GivenName = "Doppelgangers";
 
 
-				npc.netUpdate = true;
-				npc.timeLeft = 99999;
-				if (npc.life > 0)
-					npc.active = true;
+				NPC.netUpdate = true;
+				NPC.timeLeft = 99999;
+				if (NPC.life > 0)
+					NPC.active = true;
 
-				if (npc.aiStyle < 0)
+				if (NPC.aiStyle < 0)
 				{
 					//Vector2 ownerloc=npc.ai[0].Center;
 				}
 
 				Vector2 ploc = P.Center;
-				circleLoc = npc.Center;
-				Vector2 meloc = npc.Center;
+				circleLoc = NPC.Center;
+				Vector2 meloc = NPC.Center;
 				float moveup = 0;
 				int isboss = 0;
-				if (npc.boss == true)
+				if (NPC.boss == true)
 				{
 					isboss = 1;
 				}
@@ -1943,11 +1944,11 @@ namespace SGAmod.NPCs
 				}
 				Vector2 dist = ploc - meloc;
 				int adder = 0;
-				if (npc.aiStyle == 19)
+				if (NPC.aiStyle == 19)
 				{
 					adder = 90;
 				}
-				if (npc.aiStyle == 52)
+				if (NPC.aiStyle == 52)
 				{
 					adder = 60;
 				}
@@ -1955,15 +1956,15 @@ namespace SGAmod.NPCs
 				{
 					if (phase == 1)
 					{
-						npc.velocity.Y -= 0.01f;
-						npc.velocity.Normalize();
-						npc.velocity = npc.velocity * (dist.Length() / 300);
+						NPC.velocity.Y -= 0.01f;
+						NPC.velocity.Normalize();
+						NPC.velocity = NPC.velocity * (dist.Length() / 300);
 					}
 					if (phase == 3)
 					{
-						npc.velocity.Y += 0.01f;
-						npc.velocity.Normalize();
-						npc.velocity = npc.velocity * (dist.Length() / 40);
+						NPC.velocity.Y += 0.01f;
+						NPC.velocity.Normalize();
+						NPC.velocity = NPC.velocity * (dist.Length() / 40);
 					}
 				}
 				if (isboss > 0)
@@ -2018,9 +2019,9 @@ namespace SGAmod.NPCs
 				{
 					stopmoving -= 1;
 					if (stopmoving > 0)
-						npc.velocity = Vector2.Zero;
+						NPC.velocity = Vector2.Zero;
 
-					if (NPC.CountNPCS(mod.NPCType("SPinkyClone")) + NPC.CountNPCS(NPCID.KingSlime) < 1 && npc.aiStyle != 69)
+					if (NPC.CountNPCS(Mod.Find<ModNPC>("SPinkyClone").Type) + NPC.CountNPCS(NPCID.KingSlime) < 1 && NPC.aiStyle != 69)
 						generalcounter += 1;
 					else
 						generalcounter = 0;
@@ -2037,8 +2038,8 @@ namespace SGAmod.NPCs
 								}*/
 							if (generalcounter % 10 == 0)
 							{
-								Idglib.Shattershots(npc.Center, P.Center, new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, (100 - (float)((generalcounter % 300) - 200) * 2) * 2, 2, false, 0, true, 220);
-								Idglib.Shattershots(npc.Center, P.Center, new Vector2(0, 0), ModContent.ProjectileType<PinkyWarning>(), 1, 1f, (100 - (float)((generalcounter % 300) - 200) * 2) * 2, 2, false, 0, true, 220);
+								Idglib.Shattershots(NPC.Center, P.Center, new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, (100 - (float)((generalcounter % 300) - 200) * 2) * 2, 2, false, 0, true, 220);
+								Idglib.Shattershots(NPC.Center, P.Center, new Vector2(0, 0), ModContent.ProjectileType<PinkyWarning>(), 1, 1f, (100 - (float)((generalcounter % 300) - 200) * 2) * 2, 2, false, 0, true, 220);
 							}
 
 						}
@@ -2049,10 +2050,10 @@ namespace SGAmod.NPCs
 						if (generalcounter % 400 > 150 && generalcounter % 5 == 0)
 						{
 							stopmoving = 15;
-							Vector2 here = (P.Center - npc.Center);
+							Vector2 here = (P.Center - NPC.Center);
 							here.Normalize();
-							List<Projectile> itz = Idglib.Shattershots(npc.Center + (here * circlesize), npc.Center, new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, 70, 1, true, 0, true, 180);
-							itz = Idglib.Shattershots(npc.Center, npc.Center + (here * circlesize), new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, 70, 1, true, 0, true, 180);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center + (here * circlesize), NPC.Center, new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, 70, 1, true, 0, true, 180);
+							itz = Idglib.Shattershots(NPC.Center, NPC.Center + (here * circlesize), new Vector2(0, 0), ProjectileID.DemonScythe, 50, 1f, 70, 1, true, 0, true, 180);
 
 						}
 
@@ -2068,13 +2069,13 @@ namespace SGAmod.NPCs
 
 							if (generalcounter % 400 == 300)
 							{
-								Projectile proj = Projectile.NewProjectileDirect(npc.Center, Vector2.Zero, ModContent.ProjectileType<PinkyRingAttack>(), 150, 0f);
+								Projectile proj = Projectile.NewProjectileDirect(NPC.Center, Vector2.Zero, ModContent.ProjectileType<PinkyRingAttack>(), 150, 0f);
 								if (proj != null)
 								{
 									proj.ai[0] = Main.rand.Next(-300, 0);
-									(proj.modProjectile as PinkyRingAttack).maxTime = 600;
+									(proj.ModProjectile as PinkyRingAttack).maxTime = 600;
 									proj.timeLeft = 600;
-									(proj.modProjectile as PinkyRingAttack).ringSize = 36;
+									(proj.ModProjectile as PinkyRingAttack).ringSize = 36;
 									proj.netUpdate = true;
 								}
 							}
@@ -2083,11 +2084,11 @@ namespace SGAmod.NPCs
 								for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 16f)
 								{
 									float ff = f + generalcounter / 400f;
-									Projectile.NewProjectile(npc.Center, ff.ToRotationVector2() * 1f, ProjectileID.DemonScythe, 50, 0f);
-									Projectile.NewProjectile(npc.Center + (ff.ToRotationVector2() * 32f), ff.ToRotationVector2() * 1f, ModContent.ProjectileType<PinkyWarning>(), 1, 0f);
+									Projectile.NewProjectile(NPC.Center, ff.ToRotationVector2() * 1f, ProjectileID.DemonScythe, 50, 0f);
+									Projectile.NewProjectile(NPC.Center + (ff.ToRotationVector2() * 32f), ff.ToRotationVector2() * 1f, ModContent.ProjectileType<PinkyWarning>(), 1, 0f);
 								}
 
-								SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsySummon, npc.Center);
+								SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsySummon, NPC.Center);
 								if (sound != null)
 									sound.Pitch += 0.50f;
 							}
@@ -2103,36 +2104,36 @@ namespace SGAmod.NPCs
 
 					generalcounter += 1;
 
-					if (npc.aiStyle == 87 || npc.aiStyle == 63 || npc.aiStyle == 91)
+					if (NPC.aiStyle == 87 || NPC.aiStyle == 63 || NPC.aiStyle == 91)
 					{
 						stopmoving -= 1;
 						int modez = (Main.expertMode ? 1 : 2);
 
-						int delay = npc.aiStyle == 63 ? 150 : 87;
+						int delay = NPC.aiStyle == 63 ? 150 : 87;
 						int offsetter = 0;
-						if (npc.aiStyle == 91)
+						if (NPC.aiStyle == 91)
 						{
 							delay = 300;
-							offsetter = npc.whoAmI * 173;
+							offsetter = NPC.whoAmI * 173;
 						}
 
 						if ((generalcounter + offsetter + 60) % ((50 + delay) * modez) < 80)
 						{
 							if (Main.rand.Next(0, 2) == 1)
 							{
-								int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, DustID.PurpleCrystalShard);
+								int dust = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, DustID.PurpleCrystalShard);
 								Main.dust[dust].scale = 1.5f;
 								Main.dust[dust].noGravity = true;
-								Main.dust[dust].velocity = Vector2.Normalize(P.Center - npc.Center) * (float)(Main.rand.NextFloat(1f, 4f));
+								Main.dust[dust].velocity = Vector2.Normalize(P.Center - NPC.Center) * (float)(Main.rand.NextFloat(1f, 4f));
 							}
 							stopmoving = 3;
-							npc.position -= npc.velocity;
+							NPC.position -= NPC.velocity;
 						}
 
 						if ((generalcounter + offsetter + 60) % ((50 + delay) * modez) == 60)
 						{
-							List<Projectile> itz = Idglib.Shattershots(npc.Center, P.Center, new Vector2(0, 0), ProjectileID.NebulaBolt, 30, 12f, 40, 2, true, 0, true, 200);
-							SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 110);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.Center, new Vector2(0, 0), ProjectileID.NebulaBolt, 30, 12f, 40, 2, true, 0, true, 200);
+							SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 110);
 							if (sound != null)
 								sound.Pitch += 0.50f;
 
@@ -2146,13 +2147,13 @@ namespace SGAmod.NPCs
 					drawdist += (1f - drawdist) * 0.01f;
 
 				float dashdist = (2200 - (isboss * 800));
-				if (npc.aiStyle == 41 && generalcounter%300>150)
+				if (NPC.aiStyle == 41 && generalcounter%300>150)
 				{
 					dashdist /= 2f;
-					npc.noGravity = true;
-					npc.noTileCollide = true;
-					npc.velocity = Vector2.Normalize(P.Center - npc.Center).RotatedBy(MathHelper.Pi / 3f) * 16f;
-					npc.velocity.X /= 1.5f;
+					NPC.noGravity = true;
+					NPC.noTileCollide = true;
+					NPC.velocity = Vector2.Normalize(P.Center - NPC.Center).RotatedBy(MathHelper.Pi / 3f) * 16f;
+					NPC.velocity.X /= 1.5f;
 				}
 
 				NoEscape(circlesize, circleLoc-P.MountedCenter);
@@ -2164,55 +2165,55 @@ namespace SGAmod.NPCs
 					{
                         if (ploc.X > meloc.X)
                         {
-                            npc.velocity = new Vector2(4f, (((ploc.Y + 8) - meloc.Y) / 8) + moveup);
+                            NPC.velocity = new Vector2(4f, (((ploc.Y + 8) - meloc.Y) / 8) + moveup);
                         }
                         else
                         {
-                            npc.velocity = new Vector2(-4f, (((ploc.Y + 8) - meloc.Y) / 8) + moveup);
+                            NPC.velocity = new Vector2(-4f, (((ploc.Y + 8) - meloc.Y) / 8) + moveup);
                         }
 						float speed = 12;
-						if (npc.aiStyle == 87)
-							speed = npc.aiStyle == 63 ? 16 : 24;
-						if (npc.velocity.LengthSquared() > 2 * 2)
+						if (NPC.aiStyle == 87)
+							speed = NPC.aiStyle == 63 ? 16 : 24;
+						if (NPC.velocity.LengthSquared() > 2 * 2)
 						{
-							npc.velocity.Normalize();
-							npc.velocity = npc.velocity * speed;
+							NPC.velocity.Normalize();
+							NPC.velocity = NPC.velocity * speed;
 						}
-						npc.noTileCollide = true;
-						npc.noGravity = true;
+						NPC.noTileCollide = true;
+						NPC.noGravity = true;
 					}
 
 				}
 				else
 				{
-					if (npc.aiStyle != 63 && npc.aiStyle != 91 && npc.aiStyle != 23 && npc.aiStyle != 4 && npc.aiStyle != 69 && npc.aiStyle != 52 && npc.aiStyle != 19)
+					if (NPC.aiStyle != 63 && NPC.aiStyle != 91 && NPC.aiStyle != 23 && NPC.aiStyle != 4 && NPC.aiStyle != 69 && NPC.aiStyle != 52 && NPC.aiStyle != 19)
 					{
-						npc.noTileCollide = false;
-						npc.noGravity = false;
+						NPC.noTileCollide = false;
+						NPC.noGravity = false;
 					}
 				}
-				if (npc.aiStyle == 63 || npc.aiStyle == 87 || npc.aiStyle == 91 || npc.aiStyle == 23 || npc.aiStyle == 4 || npc.aiStyle == 69 || npc.aiStyle == 52 || npc.aiStyle == 19)
+				if (NPC.aiStyle == 63 || NPC.aiStyle == 87 || NPC.aiStyle == 91 || NPC.aiStyle == 23 || NPC.aiStyle == 4 || NPC.aiStyle == 69 || NPC.aiStyle == 52 || NPC.aiStyle == 19)
 				{
-					npc.noTileCollide = true;
-					npc.noGravity = true;
+					NPC.noTileCollide = true;
+					NPC.noGravity = true;
 				}
-				if (npc.aiStyle == 19)
+				if (NPC.aiStyle == 19)
 				{
 					if (Main.rand.Next(300) < 4)
 					{
-						npc.velocity = new Vector2((float)(-6f + Main.rand.Next(12)), (float)(-6f + Main.rand.Next(12)));
+						NPC.velocity = new Vector2((float)(-6f + Main.rand.Next(12)), (float)(-6f + Main.rand.Next(12)));
 					}
 				}
 
 
-				if (npc.boss == true)
+				if (NPC.boss == true)
 				{
 					if (phase>1 && generalcounter>0)
-						npc.noGravity = true;
-					npc.defense = ((NPC.CountNPCS(mod.NPCType("SPinkyClone"))) * 100) + fatherphase;
-					if (((NPC.CountNPCS(mod.NPCType("SPinkyClone")) > 0) && Main.rand.Next(30) < 290) || fatherphase == 2)
+						NPC.noGravity = true;
+					NPC.defense = ((NPC.CountNPCS(Mod.Find<ModNPC>("SPinkyClone").Type)) * 100) + fatherphase;
+					if (((NPC.CountNPCS(Mod.Find<ModNPC>("SPinkyClone").Type) > 0) && Main.rand.Next(30) < 290) || fatherphase == 2)
 					{
-						npc.dontTakeDamage = true;
+						NPC.dontTakeDamage = true;
 						if (fatherphase == 2)
 						{
 							//npc.life=npc.life+20;
@@ -2220,7 +2221,7 @@ namespace SGAmod.NPCs
 					}
 					else
 					{
-						npc.dontTakeDamage = false;
+						NPC.dontTakeDamage = false;
 					}
 
 					if (Main.expertMode)
@@ -2263,15 +2264,15 @@ namespace SGAmod.NPCs
 							}
 						}
 
-						if (npc.life < npc.lifeMax * 0.24 && fatherphase == -1)
+						if (NPC.life < NPC.lifeMax * 0.24 && fatherphase == -1)
 						{
 							fatherphase = 2;
 
-							father = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y - 32, NPCID.KingSlime);
-							Main.npc[father].life = (int)(npc.lifeMax * 0.9);
-							Main.npc[father].lifeMax = (int)(npc.lifeMax * 0.9);
+							father = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y - 32, NPCID.KingSlime);
+							Main.npc[father].life = (int)(NPC.lifeMax * 0.9);
+							Main.npc[father].lifeMax = (int)(NPC.lifeMax * 0.9);
 							Main.npc[father].boss = true;
-							Main.npc[father].ai[0] = npc.whoAmI;
+							Main.npc[father].ai[0] = NPC.whoAmI;
 							Main.npc[father].damage = 60;
 							Main.npc[father].defense = 50;
 							Main.npc[father].aiStyle = 30;
@@ -2282,141 +2283,141 @@ namespace SGAmod.NPCs
 
 
 					}
-					if (npc.life < npc.lifeMax * 0.95)
+					if (NPC.life < NPC.lifeMax * 0.95)
 					{
 						aicounter = aicounter + 1;
 						if (aicounter == 30)
 						{
-							int newguy1 = NPC.NewNPC((int)npc.Center.X - 13, (int)npc.Center.Y - 2, mod.NPCType("SPinkyClone"));
-							int newguy2 = NPC.NewNPC((int)npc.Center.X - 13, (int)npc.Center.Y - 2, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy1].life = npc.lifeMax / 8;
-							Main.npc[newguy1].lifeMax = npc.lifeMax / 8;
-							Main.npc[newguy2].life = npc.lifeMax / 8;
-							Main.npc[newguy2].lifeMax = npc.lifeMax / 8;
+							int newguy1 = NPC.NewNPC((int)NPC.Center.X - 13, (int)NPC.Center.Y - 2, Mod.Find<ModNPC>("SPinkyClone").Type);
+							int newguy2 = NPC.NewNPC((int)NPC.Center.X - 13, (int)NPC.Center.Y - 2, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy1].life = NPC.lifeMax / 8;
+							Main.npc[newguy1].lifeMax = NPC.lifeMax / 8;
+							Main.npc[newguy2].life = NPC.lifeMax / 8;
+							Main.npc[newguy2].lifeMax = NPC.lifeMax / 8;
 							Main.npc[newguy1].boss = false;
 							Main.npc[newguy2].boss = false;
 							Main.npc[newguy1].aiStyle = 87;
 							Main.npc[newguy2].aiStyle = 87;
-							Main.npc[newguy1].ai[0] = npc.whoAmI;
-							Main.npc[newguy2].ai[0] = npc.whoAmI;
+							Main.npc[newguy1].ai[0] = NPC.whoAmI;
+							Main.npc[newguy2].ai[0] = NPC.whoAmI;
 							Main.npc[newguy2].netUpdate = true;
 							Main.npc[newguy1].netUpdate = true;
-							npc.aiStyle = 15;
+							NPC.aiStyle = 15;
 							Main.NewText("<Supreme Pinky> REAL MEN WEAR PINK! ", 255, 100, 255);
 						}
 					}
 
-					if (npc.life < npc.lifeMax * 0.75)
+					if (NPC.life < NPC.lifeMax * 0.75)
 					{
 						if (aicounter < 90000)
 						{
 							aicounter = 90000;
-							int newguy3 = NPC.NewNPC((int)npc.Center.X - 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"));
-							int newguy4 = NPC.NewNPC((int)npc.Center.X + 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy3].life = npc.lifeMax / 4;
-							Main.npc[newguy3].lifeMax = npc.lifeMax / 4;
-							Main.npc[newguy4].life = npc.lifeMax / 4;
-							Main.npc[newguy4].lifeMax = npc.lifeMax / 4;
+							int newguy3 = NPC.NewNPC((int)NPC.Center.X - 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							int newguy4 = NPC.NewNPC((int)NPC.Center.X + 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy3].life = NPC.lifeMax / 4;
+							Main.npc[newguy3].lifeMax = NPC.lifeMax / 4;
+							Main.npc[newguy4].life = NPC.lifeMax / 4;
+							Main.npc[newguy4].lifeMax = NPC.lifeMax / 4;
 							Main.npc[newguy3].boss = false;
 							Main.npc[newguy4].boss = false;
 							Main.npc[newguy3].defense = 0;
 							Main.npc[newguy4].defense = 0;
 							Main.npc[newguy3].aiStyle = 41;
 							Main.npc[newguy4].aiStyle = 41;
-							Main.npc[newguy3].ai[0] = npc.whoAmI;
-							Main.npc[newguy4].ai[0] = npc.whoAmI;
+							Main.npc[newguy3].ai[0] = NPC.whoAmI;
+							Main.npc[newguy4].ai[0] = NPC.whoAmI;
 							Main.npc[newguy3].netUpdate = true;
 							Main.npc[newguy4].netUpdate = true;
-							npc.aiStyle = 96;
+							NPC.aiStyle = 96;
 							phase = 1;
 							Main.NewText("<Supreme Pinky> YOU DARE RESIST THE PINK!?! ", 255, 100, 255);
 						}
 					}
 
-					if (npc.life < npc.lifeMax * 0.50 || aicounter > 94050)
+					if (NPC.life < NPC.lifeMax * 0.50 || aicounter > 94050)
 					{
 						if (aicounter < 100000)
 						{
 							aicounter = 100000;
-							int newguy666 = NPC.NewNPC((int)npc.Center.X + 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy666].life = npc.lifeMax / 6;
-							Main.npc[newguy666].lifeMax = npc.lifeMax / 6;
-							Main.npc[newguy666].life = npc.lifeMax / 6;
-							Main.npc[newguy666].lifeMax = npc.lifeMax / 6;
+							int newguy666 = NPC.NewNPC((int)NPC.Center.X + 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy666].life = NPC.lifeMax / 6;
+							Main.npc[newguy666].lifeMax = NPC.lifeMax / 6;
+							Main.npc[newguy666].life = NPC.lifeMax / 6;
+							Main.npc[newguy666].lifeMax = NPC.lifeMax / 6;
 							Main.npc[newguy666].boss = false;
 							Main.npc[newguy666].defense = 0;
 							Main.npc[newguy666].aiStyle = 91;
 							Main.npc[newguy666].noGravity = true;
-							Main.npc[newguy666].ai[0] = npc.whoAmI;
+							Main.npc[newguy666].ai[0] = NPC.whoAmI;
 							Main.npc[newguy666].netUpdate = true;
 
 
-							int newguy667 = NPC.NewNPC((int)npc.Center.X - 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy667].life = npc.lifeMax / 6;
-							Main.npc[newguy667].lifeMax = npc.lifeMax / 6;
-							Main.npc[newguy667].life = npc.lifeMax / 6;
-							Main.npc[newguy667].lifeMax = npc.lifeMax / 6;
+							int newguy667 = NPC.NewNPC((int)NPC.Center.X - 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy667].life = NPC.lifeMax / 6;
+							Main.npc[newguy667].lifeMax = NPC.lifeMax / 6;
+							Main.npc[newguy667].life = NPC.lifeMax / 6;
+							Main.npc[newguy667].lifeMax = NPC.lifeMax / 6;
 							Main.npc[newguy667].boss = false;
 							Main.npc[newguy667].defense = 0;
 							Main.npc[newguy667].aiStyle = 91;
 							Main.npc[newguy667].noGravity = true;
-							Main.npc[newguy667].ai[0] = npc.whoAmI;
+							Main.npc[newguy667].ai[0] = NPC.whoAmI;
 							Main.npc[newguy667].netUpdate = true;
 
 
-							int newguy668 = NPC.NewNPC((int)npc.Center.X + 80, (int)npc.Center.Y - 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy668].life = npc.lifeMax / 6;
-							Main.npc[newguy668].lifeMax = npc.lifeMax / 6;
-							Main.npc[newguy668].life = npc.lifeMax / 6;
-							Main.npc[newguy668].lifeMax = npc.lifeMax / 6;
+							int newguy668 = NPC.NewNPC((int)NPC.Center.X + 80, (int)NPC.Center.Y - 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy668].life = NPC.lifeMax / 6;
+							Main.npc[newguy668].lifeMax = NPC.lifeMax / 6;
+							Main.npc[newguy668].life = NPC.lifeMax / 6;
+							Main.npc[newguy668].lifeMax = NPC.lifeMax / 6;
 							Main.npc[newguy668].boss = false;
 							Main.npc[newguy668].defense = 0;
 							Main.npc[newguy668].aiStyle = 91;
 							Main.npc[newguy668].noGravity = true;
-							Main.npc[newguy668].ai[0] = npc.whoAmI;
+							Main.npc[newguy668].ai[0] = NPC.whoAmI;
 							Main.npc[newguy668].netUpdate = true;
 
 
-							int newguy669 = NPC.NewNPC((int)npc.Center.X - 80, (int)npc.Center.Y - 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy669].life = npc.lifeMax / 6;
-							Main.npc[newguy669].lifeMax = npc.lifeMax / 6;
-							Main.npc[newguy669].life = npc.lifeMax / 6;
-							Main.npc[newguy669].lifeMax = npc.lifeMax / 6;
+							int newguy669 = NPC.NewNPC((int)NPC.Center.X - 80, (int)NPC.Center.Y - 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy669].life = NPC.lifeMax / 6;
+							Main.npc[newguy669].lifeMax = NPC.lifeMax / 6;
+							Main.npc[newguy669].life = NPC.lifeMax / 6;
+							Main.npc[newguy669].lifeMax = NPC.lifeMax / 6;
 							Main.npc[newguy669].boss = false;
 							Main.npc[newguy669].defense = 0;
 							Main.npc[newguy669].aiStyle = 91;
 							Main.npc[newguy669].noGravity = true;
-							Main.npc[newguy669].ai[0] = npc.whoAmI;
+							Main.npc[newguy669].ai[0] = NPC.whoAmI;
 							Main.npc[newguy669].netUpdate = true;
 							phase = 2;
-							npc.aiStyle = 15;
+							NPC.aiStyle = 15;
 							Main.NewText("<Supreme Pinky> YOU WILL BECOME PART OF THE PINK!!", 255, 100, 255);
 						}
 					}
 
-					if (npc.life < npc.lifeMax * 0.30 && aicounter > 100150)
+					if (NPC.life < NPC.lifeMax * 0.30 && aicounter > 100150)
 					{
 						if (aicounter < 150000)
 						{
 							aicounter = 150000;
-							npc.aiStyle = 96;
-							npc.damage = 50;
-							int newguy670 = NPC.NewNPC((int)npc.Center.X + 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"), npc.whoAmI, 0, npc.whoAmI);
-							Main.npc[newguy670].life = npc.lifeMax / 5;
-							Main.npc[newguy670].lifeMax = npc.lifeMax / 5;
+							NPC.aiStyle = 96;
+							NPC.damage = 50;
+							int newguy670 = NPC.NewNPC((int)NPC.Center.X + 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type, NPC.whoAmI, 0, NPC.whoAmI);
+							Main.npc[newguy670].life = NPC.lifeMax / 5;
+							Main.npc[newguy670].lifeMax = NPC.lifeMax / 5;
 							Main.npc[newguy670].boss = false;
 							Main.npc[newguy670].defense = 0;
 							Main.npc[newguy670].aiStyle = 48;
-							Main.npc[newguy670].ai[0] = npc.whoAmI;
+							Main.npc[newguy670].ai[0] = NPC.whoAmI;
 							Main.npc[newguy670].netUpdate = true;
 
-							int newguy671 = NPC.NewNPC((int)npc.Center.X - 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"), npc.whoAmI, 0, npc.whoAmI);
-							Main.npc[newguy671].life = npc.lifeMax / 5;
-							Main.npc[newguy671].lifeMax = npc.lifeMax / 5;
+							int newguy671 = NPC.NewNPC((int)NPC.Center.X - 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type, NPC.whoAmI, 0, NPC.whoAmI);
+							Main.npc[newguy671].life = NPC.lifeMax / 5;
+							Main.npc[newguy671].lifeMax = NPC.lifeMax / 5;
 							Main.npc[newguy671].boss = false;
 							Main.npc[newguy671].defense = 0;
 							Main.npc[newguy671].aiStyle = 48;
-							Main.npc[newguy671].ai[0] = npc.whoAmI;
+							Main.npc[newguy671].ai[0] = NPC.whoAmI;
 							Main.npc[newguy671].netUpdate = true;
 							phase = 3;
 
@@ -2425,28 +2426,28 @@ namespace SGAmod.NPCs
 					}
 
 
-					if (npc.life < npc.lifeMax * 0.23 && aicounter > 100150 && fatherphase>1)
+					if (NPC.life < NPC.lifeMax * 0.23 && aicounter > 100150 && fatherphase>1)
 					{
 						if (aicounter < 200000)
 						{
 							aicounter = 200000;
-							npc.aiStyle = 63;
-							npc.damage = 50;
-							int newguy670 = NPC.NewNPC((int)npc.Center.X + 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy670].life = npc.lifeMax / 4;
-							Main.npc[newguy670].lifeMax = npc.lifeMax; Main.npc[newguy670].boss = false;
+							NPC.aiStyle = 63;
+							NPC.damage = 50;
+							int newguy670 = NPC.NewNPC((int)NPC.Center.X + 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy670].life = NPC.lifeMax / 4;
+							Main.npc[newguy670].lifeMax = NPC.lifeMax; Main.npc[newguy670].boss = false;
 							Main.npc[newguy670].defense = 10;
 							Main.npc[newguy670].aiStyle = 4;
-							Main.npc[newguy670].ai[0] = npc.whoAmI;
+							Main.npc[newguy670].ai[0] = NPC.whoAmI;
 							Main.npc[newguy670].netUpdate = true;
 
-							int newguy671 = NPC.NewNPC((int)npc.Center.X - 80, (int)npc.Center.Y + 40, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy671].life = npc.lifeMax / 4;
-							Main.npc[newguy671].lifeMax = npc.lifeMax;
+							int newguy671 = NPC.NewNPC((int)NPC.Center.X - 80, (int)NPC.Center.Y + 40, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy671].life = NPC.lifeMax / 4;
+							Main.npc[newguy671].lifeMax = NPC.lifeMax;
 							Main.npc[newguy671].boss = false;
 							Main.npc[newguy671].defense = 10;
 							Main.npc[newguy671].aiStyle = 4;
-							Main.npc[newguy671].ai[0] = npc.whoAmI;
+							Main.npc[newguy671].ai[0] = NPC.whoAmI;
 							Main.npc[newguy671].netUpdate = true;
 
 							phase = 4;
@@ -2454,12 +2455,12 @@ namespace SGAmod.NPCs
 						}
 					}
 
-					if (npc.life < npc.lifeMax * 0.20 && npc.aiStyle != 69 && !npc.dontTakeDamage && fatherphase > 1)
+					if (NPC.life < NPC.lifeMax * 0.20 && NPC.aiStyle != 69 && !NPC.dontTakeDamage && fatherphase > 1)
 					{
-						npc.aiStyle = 69;
-						npc.damage = 20;
-						npc.ai[0] = 0;
-						npc.defense = 300;
+						NPC.aiStyle = 69;
+						NPC.damage = 20;
+						NPC.ai[0] = 0;
+						NPC.defense = 300;
 						Main.NewText("<Supreme Pinky> PINKY WILL NOT DIE AGAIN!", 255, 100, 255);
 					}
 
@@ -2489,11 +2490,11 @@ namespace SGAmod.NPCs
 							{
 								//int newguy5 = NPC.NewNPC((int)npc.Center.X + 150 - Main.rand.Next(300), (int)npc.Center.Y + 30, 1);
 								int newguy5;
-								Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(npc.target,1,out newguy5);
-								Main.npc[newguy5].life = npc.lifeMax / 30;
-								Main.npc[newguy5].lifeMax = npc.lifeMax / 30;
-								Main.npc[newguy5].life = npc.lifeMax / 30;
-								Main.npc[newguy5].lifeMax = npc.lifeMax / 30;
+								Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(NPC.target,1,out newguy5);
+								Main.npc[newguy5].life = NPC.lifeMax / 30;
+								Main.npc[newguy5].lifeMax = NPC.lifeMax / 30;
+								Main.npc[newguy5].life = NPC.lifeMax / 30;
+								Main.npc[newguy5].lifeMax = NPC.lifeMax / 30;
 								Main.npc[newguy5].boss = false;
 								Main.npc[newguy5].defense = 90;
 								if (aicounter > 90650)
@@ -2519,9 +2520,9 @@ namespace SGAmod.NPCs
 						{
 							//int newguy55 = NPC.NewNPC((int)P.Center.X + Main.rand.Next(-300, 300), (int)P.Center.Y - 320, 16, npc.whoAmI);
 							int newguy55;
-							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(npc.target, NPCID.MotherSlime, out newguy55);
-							Main.npc[newguy55].life = npc.lifeMax / 12;
-							Main.npc[newguy55].lifeMax = npc.lifeMax / 12;
+							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(NPC.target, NPCID.MotherSlime, out newguy55);
+							Main.npc[newguy55].life = NPC.lifeMax / 12;
+							Main.npc[newguy55].lifeMax = NPC.lifeMax / 12;
 							Main.npc[newguy55].boss = false;
 							Main.npc[newguy55].defense = 60;
 							Main.npc[newguy55].noTileCollide = true;
@@ -2532,9 +2533,9 @@ namespace SGAmod.NPCs
 
 							//int newguy16 = NPC.NewNPC((int)P.Center.X - 800, (int)P.Center.Y - 30, 1);
 							int newguy16;
-							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(npc.target, NPCID.Crimslime, out newguy16);
-							Main.npc[newguy16].life = npc.lifeMax / 15;
-							Main.npc[newguy16].lifeMax = npc.lifeMax / 15;
+							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(NPC.target, NPCID.Crimslime, out newguy16);
+							Main.npc[newguy16].life = NPC.lifeMax / 15;
+							Main.npc[newguy16].lifeMax = NPC.lifeMax / 15;
 							Main.npc[newguy16].boss = false;
 							Main.npc[newguy16].defense = 50;
 							Main.npc[newguy16].noTileCollide = true;
@@ -2545,9 +2546,9 @@ namespace SGAmod.NPCs
 
 							//int newguy116 = NPC.NewNPC((int)P.Center.X + 800, (int)P.Center.Y - 30, 1);
 							int newguy116;
-							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(npc.target, NPCID.CorruptSlime, out newguy116);
-							Main.npc[newguy116].life = npc.lifeMax / 15;
-							Main.npc[newguy116].lifeMax = npc.lifeMax / 15;
+							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(NPC.target, NPCID.CorruptSlime, out newguy116);
+							Main.npc[newguy116].life = NPC.lifeMax / 15;
+							Main.npc[newguy116].lifeMax = NPC.lifeMax / 15;
 							Main.npc[newguy116].boss = false;
 							Main.npc[newguy116].defense = 50;
 							Main.npc[newguy116].noTileCollide = true;
@@ -2565,11 +2566,11 @@ namespace SGAmod.NPCs
 						{
 							//int newguy5 = NPC.NewNPC((int)npc.Center.X, (int)P.Center.Y, NPCID.DungeonSlime);
 							int newguy5;
-							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(npc.target, 1, out newguy5);
-							Main.npc[newguy5].life = npc.lifeMax / 3;
-							Main.npc[newguy5].lifeMax = npc.lifeMax / 3;
-							Main.npc[newguy5].life = npc.lifeMax / 3;
-							Main.npc[newguy5].lifeMax = npc.lifeMax / 3;
+							Hellion.Assist.SpawnOnPlayerButNoTextAndReturnValue(NPC.target, 1, out newguy5);
+							Main.npc[newguy5].life = NPC.lifeMax / 3;
+							Main.npc[newguy5].lifeMax = NPC.lifeMax / 3;
+							Main.npc[newguy5].life = NPC.lifeMax / 3;
+							Main.npc[newguy5].lifeMax = NPC.lifeMax / 3;
 							Main.npc[newguy5].boss = false;
 							Main.npc[newguy5].defense = 70;
 							Main.npc[newguy5].noTileCollide = true;
@@ -2590,27 +2591,27 @@ namespace SGAmod.NPCs
 
 				}
 
-				if (npc.boss == false)
+				if (NPC.boss == false)
 				{
-					npc.dontTakeDamage = false;
-					if (npc.ai[0] == null || npc.life < 1)
+					NPC.dontTakeDamage = false;
+					if (NPC.ai[0] == null || NPC.life < 1)
 					{
-						npc.StrikeNPCNoInteraction(999999, 0, 0);
-						npc.active = false;
+						NPC.StrikeNPCNoInteraction(999999, 0, 0);
+						NPC.active = false;
 					}
-					float lifepercent = npc.aiStyle == 11 ? 0.25f : 0.75f;
-					float lifepercent2 = npc.aiStyle == 11 ? 0.15f : 0.50f;
-					if (npc.aiStyle == 87 || npc.aiStyle == 11)
+					float lifepercent = NPC.aiStyle == 11 ? 0.25f : 0.75f;
+					float lifepercent2 = NPC.aiStyle == 11 ? 0.15f : 0.50f;
+					if (NPC.aiStyle == 87 || NPC.aiStyle == 11)
 					{
-						if (aicounter < 990999 && npc.life < npc.lifeMax * 0.6)
+						if (aicounter < 990999 && NPC.life < NPC.lifeMax * 0.6)
 						{
 							aicounter = 1000000;
-							int newguy1 = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y + 200, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy1].life = (int)(npc.lifeMax * lifepercent);
-							Main.npc[newguy1].lifeMax = (int)(npc.lifeMax * lifepercent);
+							int newguy1 = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y + 200, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy1].life = (int)(NPC.lifeMax * lifepercent);
+							Main.npc[newguy1].lifeMax = (int)(NPC.lifeMax * lifepercent);
 							Main.npc[newguy1].boss = false;
 							Main.npc[newguy1].aiStyle = 63;
-							Main.npc[newguy1].ai[0] = npc.ai[0];
+							Main.npc[newguy1].ai[0] = NPC.ai[0];
 							Main.npc[newguy1].netUpdate = true;
 							Main.npc[newguy1].noGravity = true;
 							Main.NewText("<Supreme Pinky> JOIN THE PINK SIDE OF THE FORCE!", 255, 100, 255);
@@ -2618,23 +2619,23 @@ namespace SGAmod.NPCs
 
 					}
 
-					if (npc.aiStyle == 48)
+					if (NPC.aiStyle == 48)
 					{
-						if (aicounter < 99999 && npc.life < npc.lifeMax * 0.4)
+						if (aicounter < 99999 && NPC.life < NPC.lifeMax * 0.4)
 						{
 							aicounter = 100000;
-							int newguy1 = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y + 200, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy1].life = (int)(npc.lifeMax * lifepercent2);
-							Main.npc[newguy1].lifeMax = (int)(npc.lifeMax * lifepercent2);
+							int newguy1 = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y + 200, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy1].life = (int)(NPC.lifeMax * lifepercent2);
+							Main.npc[newguy1].lifeMax = (int)(NPC.lifeMax * lifepercent2);
 							Main.npc[newguy1].boss = false;
 							Main.npc[newguy1].aiStyle = 41;
 							Main.npc[newguy1].noGravity = true;
 							//Main.npc[newguy1].ai[0] = npc.ai[0];
 							Main.npc[newguy1].netUpdate = true;
 
-							int newguy2 = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y + 200, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy2].life = (int)(npc.lifeMax * lifepercent);
-							Main.npc[newguy2].lifeMax = (int)(npc.lifeMax * lifepercent);
+							int newguy2 = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y + 200, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy2].life = (int)(NPC.lifeMax * lifepercent);
+							Main.npc[newguy2].lifeMax = (int)(NPC.lifeMax * lifepercent);
 							Main.npc[newguy2].boss = false;
 							Main.npc[newguy2].aiStyle = 87;
 							//Main.npc[newguy2].ai[0] = npc.ai[0];
@@ -2644,25 +2645,25 @@ namespace SGAmod.NPCs
 
 					}
 
-					if (npc.aiStyle == 4)
+					if (NPC.aiStyle == 4)
 					{
-						if (aicounter < 99999 && npc.life < npc.lifeMax * 0.15)
+						if (aicounter < 99999 && NPC.life < NPC.lifeMax * 0.15)
 						{
 							aicounter = 100000;
-							int newguy1 = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y + 200, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy1].life = (int)(npc.lifeMax * 0.40);
-							Main.npc[newguy1].lifeMax = (int)(npc.lifeMax * 0.40);
+							int newguy1 = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y + 200, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy1].life = (int)(NPC.lifeMax * 0.40);
+							Main.npc[newguy1].lifeMax = (int)(NPC.lifeMax * 0.40);
 							Main.npc[newguy1].boss = false;
 							Main.npc[newguy1].aiStyle = 11;
-							Main.npc[newguy1].ai[0] = npc.ai[0];
+							Main.npc[newguy1].ai[0] = NPC.ai[0];
 							Main.npc[newguy1].netUpdate = true;
 
-							int newguy2 = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y + 200, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy2].life = (int)(npc.lifeMax * 0.40);
-							Main.npc[newguy2].lifeMax = (int)(npc.lifeMax * 0.40);
+							int newguy2 = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y + 200, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy2].life = (int)(NPC.lifeMax * 0.40);
+							Main.npc[newguy2].lifeMax = (int)(NPC.lifeMax * 0.40);
 							Main.npc[newguy2].boss = false;
 							Main.npc[newguy2].aiStyle = 11;
-							Main.npc[newguy2].ai[0] = npc.ai[0];
+							Main.npc[newguy2].ai[0] = NPC.ai[0];
 							Main.npc[newguy1].netUpdate = true;
 							Main.NewText("<Supreme Pinky> PINK PINK PINK PINK!", 255, 100, 255);
 						}
@@ -2670,17 +2671,17 @@ namespace SGAmod.NPCs
 					}
 
 
-					if (npc.aiStyle == 41)
+					if (NPC.aiStyle == 41)
 					{
-						if (aicounter < 99999 && npc.life < npc.lifeMax * 0.4)
+						if (aicounter < 99999 && NPC.life < NPC.lifeMax * 0.4)
 						{
 							aicounter = 100000;
-							int newguy1 = NPC.NewNPC((int)npc.Center.X - 0, (int)npc.Center.Y + 200, mod.NPCType("SPinkyClone"));
-							Main.npc[newguy1].life = (int)(npc.lifeMax * 0.75);
-							Main.npc[newguy1].lifeMax = (int)(npc.lifeMax * 0.75);
+							int newguy1 = NPC.NewNPC((int)NPC.Center.X - 0, (int)NPC.Center.Y + 200, Mod.Find<ModNPC>("SPinkyClone").Type);
+							Main.npc[newguy1].life = (int)(NPC.lifeMax * 0.75);
+							Main.npc[newguy1].lifeMax = (int)(NPC.lifeMax * 0.75);
 							Main.npc[newguy1].boss = false;
 							Main.npc[newguy1].aiStyle = 38;
-							Main.npc[newguy1].ai[0] = npc.ai[0];
+							Main.npc[newguy1].ai[0] = NPC.ai[0];
 							Main.npc[newguy1].netUpdate = true;
 							Main.NewText("<Supreme Pinky> THE PINK WILL CONSUME YOU!", 255, 100, 255);
 						}
@@ -2701,7 +2702,7 @@ namespace SGAmod.NPCs
 
 		public override bool CheckActive()
 		{
-			return npc.life < 1 || (npc.timeLeft < 2 && GetType() == typeof(SPinkyTrue));
+			return NPC.life < 1 || (NPC.timeLeft < 2 && GetType() == typeof(SPinkyTrue));
 		}
 		public override bool CheckDead()
 		{
@@ -2719,7 +2720,7 @@ namespace SGAmod.NPCs
 		{
 			if (GetType() == typeof(SPinkyTrue))
 			{
-				if ((projectile.penetrate <0 || projectile.penetrate >2) && npc.ai[1] != 10)
+				if ((projectile.penetrate <0 || projectile.penetrate >2) && NPC.ai[1] != 10)
                 {
 					damage = (int)(damage * 0.20f);
 				}
@@ -2729,7 +2730,7 @@ namespace SGAmod.NPCs
 			if (GetType() == typeof(SPinkyClone))
 			{
 				damage = (int)Math.Pow(damage, 0.96);
-				if (npc.aiStyle != 69)
+				if (NPC.aiStyle != 69)
 					damage = (int)(damage / (1 + (dpscap / 1000f)));
 				dpscap += damage;
 
@@ -2739,7 +2740,7 @@ namespace SGAmod.NPCs
 
 					if (GetType() == typeof(SPinky))
 					damage = (int)Math.Pow(damage, 0.85);
-				if (npc.aiStyle != 69)
+				if (NPC.aiStyle != 69)
 					damage = (int)(damage / (1 + (dpscap / 750f)));
 				dpscap += damage;
 			}
@@ -2756,14 +2757,14 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Not Supreme Pinky");
-			Main.npcFrameCount[npc.type] = 5;
+			Main.npcFrameCount[NPC.type] = 5;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			npc.netAlways = false;
-			npc.boss = false;
+			NPC.netAlways = false;
+			NPC.boss = false;
 		}
 
 		public override void NPCLoot()
@@ -2799,15 +2800,15 @@ namespace SGAmod.NPCs
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = true;
-			projectile.friendly = false;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 600;
-			aiType = -1;
-			projectile.aiStyle = -1;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 600;
+			AIType = -1;
+			Projectile.aiStyle = -1;
 		}
 
 		public override string Texture
@@ -2817,31 +2818,31 @@ namespace SGAmod.NPCs
 
 		public override void AI()
         {
-			if (projectile.ai[0] == 0)
+			if (Projectile.ai[0] == 0)
             {
 				color = Main.hslToRgb(Main.rand.NextFloat() % 1f, 1f, 0.65f);
-				projectile.ai[1] = Main.rand.NextFloat(-0.5f,0.5f);
+				Projectile.ai[1] = Main.rand.NextFloat(-0.5f,0.5f);
             }
 			int index = NPC.FindFirstNPC(ModContent.NPCType<SPinkyTrue>());
 			if (index >= 0)
 			{
 				NPC pinky = Main.npc[index];
-				projectile.ai[0] += 1;
+				Projectile.ai[0] += 1;
 
 				if (pinky != null && pinky.active)
 				{
-					float length = projectile.velocity.Length();
-					Vector2 vector = pinky.Center - projectile.Center;
-					projectile.velocity = Vector2.Normalize(vector) * length;
+					float length = Projectile.velocity.Length();
+					Vector2 vector = pinky.Center - Projectile.Center;
+					Projectile.velocity = Vector2.Normalize(vector) * length;
 
 					if (vector.Length() < 96 || pinky.ai[0] > 1000000)
 					{
-						projectile.Kill();
+						Projectile.Kill();
 					}
 					return;
 				}
 			}
-			projectile.Kill();
+			Projectile.Kill();
 		}
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -2875,37 +2876,37 @@ namespace SGAmod.NPCs
 
 		public override void SetDefaults()
 		{
-			projectile.width = 132;
-			projectile.height = 132;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.tileCollide = false;
-			projectile.alpha = 40;
-			projectile.timeLeft = maxTime;
-			projectile.extraUpdates = 0;
-			projectile.ignoreWater = true;
-			projectile.damage = 20;
+			Projectile.width = 132;
+			Projectile.height = 132;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.tileCollide = false;
+			Projectile.alpha = 40;
+			Projectile.timeLeft = maxTime;
+			Projectile.extraUpdates = 0;
+			Projectile.ignoreWater = true;
+			Projectile.damage = 20;
 		}
 
-		float FlashTimer => (float)Math.Sin((projectile.ai[0] / (float)flashTime) * MathHelper.TwoPi);		
+		float FlashTimer => (float)Math.Sin((Projectile.ai[0] / (float)flashTime) * MathHelper.TwoPi);		
 
 		public override void AI()
 		{
-			float realsize = ((projectile.width * 32f) * 0.5f) * 1.1f;
-			projectile.ai[0] += 1;
-			projectile.localAI[0] += 1;
-			if (FlashTimer > 0 && projectile.timeLeft > 60)
+			float realsize = ((Projectile.width * 32f) * 0.5f) * 1.1f;
+			Projectile.ai[0] += 1;
+			Projectile.localAI[0] += 1;
+			if (FlashTimer > 0 && Projectile.timeLeft > 60)
 			{
-				foreach (Player player in Main.player.Where(testby => ringSize - Math.Abs(((testby.Center) - projectile.Center).Length() - (realsize * ((float)projectile.localAI[0] / (float)maxTime))) > 0))
+				foreach (Player player in Main.player.Where(testby => ringSize - Math.Abs(((testby.Center) - Projectile.Center).Length() - (realsize * ((float)Projectile.localAI[0] / (float)maxTime))) > 0))
 				{
-					player.Hurt(PlayerDeathReason.ByProjectile(255, projectile.whoAmI), projectile.damage, 0, Crit: true);
+					player.Hurt(PlayerDeathReason.ByProjectile(255, Projectile.whoAmI), Projectile.damage, 0, Crit: true);
 				}
 			}
 		}
 
 		public override bool CanDamage()
 		{
-			return FlashTimer > 0 && projectile.timeLeft > 60 && projectile.localAI[0]>120;
+			return FlashTimer > 0 && Projectile.timeLeft > 60 && Projectile.localAI[0]>120;
 		}
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -2915,37 +2916,37 @@ namespace SGAmod.NPCs
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D mainTex = Main.projectileTexture[projectile.type];
+			Texture2D mainTex = Main.projectileTexture[Projectile.type];
 			Effect RadialEffect = SGAmod.RadialEffect;
-			float alpha = MathHelper.Clamp(projectile.timeLeft / 60f, 0f, 0.50f+MathHelper.Clamp(FlashTimer,-0.25f,0.50f))*Math.Min((projectile.localAI[0]-0f)/20f,1f);
+			float alpha = MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 0.50f+MathHelper.Clamp(FlashTimer,-0.25f,0.50f))*Math.Min((Projectile.localAI[0]-0f)/20f,1f);
 			Vector2 half = mainTex.Size() / 2f;
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("TiledPerlin"));//SGAmod.PearlIceBackground
+			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value);//SGAmod.PearlIceBackground
 			RadialEffect.Parameters["alpha"].SetValue(0.80f*alpha);
-			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, -Main.GlobalTime * 0.175f));
+			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, -Main.GlobalTimeWrappedHourly * 0.175f));
 			RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 2f));
-			RadialEffect.Parameters["ringScale"].SetValue(0.075f*((80f/ (float)projectile.width) * ((float)ringSize/64f))* alpha);
-			RadialEffect.Parameters["ringOffset"].SetValue((1f-(projectile.timeLeft/(float)maxTime))*0.9f);
+			RadialEffect.Parameters["ringScale"].SetValue(0.075f*((80f/ (float)Projectile.width) * ((float)ringSize/64f))* alpha);
+			RadialEffect.Parameters["ringOffset"].SetValue((1f-(Projectile.timeLeft/(float)maxTime))*0.9f);
 			RadialEffect.Parameters["ringColor"].SetValue(Color.Pink.ToVector3());
 			RadialEffect.Parameters["tunnel"].SetValue(false);
 
 			RadialEffect.CurrentTechnique.Passes["Radial"].Apply();
 
-			Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.LightGray, 0, half, projectile.width*2f, default, 0);
+			Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.LightGray, 0, half, Projectile.width*2f, default, 0);
 
-			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("Stain"));//SGAmod.PearlIceBackground
+			RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Stain").Value);//SGAmod.PearlIceBackground
 			RadialEffect.Parameters["alpha"].SetValue(1.25f * alpha);
-			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * -0.125f, -Main.GlobalTime * 0.175f));
+			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * -0.125f, -Main.GlobalTimeWrappedHourly * 0.175f));
 			RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 2f));
-			RadialEffect.Parameters["ringScale"].SetValue(0.05f * ((80f / (float)projectile.width) * ((float)ringSize / 64f)) * alpha);
+			RadialEffect.Parameters["ringScale"].SetValue(0.05f * ((80f / (float)Projectile.width) * ((float)ringSize / 64f)) * alpha);
 			RadialEffect.Parameters["ringColor"].SetValue(Color.Magenta.ToVector3());
 
 			RadialEffect.CurrentTechnique.Passes["Radial"].Apply();
 
-			Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.LightGray, 0, half, projectile.width * 2f, default, 0);
+			Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.LightGray, 0, half, Projectile.width * 2f, default, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -2966,29 +2967,29 @@ namespace SGAmod.NPCs
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = true;
-			projectile.friendly = false;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 150;
-			projectile.extraUpdates = 1;
-			aiType = -1;
-			projectile.aiStyle = -1;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 150;
+			Projectile.extraUpdates = 1;
+			AIType = -1;
+			Projectile.aiStyle = -1;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			float there = projectile.velocity.ToRotation() - MathHelper.ToRadians(-90);
+			float there = Projectile.velocity.ToRotation() - MathHelper.ToRadians(-90);
 			//if (projectile.ai[0] < 120)
 			//{
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-			Vector2 scale = projectile.Hitbox.Size()/16f;
+			Vector2 scale = Projectile.Hitbox.Size()/16f;
 
-			spriteBatch.Draw(Main.extraTexture[60], startpos - Main.screenPosition, null, color * MathHelper.Clamp(projectile.timeLeft / (float)timeleft, 0f, 0.75f), there, (Main.extraTexture[60].Size() / 2f) + new Vector2(0, 12), scale*(new Vector2(GetType() == typeof(Murk.MurkTelegraphedAttack) ? 0.25f : 0.75f, projectile.ai[0]* projectile.damage)), SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.extraTexture[60], startpos - Main.screenPosition, null, color * MathHelper.Clamp(Projectile.timeLeft / (float)timeleft, 0f, 0.75f), there, (Main.extraTexture[60].Size() / 2f) + new Vector2(0, 12), scale*(new Vector2(GetType() == typeof(Murk.MurkTelegraphedAttack) ? 0.25f : 0.75f, Projectile.ai[0]* Projectile.damage)), SpriteEffects.None, 0f);
 			//}
 
 			Main.spriteBatch.End();
@@ -3021,23 +3022,23 @@ namespace SGAmod.NPCs
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = false;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 560;
-			projectile.extraUpdates = 0;
-			aiType = -1;
-			projectile.aiStyle = -1;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = false;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 560;
+			Projectile.extraUpdates = 0;
+			AIType = -1;
+			Projectile.aiStyle = -1;
 		}
 
         public override void AI()
         {
-			projectile.ai[0] += 1;
-			if (projectile.timeLeft < 60)
-				projectile.ai[0] += 50;
+			Projectile.ai[0] += 1;
+			if (Projectile.timeLeft < 60)
+				Projectile.ai[0] += 50;
 
 		}
 
@@ -3050,7 +3051,7 @@ namespace SGAmod.NPCs
 
 			/*for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi/16f)
 			{
-				float there = f-Main.GlobalTime/10f;
+				float there = f-Main.GlobalTimeWrappedHourly/10f;
 				spriteBatch.Draw(texture2, projectile.Center - Main.screenPosition, null, (Color.Pink* 0.25f) * MathHelper.Clamp((projectile.timeLeft-60) / 60f, 0f, projectile.ai[0] / 800f), there, texture2.Size() / 2f, new Vector2(4f, 4f)+ (new Vector2(32f, 32f)/(1+(projectile.ai[0] / 300f))), SpriteEffects.None, 0f);
 			}*/
 
@@ -3058,16 +3059,16 @@ namespace SGAmod.NPCs
 			Effect effect = SGAmod.TrailEffect;
 
 			effect.Parameters["WorldViewProjection"].SetValue(WVP.View(Main.GameViewMatrix.Zoom) * WVP.Projection());
-			effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.GetTexture("Space"));
+			effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Space").Value);
 			effect.Parameters["coordOffset"].SetValue(0);
 			effect.Parameters["coordMultiplier"].SetValue(4f);
-			effect.Parameters["strength"].SetValue(MathHelper.Clamp((projectile.timeLeft - 60) / 120f, 0f, projectile.ai[0] / 800f));
+			effect.Parameters["strength"].SetValue(MathHelper.Clamp((Projectile.timeLeft - 60) / 120f, 0f, Projectile.ai[0] / 800f));
 
 			VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[6];
 
-			Vector3 screenPos = (projectile.Center-Main.screenPosition).ToVector3();
+			Vector3 screenPos = (Projectile.Center-Main.screenPosition).ToVector3();
 			float skymove = ((Math.Max(Main.screenPosition.Y - 8000, 0)) / (Main.maxTilesY * 16f));
-			float size = 640f + (640f/(1 + (projectile.ai[0] / 300f)));
+			float size = 640f + (640f/(1 + (Projectile.ai[0] / 300f)));
 
 			vertices[0] = new VertexPositionColorTexture(screenPos + new Vector3(-size, -size, 0), Color.DeepPink, new Vector2(0, 0));
 			vertices[1] = new VertexPositionColorTexture(screenPos + new Vector3(-size, size, 0), Color.DeepPink, new Vector2(0, 1));
@@ -3095,8 +3096,8 @@ namespace SGAmod.NPCs
 
 			for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 5f)
 			{
-				float there = f+Main.GlobalTime/10f;
-				spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, (Color.White* 0.20f) * MathHelper.Clamp(projectile.timeLeft / 30f, 0f, 1f), there, texture.Size() / 2f, new Vector2(0.95f, 1f) * (projectile.ai[0] / 150f), SpriteEffects.None, 0f);
+				float there = f+Main.GlobalTimeWrappedHourly/10f;
+				spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, (Color.White* 0.20f) * MathHelper.Clamp(Projectile.timeLeft / 30f, 0f, 1f), there, texture.Size() / 2f, new Vector2(0.95f, 1f) * (Projectile.ai[0] / 150f), SpriteEffects.None, 0f);
 			}
 
 			//}
@@ -3121,19 +3122,19 @@ namespace SGAmod.NPCs
 	public class PinkyMinionKilledProj : ModProjectile
 	{
 
-		protected virtual float ScalePercent => MathHelper.Clamp(projectile.timeLeft / 10f, 0f, Math.Min(projectile.localAI[0]/3f, 0.75f));
+		protected virtual float ScalePercent => MathHelper.Clamp(Projectile.timeLeft / 10f, 0f, Math.Min(Projectile.localAI[0]/3f, 0.75f));
 		protected virtual int EnemyType => ModContent.NPCType<SPinkyTrue>();
 		protected virtual float SpinRate => 1f;
 
 		Vector2 startingloc = default;
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.aiStyle = -1;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 300;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.aiStyle = -1;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 300;
 		}
 
 		public override string Texture
@@ -3144,8 +3145,8 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("S-Pinky Minion killed");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 10;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		public override bool CanDamage()
@@ -3155,28 +3156,28 @@ namespace SGAmod.NPCs
 
 		public virtual void ReachedTarget(NPC target)
         {
-			target.StrikeNPC((int)projectile.damage, 0, 1);
+			target.StrikeNPC((int)Projectile.damage, 0, 1);
 			if (Main.netMode != NetmodeID.SinglePlayer)
 			{
-				NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, target.whoAmI, projectile.damage, 0f, (float)1, 0, 0, 0);
+				NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, target.whoAmI, Projectile.damage, 0f, (float)1, 0, 0, 0);
 			}
 
 			for (int i = 0; i < 32; i += 1)
 			{
 				Vector2 position = new Vector2(6, 6) + new Vector2(Main.rand.Next(12), Main.rand.Next(12));
-				int num128 = Dust.NewDust(projectile.Center + position, 0, 0, DustID.t_Marble, 0, 0, 240, Color.Pink, ScalePercent);
+				int num128 = Dust.NewDust(Projectile.Center + position, 0, 0, DustID.t_Marble, 0, 0, 240, Color.Pink, ScalePercent);
 				Main.dust[num128].noGravity = true;
 				Main.dust[num128].color = Color.Pink;
-				Main.dust[num128].velocity = (Vector2.Normalize(position) * 6f) + (projectile.velocity * 2.5f);
+				Main.dust[num128].velocity = (Vector2.Normalize(position) * 6f) + (Projectile.velocity * 2.5f);
 			}
 
-			SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 86);
+			SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 86);
 			if (sound != null)
 				sound.Pitch += 0.50f;
 
-			projectile.ai[0] += 1;
-			projectile.timeLeft = (int)MathHelper.Clamp(projectile.timeLeft, 0, 10);
-			projectile.netUpdate = true;
+			Projectile.ai[0] += 1;
+			Projectile.timeLeft = (int)MathHelper.Clamp(Projectile.timeLeft, 0, 10);
+			Projectile.netUpdate = true;
 
 		}
 
@@ -3186,31 +3187,31 @@ namespace SGAmod.NPCs
 		{
 			if (startingloc == default)
 			{
-				startingloc = projectile.Center;
+				startingloc = Projectile.Center;
 			}
 
-			projectile.localAI[0] += 0.25f;
+			Projectile.localAI[0] += 0.25f;
 
 			List<Point> weightedPoints2 = new List<Point>();
 
 			//foreach (NPC npc in Main.npc.Where(testby => testby.type != ModContent.NPCType<SPinkyTrue>()))
 				//weightedPoints2.Add(new Point(npc.whoAmI, 1000000));
 
-			NPC[] findnpc = SGAUtils.ClosestEnemies(projectile.Center,1500,checkWalls: false,checkCanChase: false)?.ToArray();
+			NPC[] findnpc = SGAUtils.ClosestEnemies(Projectile.Center,1500,checkWalls: false,checkCanChase: false)?.ToArray();
 			findnpc = findnpc != null ? findnpc.Where(testby => testby.type == EnemyType).ToArray() : null;
 
 			if (findnpc != null && findnpc.Count() > 0 && findnpc[0].type == EnemyType)
             {
-				projectile.velocity *= 0.94f;
-				if (projectile.localAI[0] > 8f)
+				Projectile.velocity *= 0.94f;
+				if (Projectile.localAI[0] > 8f)
 				{
 					NPC target = findnpc[0];
 					int dist = 60 * 60;
-					Vector2 distto = target.Center - projectile.Center;
-					projectile.velocity += Vector2.Normalize(distto).RotatedBy((MathHelper.Clamp(1f-(projectile.localAI[0] - 8f) / 5f, 0f, 1f) * 0.85f)*SpinRate) * 3.20f;
-					projectile.velocity = Vector2.Normalize(projectile.velocity) * MathHelper.Clamp(projectile.velocity.Length(), 0f, 32f+ projectile.localAI[0]);
+					Vector2 distto = target.Center - Projectile.Center;
+					Projectile.velocity += Vector2.Normalize(distto).RotatedBy((MathHelper.Clamp(1f-(Projectile.localAI[0] - 8f) / 5f, 0f, 1f) * 0.85f)*SpinRate) * 3.20f;
+					Projectile.velocity = Vector2.Normalize(Projectile.velocity) * MathHelper.Clamp(Projectile.velocity.Length(), 0f, 32f+ Projectile.localAI[0]);
 
-					if (projectile.timeLeft > 10 && projectile.ai[0] < 1 && distto.LengthSquared() < dist)
+					if (Projectile.timeLeft > 10 && Projectile.ai[0] < 1 && distto.LengthSquared() < dist)
 					{
 						ReachedTarget(target);
 					}
@@ -3218,47 +3219,47 @@ namespace SGAmod.NPCs
             }
             else
             {
-				projectile.timeLeft = (int)MathHelper.Clamp(projectile.timeLeft, 0, 10);
+				Projectile.timeLeft = (int)MathHelper.Clamp(Projectile.timeLeft, 0, 10);
 			}
 
-			projectile.velocity *= 0.97f;
+			Projectile.velocity *= 0.97f;
 
-			if (projectile.ai[0] > 0)
+			if (Projectile.ai[0] > 0)
             {
-				projectile.ai[0] += 1;
+				Projectile.ai[0] += 1;
 			}
 
-			int num126 = Dust.NewDust(projectile.position - new Vector2(2, 2), Main.rand.Next(4), Main.rand.Next(4), DustID.t_Marble, 0, 0, 240, Color.Pink, ScalePercent);
+			int num126 = Dust.NewDust(Projectile.position - new Vector2(2, 2), Main.rand.Next(4), Main.rand.Next(4), DustID.t_Marble, 0, 0, 240, Color.Pink, ScalePercent);
 			Main.dust[num126].noGravity = true;
-			Main.dust[num126].velocity = projectile.velocity * 0.5f;
+			Main.dust[num126].velocity = Projectile.velocity * 0.5f;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			for (int i = 0; i < projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
+			for (int i = 0; i < Projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
 			{
-				if (projectile.oldPos[i] == default)
-					projectile.oldPos[i] = projectile.position;
+				if (Projectile.oldPos[i] == default)
+					Projectile.oldPos[i] = Projectile.position;
 			}
 
-			TrailHelper trail = new TrailHelper("DefaultPass", mod.GetTexture("noise"));
-			UnifiedRandom rando = new UnifiedRandom(projectile.whoAmI);
+			TrailHelper trail = new TrailHelper("DefaultPass", Mod.Assets.Request<Texture2D>("noise").Value);
+			UnifiedRandom rando = new UnifiedRandom(Projectile.whoAmI);
 			float colorz = rando.NextFloat();
 			trail.color = delegate (float percent)
 			{
-				return Color.Lerp(Main.hslToRgb((colorz+(percent/4f))%1f,1f,0.75f), Color.Pink, MathHelper.Clamp(projectile.ai[0] / 7f, 0f, 1f));
+				return Color.Lerp(Main.hslToRgb((colorz+(percent/4f))%1f,1f,0.75f), Color.Pink, MathHelper.Clamp(Projectile.ai[0] / 7f, 0f, 1f));
 			};
-			trail.projsize = projectile.Hitbox.Size() / 2f;
-			trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
-			trail.trailThickness = 4 + MathHelper.Clamp(projectile.ai[0], 0f, 30f);
+			trail.projsize = Projectile.Hitbox.Size() / 2f;
+			trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
+			trail.trailThickness = 4 + MathHelper.Clamp(Projectile.ai[0], 0f, 30f);
 			trail.trailThicknessIncrease = 6;
 			//trail.capsize = new Vector2(6f, 0f);
 			trail.strength = ScalePercent;
-			trail.DrawTrail(projectile.oldPos.ToList(), projectile.Center);
+			trail.DrawTrail(Projectile.oldPos.ToList(), Projectile.Center);
 
 			Texture2D mainTex = Main.itemTexture[ItemID.Gel];
 
-			Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Main.hslToRgb(colorz % 1f, 1f, 0.75f) * trail.strength, 0, mainTex.Size()/2f, 2f + MathHelper.Clamp(projectile.ai[0], 0f, 30f)*0.10f, default, 0);
+			Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Main.hslToRgb(colorz % 1f, 1f, 0.75f) * trail.strength, 0, mainTex.Size()/2f, 2f + MathHelper.Clamp(Projectile.ai[0], 0f, 30f)*0.10f, default, 0);
 
 			return false;
 		}

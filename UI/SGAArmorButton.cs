@@ -14,6 +14,7 @@ using Terraria.UI;
 using SGAmod.UI;
 using SGAmod.UI.UIClasses;
 using Terraria.GameInput;
+using Terraria.Audio;
 
 namespace SGAmod.UI
 {
@@ -106,7 +107,7 @@ namespace SGAmod.UI
         {
 			//if (!Main.dedServ)
 			//{
-				Main.PlaySound(SoundID.Mech, new Vector2(-1, -1),0);
+				SoundEngine.PlaySound(SoundID.Mech, new Vector2(-1, -1),0);
 			Main.LocalPlayer.SGAPly().armorToggleMode = !Main.LocalPlayer.SGAPly().armorToggleMode;
 			//}
         }

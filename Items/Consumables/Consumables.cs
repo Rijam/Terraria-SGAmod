@@ -21,6 +21,7 @@ using SGAmod.HavocGear.Items;
 using SGAmod.Tiles;
 using SGAmod.Dimensions;
 using Terraria.Utilities;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Consumables
 {
@@ -35,13 +36,13 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Orange;
-			item.value = 5000;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item2;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = 5000;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item2;
 		}
 
 		public override bool CanRightClick()
@@ -65,14 +66,7 @@ namespace SGAmod.Items.Consumables
 		}
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<Weapons.Technical.LaserMarker>(), 8);
-			recipe.AddIngredient(ModContent.ItemType < EnergizerBattery>(), 3);
-			recipe.AddIngredient(ModContent.ItemType < AdvancedPlating>(), 6);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 4);
-			recipe.AddTile(ModContent.TileType<ReverseEngineeringStation>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<Weapons.Technical.LaserMarker>(), 8).AddIngredient(ModContent.ItemType < EnergizerBattery>(), 3).AddIngredient(ModContent.ItemType < AdvancedPlating>(), 6).AddIngredient(ItemID.MeteoriteBar, 4).AddTile(ModContent.TileType<ReverseEngineeringStation>()).Register();
 		}
 	}
 	public class RedManaStar : ModItem
@@ -87,17 +81,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -116,31 +110,31 @@ namespace SGAmod.Items.Consumables
 			SGAPlayer sgaplayer = Main.LocalPlayer.GetModPlayer<SGAPlayer>();
 			if (sgaplayer.Redmanastar < 1)
 			{
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "Your magic attacks have a small chance to inflict 'On-Fire!'"));
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "Usable right away"));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "Your magic attacks have a small chance to inflict 'On-Fire!'"));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "Usable right away"));
 			}
 			if (sgaplayer.Redmanastar == 1)
 			{
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "You instead inflict 'Thermal Blaze' instead of 'On Fire!'"));
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "Usable after Sharkvern is defeated."));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "You instead inflict 'Thermal Blaze' instead of 'On Fire!'"));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "Usable after Sharkvern is defeated."));
 			}
 			if (sgaplayer.Redmanastar == 2)
 			{
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "You instead inflict 'Daybroken' instead of 'Thermal Blaze'"));
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "Usable after Luminite Wraith is defeated."));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "You instead inflict 'Daybroken' instead of 'Thermal Blaze'"));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "Usable after Luminite Wraith is defeated."));
 			}
 			if (sgaplayer.Redmanastar > 2)
 			{
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "Its power is at its max, and can no longer help you gain strength"));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "Its power is at its max, and can no longer help you gain strength"));
 			}
 			else
 			{
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "Rare chance to permanently strip enemy immunity to the above debuff on magic hit."));
-				tooltips.Add(new TooltipLine(mod, "RedStarLine", "-Permanent Upgrade-"));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "Rare chance to permanently strip enemy immunity to the above debuff on magic hit."));
+				tooltips.Add(new TooltipLine(Mod, "RedStarLine", "-Permanent Upgrade-"));
 
 			}
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.Redmanastar += 1;
@@ -158,24 +152,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Green;
-			item.value = Item.buyPrice(silver: 50);
-			item.useStyle = 2;
-			item.useAnimation = 30;
-			item.useTime = 30;
-			item.useTurn = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Green;
+			Item.value = Item.buyPrice(silver: 50);
+			Item.useStyle = 2;
+			Item.useAnimation = 30;
+			Item.useTime = 30;
+			Item.useTurn = true;
 			//item.UseSound = SoundID.Drown;
-			item.consumable = true;
+			Item.consumable = true;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			return player.SGAPly().CooldownStacks.Count < player.SGAPly().MaxCooldownStacks;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.AddCooldownStack(60 * 60, 1);
@@ -210,17 +204,6 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void AddRecipes()
 		{
-			if (GetType() == typeof(MossySalve))
-			{
-				ModRecipe recipe = new ModRecipe(mod);
-				recipe.AddIngredient(ItemID.Vine, 5);
-				recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.DankCore>(), 1);
-				recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.DecayedMoss>(), 3);
-				recipe.AddTile(TileID.WorkBenches);
-				recipe.SetResult(this, 3);
-				recipe.AddRecipe();
-
-			}
 		}
 	}
 
@@ -234,24 +217,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Pink;
-			item.value = Item.buyPrice(silver: 50);
-			item.useStyle = ItemUseStyleID.EatingUsing;
-			item.useAnimation = 45;
-			item.useTime = 45;
-			item.useTurn = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Pink;
+			Item.value = Item.buyPrice(silver: 50);
+			Item.useStyle = ItemUseStyleID.EatFood;
+			Item.useAnimation = 45;
+			Item.useTime = 45;
+			Item.useTurn = true;
 			//item.UseSound = SoundID.Drown;
-			item.consumable = true;
+			Item.consumable = true;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			return true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			Idglibrary.IdgPlayer idg = player.GetModPlayer<IdgPlayer>();
 
@@ -265,15 +248,7 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bottle, 3);
-			recipe.AddIngredient(ItemID.Ale, 4);
-			recipe.AddIngredient(ItemID.Hay, 6);
-			recipe.AddIngredient(ModContent.ItemType<Glowrock>(), 15);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.DankCore>(), 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.Bottle, 3).AddIngredient(ItemID.Ale, 4).AddIngredient(ItemID.Hay, 6).AddIngredient(ModContent.ItemType<Glowrock>(), 15).AddIngredient(ModContent.ItemType<HavocGear.Items.DankCore>(), 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -283,22 +258,22 @@ namespace SGAmod.Items.Consumables
 		{
 			DisplayName.SetDefault("Enchanted Bubble");
 			Tooltip.SetDefault("'A breath of fresh air sealed within this magic bubble!'\n'Biting into this bubble restores your lungs'\nRecovers up to 200 Breath (the vanilla default)\n" + Idglib.ColorText(Color.Orange, "Requires 1 Cooldown stack, adds 90 seconds each"));
-			ItemID.Sets.ItemIconPulse[item.type] = true;
+			ItemID.Sets.ItemIconPulse[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 1;
-			item.value = Item.buyPrice(silver: 50);
-			item.useStyle = 2;
-			item.useAnimation = 30;
-			item.useTime = 30;
-			item.useTurn = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 1;
+			Item.value = Item.buyPrice(silver: 50);
+			Item.useStyle = 2;
+			Item.useAnimation = 30;
+			Item.useTime = 30;
+			Item.useTurn = true;
 			//item.UseSound = SoundID.Drown;
-			item.consumable = true;
+			Item.consumable = true;
 		}
 
 		public override string Texture
@@ -308,21 +283,21 @@ namespace SGAmod.Items.Consumables
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((((Main.GlobalTime) * 0.116f)+(item.whoAmI * 0.179f)) % 1f, 0.8f, 0.75f);
+			return Main.hslToRgb((((Main.GlobalTimeWrappedHourly) * 0.116f)+(Item.whoAmI * 0.179f)) % 1f, 0.8f, 0.75f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.Aqua, Color.Blue, 0.5f + (float)Math.Sin(Main.GlobalTime * 1.5f));
+					line.OverrideColor = Color.Lerp(Color.Aqua, Color.Blue, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 1.5f));
 				}
 			}
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.AddCooldownStack(60 * 90, 1);
@@ -341,17 +316,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 1;
-			item.value = 0;
-			item.useStyle = ItemUseStyleID.HoldingUp;
-			item.useAnimation = 60;
-			item.useTime = 60;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 1;
+			Item.value = 0;
+			Item.useStyle = ItemUseStyleID.HoldUp;
+			Item.useAnimation = 60;
+			Item.useTime = 60;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
 
 		public override string Texture
@@ -361,16 +336,16 @@ namespace SGAmod.Items.Consumables
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime * -0.916f) % 1f, 0.8f, 0.75f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly * -0.916f) % 1f, 0.8f, 0.75f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.Yellow, Color.Blue, 0.5f + (float)Math.Sin(-Main.GlobalTime * 0.5f));
+					line.OverrideColor = Color.Lerp(Color.Yellow, Color.Blue, 0.5f + (float)Math.Sin(-Main.GlobalTimeWrappedHourly * 0.5f));
 				}
 			}
 		}
@@ -383,7 +358,7 @@ namespace SGAmod.Items.Consumables
 			return !player.HasBuff(buffid) && !Main.dayTime;
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 
 			int buffid = ModContent.BuffType<Buffs.StarStormCooldown>();
@@ -419,14 +394,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType <VirulentBar>(), 3);
-			recipe.AddIngredient(ModContent.ItemType <CryostalBar>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<WraithFragment4>(), 3);
-			recipe.AddIngredient(ItemID.FallenStar, 1);
-			recipe.AddTile(TileID.CrystalBall);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType <VirulentBar>(), 3).AddIngredient(ModContent.ItemType <CryostalBar>(), 3).AddIngredient(ModContent.ItemType<WraithFragment4>(), 3).AddIngredient(ItemID.FallenStar, 1).AddTile(TileID.CrystalBall).Register();
 		}
 	}
 	public class VenerableCatharsis : TrueCopperWraithNotch
@@ -435,7 +403,7 @@ namespace SGAmod.Items.Consumables
 		{
 			DisplayName.SetDefault("Venerable Catharsis");
 			Tooltip.SetDefault("Upgrades a Normal world to an Expert World\n-Permanent Upgrade-");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 4));
 		}
 
 		public override Color? GetAlpha(Color lightColor)
@@ -450,24 +418,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 1;
-			item.rare = ItemRarityID.Quest;
-			item.value = Item.sellPrice(gold: 1);
-			item.useStyle = 2;
-			item.useAnimation = 32;
-			item.useTime = 32;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item123;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 1;
+			Item.rare = ItemRarityID.Quest;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.useStyle = 2;
+			Item.useAnimation = 32;
+			Item.useTime = 32;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item123;
+			Item.consumable = true;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			return !Main.expertMode;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			Main.expertMode = true;
 			return true;
@@ -497,12 +465,12 @@ namespace SGAmod.Items.Consumables
 					TrippyRainbowEffect.Parameters["uColor"].SetValue(new Vector3(0.05f, 0.05f, 0f));
 					TrippyRainbowEffect.Parameters["uScreenResolution"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight) / 6f);
 					TrippyRainbowEffect.Parameters["uOpacity"].SetValue(0.15f);
-					TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTime * 0.1f));
+					TrippyRainbowEffect.Parameters["uDirection"].SetValue(new Vector2(1f, Main.GlobalTimeWrappedHourly * 0.1f));
 					TrippyRainbowEffect.Parameters["uIntensity"].SetValue(1f);
 					TrippyRainbowEffect.Parameters["uScreenPosition"].SetValue(Main.screenPosition / 500f);
 					TrippyRainbowEffect.Parameters["uTargetPosition"].SetValue(Main.screenPosition / 500f);
-					TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTime * 0.05f);
-					TrippyRainbowEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.GetTexture("TiledPerlin"));
+					TrippyRainbowEffect.Parameters["uProgress"].SetValue(Main.GlobalTimeWrappedHourly * 0.05f);
+					TrippyRainbowEffect.Parameters["overlayTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value);
 					TrippyRainbowEffect.CurrentTechnique.Passes["ScreenTrippy"].Apply();
 
 					Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White);
@@ -520,17 +488,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Quest;
-			item.value = Item.buyPrice(gold: 1);
-			item.useStyle = ItemUseStyleID.EatingUsing;
-			item.useAnimation = 64;
-			item.useTime = 64;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item2;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Quest;
+			Item.value = Item.buyPrice(gold: 1);
+			Item.useStyle = ItemUseStyleID.EatFood;
+			Item.useAnimation = 64;
+			Item.useTime = 64;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item2;
+			Item.consumable = true;
 		}
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
@@ -548,13 +516,13 @@ namespace SGAmod.Items.Consumables
 			}
 			else
 			{
-				Texture2D stain = mod.GetTexture("Stain");
+				Texture2D stain = Mod.Assets.Request<Texture2D>("Stain").Value;
 				DrawData value28 = new DrawData(stain, new Vector2(240, 240), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 600, 600)), Microsoft.Xna.Framework.Color.White, MathHelper.PiOver2, stain.Size() / 2f, 0.2f, SpriteEffects.None, 0);
 				shader.Apply(null, new DrawData?(value28));
 			}
 
 
-			spriteBatch.Draw(Main.itemTexture[item.type], position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			return false;
@@ -568,7 +536,7 @@ namespace SGAmod.Items.Consumables
 			shader.UseOpacity(0.5f);
 			shader.UseSaturation(0.25f);
 			shader.Apply(null);
-			spriteBatch.Draw(Main.itemTexture[item.type], item.position-Main.screenPosition, null, lightColor, 0, Main.itemTexture[item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], Item.position-Main.screenPosition, null, lightColor, 0, Main.itemTexture[Item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 			return false;
@@ -578,13 +546,13 @@ namespace SGAmod.Items.Consumables
 
         public override void UpdateInventory(Player player)
         {
-            if (item.stack >= 10)
+            if (Item.stack >= 10)
             {
-				player.AddBuff(ModContent.BuffType<Buffs.CleansedPerception>(), (60 * (item.stack-10))+2);
+				player.AddBuff(ModContent.BuffType<Buffs.CleansedPerception>(), (60 * (Item.stack-10))+2);
 			}
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
 		{
 			player.AddBuff(ModContent.BuffType<Buffs.CleansedPerception>(),60*60);
 			//Main.expertMode = true;
@@ -602,17 +570,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 1;
-			item.value = Item.sellPrice(gold: 1);
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 1;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
 
 		public override string Texture
@@ -625,7 +593,7 @@ namespace SGAmod.Items.Consumables
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			return !sgaplayer.benchGodFavor;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.benchGodFavor = true;
@@ -644,17 +612,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 1;
-			item.value = Item.sellPrice(gold: 1);
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 1;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
 
 		public override string Texture
@@ -664,16 +632,16 @@ namespace SGAmod.Items.Consumables
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime * 0.916f) % 1f, 0.8f, 0.75f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.916f) % 1f, 0.8f, 0.75f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.Yellow, Color.Blue, 0.5f + (float)Math.Sin(Main.GlobalTime * 0.5f));
+					line.OverrideColor = Color.Lerp(Color.Yellow, Color.Blue, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f));
 				}
 			}
 		}
@@ -683,7 +651,7 @@ namespace SGAmod.Items.Consumables
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			return !sgaplayer.Drakenshopunlock;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			sgaplayer.Drakenshopunlock = true;
@@ -701,17 +669,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 1;
-			item.value = Item.sellPrice(gold: 1);
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 1;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
 
 		public override string Texture
@@ -721,16 +689,16 @@ namespace SGAmod.Items.Consumables
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime * 0.916f) % 1f, 0.8f, 0.75f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.916f) % 1f, 0.8f, 0.75f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.Yellow, Color.Blue, 0.5f + (float)Math.Sin(Main.GlobalTime * 0.5f));
+					line.OverrideColor = Color.Lerp(Color.Yellow, Color.Blue, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.5f));
 				}
 			}
 		}
@@ -741,7 +709,7 @@ namespace SGAmod.Items.Consumables
 				return false;
 			return !SGAWorld.portalcanmovein;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			SGAWorld.portalcanmovein = true;
 			return true;
@@ -761,7 +729,7 @@ namespace SGAmod.Items.Consumables
 			return player.SGAPly().CooldownStacks.Count < player.SGAPly().MaxCooldownStacks;
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			player.SGAPly().AddCooldownStack(60 * 90, 1);
 			player.SGAPly().FireBreath += 1;
@@ -771,17 +739,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 5;
-			item.value = 15000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item2;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 5;
+			Item.value = 15000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item2;
+			Item.consumable = true;
 			//item.buffType = mod.BuffType("ConsumeHellBuff");
 			//item.buffTime = 60*60;
 		}
@@ -800,7 +768,7 @@ namespace SGAmod.Items.Consumables
 			return player.SGAPly().CooldownStacks.Count < player.SGAPly().MaxCooldownStacks;
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			int max = 2000 + (SGAWorld.downedSharkvern ? 1000 : 0) + (SGAWorld.downedWraiths>3 ? 2000 : 0);
 			if (player.SGAPly().Electicpermboost < max)
@@ -812,29 +780,21 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 2;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item2;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 2;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item2;
+			Item.consumable = true;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType < BottledMud>(), 5);
-			recipe.AddIngredient(ModContent.ItemType < VialofAcid>(), 15);
-			recipe.AddIngredient(ModContent.ItemType <HavocGear.Items.Biomass>(), 5);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.MoistSand>(), 6);
-			recipe.AddIngredient(ItemID.Bunny, 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 5);
-			recipe.AddRecipe();
+			CreateRecipe(5).AddIngredient(ModContent.ItemType < BottledMud>(), 5).AddIngredient(ModContent.ItemType < VialofAcid>(), 15).AddIngredient(ModContent.ItemType <HavocGear.Items.Biomass>(), 5).AddIngredient(ModContent.ItemType<HavocGear.Items.MoistSand>(), 6).AddIngredient(ItemID.Bunny, 1).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -859,18 +819,18 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 1;
-			item.rare = 5;
-			item.value = 50000;
-			item.useStyle = 2;
-			item.noUseGraphic = true;
-			item.useAnimation = 120;
-			item.useTime = 120;
-			item.shoot = mod.ProjectileType("GongSummon");
-			item.useTurn = true;
-			item.UseSound = SoundID.Item1;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 1;
+			Item.rare = 5;
+			Item.value = 50000;
+			Item.useStyle = 2;
+			Item.noUseGraphic = true;
+			Item.useAnimation = 120;
+			Item.useTime = 120;
+			Item.shoot = Mod.Find<ModProjectile>("GongSummon").Type;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item1;
 		}
 	}
 
@@ -893,72 +853,72 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.timeLeft = 220;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			aiType = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.timeLeft = 220;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			AIType = 0;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Vector2 gohere = new Vector2(0, -160+(160 / ((projectile.ai[0]/25f)+1)));
+			Vector2 gohere = new Vector2(0, -160+(160 / ((Projectile.ai[0]/25f)+1)));
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/Extra_49");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Extra_49");
 
-			float scaleeffect = MathHelper.Clamp(((float)150f-projectile.timeLeft) / 80f,0f,Math.Min((float)projectile.timeLeft / 30f,1f));
+			float scaleeffect = MathHelper.Clamp(((float)150f-Projectile.timeLeft) / 80f,0f,Math.Min((float)Projectile.timeLeft / 30f,1f));
 
 			for (float valez = 0.1f; valez < 10f; valez += 0.5f)
 			{
-				spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White * 0.25f, (Main.GlobalTime + valez * 3f) * 2f, tex.Size() / 2f, (0.5f + (valez / 15f)) * scaleeffect, SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.White * 0.25f, (Main.GlobalTimeWrappedHourly + valez * 3f) * 2f, tex.Size() / 2f, (0.5f + (valez / 15f)) * scaleeffect, SpriteEffects.FlipVertically, 0f);
 			}
 
-			scaleeffect = MathHelper.Clamp(((float)120f - projectile.timeLeft) / 30f, 0f, Math.Min((float)projectile.timeLeft / 30f, 1f));
+			scaleeffect = MathHelper.Clamp(((float)120f - Projectile.timeLeft) / 30f, 0f, Math.Min((float)Projectile.timeLeft / 30f, 1f));
 			tex = Main.extraTexture[34];
 
 			for (float valez = 0.1f; valez < 10f; valez += 0.2f)
 			{
-				spriteBatch.Draw(tex, projectile.Center-Main.screenPosition, null, Main.hslToRgb(((Main.GlobalTime + valez * 3f) * 2f)%1f,0.8f,0.75f)*0.05f, (Main.GlobalTime + valez*3f)*2f, tex.Size() / 2f, (0.25f+(valez/10f))* scaleeffect, SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(tex, Projectile.Center-Main.screenPosition, null, Main.hslToRgb(((Main.GlobalTimeWrappedHourly + valez * 3f) * 2f)%1f,0.8f,0.75f)*0.05f, (Main.GlobalTimeWrappedHourly + valez*3f)*2f, tex.Size() / 2f, (0.25f+(valez/10f))* scaleeffect, SpriteEffects.FlipVertically, 0f);
 			}
 
-			spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.Center+ gohere - Main.screenPosition, null, Color.White*Math.Min((float)projectile.timeLeft / 80f,1f), 0, Main.projectileTexture[projectile.type].Size()/2f, new Vector2(1, 1), SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.projectileTexture[Projectile.type], Projectile.Center+ gohere - Main.screenPosition, null, Color.White*Math.Min((float)Projectile.timeLeft / 80f,1f), 0, Main.projectileTexture[Projectile.type].Size()/2f, new Vector2(1, 1), SpriteEffects.None, 0f);
 			return false;
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
 			if (player == null)
-				projectile.Kill();
+				Projectile.Kill();
 			if (player.dead)
-				projectile.Kill();
+				Projectile.Kill();
 			player.itemTime = 6;
 			player.itemAnimation = 6;
-			projectile.ai[0] += 1;
+			Projectile.ai[0] += 1;
 
-			Vector2 gohere = new Vector2(0, -160 + (160 / ((projectile.ai[0] / 25f) + 1)));
+			Vector2 gohere = new Vector2(0, -160 + (160 / ((Projectile.ai[0] / 25f) + 1)));
 
-			if (projectile.timeLeft == 150)
+			if (Projectile.timeLeft == 150)
 			{
-				RippleBoom.MakeShockwave(projectile.Center+ gohere, 8f, 2f, 20f, 100, 0.5f, true);
-				Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 35, 1f, 0.25f);
+				RippleBoom.MakeShockwave(Projectile.Center+ gohere, 8f, 2f, 20f, 100, 0.5f, true);
+				SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 35, 1f, 0.25f);
 
 			}
 
-			if (projectile.timeLeft == 50)
+			if (Projectile.timeLeft == 50)
 			{
 				Chest.SetupTravelShop();
 				NetMessage.SendTravelShop(-1);
 
 				if (NPC.CountNPCS(NPCID.TravellingMerchant) < 1)
-					NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, NPCID.TravellingMerchant);
+					NPC.NewNPC((int)Projectile.Center.X, (int)Projectile.Center.Y, NPCID.TravellingMerchant);
 				else
-					Main.npc[(NPC.FindFirstNPC(NPCID.TravellingMerchant))].Center = projectile.Center;
+					Main.npc[(NPC.FindFirstNPC(NPCID.TravellingMerchant))].Center = Projectile.Center;
 			}
 		}
 	}
@@ -978,7 +938,7 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			item.shoot = mod.ProjectileType("BoneBucketSummon");
+			Item.shoot = Mod.Find<ModProjectile>("BoneBucketSummon").Type;
 		}
 	}
 
@@ -998,48 +958,48 @@ namespace SGAmod.Items.Consumables
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Vector2 gohere = new Vector2(0, -160 + (160 / ((projectile.ai[0] / 25f) + 1)));
+			Vector2 gohere = new Vector2(0, -160 + (160 / ((Projectile.ai[0] / 25f) + 1)));
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/Extra_49");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Extra_49");
 
-			float scaleeffect = MathHelper.Clamp(((float)150f - projectile.timeLeft) / 80f, 0f, Math.Min((float)projectile.timeLeft / 30f, 1f));
+			float scaleeffect = MathHelper.Clamp(((float)150f - Projectile.timeLeft) / 80f, 0f, Math.Min((float)Projectile.timeLeft / 30f, 1f));
 
 			for (float valez = 0.1f; valez < 10f; valez += 0.5f)
 			{
-				spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White * 0.25f, (Main.GlobalTime + valez * 3f) * 2f, tex.Size() / 2f, (0.5f + (valez / 15f)) * scaleeffect, SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.White * 0.25f, (Main.GlobalTimeWrappedHourly + valez * 3f) * 2f, tex.Size() / 2f, (0.5f + (valez / 15f)) * scaleeffect, SpriteEffects.FlipVertically, 0f);
 			}
 
-			scaleeffect = MathHelper.Clamp(((float)120f - projectile.timeLeft) / 30f, 0f, Math.Min((float)projectile.timeLeft / 30f, 1f));
+			scaleeffect = MathHelper.Clamp(((float)120f - Projectile.timeLeft) / 30f, 0f, Math.Min((float)Projectile.timeLeft / 30f, 1f));
 			tex = Main.extraTexture[34];
 
 			for (float valez = 0.1f; valez < 10f; valez += 0.2f)
 			{
-				spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Main.hslToRgb(((Main.GlobalTime + valez * 3f) * 2f) % 1f, 0.8f, 0.75f) * 0.05f, (Main.GlobalTime + valez * 3f) * 2f, tex.Size() / 2f, (0.25f + (valez / 10f)) * scaleeffect, SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Main.hslToRgb(((Main.GlobalTimeWrappedHourly + valez * 3f) * 2f) % 1f, 0.8f, 0.75f) * 0.05f, (Main.GlobalTimeWrappedHourly + valez * 3f) * 2f, tex.Size() / 2f, (0.25f + (valez / 10f)) * scaleeffect, SpriteEffects.FlipVertically, 0f);
 			}
 
-			Vector2 drawOffset = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height*1.5f)/2f;
-			spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.Center + gohere - Main.screenPosition, null, Color.White * Math.Min((float)projectile.timeLeft / 80f, 1f), -((projectile.timeLeft-70)/150f), drawOffset, new Vector2(1, 1), SpriteEffects.None, 0f);
+			Vector2 drawOffset = new Vector2(Main.projectileTexture[Projectile.type].Width, Main.projectileTexture[Projectile.type].Height*1.5f)/2f;
+			spriteBatch.Draw(Main.projectileTexture[Projectile.type], Projectile.Center + gohere - Main.screenPosition, null, Color.White * Math.Min((float)Projectile.timeLeft / 80f, 1f), -((Projectile.timeLeft-70)/150f), drawOffset, new Vector2(1, 1), SpriteEffects.None, 0f);
 			return false;
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
 			if (player == null)
-				projectile.Kill();
+				Projectile.Kill();
 			if (player.dead)
-				projectile.Kill();
+				Projectile.Kill();
 			player.itemTime = 6;
 			player.itemAnimation = 6;
-			projectile.ai[0] += 1;
+			Projectile.ai[0] += 1;
 
-			Vector2 gohere = new Vector2(0, -160 + (160 / ((projectile.ai[0] / 25f) + 1)));
+			Vector2 gohere = new Vector2(0, -160 + (160 / ((Projectile.ai[0] / 25f) + 1)));
 
-			if (projectile.timeLeft == 150)
+			if (Projectile.timeLeft == 150)
 			{
-				RippleBoom.MakeShockwave(projectile.Center + gohere, 8f, 2f, 20f, 100, 0.5f, true);
-				SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_DarkMageHurt, (int)projectile.Center.X, (int)projectile.Center.Y);
+				RippleBoom.MakeShockwave(Projectile.Center + gohere, 8f, 2f, 20f, 100, 0.5f, true);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_DarkMageHurt, (int)Projectile.Center.X, (int)Projectile.Center.Y);
 				if (sound != null)
 				{
 					sound.Pitch += 0.50f;
@@ -1047,13 +1007,13 @@ namespace SGAmod.Items.Consumables
 
 			}
 
-			if (projectile.timeLeft == 50)
+			if (Projectile.timeLeft == 50)
 			{
 
 				if (NPC.CountNPCS(NPCID.SkeletonMerchant) < 1)
-					NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, NPCID.SkeletonMerchant);
+					NPC.NewNPC((int)Projectile.Center.X, (int)Projectile.Center.Y, NPCID.SkeletonMerchant);
 				else
-					Main.npc[(NPC.FindFirstNPC(NPCID.TravellingMerchant))].Center = projectile.Center;
+					Main.npc[(NPC.FindFirstNPC(NPCID.TravellingMerchant))].Center = Projectile.Center;
 			}
 		}
 	}
@@ -1071,7 +1031,7 @@ namespace SGAmod.Items.Consumables
 		{
 			return player.SGAPly().CooldownStacks.Count < player.SGAPly().MaxCooldownStacks && !BirthdayParty.PartyIsUp;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			bool worked = false;
 			for (int i = 0; i < 1000; i += 1)
@@ -1107,20 +1067,20 @@ namespace SGAmod.Items.Consumables
 
         public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 1;
-			item.rare = 5;
-			item.value = 50000;
-			item.useStyle = ItemUseStyleID.HoldingUp;
-			item.noUseGraphic = true;
-			item.useAnimation = 30;
-			item.useTime = 30;
-			item.vanity = true;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item1;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 1;
+			Item.rare = 5;
+			Item.value = 50000;
+			Item.useStyle = ItemUseStyleID.HoldUp;
+			Item.noUseGraphic = true;
+			Item.useAnimation = 30;
+			Item.useTime = 30;
+			Item.vanity = true;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item1;
 			Item hat = new Item(); hat.SetDefaults(ItemID.PartyHat);
-			item.headSlot = hat.headSlot;
+			Item.headSlot = hat.headSlot;
 		}
 
 		public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
@@ -1141,7 +1101,7 @@ namespace SGAmod.Items.Consumables
 		public int npcTypeToUse = -10000;
 		public override bool CloneNewInstances => GetType() != typeof(SoulJar);
 
-		public static Color SoulColorStatic => Main.hslToRgb(Main.GlobalTime % 1f, 1f, 0.75f);
+		public static Color SoulColorStatic => Main.hslToRgb(Main.GlobalTimeWrappedHourly % 1f, 1f, 0.75f);
 
 		public Color SoulColor
         {
@@ -1167,18 +1127,18 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.maxStack = 30;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.consumable = true;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.rare = ItemRarityID.Orange;
-			item.shoot = ModContent.ProjectileType<SoulJarProj>();
-			item.shootSpeed = 16;
-			item.noUseGraphic = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.maxStack = 30;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.consumable = true;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.rare = ItemRarityID.Orange;
+			Item.shoot = ModContent.ProjectileType<SoulJarProj>();
+			Item.shootSpeed = 16;
+			Item.noUseGraphic = true;
 		}
 
 		public void ParseLoadingCapture()
@@ -1193,7 +1153,7 @@ namespace SGAmod.Items.Consumables
                 catch
                 {
 					Mod modder = ModLoader.GetMod(modName);
-					typeofnpc = modder != null ? modder.NPCType(npcType) : 0;
+					typeofnpc = modder != null ? modder.Find<ModNPC>(npcType) .Type: 0;
 					if (typeofnpc == 0)
 						typeofnpc = -1;
 					goto gother;
@@ -1202,7 +1162,7 @@ namespace SGAmod.Items.Consumables
 			else
 			{
 				Mod modder = ModLoader.GetMod(modName);
-				typeofnpc = modder != null ? modder.NPCType(npcType) : 0;
+				typeofnpc = modder != null ? modder.Find<ModNPC>(npcType) .Type: 0;
 				if (typeofnpc == 0)
 					typeofnpc = -1;
 			}
@@ -1217,12 +1177,12 @@ namespace SGAmod.Items.Consumables
 
 		public void DoCapture(NPC npc)
 		{
-			ModNPC modnpc = npc.modNPC;
-			npcType = modnpc != null ? npc.modNPC.GetType().Name : npc.type.ToString();
-			modName = modnpc != null ? modnpc.mod.GetType().Name : "";
+			ModNPC modnpc = npc.ModNPC;
+			npcType = modnpc != null ? npc.ModNPC.GetType().Name : npc.type.ToString();
+			modName = modnpc != null ? modnpc.Mod.GetType().Name : "";
 			ParseLoadingCapture();
 
-			SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 103);
+			SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 103);
 			if (sound != null)
 				sound.Pitch += 0.50f;
 
@@ -1236,7 +1196,7 @@ namespace SGAmod.Items.Consumables
 			writer.Write(modName);
 
 		}
-		public override void NetRecieve(BinaryReader reader)
+		public override void NetReceive(BinaryReader reader)
 		{
 			if (GetType() == typeof(SoulJar))
 				return;
@@ -1276,22 +1236,22 @@ namespace SGAmod.Items.Consumables
 			if (npcTypeToUse >= -9999)
 			{
 				//Main.NewText(npcTypeToUse);
-				tooltips.Add(new TooltipLine(mod, "SoulJarText", "Contains a soul of an NPC:"));
+				tooltips.Add(new TooltipLine(Mod, "SoulJarText", "Contains a soul of an NPC:"));
 				NPC npctoshow = new NPC();
 				npctoshow.SetDefaults(npcTypeToUse);
-				tooltips.Add(new TooltipLine(mod, "SoulJarText", ""+ npctoshow.FullName));
+				tooltips.Add(new TooltipLine(Mod, "SoulJarText", ""+ npctoshow.FullName));
             }
             else
             {
 				if (GetType() == typeof(SoulJarFull))
-				tooltips.Add(new TooltipLine(mod, "SoulJarText", "This jar appears to be empty"));
+				tooltips.Add(new TooltipLine(Mod, "SoulJarText", "This jar appears to be empty"));
 			}
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
 
-			Texture2D inner = Main.itemTexture[item.type];
+			Texture2D inner = Main.itemTexture[Item.type];
 				Texture2D inner2 = Main.itemTexture[ItemID.RedDye];
 
 				Vector2 slotSize = new Vector2(52f, 52f);
@@ -1308,35 +1268,28 @@ namespace SGAmod.Items.Consumables
 		}
         public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
-			Texture2D inner = Main.itemTexture[item.type];
+			Texture2D inner = Main.itemTexture[Item.type];
 			Texture2D inner2 = Main.itemTexture[ItemID.RedDye];
 
-			Vector2 drawPos = item.Center-Main.screenPosition;
+			Vector2 drawPos = Item.Center-Main.screenPosition;
 			Vector2 textureOrigin = new Vector2(inner.Width, inner.Height) / 2f;
 
-			Color lighting = Lighting.GetColor(((int)item.Center.X) >> 4, ((int)item.Center.Y) >> 4, Color.White);
+			Color lighting = Lighting.GetColor(((int)Item.Center.X) >> 4, ((int)Item.Center.Y) >> 4, Color.White);
 
 			//spriteBatch.Draw(inner, drawPos, null, Color.DarkMagenta, 0, textureOrigin, Main.inventoryScale * 1f, SpriteEffects.None, 0f);
 
-			spriteBatch.Draw(inner2, drawPos, null, lighting, item.velocity.X * 0.2f, textureOrigin, item.scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(inner, drawPos, null, lighting, item.velocity.X * 0.2f, textureOrigin, item.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(inner2, drawPos, null, lighting, Item.velocity.X * 0.2f, textureOrigin, Item.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(inner, drawPos, null, lighting, Item.velocity.X * 0.2f, textureOrigin, Item.scale, SpriteEffects.None, 0f);
 			return false;
 		}
 
         public override void AddRecipes()
 		{
-			if (GetType() == typeof(SoulJar))
-			{
-				ModRecipe recipe = new ModRecipe(mod);
-				recipe.AddIngredient(ModContent.ItemType<SoulJarFull>(), 1);
-				recipe.SetResult(this, 1);
-				recipe.AddRecipe();
-			}
 		}
 
         public override bool CanUseItem(Player player)
         {
-            return item.type == ModContent.ItemType<SoulJar>();
+            return Item.type == ModContent.ItemType<SoulJar>();
         }
 
     }
@@ -1353,13 +1306,13 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			item.useTime = -1;
-			item.maxStack = 1;
-			item.useAnimation = -1;
-			item.consumable = false;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.rare = ItemRarityID.Orange;
-			item.shoot = 0;
+			Item.useTime = -1;
+			Item.maxStack = 1;
+			Item.useAnimation = -1;
+			Item.consumable = false;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.rare = ItemRarityID.Orange;
+			Item.shoot = 0;
 		}
 	}
 
@@ -1389,27 +1342,27 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 12;
-			projectile.height = 12;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ranged = true;
-			projectile.timeLeft = 240;
-			projectile.arrow = true;
-			projectile.damage = 0;
-			aiType = ProjectileID.WoodenArrowFriendly;
+			Projectile.width = 12;
+			Projectile.height = 12;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.timeLeft = 240;
+			Projectile.arrow = true;
+			Projectile.damage = 0;
+			AIType = ProjectileID.WoodenArrowFriendly;
 		}
 
         public override bool PreKill(int timeLeft)
         {
 
-			if (projectile.owner == Main.myPlayer)
+			if (Projectile.owner == Main.myPlayer)
 			{
-				int item = Item.NewItem(projectile.getRect(), capture != null ? ModContent.ItemType<SoulJarFull>() : ModContent.ItemType<SoulJar>());
+				int item = Item.NewItem(Projectile.getRect(), capture != null ? ModContent.ItemType<SoulJarFull>() : ModContent.ItemType<SoulJar>());
 
-				if (item >= 0 && capture != null && Main.item[item].modItem is SoulJar jar)
+				if (item >= 0 && capture != null && Main.item[item].ModItem is SoulJar jar)
                 {
 					jar.DoCapture(capture);
                 }
@@ -1428,19 +1381,19 @@ namespace SGAmod.Items.Consumables
         public override void AI()
 		{
 
-			projectile.ai[0] = projectile.ai[0] + 1;
-			projectile.velocity.Y += 0.15f;
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.ai[0] = Projectile.ai[0] + 1;
+			Projectile.velocity.Y += 0.15f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 
 
-			NPC target = Main.npc[Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), true, true, true, projectile)];
+			NPC target = Main.npc[Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), true, true, true, Projectile)];
 			if (target != null && target.life<(int)(target.lifeMax*0.10))
 			{
-				if (new Rectangle((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height).Intersects
+				if (new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height).Intersects
 					(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, target.height)))
 				{
 					capture = target;
-					projectile.Kill();
+					Projectile.Kill();
 				}
 			}
 		}
@@ -1448,19 +1401,19 @@ namespace SGAmod.Items.Consumables
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Texture2D inner = Main.projectileTexture[projectile.type];
+			Texture2D inner = Main.projectileTexture[Projectile.type];
 			Texture2D inner2 = Main.itemTexture[ItemID.RedDye];
 
 			Vector2 slotSize = new Vector2(52f, 52f);
-			Vector2 drawPos = projectile.Center-Main.screenPosition;
+			Vector2 drawPos = Projectile.Center-Main.screenPosition;
 			Vector2 textureOrigin = new Vector2(inner.Width, inner.Height) / 2f;
 
 			//spriteBatch.Draw(inner, drawPos, null, Color.DarkMagenta, 0, textureOrigin, Main.inventoryScale * 1f, SpriteEffects.None, 0f);
 
-			Color lighting = Lighting.GetColor(((int)projectile.Center.X) >> 4, ((int)projectile.Center.Y) >> 4,Color.White);
+			Color lighting = Lighting.GetColor(((int)Projectile.Center.X) >> 4, ((int)Projectile.Center.Y) >> 4,Color.White);
 
-			spriteBatch.Draw(inner2, drawPos, null, Color.White.MultiplyRGB(lighting), projectile.rotation, textureOrigin, projectile.scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(inner, drawPos, null, SoulColor.MultiplyRGB(lighting), projectile.rotation, textureOrigin, projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(inner2, drawPos, null, Color.White.MultiplyRGB(lighting), Projectile.rotation, textureOrigin, Projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(inner, drawPos, null, SoulColor.MultiplyRGB(lighting), Projectile.rotation, textureOrigin, Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
@@ -1476,27 +1429,27 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 30;
-			item.consumable = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 72;
-			item.useAnimation = 72;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.noUseGraphic = true;
-			item.rare = ItemRarityID.LightRed;
-			item.UseSound = SoundID.Item1;
-			item.shoot = ProjectileID.SnowBallFriendly;
-			item.shootSpeed = 10f;
+			Item.maxStack = 30;
+			Item.consumable = true;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 72;
+			Item.useAnimation = 72;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.noUseGraphic = true;
+			Item.rare = ItemRarityID.LightRed;
+			Item.UseSound = SoundID.Item1;
+			Item.shoot = ProjectileID.SnowBallFriendly;
+			Item.shootSpeed = 10f;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			return player.SGAPly().ShadowSectorZone > 0;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			return true;
 		}
@@ -1508,13 +1461,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bomb, 1);
-			recipe.AddIngredient(ModContent.ItemType<Entrophite>(), 30);
-			recipe.AddIngredient(ModContent.ItemType<StygianCore>(), 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bomb, 1).AddIngredient(ModContent.ItemType<Entrophite>(), 30).AddIngredient(ModContent.ItemType<StygianCore>(), 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -1542,16 +1489,16 @@ namespace SGAmod.Items.Consumables
 
         public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Grenade);
-			projectile.width = 32;
-			projectile.height = 32;
+			Projectile.CloneDefaults(ProjectileID.Grenade);
+			Projectile.width = 32;
+			Projectile.height = 32;
 
-			projectile.tileCollide = true;
-			projectile.friendly = false;
-			projectile.hostile = false;
-			projectile.timeLeft = 800;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			Projectile.tileCollide = true;
+			Projectile.friendly = false;
+			Projectile.hostile = false;
+			Projectile.timeLeft = 800;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 3;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
         public override bool CanDamage()
@@ -1561,7 +1508,7 @@ namespace SGAmod.Items.Consumables
 
         public override bool PreAI()
         {
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
 			if (player.SGAPly().ShadowSectorZone > 0 && timer < 5)
 			{
@@ -1572,7 +1519,7 @@ namespace SGAmod.Items.Consumables
 
 			int trueTimer = timer - 100;
 
-			if (trueTimer > 200 && projectile.timeLeft > 3 && sector != null)
+			if (trueTimer > 200 && Projectile.timeLeft > 3 && sector != null)
 			{
 				consumeTimer -= 1;
 				if (sector.sectors.Count > 0 || suckedInDarkness.Count > 0)
@@ -1588,13 +1535,13 @@ namespace SGAmod.Items.Consumables
 
 				percent = sector.sectors.Count / (float)max;
 
-				projectile.rotation = projectile.rotation.AngleLerp(0, 0.10f);
-				projectile.velocity /= 1.25f;
+				Projectile.rotation = Projectile.rotation.AngleLerp(0, 0.10f);
+				Projectile.velocity /= 1.25f;
 
 				for (int i = 0; i < 8; i += 1)
 				{
 					Vector2 randomcircle = Main.rand.NextVector2Circular(1f,1f)*((1.25f - percent)) * 320f;
-					int num655 = Dust.NewDust(projectile.Center + randomcircle,0, 0, 90, 0,0, 150, Color.Red, 0.50f);
+					int num655 = Dust.NewDust(Projectile.Center + randomcircle,0, 0, 90, 0,0, 150, Color.Red, 0.50f);
 					Main.dust[num655].velocity = -Vector2.Normalize(randomcircle)*3f;
 					Main.dust[num655].noGravity = true;
 
@@ -1602,11 +1549,11 @@ namespace SGAmod.Items.Consumables
 
 				if (timer % 30 == 0 && trueTimer<1150 && consumeTimer>0)
 				{
-					Projectile proj = Projectile.NewProjectileDirect(projectile.Center, Main.rand.NextVector2Circular(trueTimer / 800f, trueTimer / 800f), ModContent.ProjectileType<ExplosionRelocatorEye>(), 0, 0, player.whoAmI);
+					Projectile proj = Projectile.NewProjectileDirect(Projectile.Center, Main.rand.NextVector2Circular(trueTimer / 800f, trueTimer / 800f), ModContent.ProjectileType<ExplosionRelocatorEye>(), 0, 0, player.whoAmI);
 					if (proj != null)
 					{
 						proj.localAI[1] = (1.15f-percent)*12f;
-						var snd = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 3);
+						var snd = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 3);
 						if (snd != null)
                         {
 							snd.Pitch = -0.80f + (percent * 1.50f);
@@ -1614,7 +1561,7 @@ namespace SGAmod.Items.Consumables
 					}
 				}
 
-				projectile.timeLeft = 5;
+				Projectile.timeLeft = 5;
 
 				for (int iii = 0; iii < 1; iii += 1)
 				{
@@ -1623,8 +1570,8 @@ namespace SGAmod.Items.Consumables
 						DarkSectorTile tile = sector.sectors[sector.sectors.Count - 1];
 						Vector2 tilePos = new Vector2(tile.position.X * 16, tile.position.Y * 16);
 
-						Vector2 distTo = (tilePos - projectile.Center);
-						float len = (tilePos - projectile.Center).Length();
+						Vector2 distTo = (tilePos - Projectile.Center);
+						float len = (tilePos - Projectile.Center).Length();
 
 
 						/*for (float i = 0; i < (tilePos - projectile.Center).Length(); i += 32)
@@ -1656,18 +1603,18 @@ namespace SGAmod.Items.Consumables
 				if (trueTimer > 1200)
                 {
 					DimDingeonsWorld.darkSectors.Remove(sector);
-					Projectile proj = Projectile.NewProjectileDirect(projectile.Center, Vector2.Zero, ModContent.ProjectileType<ExplosionRelocatorEye>(), 0, 0, player.whoAmI);
+					Projectile proj = Projectile.NewProjectileDirect(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ExplosionRelocatorEye>(), 0, 0, player.whoAmI);
 					proj.timeLeft = 450;
 					proj.localAI[1] = 25f;
 
-					var snd = Main.PlaySound(SoundID.NPCKilled, (int)projectile.Center.X, (int)projectile.Center.Y, 59);
+					var snd = SoundEngine.PlaySound(SoundID.NPCKilled, (int)Projectile.Center.X, (int)Projectile.Center.Y, 59);
 					if (snd != null)
 					{
 						snd.Pitch = -0.85f;
 					}
 
 					SGAWorld.darkSectorInt++;
-					projectile.timeLeft = Math.Min(projectile.timeLeft, 2);
+					Projectile.timeLeft = Math.Min(Projectile.timeLeft, 2);
 				}
 
 				return false;
@@ -1675,7 +1622,7 @@ namespace SGAmod.Items.Consumables
             else
             {
 				if (trueTimer > 200)
-				projectile.timeLeft = Math.Min(projectile.timeLeft, 2);
+				Projectile.timeLeft = Math.Min(Projectile.timeLeft, 2);
 			}
 
 			return true;
@@ -1683,20 +1630,20 @@ namespace SGAmod.Items.Consumables
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-			Texture2D bomber = Main.projectileTexture[projectile.type];
-			Vector2 drawPos = projectile.Center;
-			Texture2D glow = ModContent.GetTexture("SGAmod/Glow");
+			Texture2D bomber = Main.projectileTexture[Projectile.type];
+			Vector2 drawPos = Projectile.Center;
+			Texture2D glow = ModContent.Request<Texture2D>("SGAmod/Glow");
 			Vector2 glowCenter = glow.Size()/2f;
 
 			foreach ((float, float, Vector2) suckedin in suckedInDarkness)
 			{
-				Vector2 vec = suckedin.Item3 - projectile.Center;
+				Vector2 vec = suckedin.Item3 - Projectile.Center;
 				Vector2 center = drawPos + Vector2.Normalize(vec) * suckedin.Item1;
 				float alphaScale = MathHelper.Clamp(suckedin.Item1 / 320f, 0f, 1f);
 				spriteBatch.Draw(glow, center - Main.screenPosition, null, Color.Black * alphaScale * 0.25f, 0, glowCenter, 2f+(2f * alphaScale), SpriteEffects.None, 0f);
 			}
 
-			spriteBatch.Draw(bomber, drawPos - Main.screenPosition, null, lightColor, projectile.rotation, new Vector2(bomber.Width/2f, bomber.Height/1.5f), projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(bomber, drawPos - Main.screenPosition, null, lightColor, Projectile.rotation, new Vector2(bomber.Width/2f, bomber.Height/1.5f), Projectile.scale, SpriteEffects.None, 0f);
 
 
 			return false;
@@ -1710,15 +1657,15 @@ namespace SGAmod.Items.Consumables
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Voided Relocator Explosion");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.extraUpdates = 2;
-			projectile.timeLeft = 120;
+			Projectile.extraUpdates = 2;
+			Projectile.timeLeft = 120;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -1729,26 +1676,26 @@ namespace SGAmod.Items.Consumables
 		public override void PostEffectsDraw(SpriteBatch spriteBatch, float drawScale = 2f)
 		{
 
-			float alpha = Math.Min((projectile.timeLeft) / 30f, 1f);
+			float alpha = Math.Min((Projectile.timeLeft) / 30f, 1f);
 
 			if (alpha <= 0)
 				return;
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/Dimensions/NPCs/NullWatcher");
-			Rectangle rect = new Rectangle(0, (tex.Height / 7) * (2 + (int)(Math.Min(projectile.localAI[0] / 15f, 4))), tex.Width, tex.Height / 7);
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/Dimensions/NPCs/NullWatcher");
+			Rectangle rect = new Rectangle(0, (tex.Height / 7) * (2 + (int)(Math.Min(Projectile.localAI[0] / 15f, 4))), tex.Width, tex.Height / 7);
 			Rectangle recteye = new Rectangle(0, 0, tex.Width, tex.Height / 7);
 
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 7) / 2f;
 
-			float scale = (2f - (projectile.timeLeft / 60f)) * projectile.localAI[1];
+			float scale = (2f - (Projectile.timeLeft / 60f)) * Projectile.localAI[1];
 
 			for (int k = 0; k < 1; k++)//projectile.oldPos.Length
 			{
-				Vector2 drawPos = (projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY)) / drawScale;
-				float coloralpha = ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+				Vector2 drawPos = (Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY)) / drawScale;
+				float coloralpha = ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-				spriteBatch.Draw(tex, drawPos, rect, Color.GreenYellow * coloralpha * 0.75f * alpha, projectile.rotation, drawOrigin, projectile.scale * 1f * scale, SpriteEffects.None, 0f);
-				spriteBatch.Draw(tex, drawPos + Vector2.Zero, recteye, Color.White * coloralpha * 0.75f * alpha, projectile.rotation, drawOrigin, projectile.scale * scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, rect, Color.GreenYellow * coloralpha * 0.75f * alpha, Projectile.rotation, drawOrigin, Projectile.scale * 1f * scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos + Vector2.Zero, recteye, Color.White * coloralpha * 0.75f * alpha, Projectile.rotation, drawOrigin, Projectile.scale * scale, SpriteEffects.None, 0f);
 			}
 
 		}

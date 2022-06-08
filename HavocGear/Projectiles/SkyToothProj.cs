@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Enums;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Projectiles
 {
@@ -18,24 +19,24 @@ namespace SGAmod.HavocGear.Projectiles
 		
 		public override void SetDefaults()
         { 
-            projectile.width = 14;      
-            projectile.height = 20; 
-            projectile.friendly = true;     
-            projectile.magic = true;     
-            projectile.tileCollide = true;
-            projectile.penetrate = 4;     
-            projectile.timeLeft = 2000;  
-            projectile.light = 0.75f;
-            projectile.extraUpdates = 1;
-   		    projectile.ignoreWater = true;    
+            Projectile.width = 14;      
+            Projectile.height = 20; 
+            Projectile.friendly = true;     
+            Projectile.DamageType = DamageClass.Magic;     
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 4;     
+            Projectile.timeLeft = 2000;  
+            Projectile.light = 0.75f;
+            Projectile.extraUpdates = 1;
+   		    Projectile.ignoreWater = true;    
         }
         public override void AI()           //this make that the projectile will face the corect way
         {                                                           // |
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;  
+            Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;  
        	}
 		public override void Kill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item10, projectile.position);
+			SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 		}
     }
 }

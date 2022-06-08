@@ -19,89 +19,89 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sandscorched Golem");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.lifeMax = 1000;
-			npc.defense = 22;
-			npc.damage = 65;
-			npc.scale = 1f;
-			npc.width = 48;
-			npc.height = 56;
-			animationType = -1;
-			npc.aiStyle = 3;
-			npc.knockBackResist = 0.4f;
-			npc.buffImmune[BuffID.Poisoned] = true;
-			npc.buffImmune[BuffID.Venom] = true;
-			npc.buffImmune[BuffID.OnFire] = true;
-			npc.buffImmune[BuffID.ShadowFlame] = true;
-			npc.buffImmune[BuffID.CursedInferno] = true;
-			npc.buffImmune[mod.BuffType("ThermalBlaze")] = true;
-			npc.npcSlots = 0.1f;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath6;
-			npc.value = Item.buyPrice(0, 0, 50);
-			banner = npc.type;
-			bannerItem = mod.ItemType("SandscorchedGolemBanner");
+			NPC.lifeMax = 1000;
+			NPC.defense = 22;
+			NPC.damage = 65;
+			NPC.scale = 1f;
+			NPC.width = 48;
+			NPC.height = 56;
+			AnimationType = -1;
+			NPC.aiStyle = 3;
+			NPC.knockBackResist = 0.4f;
+			NPC.buffImmune[BuffID.Poisoned] = true;
+			NPC.buffImmune[BuffID.Venom] = true;
+			NPC.buffImmune[BuffID.OnFire] = true;
+			NPC.buffImmune[BuffID.ShadowFlame] = true;
+			NPC.buffImmune[BuffID.CursedInferno] = true;
+			NPC.buffImmune[Mod.Find<ModBuff>("ThermalBlaze").Type] = true;
+			NPC.npcSlots = 0.1f;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath6;
+			NPC.value = Item.buyPrice(0, 0, 50);
+			banner = NPC.type;
+			bannerItem = Mod.Find<ModItem>("SandscorchedGolemBanner").Type;
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life < 1)
+			if (NPC.life < 1)
 			{
-				Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * -4, 6), npc.velocity, mod.GetGoreSlot("Gores/SandscorchedGolem_leg_gib"), 1f);
-				Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * -4, -2), npc.velocity, mod.GetGoreSlot("Gores/SandscorchedGolem_arm_gib"), 1f);
-				Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 4, -2), npc.velocity, mod.GetGoreSlot("Gores/SandscorchedGolem_arm_gib"), 1f);
-				Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 4, 6), npc.velocity, mod.GetGoreSlot("Gores/SandscorchedGolem_leg_gib"), 1f);
-				Gore.NewGore(npc.Center, npc.velocity, mod.GetGoreSlot("Gores/SandscorchedGolem_chest_gib"), 1f);
-				Gore.NewGore(npc.Center + new Vector2(0, -18), npc.velocity, mod.GetGoreSlot("Gores/SandscorchedGolem_head_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * -4, 6), NPC.velocity, Mod.GetGoreSlot("Gores/SandscorchedGolem_leg_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * -4, -2), NPC.velocity, Mod.GetGoreSlot("Gores/SandscorchedGolem_arm_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 4, -2), NPC.velocity, Mod.GetGoreSlot("Gores/SandscorchedGolem_arm_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 4, 6), NPC.velocity, Mod.GetGoreSlot("Gores/SandscorchedGolem_leg_gib"), 1f);
+				Gore.NewGore(NPC.Center, NPC.velocity, Mod.GetGoreSlot("Gores/SandscorchedGolem_chest_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(0, -18), NPC.velocity, Mod.GetGoreSlot("Gores/SandscorchedGolem_head_gib"), 1f);
 			}
 		}
 
 		public override void AI()
 		{
-			npc.TargetClosest(false);
+			NPC.TargetClosest(false);
 			for (int k = 0; k < 1; k++)
             		{
-                		int dust = Dust.NewDust(npc.position - new Vector2(8f, 8f), npc.width + 6, npc.height + 8, mod.DustType("HotDust"), 0.6f, 0.5f, 0, default(Color), 1.0f);
+                		int dust = Dust.NewDust(NPC.position - new Vector2(8f, 8f), NPC.width + 6, NPC.height + 8, Mod.Find<ModDust>("HotDust").Type, 0.6f, 0.5f, 0, default(Color), 1.0f);
 				Main.dust[dust].noGravity = true;				
 				Main.dust[dust].velocity *= 0.0f;
             		}
-            		Player target=Main.player[npc.target];
+            		Player target=Main.player[NPC.target];
             	if (target!=null && (!target.dead)){
-            	npc.spriteDirection=target.position.X-npc.position.X>0f ? 1 : -1;
+            	NPC.spriteDirection=target.position.X-NPC.position.X>0f ? 1 : -1;
             	}else{
-            	npc.spriteDirection=npc.velocity.X>0 ? 1 : -1;
+            	NPC.spriteDirection=NPC.velocity.X>0 ? 1 : -1;
            		}
-           		npc.velocity+=new Vector2((float)npc.spriteDirection*0.25f,0f);
-           		 npc.velocity=new Vector2(MathHelper.Clamp(npc.velocity.X/1.05f,-10f,10f),npc.velocity.Y);
-			if (npc.velocity.Length()<2)
-				npc.velocity.Y =-5f;
+           		NPC.velocity+=new Vector2((float)NPC.spriteDirection*0.25f,0f);
+           		 NPC.velocity=new Vector2(MathHelper.Clamp(NPC.velocity.X/1.05f,-10f,10f),NPC.velocity.Y);
+			if (NPC.velocity.Length()<2)
+				NPC.velocity.Y =-5f;
 
-			framevar +=Math.Abs(npc.velocity.X)*0.05f;
+			framevar +=Math.Abs(NPC.velocity.X)*0.05f;
 		}
 
 				public override void FindFrame(int frameHeight)
 		{
-			npc.frame.Y=(((int)framevar%4))*npc.height;
+			NPC.frame.Y=(((int)framevar%4))*NPC.height;
 		}
 
 		public override void NPCLoot()
 		{
-			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FieryShard"), Main.rand.Next(3, 13));
+			Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("FieryShard").Type, Main.rand.Next(3, 13));
 		}
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			player.AddBuff(mod.BuffType("ThermalBlaze"), 200, true);
+			player.AddBuff(Mod.Find<ModBuff>("ThermalBlaze").Type, 200, true);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
 			Tile tile = Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY-3];
-			return !spawnInfo.playerInTown && !NPC.BusyWithAnyInvasionOfSorts() && !NPC.BusyWithAnyInvasionOfSorts() && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && spawnInfo.spawnTileY < Main.rockLayer && spawnInfo.player.ZoneDesert && !spawnInfo.player.ZoneBeach && Main.hardMode ? 0.15f : 0f;
+			return !spawnInfo.playerInTown && !NPC.BusyWithAnyInvasionOfSorts() && !NPC.BusyWithAnyInvasionOfSorts() && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && spawnInfo.spawnTileY < Main.rockLayer && spawnInfo.Player.ZoneDesert && !spawnInfo.Player.ZoneBeach && Main.hardMode ? 0.15f : 0f;
 		}
 
 

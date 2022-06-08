@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SGAmod.Items.Tools
 {
@@ -18,25 +19,25 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 0;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = ItemUseStyleID.EatingUsing;
-			item.knockBack = 6;
-			item.value = Item.buyPrice(0,2);
-			item.rare = 2;
-			item.UseSound = SoundID.Item55;
-			item.autoReuse = true;
-			item.noUseGraphic = true;
-			item.useTurn = true;
+			Item.damage = 0;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = ItemUseStyleID.EatFood;
+			Item.knockBack = 6;
+			Item.value = Item.buyPrice(0,2);
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item55;
+			Item.autoReuse = true;
+			Item.noUseGraphic = true;
+			Item.useTurn = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/Tools/Spanner");
-				item.GetGlobalItem<ItemUseGlow>().glowOffsetX = -18;
-				item.GetGlobalItem<ItemUseGlow>().glowOffsetY = 6;
-				item.GetGlobalItem<ItemUseGlow>().GlowColor = delegate (Item item, Player player)
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/Tools/Spanner").Value;
+				Item.GetGlobalItem<ItemUseGlow>().glowOffsetX = -18;
+				Item.GetGlobalItem<ItemUseGlow>().glowOffsetY = 6;
+				Item.GetGlobalItem<ItemUseGlow>().GlowColor = delegate (Item item, Player player)
 				{
 					return Lighting.GetColor((int)player.Center.X/16, (int)player.Center.Y / 16,Color.White);
 				};
@@ -48,7 +49,7 @@ namespace SGAmod.Items.Tools
             return new Vector2(18,6);
         }
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
         {
 			if (Main.netMode != NetmodeID.Server)
 			{

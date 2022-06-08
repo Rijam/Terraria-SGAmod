@@ -29,7 +29,7 @@ namespace SGAmod
 			return (long)99999;
 		}
 
-		public override bool TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3)
+		/*public override bool TryPurchasing(int price, List<Item[]> inv, List<Point> slotCoins, List<Point> slotsEmpty, List<Point> slotEmptyBank, List<Point> slotEmptyBank2, List<Point> slotEmptyBank3)
 		{
 			SGAPlayer modplayer = Main.LocalPlayer.GetModPlayer<SGAPlayer>();
 			if (modplayer.ExpertiseCollected >= price*10)
@@ -38,7 +38,7 @@ namespace SGAmod
 				return true;
 			}
 			return false;
-		}
+		}*/
 
 		public override void DrawSavingsMoney(SpriteBatch sb, string text, float shopx, float shopy, long totalCoins, bool horizontal = false)
 		{

@@ -16,20 +16,20 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.buyPrice(silver: 10);
-			item.rare = ItemRarityID.Yellow;
-			item.createTile = mod.TileType("LiquidationHopperTile");
-			item.placeStyle = 0;
-			item.mech = true;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(silver: 10);
+			Item.rare = ItemRarityID.Yellow;
+			Item.createTile = Mod.Find<ModTile>("LiquidationHopperTile").Type;
+			Item.placeStyle = 0;
+			Item.mech = true;
 		}
 
         public override Color? GetAlpha(Color lightColor)
@@ -42,7 +42,7 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 			if (!Main.gameMenu)
 			{
 				Texture2D texture = Main.itemTexture[ItemID.GoldCoin];
-				Vector2 drawPos = item.Center;
+				Vector2 drawPos = Item.Center;
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
 				spriteBatch.Draw(texture, drawPos, null, lightColor, 0f, textureOrigin, Main.inventoryScale * 1f, SpriteEffects.None, 0f);
 			}
@@ -64,12 +64,7 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<HopperItem>(), 1);
-			recipe.AddIngredient(ItemID.GoldCoin, 5);
-			recipe.AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<HopperItem>(), 1).AddIngredient(ItemID.GoldCoin, 5).AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>()).Register();
 		}
 	}
 	public class HopperChestItem : HopperItem
@@ -81,20 +76,20 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
         public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.buyPrice(silver: 10);
-			item.rare = ItemRarityID.LightPurple;
-			item.createTile = mod.TileType("ChestHopperTile");
-			item.placeStyle = 0;
-			item.mech = true;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(silver: 10);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.createTile = Mod.Find<ModTile>("ChestHopperTile").Type;
+			Item.placeStyle = 0;
+			Item.mech = true;
 		}
 
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
@@ -102,7 +97,7 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 			if (!Main.gameMenu)
 			{
 				Texture2D texture = Main.cursorTextures[7];
-				Vector2 drawPos = item.Center;
+				Vector2 drawPos = Item.Center;
 				Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
 				spriteBatch.Draw(texture, drawPos, null, lightColor, 0f, textureOrigin, Main.inventoryScale * 1f, SpriteEffects.None, 0f);
 			}
@@ -124,13 +119,7 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<HopperItem>(), 1);
-			recipe.AddIngredient(ItemID.GoldenKey, 1);
-			recipe.AddRecipeGroup("SGAmod:Chests", 1);
-			recipe.AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<HopperItem>(), 1).AddIngredient(ItemID.GoldenKey, 1).AddRecipeGroup("SGAmod:Chests", 1).AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>()).Register();
 		}
 	}	
 	public class HopperItem : ModItem
@@ -142,31 +131,25 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
         public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = Item.buyPrice(silver: 10);
-			item.rare = 1;
-			item.createTile = mod.TileType("HopperTile");
-			item.placeStyle = 0;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(silver: 10);
+			Item.rare = 1;
+			Item.createTile = Mod.Find<ModTile>("HopperTile").Type;
+			Item.placeStyle = 0;
 		}
         public override string Texture => "SGAmod/Items/Placeable/TechPlaceable/HopperItem";
 
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 3);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 3);
-			recipe.AddIngredient(ItemID.MetalSink, 1);
-			recipe.AddTile(TileID.HeavyWorkBench);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(mod.ItemType("UnmanedBar"), 3).AddIngredient(mod.ItemType("NoviteBar"), 3).AddIngredient(ItemID.MetalSink, 1).AddTile(TileID.HeavyWorkBench).Register();
 		}
 	}
 }

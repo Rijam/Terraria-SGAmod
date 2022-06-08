@@ -9,41 +9,41 @@ namespace SGAmod.NPCs.Dank
 	{
 		public override void SetDefaults()
 		{
-			npc.width = 26;
-			npc.height = 28;
-			npc.damage = 24;
-			npc.defense = 2;
-			npc.lifeMax = 18;
-            npc.HitSound = SoundID.NPCHit25;
-            npc.DeathSound = SoundID.NPCDeath18;
-            npc.noGravity = true;
-			npc.value = 80f;
-			npc.knockBackResist = 0.5f;
-			npc.aiStyle = 18;
-			aiType = NPCID.GreenJellyfish;
-			animationType = NPCID.GreenJellyfish;
-            banner = npc.type;
-            bannerItem = mod.ItemType("SwampJellyBanner");
+			NPC.width = 26;
+			NPC.height = 28;
+			NPC.damage = 24;
+			NPC.defense = 2;
+			NPC.lifeMax = 18;
+            NPC.HitSound = SoundID.NPCHit25;
+            NPC.DeathSound = SoundID.NPCDeath18;
+            NPC.noGravity = true;
+			NPC.value = 80f;
+			NPC.knockBackResist = 0.5f;
+			NPC.aiStyle = 18;
+			AIType = NPCID.GreenJellyfish;
+			AnimationType = NPCID.GreenJellyfish;
+            banner = NPC.type;
+            bannerItem = Mod.Find<ModItem>("SwampJellyBanner").Type;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Swamp Jellyfish");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.GreenJellyfish];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.GreenJellyfish];
         }
 
         public override void NPCLoot()
         {
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Glowstick, Main.rand.Next(4));
+            Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.Glowstick, Main.rand.Next(4));
             if (Main.rand.Next(50) < 1)
-                Item.NewItem(npc.position, npc.Hitbox.Size(), ModContent.ItemType<Items.Accessories.MurkyCharm>());
+                Item.NewItem(NPC.position, NPC.Hitbox.Size(), ModContent.ItemType<Items.Accessories.MurkyCharm>());
         }
 
         public override bool CheckDead()
         {
-            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/SwampJelly_1"), 1f);
-            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/SwampJelly_2"), 1f);
-            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/SwampJelly_3"), 1f);
+            Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/SwampJelly_1"), 1f);
+            Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/SwampJelly_2"), 1f);
+            Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/SwampJelly_3"), 1f);
             return true;
         }
 
@@ -51,7 +51,7 @@ namespace SGAmod.NPCs.Dank
 		{
             int x = spawnInfo.spawnTileX;
             int y = spawnInfo.spawnTileY;
-			return SGAUtils.NoInvasion(spawnInfo) && spawnInfo.water && spawnInfo.player.SGAPly().DankShrineZone ? 2f : 0f;
+			return SGAUtils.NoInvasion(spawnInfo) && spawnInfo.water && spawnInfo.Player.SGAPly().DankShrineZone ? 2f : 0f;
 		}
 	}
 }

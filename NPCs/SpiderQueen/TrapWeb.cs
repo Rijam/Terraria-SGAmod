@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 
 namespace SGAmod.NPCs.SpiderQueen
@@ -22,15 +23,15 @@ namespace SGAmod.NPCs.SpiderQueen
         {
             Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-            aiType = ProjectileID.Boulder;      
-            projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.penetrate = 10;
-			projectile.light = 0.5f;
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.tileCollide=true;
-            projectile.penetrate = 1;
+            AIType = ProjectileID.Boulder;      
+            Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.penetrate = 10;
+			Projectile.light = 0.5f;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.tileCollide=true;
+            Projectile.penetrate = 1;
         }
 
         public override string Texture
@@ -40,27 +41,27 @@ namespace SGAmod.NPCs.SpiderQueen
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.penetrate--;
-            if (projectile.penetrate <= 0)
+            Projectile.penetrate--;
+            if (Projectile.penetrate <= 0)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             return false;
         }
 
 	    public override bool PreKill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item45, projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item45, Projectile.Center);
 
-            int i = (int)projectile.Center.X/16;
-            int j = (int)projectile.Center.Y/16;
+            int i = (int)Projectile.Center.X/16;
+            int j = (int)Projectile.Center.Y/16;
             for (int x = -8; x <= 8; x++)
             {
                 for (int y = -8; y <= 8; y++)
                 {
                     //WorldGen.Convert(i + x, j + y, 0, 0);
                     Tile tile = Main.tile[i + x, j + y];
-                    if (!tile.active() && Main.rand.NextFloat(0,(new Vector2(x, y)).Length()) < 1)
+                    if (!tile.HasTile && Main.rand.NextFloat(0,(new Vector2(x, y)).Length()) < 1)
                     {
                         if (Main.netMode == NetmodeID.SinglePlayer || Main.dedServ)
                         {
@@ -69,7 +70,7 @@ namespace SGAmod.NPCs.SpiderQueen
                         }
                         //tile.type = (ushort)ModContent.TileType<AcidicWebTile>();
                         WorldGen.PlaceTile(i + x, j + y,(ushort)ModContent.TileType<AcidicWebTile>());
-                        tile.active(true);
+                        tile.HasTile;
                         NetMessage.SendTileRange(Main.myPlayer, i + x, j + y, 1, 1);
                     }
                 }
@@ -84,7 +85,7 @@ namespace SGAmod.NPCs.SpiderQueen
             {
                 Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
                 randomcircle *= Main.rand.NextFloat(0f, 6f);
-                int num316 = Dust.NewDust(new Vector2(projectile.position.X - 1, projectile.position.Y), projectile.width, projectile.height, DustID.Web, 0, 0, 50, Color.Lime, projectile.scale * 2f);
+                int num316 = Dust.NewDust(new Vector2(Projectile.position.X - 1, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Web, 0, 0, 50, Color.Lime, Projectile.scale * 2f);
                 Main.dust[num316].noGravity = false;
                 Main.dust[num316].velocity = new Vector2(randomcircle.X, randomcircle.Y);
             }
@@ -95,15 +96,15 @@ namespace SGAmod.NPCs.SpiderQueen
 		
 		public override void AI()
         {
-            projectile.rotation = ((float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f)+MathHelper.ToRadians(90);
+            Projectile.rotation = ((float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f)+MathHelper.ToRadians(90);
 
-            int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height,DustID.Web, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 20, Color.Lime, 1.5f);
+            int DustID2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height,DustID.Web, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 20, Color.Lime, 1.5f);
             Main.dust[DustID2].noGravity = true;
 		}
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.Center - Main.screenPosition, null, Color.Lime, 0f, Main.projectileTexture[projectile.type].Size()/2f, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Main.projectileTexture[Projectile.type], Projectile.Center - Main.screenPosition, null, Color.Lime, 0f, Main.projectileTexture[Projectile.type].Size()/2f, 1, SpriteEffects.None, 0f);
 
             return false;
         }
@@ -136,7 +137,7 @@ namespace SGAmod.NPCs.SpiderQueen
 
                     Tile tile = Framing.GetTileSafely(tilecoord.X, tilecoord.Y);
 
-                    if (tile.type == ModContent.TileType<AcidicWebTile>())
+                    if (tile.TileType == ModContent.TileType<AcidicWebTile>())
                     {
                         WorldGen.KillTile(tilecoord.X, tilecoord.Y);
 
@@ -161,7 +162,7 @@ namespace SGAmod.NPCs.SpiderQueen
             texture = "Terraria/Tiles_" + TileID.Cobweb;
             return true;
         }
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             TileID.Sets.NotReallySolid[Type] = true;
             Main.tileCut[Type] = true;
@@ -185,7 +186,7 @@ namespace SGAmod.NPCs.SpiderQueen
             Noisegen.Amplitude = 0.50f;
             Noisegen.Frequency *= 1.00;
 
-            spriteBatch.Draw(Main.tileTexture[tile.type], location - Main.screenPosition, new Rectangle(tile.frameX,tile.frameY,16,16), Color.Lerp(Color.DarkGreen*0.250f,Color.Lime,0.50f+ (float)Noisegen.Noise((int)(location.X + Main.GlobalTime * 10f), (int)(location.Y+Main.GlobalTime*10f))), 0f, Vector2.Zero, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Main.tileTexture[tile.TileType], location - Main.screenPosition, new Rectangle(tile.TileFrameX,tile.TileFrameY,16,16), Color.Lerp(Color.DarkGreen*0.250f,Color.Lime,0.50f+ (float)Noisegen.Noise((int)(location.X + Main.GlobalTimeWrappedHourly * 10f), (int)(location.Y+Main.GlobalTimeWrappedHourly*10f))), 0f, Vector2.Zero, 1, SpriteEffects.None, 0f);
 
 
             return false;
@@ -193,7 +194,7 @@ namespace SGAmod.NPCs.SpiderQueen
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            if (Main.tile[i, j].active())
+            if (Main.tile[i, j].HasTile)
             {
                 g = Color.Lime.G * 0.25f;
             }

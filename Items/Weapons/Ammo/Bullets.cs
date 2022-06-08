@@ -22,29 +22,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 13;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 25;
-			item.rare = 5;
-			item.shoot = ModContent.ProjectileType <Projectiles.BlazeBullet>();   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 13;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 25;
+			Item.rare = 5;
+			Item.shoot = ModContent.ProjectileType <Projectiles.BlazeBullet>();   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("WraithFragment4"), 2);
-			recipe.AddIngredient(mod.ItemType("FieryShard"), 1);
-			recipe.AddIngredient(ItemID.MusketBall, 50);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(mod.ItemType("WraithFragment4"), 2).AddIngredient(mod.ItemType("FieryShard"), 1).AddIngredient(ItemID.MusketBall, 50).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 
@@ -61,28 +55,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 8;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 25;
-			item.rare = 5;
-			item.shoot = ModContent.ProjectileType<Projectiles.AcidBullet>();   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 2.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 8;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 25;
+			Item.rare = 5;
+			Item.shoot = ModContent.ProjectileType<Projectiles.AcidBullet>();   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 2.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VialofAcid"), 1);
-			recipe.AddIngredient(ItemID.MusketBall, 50);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(mod.ItemType("VialofAcid"), 1).AddIngredient(ItemID.MusketBall, 50).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -99,28 +88,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 6;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 0f;
-			item.value = 20;
-			item.rare = ItemRarityID.Green;
-			item.shoot = ModContent.ProjectileType<Projectiles.NoviteBullet>();   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 4.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 6;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 0f;
+			Item.value = 20;
+			Item.rare = ItemRarityID.Green;
+			Item.shoot = ModContent.ProjectileType<Projectiles.NoviteBullet>();   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 4.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 1);
-			recipe.AddIngredient(ItemID.MusketBall, 50);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(ModContent.ItemType<NoviteBar>(), 1).AddIngredient(ItemID.MusketBall, 50).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -138,32 +122,27 @@ namespace SGAmod.Items.Weapons.Ammo
         public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
         {
 			if (GetType() == typeof(SeekerBullet))
-			flat += item.damage * player.minionDamage;
+			flat += Item.damage * player.GetDamage(DamageClass.Summon);
 		}
         public override void SetDefaults()
 		{
-			item.damage = 12;
-			item.summon = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;
-			item.knockBack = 0f;
-			item.value = 20;
-			item.rare = ItemRarityID.LightPurple;
-			item.shoot = ModContent.ProjectileType<Projectiles.SeekerBullet>();
-			item.shootSpeed = 6f;
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 12;
+			Item.DamageType = DamageClass.Summon;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.knockBack = 0f;
+			Item.value = 20;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.shoot = ModContent.ProjectileType<Projectiles.SeekerBullet>();
+			Item.shootSpeed = 6f;
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.AncientBattleArmorMaterial, 1);
-			recipe.AddIngredient(ItemID.MusketBall, 250);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddIngredient(ItemID.AncientBattleArmorMaterial, 1).AddIngredient(ItemID.MusketBall, 250).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -180,28 +159,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 75;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;
-			item.knockBack = 0f;
-			item.value = 20;
-			item.rare = ItemRarityID.Lime;
-			item.shoot = ModContent.ProjectileType<Projectiles.SoundboundBullet>();
-			item.shootSpeed = 6f;
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 75;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.knockBack = 0f;
+			Item.value = 20;
+			Item.rare = ItemRarityID.Lime;
+			Item.shoot = ModContent.ProjectileType<Projectiles.SoundboundBullet>();
+			Item.shootSpeed = 6f;
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Ectoplasm, 1);
-			recipe.AddIngredient(ItemID.MusketBall, 50);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(ItemID.Ectoplasm, 1).AddIngredient(ItemID.MusketBall, 50).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -218,28 +192,23 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 8;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 10;
-			item.rare = 1;
-			item.shoot = ModContent.ProjectileType<Projectiles.TungstenBullet>();   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 4.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 8;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 10;
+			Item.rare = 1;
+			Item.shoot = ModContent.ProjectileType<Projectiles.TungstenBullet>();   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 4.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.TungstenBar, 1);
-			recipe.AddIngredient(ItemID.MusketBall, 70);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 70);
-			recipe.AddRecipe();
+			CreateRecipe(70).AddIngredient(ItemID.TungstenBar, 1).AddIngredient(ItemID.MusketBall, 70).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -255,33 +224,23 @@ namespace SGAmod.Items.Weapons.Ammo
 
 		public override void SetDefaults()
 		{
-			item.damage = 20;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 2.0f;
-			item.value = 300;
-			item.rare = 10;
-			item.shoot = ModContent.ProjectileType <Projectiles.AimBotBullet>();   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 1f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 20;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 2.0f;
+			Item.value = 300;
+			Item.rare = 10;
+			Item.shoot = ModContent.ProjectileType <Projectiles.AimBotBullet>();   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 1f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<Entrophite>(), 20);
-			recipe.AddIngredient(ModContent.ItemType<MoneySign>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<ByteSoul>(), 5);
-			recipe.AddIngredient(ModContent.ItemType<DrakeniteBar>(), 1);
-			recipe.AddIngredient(ItemID.MoonlordBullet, 100);
-			recipe.AddIngredient(ItemID.MeteorShot, 75);
-			recipe.AddIngredient(ItemID.ChlorophyteBullet, 75);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddIngredient(ModContent.ItemType<Entrophite>(), 20).AddIngredient(ModContent.ItemType<MoneySign>(), 1).AddIngredient(ModContent.ItemType<ByteSoul>(), 5).AddIngredient(ModContent.ItemType<DrakeniteBar>(), 1).AddIngredient(ItemID.MoonlordBullet, 100).AddIngredient(ItemID.MeteorShot, 75).AddIngredient(ItemID.ChlorophyteBullet, 75).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 	public class PortalBullet : ModItem
@@ -303,8 +262,8 @@ namespace SGAmod.Items.Weapons.Ammo
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
-			spriteBatch.Draw(inner, position+ (new Vector2(4f,8f)*scale), null, drawColor, Main.GlobalTime, new Vector2(inner.Width / 2, inner.Height / 2), scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(Main.itemTexture[item.type], position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(inner, position+ (new Vector2(4f,8f)*scale), null, drawColor, Main.GlobalTimeWrappedHourly, new Vector2(inner.Width / 2, inner.Height / 2), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			return false;
@@ -312,29 +271,23 @@ namespace SGAmod.Items.Weapons.Ammo
 
 		public override void SetDefaults()
 		{
-			item.damage = 19;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 100;
-			item.rare = 9;
-			item.shoot = ModContent.ProjectileType<Projectiles.PortalBullet>();   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 4.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 19;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 100;
+			Item.rare = 9;
+			Item.shoot = ModContent.ProjectileType<Projectiles.PortalBullet>();   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 4.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 1);
-			recipe.AddIngredient(mod.ItemType("PlasmaCell"), 1);
-			recipe.AddIngredient(ItemID.HighVelocityBullet, 100);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 100);
-			recipe.AddRecipe();
+			CreateRecipe(100).AddIngredient(mod.ItemType("StarMetalBar"), 1).AddIngredient(mod.ItemType("PlasmaCell"), 1).AddIngredient(ItemID.HighVelocityBullet, 100).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -360,41 +313,41 @@ namespace SGAmod.Items.Weapons.Ammo
 			shader.UseOpacity(0.5f);
 			shader.UseSaturation(0.25f);
 			shader.Apply(null);
-			spriteBatch.Draw(Main.itemTexture[item.type], position, frame, drawColor,0, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], position, frame, drawColor,0, origin, scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			return false;
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 2;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 25;
-			item.rare = 5;
-			item.shoot = ProjectileID.Bullet;   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 4.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 2;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 25;
+			Item.rare = 5;
+			Item.shoot = ProjectileID.Bullet;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 4.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 		public virtual int GetAmmo(Player player,out int weapontype,bool previous = false)
 		{
 			bool canuse = true;
-			weapontype = item.type;
+			weapontype = Item.type;
 			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 			Item newitem = new Item();
 			newitem.SetDefaults(sgaplayer.ammoinboxes[sgaplayer.PrismalShots + (1)]);
 
-			if (sgaplayer.ammoinboxes[1] == 0 || sgaplayer.ammoinboxes[1] == item.type)
+			if (sgaplayer.ammoinboxes[1] == 0 || sgaplayer.ammoinboxes[1] == Item.type)
 				canuse = false;
-			if (sgaplayer.ammoinboxes[2] == 0 || sgaplayer.ammoinboxes[2] == item.type)
+			if (sgaplayer.ammoinboxes[2] == 0 || sgaplayer.ammoinboxes[2] == Item.type)
 				canuse = false;
-			if ((sgaplayer.ammoinboxes[3] == 0 || sgaplayer.ammoinboxes[3] == item.type) && maxvalue>2)
+			if ((sgaplayer.ammoinboxes[3] == 0 || sgaplayer.ammoinboxes[3] == Item.type) && maxvalue>2)
 				canuse = false;
-			if (newitem.ammo != item.ammo)
+			if (newitem.ammo != Item.ammo)
 				canuse = false;
 
 			if (canuse)
@@ -409,14 +362,14 @@ namespace SGAmod.Items.Weapons.Ammo
 			}
 			else
 			{
-				return item.shoot;
+				return Item.shoot;
 			}
 
 		}
 
 		public override void OnConsumeAmmo(Player player)
 		{
-			if (ammotype!=item.type && Main.rand.Next(maxvalue+1)<1)
+			if (ammotype!=Item.type && Main.rand.Next(maxvalue+1)<1)
 			player.ConsumeItemRespectInfiniteAmmoTypes(ammotype);
 		}
 
@@ -428,17 +381,7 @@ namespace SGAmod.Items.Weapons.Ammo
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:Tier1Bars", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier2Bars", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier4Bars", 1);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 2);
-			recipe.AddIngredient(ItemID.HallowedBar, 1);
-			recipe.AddIngredient(ItemID.SilverBullet, 125);
-			recipe.AddIngredient(ModContent.ItemType<TungstenBullet>(), 125);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddRecipeGroup("SGAmod:Tier1Bars", 1).AddRecipeGroup("SGAmod:Tier2Bars", 1).AddRecipeGroup("SGAmod:Tier4Bars", 1).AddIngredient(mod.ItemType("WraithFragment3"), 2).AddIngredient(ItemID.HallowedBar, 1).AddIngredient(ItemID.SilverBullet, 125).AddIngredient(ModContent.ItemType<TungstenBullet>(), 125).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 
@@ -460,35 +403,30 @@ namespace SGAmod.Items.Weapons.Ammo
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			ArmorShaderData shader = GameShaders.Armor.GetShaderFromItemId(ItemID.LivingRainbowDye);
 			shader.Apply(null);
-			spriteBatch.Draw(Main.itemTexture[item.type], position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], position, frame, drawColor, 0, origin, scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			return false;
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 17;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 999;
-			item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
-			item.knockBack = 1.5f;
-			item.value = 25;
-			item.rare = 10;
-			item.shoot = ProjectileID.Bullet;   //The projectile shoot when your weapon using this ammo
-			item.shootSpeed = 4.5f;                  //The speed of the projectile
-			item.ammo = AmmoID.Bullet;
+			Item.damage = 17;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 999;
+			Item.consumable = true;             //You need to set the item consumable so that the ammo would automatically consumed
+			Item.knockBack = 1.5f;
+			Item.value = 25;
+			Item.rare = 10;
+			Item.shoot = ProjectileID.Bullet;   //The projectile shoot when your weapon using this ammo
+			Item.shootSpeed = 4.5f;                  //The speed of the projectile
+			Item.ammo = AmmoID.Bullet;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismicBullet"), 250);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 250);
-			recipe.AddRecipe();
+			CreateRecipe(250).AddIngredient(mod.ItemType("PrismalBar"), 1).AddIngredient(mod.ItemType("PrismicBullet"), 250).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 

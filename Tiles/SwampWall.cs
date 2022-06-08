@@ -26,7 +26,7 @@ namespace SGAmod.Tiles
 	}
 	public class SwampWall : ModWall
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false;
 			AddMapEntry(new Color(150, 250, 150));

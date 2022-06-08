@@ -18,11 +18,11 @@ namespace SGAmod.Items.Armors.Novus
         public override string Texture => "SGAmod/Items/Armors/Novus/NovusHood";
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense=2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense=2;
 		}
         public override bool DrawHead()
         {
@@ -30,16 +30,12 @@ namespace SGAmod.Items.Armors.Novus
         }
         public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
             sgaplayer.UseTimeMul+=0.05f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -54,26 +50,22 @@ namespace SGAmod.Items.Armors.Novus
 		public override string Texture => "SGAmod/Items/Armors/Novus/NovusChestplate";
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense=4;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense=4;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			player.meleeCrit += 5;
-			player.rangedCrit += 5;
-			player.magicCrit += 5;
+			player.GetCritChance(DamageClass.Melee) += 5;
+			player.GetCritChance(DamageClass.Ranged) += 5;
+			player.GetCritChance(DamageClass.Magic) += 5;
 			player.Throwing().thrownCrit += 5;
 		}		
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 15);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 15).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -88,11 +80,11 @@ namespace SGAmod.Items.Armors.Novus
 		public override string Texture => "SGAmod/Items/Armors/Novus/NovusLeggings";
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense=2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense=2;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -102,11 +94,7 @@ namespace SGAmod.Items.Armors.Novus
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 

@@ -19,7 +19,7 @@ namespace SGAmod.Tiles.TechTiles
 		const int maxXSize = 18 * 8;
 		const int maxYSize = 18 * 4;
 		protected int DropItem => ModContent.ItemType<DropperItem>();
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
@@ -56,7 +56,7 @@ namespace SGAmod.Tiles.TechTiles
 
 		public static Point GetRealDropperCorner(Point here, Tile tile)
 		{
-			Point coords = new Point(here.X - ((tile.frameX) % 36) / 18, here.Y - ((tile.frameY) % 36) / 18);
+			Point coords = new Point(here.X - ((tile.TileFrameX) % 36) / 18, here.Y - ((tile.TileFrameY) % 36) / 18);
 			return coords;
 		}
 
@@ -76,7 +76,7 @@ namespace SGAmod.Tiles.TechTiles
 
 			Tile tile = Framing.GetTileSafely(tilePos.X, tilePos.Y);
 
-			if ((tile.frameY / 36) % 2 > 0)
+			if ((tile.TileFrameY / 36) % 2 > 0)
 				return false;
 
 			if (testOnly)
@@ -84,7 +84,7 @@ namespace SGAmod.Tiles.TechTiles
 
 
 			Point coords = GetRealDropperCorner(tilePos, tile);
-			Vector2 offset = tileDirection[tile.frameX / 36].ToVector2();
+			Vector2 offset = tileDirection[tile.TileFrameX / 36].ToVector2();
 
 			Vector2 SpitFrom = ((coords).ToVector2() * 16) + (offset * 16) + (Vector2.One * 16);
 
@@ -118,7 +118,7 @@ namespace SGAmod.Tiles.TechTiles
 				for (int y = 0; y < 2; y += 1)
 				{
 					Tile corner = Framing.GetTileSafely(coords.X + x, coords.Y + y);
-					corner.frameX = (short)((corner.frameX + 36) % maxXSize);
+					corner.TileFrameX = (short)((corner.TileFrameX + 36) % maxXSize);
 				}
 			}
 			if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -138,7 +138,7 @@ namespace SGAmod.Tiles.TechTiles
 				for (int y = 0; y < 2; y += 1)
 				{
 					Tile corner = Framing.GetTileSafely(coords.X + x, coords.Y + y);
-					corner.frameY = (short)((corner.frameY + 36) % maxYSize);
+					corner.TileFrameY = (short)((corner.TileFrameY + 36) % maxYSize);
 				}
 			}
 			if (Main.netMode == NetmodeID.Server)
@@ -159,8 +159,8 @@ namespace SGAmod.Tiles.TechTiles
 				{
 					//SGAmod.Instance.Logger.Warn("Tile here: " + (coords.X + x) + " - " + (coords.Y - y));
 					Tile tilehere = Framing.GetTileSafely(coords.X + x, coords.Y - y);
-					ModTile modtile = TileLoader.GetTile(tilehere.type);
-					if (Chest.FindChestByGuessing(coords.X + x, coords.Y - y) >= 0 || tilehere.type == TileID.Containers || (modtile != null && modtile.chest != ""))
+					ModTile modtile = TileLoader.GetTile(tilehere.TileType);
+					if (Chest.FindChestByGuessing(coords.X + x, coords.Y - y) >= 0 || tilehere.TileType == TileID.Containers || (modtile != null && modtile.chest != ""))
 					{
 						return false;
 					}
@@ -181,7 +181,7 @@ namespace SGAmod.Tiles.TechTiles
 
 			if (item > 0)
 			{
-				if (((tile.frameX) % 36) / 18 == 0 && ((tile.frameY) % 36) / 18 == 0)
+				if (((tile.TileFrameX) % 36) / 18 == 0 && ((tile.TileFrameY) % 36) / 18 == 0)
 					Item.NewItem(coords.X * 16, coords.Y * 16, 32, 32, item);
 			}
 
@@ -192,7 +192,7 @@ namespace SGAmod.Tiles.TechTiles
 		{
 			Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 			Tile tile = Framing.GetTileSafely(i, j);
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
 				Point coords = GetRealDropperCorner(new Point(i, j), tile);
 				if (coords.X == i && coords.Y == j)
@@ -203,8 +203,8 @@ namespace SGAmod.Tiles.TechTiles
 					Rectangle arrowRect = new Rectangle(32, 0, 32, 32);
 					Vector2 offset = zerooroffset + (new Vector2(i, j) * 16);
 
-					Vector2 offsetRotation = tileDirection[tile.frameX / 36].ToVector2();
-					Color onOff = (tile.frameY % 72) == 0 ? Color.Lime : Color.Red;
+					Vector2 offsetRotation = tileDirection[tile.TileFrameX / 36].ToVector2();
+					Color onOff = (tile.TileFrameY % 72) == 0 ? Color.Lime : Color.Red;
 
 					spriteBatch.Draw(inner, offset - Main.screenPosition, machineRect, Lighting.GetColor(i,j,Color.White), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
 					spriteBatch.Draw(inner, offset+ Vector2.One * 16 - Main.screenPosition, arrowRect, onOff, offsetRotation.ToRotation(), Vector2.One*16, Vector2.One, SpriteEffects.None, 0f);

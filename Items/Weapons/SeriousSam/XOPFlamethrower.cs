@@ -20,22 +20,22 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
         public override void SetDefaults()
         {
-            item.damage = 22;
-            item.ranged = true;
-            item.width = 48;
-            item.height = 28;
-            item.useTime = 1;
-            item.useAnimation = 10;
-            item.useStyle = 5;
-            item.noMelee = true;
-            item.knockBack = 0;
-            item.value = 600000;
-			item.crit = 10;
-            item.rare = 7;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<XOPFlames>();
-            item.shootSpeed = 8f;
-            item.useAmmo = AmmoID.Gel;
+            Item.damage = 22;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 48;
+            Item.height = 28;
+            Item.useTime = 1;
+            Item.useAnimation = 10;
+            Item.useStyle = 5;
+            Item.noMelee = true;
+            Item.knockBack = 0;
+            Item.value = 600000;
+			Item.crit = 10;
+            Item.rare = 7;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<XOPFlames>();
+            Item.shootSpeed = 8f;
+            Item.useAmmo = AmmoID.Gel;
         }
 
         public override Vector2? HoldoutOffset()
@@ -52,14 +52,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Flamethrower, 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.FieryShard>(), 10);
-			recipe.AddIngredient(ModContent.ItemType <AdvancedPlating>(), 10);
-			recipe.AddIngredient(ItemID.LihzahrdPowerCell, 1);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-            recipe.SetResult(this);
-      		recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.Flamethrower, 1).AddIngredient(ModContent.ItemType<HavocGear.Items.FieryShard>(), 10).AddIngredient(ModContent.ItemType <AdvancedPlating>(), 10).AddIngredient(ItemID.LihzahrdPowerCell, 1).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
         }
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -94,19 +87,19 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 18;
-			projectile.height = 18;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ranged = true;
-			projectile.timeLeft = 120;
-			projectile.penetrate = -1;
-			aiType = ProjectileID.WoodenArrowFriendly;
-			projectile.scale = 0.5f;
-			projectile.usesIDStaticNPCImmunity = true;
-			projectile.idStaticNPCHitCooldown = 4;
+			Projectile.width = 18;
+			Projectile.height = 18;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.timeLeft = 120;
+			Projectile.penetrate = -1;
+			AIType = ProjectileID.WoodenArrowFriendly;
+			Projectile.scale = 0.5f;
+			Projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 4;
 		}
 
 		public override string Texture
@@ -124,26 +117,26 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		{
 			{
 				//Main.PlaySound(SoundID.Item10, projectile.Center);
-				if (projectile.velocity.X != oldVelocity.X)
+				if (Projectile.velocity.X != oldVelocity.X)
 				{
-					projectile.velocity.X = -oldVelocity.X;
+					Projectile.velocity.X = -oldVelocity.X;
 				}
-				if (projectile.velocity.Y != oldVelocity.Y)
+				if (Projectile.velocity.Y != oldVelocity.Y)
 				{
-					projectile.velocity.Y = -oldVelocity.Y;
+					Projectile.velocity.Y = -oldVelocity.Y;
 				}
-				projectile.velocity /= 2f;
+				Projectile.velocity /= 2f;
 			}
 			return false;
 		}
 
 		public override void AI()
 		{
-			projectile.scale += 0.01f;
-			projectile.width = (int)((float)18f * projectile.scale);
-			projectile.height = (int)((float)18f * projectile.scale);
+			Projectile.scale += 0.01f;
+			Projectile.width = (int)((float)18f * Projectile.scale);
+			Projectile.height = (int)((float)18f * Projectile.scale);
 
-			Tile tile = Main.tile[(int)projectile.Center.X / 16, (int)projectile.Center.Y / 16];
+			Tile tile = Main.tile[(int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16];
 			if (tile != null)
 				if (tile.liquid > 64)
 				{
@@ -151,16 +144,16 @@ namespace SGAmod.Items.Weapons.SeriousSam
 					{
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 						randomcircle *= Main.rand.NextFloat(0f, 2f);
-						int num316 = Dust.NewDust(new Vector2(projectile.position.X - 1, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"), 0, 0, 50, Main.hslToRgb(0.15f, 1f, 1.00f), projectile.scale * 1.5f);
+						int num316 = Dust.NewDust(new Vector2(Projectile.position.X - 1, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type, 0, 0, 50, Main.hslToRgb(0.15f, 1f, 1.00f), Projectile.scale * 1.5f);
 						Main.dust[num316].noGravity = true;
 						Main.dust[num316].velocity = new Vector2(randomcircle.X, randomcircle.Y);
 					}
 
 
-					projectile.Kill();
+					Projectile.Kill();
 				}
 
-			Lighting.AddLight(projectile.Center, Color.Orange.ToVector3() * 0.75f);
+			Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3() * 0.75f);
 
 			
 		}
@@ -179,12 +172,12 @@ namespace SGAmod.Items.Weapons.SeriousSam
 			Texture2D tex = SGAmod.ExtraTextures[94];
 
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-			Color color = Color.Lerp((projectile.GetAlpha(lightColor) * 0.5f), Color.White, 0.5f); //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-			int timing = 5-((int)(((float)projectile.timeLeft / 120f) *6f));
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+			Color color = Color.Lerp((Projectile.GetAlpha(lightColor) * 0.5f), Color.White, 0.5f); //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+			int timing = 5-((int)(((float)Projectile.timeLeft / 120f) *6f));
 			timing *= ((tex.Height) / 5);
-			float alpha = Math.Min(0.5f + (projectile.timeLeft / 120f), 1f);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), color* alpha, projectile.velocity.X * 0.04f, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+			float alpha = Math.Min(0.5f + (Projectile.timeLeft / 120f), 1f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), color* alpha, Projectile.velocity.X * 0.04f, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
@@ -197,7 +190,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 	public class NapalmBurn : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Napalm Burn");
 			Description.SetDefault("Sticky Fiery Death");

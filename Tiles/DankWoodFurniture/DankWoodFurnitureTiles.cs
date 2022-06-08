@@ -10,6 +10,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using SGAmod.Items.Placeable.DankWoodFurniture;
+using Terraria.Audio;
 
 namespace SGAmod.Tiles.DankWoodFurniture
 {
@@ -19,7 +20,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region DankWood Door
     public class DankDoorClosed : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileBlockLight[Type] = true;
@@ -54,7 +55,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             //dustType = mod.DustType("Sparkle");
             disableSmartCursor = true;
             adjTiles = new int[] { TileID.ClosedDoor };
-            openDoorID = mod.TileType("DankDoorOpen");
+            openDoorID = Mod.Find<ModTile>("DankDoorOpen").Type;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)
@@ -68,7 +69,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 16, 48, mod.ItemType("DankDoorItem"));
+            Item.NewItem(i * 16, j * 16, 16, 48, Mod.Find<ModItem>("DankDoorItem").Type);
         }
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
@@ -139,14 +140,14 @@ namespace SGAmod.Tiles.DankWoodFurniture
             //dustType = mod.DustType("Sparkle");
             disableSmartCursor = true;
             adjTiles = new int[] { TileID.OpenDoor };
-            closeDoorID = mod.TileType("DankDoorClosed");
+            closeDoorID = Mod.Find<ModTile>("DankDoorClosed").Type;
         }
     }
     #endregion
     #region DankWood Block
     public class DankWoodBlock : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
@@ -165,7 +166,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region DankWood Platform
     public class DankWoodPlatformTile : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -206,7 +207,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Workbench
     public class DankWoodWorkbench : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolidTop[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -238,7 +239,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Chair
     public class DankWoodChair : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
@@ -275,7 +276,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Toilet
     public class DankWoodToilet : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
@@ -312,7 +313,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Table
     public class DankWoodTable : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolidTop[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -344,7 +345,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Dresser
     public class DankWoodDresser : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolidTop[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -378,27 +379,27 @@ namespace SGAmod.Tiles.DankWoodFurniture
             return true;
         }
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
-            if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameY == 0)
+            if (Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY == 0)
             {
                 Main.CancelClothesWindow(true);
                 Main.mouseRightRelease = false;
-                int left = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
+                int left = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameX / 18);
                 left %= 3;
                 left = Player.tileTargetX - left;
-                int top = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                int top = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY / 18);
                 if (player.sign > -1)
                 {
-                    Main.PlaySound(SoundID.MenuClose);
+                    SoundEngine.PlaySound(SoundID.MenuClose);
                     player.sign = -1;
                     Main.editSign = false;
                     Main.npcChatText = string.Empty;
                 }
                 if (Main.editChest)
                 {
-                    Main.PlaySound(SoundID.MenuTick);
+                    SoundEngine.PlaySound(SoundID.MenuTick);
                     Main.editChest = false;
                     Main.npcChatText = string.Empty;
                 }
@@ -413,7 +414,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
                     {
                         player.chest = -1;
                         Recipe.FindRecipes();
-                        Main.PlaySound(SoundID.MenuClose);
+                        SoundEngine.PlaySound(SoundID.MenuClose);
                     }
                     else
                     {
@@ -432,14 +433,14 @@ namespace SGAmod.Tiles.DankWoodFurniture
                         {
                             player.chest = -1;
                             Recipe.FindRecipes();
-                            Main.PlaySound(SoundID.MenuClose);
+                            SoundEngine.PlaySound(SoundID.MenuClose);
                         }
                         else if (num213 != player.chest && player.chest == -1)
                         {
                             player.chest = num213;
                             Main.playerInventory = true;
                             Main.recBigList = false;
-                            Main.PlaySound(SoundID.MenuOpen);
+                            SoundEngine.PlaySound(SoundID.MenuOpen);
                             player.chestX = left;
                             player.chestY = top;
                         }
@@ -448,7 +449,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
                             player.chest = num213;
                             Main.playerInventory = true;
                             Main.recBigList = false;
-                            Main.PlaySound(SoundID.MenuTick);
+                            SoundEngine.PlaySound(SoundID.MenuTick);
                             player.chestX = left;
                             player.chestY = top;
                         }
@@ -474,8 +475,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
             int left = Player.tileTargetX;
             int top = Player.tileTargetY;
-            left -= (int)(tile.frameX % 54 / 18);
-            if (tile.frameY % 36 != 0)
+            left -= (int)(tile.TileFrameX % 54 / 18);
+            if (tile.TileFrameY % 36 != 0)
             {
                 top--;
             }
@@ -516,8 +517,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
             int left = Player.tileTargetX;
             int top = Player.tileTargetY;
-            left -= (int)(tile.frameX % 54 / 18);
-            if (tile.frameY % 36 != 0)
+            left -= (int)(tile.TileFrameX % 54 / 18);
+            if (tile.TileFrameY % 36 != 0)
             {
                 top--;
             }
@@ -545,7 +546,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             }
             player.noThrow = 2;
             player.showItemIcon = true;
-            if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameY > 0)
+            if (Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY > 0)
             {
                 player.showItemIcon2 = ItemID.FamiliarShirt;
             }
@@ -566,7 +567,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Bed
     public class DankWoodBed : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -597,14 +598,14 @@ namespace SGAmod.Tiles.DankWoodFurniture
             Item.NewItem(i * 16, j * 16, 64, 32, ModContent.ItemType<Items.Placeable.DankWoodFurniture.DankWoodBed>());
         }
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
-            int spawnX = i - tile.frameX / 18;
+            int spawnX = i - tile.TileFrameX / 18;
             int spawnY = j + 2;
-            spawnX += tile.frameX >= 72 ? 5 : 2;
-            if (tile.frameY % 38 != 0)
+            spawnX += tile.TileFrameX >= 72 ? 5 : 2;
+            if (tile.TileFrameY % 38 != 0)
             {
                 spawnY--;
             }
@@ -634,7 +635,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Sofa
     public class DankWoodSofa : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
@@ -664,7 +665,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Lantern
     internal class DankWoodLantern : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             // Main.tileFlame[Type] = true; This breaks it.
             Main.tileLighted[Type] = true;
@@ -690,10 +691,10 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void HitWire(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int topY = j - tile.frameY / 18 % 3;
-            short frameAdjustment = (short)(tile.frameX > 0 ? -18 : 18);
-            Main.tile[i, topY].frameX += frameAdjustment;
-            Main.tile[i, topY + 1].frameX += frameAdjustment;
+            int topY = j - tile.TileFrameY / 18 % 3;
+            short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
+            Main.tile[i, topY].TileFrameX += frameAdjustment;
+            Main.tile[i, topY + 1].TileFrameX += frameAdjustment;
             Wiring.SkipWire(i, topY);
             Wiring.SkipWire(i, topY + 1);
             NetMessage.SendTileSquare(-1, i, topY + 1, 3, TileChangeType.None);
@@ -710,7 +711,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 0)
+            if (tile.TileFrameX == 0)
             {
                 // We can support different light colors for different styles here: switch (tile.frameY / 54)
                 r = 1f;     //1f more moody
@@ -724,8 +725,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
             {
                 Tile tile = Main.tile[i, j];
-                short frameX = tile.frameX;
-                short frameY = tile.frameY;
+                short frameX = tile.TileFrameX;
+                short frameY = tile.TileFrameY;
                 if (Main.rand.NextBool(40) && frameX == 0)
                 {
                     int style = frameY / 54;
@@ -771,7 +772,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             int offsetY = 0;
             int height = 16;
             TileLoader.SetDrawPositions(i, j, ref width, ref offsetY, ref height);
-            var flameTexture = mod.GetTexture("Tiles/DankWoodFurniture/DankWoodLantern_Flame"); // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
+            var flameTexture = Mod.Assets.Request<Texture2D>("Tiles/DankWoodFurniture/DankWoodLantern_Flame").Value; // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
 
             ulong num190 = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
             // We can support different flames for different styles here: int style = Main.tile[j, i].frameY / 54;
@@ -779,7 +780,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             {
                 float shakeX = Utils.RandomInt(ref num190, -10, 11) * 0.15f;
                 float shakeY = Utils.RandomInt(ref num190, -10, 1) * 0.35f;
-                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.frameX, tile.frameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
+                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
             }
         }
     }
@@ -787,7 +788,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Lamp
     internal class DankWoodLamp : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             // Main.tileFlame[Type] = true; This breaks it.
             Main.tileLighted[Type] = true;
@@ -813,11 +814,11 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void HitWire(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int topY = j - tile.frameY / 18 % 3;
-            short frameAdjustment = (short)(tile.frameX > 0 ? -18 : 18);
-            Main.tile[i, topY].frameX += frameAdjustment;
-            Main.tile[i, topY + 1].frameX += frameAdjustment;
-            Main.tile[i, topY + 2].frameX += frameAdjustment;
+            int topY = j - tile.TileFrameY / 18 % 3;
+            short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
+            Main.tile[i, topY].TileFrameX += frameAdjustment;
+            Main.tile[i, topY + 1].TileFrameX += frameAdjustment;
+            Main.tile[i, topY + 2].TileFrameX += frameAdjustment;
             Wiring.SkipWire(i, topY);
             Wiring.SkipWire(i, topY + 1);
             Wiring.SkipWire(i, topY + 2);
@@ -835,7 +836,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 0)
+            if (tile.TileFrameX == 0)
             {
                 // We can support different light colors for different styles here: switch (tile.frameY / 54)
                 r = 1f;     //1f more moody
@@ -849,8 +850,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
             {
                 Tile tile = Main.tile[i, j];
-                short frameX = tile.frameX;
-                short frameY = tile.frameY;
+                short frameX = tile.TileFrameX;
+                short frameY = tile.TileFrameY;
                 if (Main.rand.NextBool(40) && frameX == 0)
                 {
                     int style = frameY / 54;
@@ -896,7 +897,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             int offsetY = 0;
             int height = 16;
             TileLoader.SetDrawPositions(i, j, ref width, ref offsetY, ref height);
-            var flameTexture = mod.GetTexture("Tiles/DankWoodFurniture/DankWoodLamp_Flame"); // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
+            var flameTexture = Mod.Assets.Request<Texture2D>("Tiles/DankWoodFurniture/DankWoodLamp_Flame").Value; // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
 
             ulong num190 = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
             // We can support different flames for different styles here: int style = Main.tile[j, i].frameY / 54;
@@ -904,7 +905,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             {
                 float shakeX = Utils.RandomInt(ref num190, -10, 11) * 0.15f;
                 float shakeY = Utils.RandomInt(ref num190, -10, 1) * 0.35f;
-                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.frameX, tile.frameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
+                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
             }
         }
     }
@@ -912,7 +913,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Bookshelf
     public class DankWoodBookcase : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolidTop[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -944,7 +945,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Torch
     public class DankWoodTorch : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -985,7 +986,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX < 66)
+            if (tile.TileFrameX < 66)
             {
                 r = 1f;     //1f more moody
                 g = 0.75f;  //0.47f
@@ -1010,8 +1011,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
         {
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
             Color color = new Color(255, 119, 0, 0);
-            int frameX = Main.tile[i, j].frameX;
-            int frameY = Main.tile[i, j].frameY;
+            int frameX = Main.tile[i, j].TileFrameX;
+            int frameY = Main.tile[i, j].TileFrameY;
             int width = 20;
             int offsetY = 0;
             int height = 20;
@@ -1032,7 +1033,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             {
                 float x = (float)Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float y = (float)Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
-                Main.spriteBatch.Draw(mod.GetTexture("Tiles/DankWoodFurniture/DankWoodTorch_Flame"), new Vector2((float)(i * 16 - (int)Main.screenPosition.X) - (width - 16f) / 2f + x, (float)(j * 16 - (int)Main.screenPosition.Y + offsetY) + y) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Mod.Assets.Request<Texture2D>("Tiles/DankWoodFurniture/DankWoodTorch_Flame").Value, new Vector2((float)(i * 16 - (int)Main.screenPosition.X) - (width - 16f) / 2f + x, (float)(j * 16 - (int)Main.screenPosition.Y + offsetY) + y) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default, 1f, SpriteEffects.None, 0f);
             }
         }
     }
@@ -1040,7 +1041,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Clock
     public class DankWoodClock : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
@@ -1066,7 +1067,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         {
             return true;
         }
-        public override bool NewRightClick(int x, int y)
+        public override bool RightClick(int x, int y)
         {
             string text = "AM";
             //Get current weird time
@@ -1139,7 +1140,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Piano
     public class DankWoodPiano : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolidTop[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -1171,7 +1172,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Sink
     public class DankWoodSink : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolidTop[Type] = true;
             Main.tileFrameImportant[Type] = true;
@@ -1203,7 +1204,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Dank Wood Bathtub
     public class DankWoodBathtub : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -1232,7 +1233,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Novite Candle
     internal class NoviteCandle : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             // Main.tileFlame[Type] = true; This breaks it.
             Main.tileLighted[Type] = true;
@@ -1258,7 +1259,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         {
             Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<Items.Placeable.SGAmod.NoviteCandle>());
         }*/
-        public override bool NewRightClick(int i, int j) //Candle gets destroyed when right clicked.
+        public override bool RightClick(int i, int j) //Candle gets destroyed when right clicked.
         {
             //Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<Items.Placeable.SGAmod.NoviteCandle>());
             WorldGen.KillTile(i, j);
@@ -1268,9 +1269,9 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void HitWire(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int topY = j - tile.frameY / 18 % 3;
-            short frameAdjustment = (short)(tile.frameX > 0 ? -18 : 18);
-            Main.tile[i, topY].frameX += frameAdjustment;
+            int topY = j - tile.TileFrameY / 18 % 3;
+            short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
+            Main.tile[i, topY].TileFrameX += frameAdjustment;
             Wiring.SkipWire(i, topY);
             NetMessage.SendTileSquare(-1, i, topY + 1, 3, TileChangeType.None);
         }
@@ -1293,7 +1294,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 0)
+            if (tile.TileFrameX == 0)
             {
                 // We can support different light colors for different styles here: switch (tile.frameY / 54)
                 r = 1f;     //1f more moody
@@ -1307,8 +1308,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
             {
                 Tile tile = Main.tile[i, j];
-                short frameX = tile.frameX;
-                short frameY = tile.frameY;
+                short frameX = tile.TileFrameX;
+                short frameY = tile.TileFrameY;
                 if (Main.rand.NextBool(40) && frameX == 0)
                 {
                     int style = frameY / 54;
@@ -1354,7 +1355,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             int offsetY = -4;
             int height = 20;
             TileLoader.SetDrawPositions(i, j, ref width, ref offsetY, ref height);
-            var flameTexture = mod.GetTexture("Tiles/DankWoodFurniture/NoviteCandle_Flame"); // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
+            var flameTexture = Mod.Assets.Request<Texture2D>("Tiles/DankWoodFurniture/NoviteCandle_Flame").Value; // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
 
             ulong num190 = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
             // We can support different flames for different styles here: int style = Main.tile[j, i].frameY / 54;
@@ -1362,7 +1363,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             {
                 float shakeX = Utils.RandomInt(ref num190, -10, 11) * 0.15f;
                 float shakeY = Utils.RandomInt(ref num190, -10, 1) * 0.35f;
-                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.frameX, tile.frameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
+                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
             }
         }
     }
@@ -1370,7 +1371,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Novite Chandelier
     internal class NoviteChandelier : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             // Main.tileFlame[Type] = true; This breaks it.
             Main.tileLighted[Type] = true;
@@ -1401,18 +1402,18 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void HitWire(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int x = i - Main.tile[i, j].frameX / 18 % 3;
-            int y = j - Main.tile[i, j].frameY / 18 % 3;
-            short frameAdjustment = (short)(tile.frameX >= 54 ? -54 : 54);
-            Main.tile[x, y].frameX += frameAdjustment;
-            Main.tile[x, y + 1].frameX += frameAdjustment;
-            Main.tile[x, y + 2].frameX += frameAdjustment;
-            Main.tile[x + 1, y].frameX += frameAdjustment;
-            Main.tile[x + 1, y + 1].frameX += frameAdjustment;
-            Main.tile[x + 1, y + 2].frameX += frameAdjustment;
-            Main.tile[x + 2, y].frameX += frameAdjustment;
-            Main.tile[x + 2, y + 1].frameX += frameAdjustment;
-            Main.tile[x + 2, y + 2].frameX += frameAdjustment;
+            int x = i - Main.tile[i, j].TileFrameX / 18 % 3;
+            int y = j - Main.tile[i, j].TileFrameY / 18 % 3;
+            short frameAdjustment = (short)(tile.TileFrameX >= 54 ? -54 : 54);
+            Main.tile[x, y].TileFrameX += frameAdjustment;
+            Main.tile[x, y + 1].TileFrameX += frameAdjustment;
+            Main.tile[x, y + 2].TileFrameX += frameAdjustment;
+            Main.tile[x + 1, y].TileFrameX += frameAdjustment;
+            Main.tile[x + 1, y + 1].TileFrameX += frameAdjustment;
+            Main.tile[x + 1, y + 2].TileFrameX += frameAdjustment;
+            Main.tile[x + 2, y].TileFrameX += frameAdjustment;
+            Main.tile[x + 2, y + 1].TileFrameX += frameAdjustment;
+            Main.tile[x + 2, y + 2].TileFrameX += frameAdjustment;
             Wiring.SkipWire(x, y);
             Wiring.SkipWire(x, y + 1);
             Wiring.SkipWire(x, y + 2);
@@ -1436,7 +1437,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 0)
+            if (tile.TileFrameX == 0)
             {
                 // We can support different light colors for different styles here: switch (tile.frameY / 54)
                 r = 1f;     //1f more moody
@@ -1450,8 +1451,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
             {
                 Tile tile = Main.tile[i, j];
-                short frameX = tile.frameX;
-                short frameY = tile.frameY;
+                short frameX = tile.TileFrameX;
+                short frameY = tile.TileFrameY;
                 if (Main.rand.NextBool(40) && frameX == 0)
                 {
                     int style = frameY / 54;
@@ -1493,7 +1494,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             int offsetY = 0;
             int height = 48;
             TileLoader.SetDrawPositions(i, j, ref width, ref offsetY, ref height);
-            var flameTexture = mod.GetTexture("Tiles/DankWoodFurniture/NoviteChandelier_Flame"); // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
+            var flameTexture = Mod.Assets.Request<Texture2D>("Tiles/DankWoodFurniture/NoviteChandelier_Flame").Value; // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
 
             ulong num190 = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
             // We can support different flames for different styles here: int style = Main.tile[j, i].frameY / 54;
@@ -1501,7 +1502,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             {
                 float shakeX = Utils.RandomInt(ref num190, -10, 11) * 0.15f;
                 float shakeY = Utils.RandomInt(ref num190, -10, 1) * 0.35f;
-                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.frameX, tile.frameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
+                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
             }
         }
     }
@@ -1509,7 +1510,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
     #region Novite Candelabra
     internal class NoviteCandelabra : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLighted[Type] = true;
@@ -1535,13 +1536,13 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void HitWire(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            int x = i - Main.tile[i, j].frameX / 18 % 2;
-            int y = j - Main.tile[i, j].frameY / 18 % 2;
-            short frameAdjustment = (short)(tile.frameX >= 36 ? -36 : 36);
-            Main.tile[x, y].frameX += frameAdjustment;
-            Main.tile[x, y + 1].frameX += frameAdjustment;
-            Main.tile[x + 1, y].frameX += frameAdjustment;
-            Main.tile[x + 1, y + 1].frameX += frameAdjustment;
+            int x = i - Main.tile[i, j].TileFrameX / 18 % 2;
+            int y = j - Main.tile[i, j].TileFrameY / 18 % 2;
+            short frameAdjustment = (short)(tile.TileFrameX >= 36 ? -36 : 36);
+            Main.tile[x, y].TileFrameX += frameAdjustment;
+            Main.tile[x, y + 1].TileFrameX += frameAdjustment;
+            Main.tile[x + 1, y].TileFrameX += frameAdjustment;
+            Main.tile[x + 1, y + 1].TileFrameX += frameAdjustment;
             Wiring.SkipWire(x, y);
             Wiring.SkipWire(x, y + 1);
             Wiring.SkipWire(x + 1, y);
@@ -1560,7 +1561,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.frameX == 0)
+            if (tile.TileFrameX == 0)
             {
                 // We can support different light colors for different styles here: switch (tile.frameY / 54)
                 r = 1f;     //1f more moody
@@ -1574,8 +1575,8 @@ namespace SGAmod.Tiles.DankWoodFurniture
             if (!Main.gamePaused && Main.instance.IsActive && (!Lighting.UpdateEveryFrame || Main.rand.NextBool(4)))
             {
                 Tile tile = Main.tile[i, j];
-                short frameX = tile.frameX;
-                short frameY = tile.frameY;
+                short frameX = tile.TileFrameX;
+                short frameY = tile.TileFrameY;
                 if (Main.rand.NextBool(40) && frameX == 0)
                 {
                     int style = frameY / 54;
@@ -1617,7 +1618,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             int offsetY = 0;
             int height = 48;
             TileLoader.SetDrawPositions(i, j, ref width, ref offsetY, ref height);
-            var flameTexture = mod.GetTexture("Tiles/DankWoodFurniture/NoviteCandelabra_Flame"); // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
+            var flameTexture = Mod.Assets.Request<Texture2D>("Tiles/DankWoodFurniture/NoviteCandelabra_Flame").Value; // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
 
             ulong num190 = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
             // We can support different flames for different styles here: int style = Main.tile[j, i].frameY / 54;
@@ -1625,7 +1626,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
             {
                 float shakeX = Utils.RandomInt(ref num190, -10, 11) * 0.15f;
                 float shakeY = Utils.RandomInt(ref num190, -10, 1) * 0.35f;
-                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.frameX, tile.frameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
+                Main.spriteBatch.Draw(flameTexture, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + shakeX, j * 16 - (int)Main.screenPosition.Y + offsetY + shakeY) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height), new Color(100, 100, 100, 0), 0f, default, 1f, effects, 0f);
             }
         }
     }

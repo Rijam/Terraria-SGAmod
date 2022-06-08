@@ -22,7 +22,7 @@ using SGAmod.NPCs.Murk;
 using SGAmod.NPCs.Sharkvern;
 using SGAmod.NPCs.SpiderQueen;
 using SGAmod.NPCs.Hellion;
-using CalamityMod;
+//using CalamityMod;
 
 using Terraria.Utilities;
 using SGAmod.SkillTree;
@@ -100,19 +100,19 @@ namespace SGAmod
 			int modnpc = 0;
 			if (npc != null)
 			{
-				if (npc.modNPC != null)
+				if (npc.ModNPC != null)
 				{
-					string thisName = npc.modNPC.GetType().Name;
+					string thisName = npc.ModNPC.GetType().Name;
 
-					if (npc.modNPC.GetType() == typeof(SPinkyTrue))
+					if (npc.ModNPC.GetType() == typeof(SPinkyTrue))
 						thisName = typeof(SPinky).Name;
 
 					foundpre = ExpertisePointsFromBossesModded.FindIndex(x => (x == thisName));
 					//Main.NewText(foundpre);
-					//Main.NewText(npc.modNPC.GetType().Name);
+					//Main.NewText(npc.ModNPC.GetType().Name);
 					if (foundpre != null && foundpre > -1)
 					{
-						bool condition = (npc.modNPC.GetType() != typeof(SPinky) || !Main.expertMode);
+						bool condition = (npc.ModNPC.GetType() != typeof(SPinky) || !Main.expertMode);
 						if (condition)
 						{
 							return foundpre;
@@ -203,7 +203,7 @@ namespace SGAmod
 
 				if (findagain == null || findagain < 0)
 				{
-					if (Main.myPlayer == player.whoAmI)
+					if (Main.myPlayer == Player.whoAmI)
 						Main.NewText("You have gained Expertise! (you now have " + ExpertiseCollected + ")");
 
 
@@ -219,7 +219,7 @@ namespace SGAmod
 			ExpertiseCollected += ammount;
 			ExpertiseCollectedTotal += ammount;
 
-			CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), Color.LimeGreen, "+" + ammount + " Expertise", false, false);
+			CombatText.NewText(new Rectangle((int)Player.position.X, (int)Player.position.Y, Player.width, Player.height), Color.LimeGreen, "+" + ammount + " Expertise", false, false);
 
 		}
 

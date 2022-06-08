@@ -16,16 +16,16 @@ namespace SGAmod.Items.Armors
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 0;
-			item.rare = 2;
-			item.vanity = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 0;
+			Item.rare = 2;
+			Item.vanity = true;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			string addtotip = tooltips[0].text;
+			string addtotip = tooltips[0].Text;
 			string thetip = "";
 			for (int loc = 0; loc < addtotip.Length; loc += 1)
 			{
@@ -37,7 +37,7 @@ namespace SGAmod.Items.Armors
 
 				thetip += character;
 			}
-			tooltips[0].text = thetip;
+			tooltips[0].Text = thetip;
 
 		}
 		public override void UpdateEquip(Player player)
@@ -48,7 +48,7 @@ namespace SGAmod.Items.Armors
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			item.rare = Main.rand.Next(0, 12);
+			Item.rare = Main.rand.Next(0, 12);
 		}
 		public override string Texture
 		{
@@ -69,15 +69,15 @@ namespace SGAmod.Items.Armors
         }
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense = 2;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 		}
 	}
 }

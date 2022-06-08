@@ -17,6 +17,7 @@ using SGAmod.Buffs;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
 using SGAmod.Items.Weapons;
+using Terraria.Audio;
 
 namespace SGAmod
 {
@@ -44,7 +45,7 @@ namespace SGAmod
 
 			drawonce = false;
 
-			Texture2D texture = mod.GetTexture("NPCs/TPD");
+			Texture2D texture = Mod.Assets.Request<Texture2D>("NPCs/TPD").Value;
 
 			//Main.spriteBatch.Draw(texture, npc.Center-Main.screenPosition, null, Color.White, npc.spriteDirection + (npc.ai[0] * 0.4f), new Vector2(16, 16), new Vector2(Main.rand.Next(5, 20) / 4f, Main.rand.Next(5, 20) / 4f), SpriteEffects.None, 0f);
 
@@ -78,8 +79,8 @@ namespace SGAmod
 				float i = Main.rand.NextFloat(90f, 260f);
 
 				int thisoned = Projectile.NewProjectile(npc.Center + (anglez * i), anglez * -16f, shootype, damage, 0f, Main.myPlayer);
-				Main.projectile[thisoned].ranged = false;
-				Main.projectile[thisoned].thrown = false;
+				// Main.projectile[thisoned].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+				// Main.projectile[thisoned].thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
 
 				for (float gg = 2f; gg > 0.25f; gg -= 0.6f)
@@ -130,17 +131,17 @@ namespace SGAmod
 
 		public void DropRelic(NPC npc)
 		{
-			if (Main.expertMode && NoHit && npc.modNPC != null)
+			if (Main.expertMode && NoHit && npc.ModNPC != null)
 			{
-				if (npc.modNPC is ISGABoss iboss)
+				if (npc.ModNPC is ISGABoss iboss)
 				{
 
 					if (npc.GetType() != typeof(HellionCore))
 					{
 						iboss.NoHitDrops();
-						Items.Placeable.Relics.SGAPlacableRelic.AttemptDropRelic(npc.modNPC);
+						Items.Placeable.Relics.SGAPlacableRelic.AttemptDropRelic(npc.ModNPC);
 						if (iboss.MasterPet() != null)
-							Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType(iboss.MasterPet()));
+							Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>(iboss.MasterPet()).Type);
 					}
 				}
 			}
@@ -269,10 +270,10 @@ namespace SGAmod
 								Vector2 anglez = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000));
 								anglez.Normalize();
 
-								Main.PlaySound(SoundID.Item, (int)((npc.Center.X) + (anglez.X * i)), (int)((npc.Center.Y) + (anglez.Y * i)), 25, 0.5f, Main.rand.NextFloat(-0.9f, -0.25f));
+								SoundEngine.PlaySound(SoundID.Item, (int)((npc.Center.X) + (anglez.X * i)), (int)((npc.Center.Y) + (anglez.Y * i)), 25, 0.5f, Main.rand.NextFloat(-0.9f, -0.25f));
 
 								int thisoned = Projectile.NewProjectile(npc.Center + (anglez * i), anglez * -16f, shootype, (int)(damage * 1.50f * moddedplayer.apocalypticalStrength), 0f, Main.myPlayer);
-								Main.projectile[thisoned].ranged = false;
+								// Main.projectile[thisoned].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
 
 								for (float gg = 4f; gg > 0.25f; gg -= 0.15f)
@@ -293,7 +294,7 @@ namespace SGAmod
 
 						IrradiatedExplosion(npc, (int)(damage * 1f * moddedplayer.apocalypticalStrength));
 
-						SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_DarkMageHealImpact, (int)npc.Center.X, (int)npc.Center.Y);
+						SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_DarkMageHealImpact, (int)npc.Center.X, (int)npc.Center.Y);
 						if (sound != null)
 							sound.Pitch += 0.525f;
 
@@ -313,13 +314,13 @@ namespace SGAmod
 
 					if (moddedplayer.CalamityRune)
 					{
-						Main.PlaySound(SoundID.Item45, npc.Center);
-						int boom = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("BoulderBlast"), (int)((damage * 2) * moddedplayer.apocalypticalStrength), knockback * 2f, player.whoAmI, 0f, 0f);
+						SoundEngine.PlaySound(SoundID.Item45, npc.Center);
+						int boom = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("BoulderBlast").Type, (int)((damage * 2) * moddedplayer.apocalypticalStrength), knockback * 2f, player.whoAmI, 0f, 0f);
 						Main.projectile[boom].usesLocalNPCImmunity = true;
 						Main.projectile[boom].localNPCHitCooldown = -1;
 						Main.projectile[boom].netUpdate = true;
 						IdgProjectile.AddOnHitBuff(boom, BuffID.Daybreak, (int)(60f * moddedplayer.apocalypticalStrength));
-						IdgProjectile.AddOnHitBuff(boom, mod.BuffType("EverlastingSuffering"), (int)(400f * moddedplayer.apocalypticalStrength));
+						IdgProjectile.AddOnHitBuff(boom, Mod.Find<ModBuff>("EverlastingSuffering").Type, (int)(400f * moddedplayer.apocalypticalStrength));
 					}
 
 					damage = (int)(damage * (3f + (moddedplayer.apocalypticalStrength - 1f)));
@@ -335,7 +336,7 @@ namespace SGAmod
 						else
 							location = new Point((int)npc.Center.X, (int)npc.Center.Y);
 
-						SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_WyvernScream, (int)location.X, (int)location.Y);
+						SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_WyvernScream, (int)location.X, (int)location.Y);
 						if (sound != null)
 							sound.Pitch = 0.925f;
 
@@ -363,7 +364,7 @@ namespace SGAmod
 							SGAmod.AddScreenShake(24f, 1200, player.Center);
 						}
 						if (effectSound)
-							Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/crit_hit").WithVolume(.7f).WithPitchVariance(.25f), npc.Center);
+							SoundEngine.PlaySound(Mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/crit_hit").WithVolume(.7f).WithPitchVariance(.25f), npc.Center);
 					}
 
 
@@ -384,7 +385,7 @@ namespace SGAmod
 				Main.projectile[proj].ai[1] = 1;
 				Main.projectile[proj].timeLeft = 2;
 				Main.projectile[proj].netUpdate = true;
-				SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_DarkMageSummonSkeleton, (int)npc.Center.X, (int)npc.Center.Y);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_DarkMageSummonSkeleton, (int)npc.Center.X, (int)npc.Center.Y);
 				if (sound != null)
 					sound.Pitch -= 0.525f;
 
@@ -564,7 +565,7 @@ namespace SGAmod
 
 			if (moddedplayer.Blazewyrmset)
 			{
-				if (npc.HasBuff(mod.BuffType("ThermalBlaze")) && ((item != null && item.melee) || (projectile != null && projectile.melee)))
+				if (npc.HasBuff(Mod.Find<ModBuff>("ThermalBlaze").Type) && ((item != null && item.melee) || (projectile != null && projectile.melee)))
 				{
 					damage += (int)(sourcedamage * 0.20f);
 				}
@@ -606,7 +607,7 @@ namespace SGAmod
 				{
 					sourcedamage = (int)(sourcedamage * 3f);
 					crit = true;
-					Main.PlaySound(SoundID.Tink, (int)npc.Center.X, (int)npc.Center.Y, 0, 1, 0.25f);
+					SoundEngine.PlaySound(SoundID.Tink, (int)npc.Center.X, (int)npc.Center.Y, 0, 1, 0.25f);
 				}
 				else
 				{
@@ -648,7 +649,7 @@ namespace SGAmod
 
 			if (item != null && npc.life - damage < 1 && npc.lifeMax > 50)
 			{
-				if (item.type == mod.ItemType("Powerjack"))
+				if (item.type == Mod.Find<ModItem>("Powerjack").Type)
 				{
 					player.HealEffect(25, false);
 					player.netLife = true;
@@ -689,11 +690,11 @@ namespace SGAmod
 					if (moddedplayer.JaggedWoodenSpike)
 					{
 						if (Main.rand.Next(0, 100) < 15)
-							npc.AddBuff(mod.BuffType("MassiveBleeding"), 60 * 5);
+							npc.AddBuff(Mod.Find<ModBuff>("MassiveBleeding").Type, 60 * 5);
 					}
 				}
 
-				if (moddedplayer.Mangroveset && player.ownedProjectileCounts[mod.ProjectileType("MangroveOrb")] < 4)
+				if (moddedplayer.Mangroveset && player.ownedProjectileCounts[Mod.Find<ModProjectile>("MangroveOrb").Type] < 4)
 				{
 					if (crit && projectile.thrown)
 					{
@@ -705,7 +706,7 @@ namespace SGAmod
 							newDamage = 50 + (int)Math.Pow((damage - 50), 0.75f);
                         }
 
-						List<Projectile> itz = Idglib.Shattershots(player.Center, player.Center + (player.Center - npc.Center), new Vector2(0, 0), mod.ProjectileType("MangroveOrb"), newDamage, 8f, 120, 2, false, 0, false, 400);
+						List<Projectile> itz = Idglib.Shattershots(player.Center, player.Center + (player.Center - npc.Center), new Vector2(0, 0), Mod.Find<ModProjectile>("MangroveOrb").Type, newDamage, 8f, 120, 2, false, 0, false, 400);
 						//itz[0].damage = 30;
 						itz[0].owner = player.whoAmI; itz[0].friendly = true; itz[0].hostile = false;
 						itz[1].owner = player.whoAmI; itz[1].friendly = true; itz[1].hostile = false;
@@ -760,7 +761,7 @@ namespace SGAmod
 			{
 				if (isproj && projectile.magic == true)
 				{
-					int[] buffids = { BuffID.OnFire, mod.BuffType("ThermalBlaze"), BuffID.Daybreak };
+					int[] buffids = { BuffID.OnFire, Mod.Find<ModBuff>("ThermalBlaze").Type, BuffID.Daybreak };
 					if (projectile != null && Main.rand.Next(0, 100) < 5)
 						npc.AddBuff(buffids[moddedplayer.Redmanastar - 1], 4 * 60);
 					if (projectile != null && Main.rand.Next(0, 100) < 1)
@@ -771,17 +772,17 @@ namespace SGAmod
 			if (moddedplayer.SerratedTooth == true)
 			{
 				if (damage > npc.defense * 5)
-					npc.AddBuff(mod.BuffType("MassiveBleeding"), Math.Min((int)(1f + ((float)damage - (float)npc.defense * 5f) * 0.02f) * 60, 60 * 5));
+					npc.AddBuff(Mod.Find<ModBuff>("MassiveBleeding").Type, Math.Min((int)(1f + ((float)damage - (float)npc.defense * 5f) * 0.02f) * 60, 60 * 5));
 			}
 
 			if (moddedplayer.Blazewyrmset)
 			{
-				if (crit && ((item != null && item.melee && item.pick + item.axe + item.hammer < 1)) || (projectile != null && projectile.melee && (player.heldProj == projectile.whoAmI || (projectile.modProjectile != null && (projectile.modProjectile is IShieldBashProjectile || projectile.modProjectile is ITrueMeleeProjectile)))))
+				if (crit && ((item != null && item.melee && item.pick + item.axe + item.hammer < 1)) || (projectile != null && projectile.melee && (player.heldProj == projectile.whoAmI || (projectile.ModProjectile != null && (projectile.ModProjectile is IShieldBashProjectile || projectile.ModProjectile is ITrueMeleeProjectile)))))
 				{
 					if (player.SGAPly().AddCooldownStack(12 * 60))
 					{
-						Main.PlaySound(SoundID.Item45, npc.Center);
-						Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("BoulderBlast"), damage * 3, knockback * 3f, player.whoAmI, 0f, 0f);
+						SoundEngine.PlaySound(SoundID.Item45, npc.Center);
+						Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("BoulderBlast").Type, damage * 3, knockback * 3f, player.whoAmI, 0f, 0f);
 					}
 
 				}
@@ -789,7 +790,7 @@ namespace SGAmod
 
 			if (moddedplayer.alkalescentHeart)
 			{
-				int[] maxcrit = { player.meleeCrit, player.rangedCrit, player.magicCrit, player.Throwing().thrownCrit };
+				int[] maxcrit = { player.GetCritChance(DamageClass.Melee), player.GetCritChance(DamageClass.Ranged), player.GetCritChance(DamageClass.Magic), player.Throwing().thrownCrit };
 				Array.Sort(maxcrit);
 				Array.Reverse(maxcrit);
 				if (crit || (projectile!=null && projectile.minion && Main.rand.Next(0,100)< maxcrit[0]))
@@ -824,12 +825,12 @@ namespace SGAmod
 			if (DosedInGas && hasabuff)
 			{
 				Combusted = 60 * 6;
-				int buff = npc.FindBuffIndex(mod.BuffType("DosedInGas"));
+				int buff = npc.FindBuffIndex(Mod.Find<ModBuff>("DosedInGas").Type);
 
 				if ((isproj && Main.player[projectile.owner].GetModPlayer<SGAPlayer>().MVMBoost) || (item != null && player.GetModPlayer<SGAPlayer>().MVMBoost))
 				{
 					int prog = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Vector2.Zero.X, Vector2.Zero.Y, ProjectileID.GrenadeIII, 350, 5f, player.whoAmI);
-					Main.projectile[prog].thrown = false; Main.projectile[prog].ranged = false; Main.projectile[prog].timeLeft = 2; Main.projectile[prog].netUpdate = true;
+					// Main.projectile[prog].thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ; // Main.projectile[prog].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ; Main.projectile[prog].timeLeft = 2; Main.projectile[prog].netUpdate = true;
 					IdgProjectile.Sync(prog);
 
 				}

@@ -9,41 +9,41 @@ namespace SGAmod.NPCs.Murk
 	{
 		public override void SetDefaults()
 		{
-			npc.width = 38;
-			npc.height = 32;
-			npc.damage = 14;
-			npc.defense = 6;
-			npc.lifeMax = 100;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.value = 60f;
-			npc.knockBackResist = 1.1f;
-			npc.aiStyle = 1;
-            npc.alpha = 0;
-			Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.BlueSlime];
-			aiType = NPCID.Crimslime;
-			animationType = NPCID.BlueSlime;
-            banner = npc.type;
-            bannerItem = mod.ItemType("DankSlimeBanner");
+			NPC.width = 38;
+			NPC.height = 32;
+			NPC.damage = 14;
+			NPC.defense = 6;
+			NPC.lifeMax = 100;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.value = 60f;
+			NPC.knockBackResist = 1.1f;
+			NPC.aiStyle = 1;
+            NPC.alpha = 0;
+			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
+			AIType = NPCID.Crimslime;
+			AnimationType = NPCID.BlueSlime;
+            banner = NPC.type;
+            bannerItem = Mod.Find<ModItem>("DankSlimeBanner").Type;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dank Slime");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.BlueSlime];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
             for (int i = 0; i < 20; i++) //this i a for loop tham make the dust spawn , the higher is the value the more dust will spawn
             {
-                int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, 0, npc.velocity.X * 0f, npc.velocity.Y * 0f, 80, default(Color), 1f);   //this make so when this projectile disappear will spawn dust, change PinkPlame to what dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
+                int dust = Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, 0, NPC.velocity.X * 0f, NPC.velocity.Y * 0f, 80, default(Color), 1f);   //this make so when this projectile disappear will spawn dust, change PinkPlame to what dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
                 Main.dust[dust].noGravity = false; //this make so the dust has no gravity
                 Main.dust[dust].velocity *= 1f;
             }
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
-                Projectile.NewProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<LessStickyOgreBallOneTick>(),0,0);
+                Projectile.NewProjectile(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LessStickyOgreBallOneTick>(),0,0);
             }
 
         }
@@ -56,17 +56,17 @@ namespace SGAmod.NPCs.Murk
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             Tile tile = Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY];
-            return !spawnInfo.playerInTown && !NPC.BusyWithAnyInvasionOfSorts() && SGAWorld.downedMurk>1 && !spawnInfo.invasion && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && spawnInfo.spawnTileY < Main.rockLayer && spawnInfo.player.ZoneJungle ? 0.12f : 0f;
+            return !spawnInfo.playerInTown && !NPC.BusyWithAnyInvasionOfSorts() && SGAWorld.downedMurk>1 && !spawnInfo.invasion && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && spawnInfo.spawnTileY < Main.rockLayer && spawnInfo.Player.ZoneJungle ? 0.12f : 0f;
         }
 
         public override void NPCLoot()
         {
             if (Main.rand.Next(4)<1)
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Gel, Main.rand.Next(4));
-            if (Main.rand.Next(1+NPC.CountNPCS(mod.NPCType("Murk"))*4) < 1)
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MurkyGel"), Main.rand.Next(3));
-            if (Main.rand.Next(2 + NPC.CountNPCS(mod.NPCType("Murk")) * 4) < 1)
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Biomass"), Main.rand.Next(3));
+            Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.Gel, Main.rand.Next(4));
+            if (Main.rand.Next(1+NPC.CountNPCS(Mod.Find<ModNPC>("Murk").Type)*4) < 1)
+            Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("MurkyGel").Type, Main.rand.Next(3));
+            if (Main.rand.Next(2 + NPC.CountNPCS(Mod.Find<ModNPC>("Murk").Type) * 4) < 1)
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("Biomass").Type, Main.rand.Next(3));
         }
     }
 }

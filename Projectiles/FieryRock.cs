@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 
 namespace SGAmod.Projectiles
@@ -19,34 +20,34 @@ namespace SGAmod.Projectiles
         {
             Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-            aiType = ProjectileID.Boulder;      
-            projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 10;
-			projectile.light = 0.5f;
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.magic = true;
-            projectile.tileCollide=false;
+            AIType = ProjectileID.Boulder;      
+            Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 10;
+			Projectile.light = 0.5f;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide=false;
         }
        
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.penetrate--;
-            if (projectile.penetrate <= 0)
+            Projectile.penetrate--;
+            if (Projectile.penetrate <= 0)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             else
             {
-                Main.PlaySound(SoundID.Item10,projectile.Center);
-                if (projectile.velocity.X != oldVelocity.X)
+                SoundEngine.PlaySound(SoundID.Item10,Projectile.Center);
+                if (Projectile.velocity.X != oldVelocity.X)
                 {
-                    projectile.velocity.X = -oldVelocity.X;
+                    Projectile.velocity.X = -oldVelocity.X;
                 }
-                if (projectile.velocity.Y != oldVelocity.Y)
+                if (Projectile.velocity.Y != oldVelocity.Y)
                 {
-                    projectile.velocity.Y = -oldVelocity.Y;
+                    Projectile.velocity.Y = -oldVelocity.Y;
                 }
             }
             return false;
@@ -54,13 +55,13 @@ namespace SGAmod.Projectiles
 
 	    public override bool PreKill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item45,projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item45,Projectile.Center);
         	int numProj = 2;
             float rotation = MathHelper.ToRadians(1);
             for (int i = 0; i < numProj; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(projectile.velocity.X, projectile.velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numProj - 1)));
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("BoulderBlast"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
+                Vector2 perturbedSpeed = new Vector2(Projectile.velocity.X, Projectile.velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numProj - 1)));
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("BoulderBlast").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, 0f);
             }
             return true;
         }
@@ -68,33 +69,33 @@ namespace SGAmod.Projectiles
 		public override void AI()
         {
 			
-           int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 20, default(Color), 1f);
+           int DustID2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 20, default(Color), 1f);
             Main.dust[DustID2].noGravity = true;
-            Player player = Main.player[projectile.owner];
-            if (projectile.ai[0]>0 || !player.channel || player.dead){
-            projectile.tileCollide=true;
-            projectile.ai[0]+=1;
+            Player player = Main.player[Projectile.owner];
+            if (Projectile.ai[0]>0 || !player.channel || player.dead){
+            Projectile.tileCollide=true;
+            Projectile.ai[0]+=1;
             }else{
-            projectile.timeLeft=600;
+            Projectile.timeLeft=600;
             Vector2 mousePos = Main.MouseWorld;
 
-            if (projectile.owner == Main.myPlayer)
+            if (Projectile.owner == Main.myPlayer)
             {
                 Vector2 diff = mousePos - player.Center;
                 diff.Normalize();
-                projectile.velocity = diff;
-                projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-                projectile.netUpdate = true;
-                projectile.Center = mousePos;
+                Projectile.velocity = diff;
+                Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+                Projectile.netUpdate = true;
+                Projectile.Center = mousePos;
             }
-            int dir = projectile.direction;
+            int dir = Projectile.direction;
             player.ChangeDir(dir);
             player.itemTime = 40;
             player.itemAnimation = 40;
-            player.itemRotation = (float)Math.Atan2(projectile.velocity.Y * dir, projectile.velocity.X * dir);
+            player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * dir, Projectile.velocity.X * dir);
 
-            projectile.Center=player.Center+(projectile.velocity*76f);
-            projectile.velocity*=8f;
+            Projectile.Center=player.Center+(Projectile.velocity*76f);
+            Projectile.velocity*=8f;
 
         }
 		

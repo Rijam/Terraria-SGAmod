@@ -45,36 +45,30 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 2;
-			item.value = 2000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = FlaskBuff;
-			item.buffTime = Item.flaskTime;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 2;
+			Item.value = 2000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = FlaskBuff;
+			Item.buffTime = Item.flaskTime;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.FlaskofFire,1);
-			recipe.AddIngredient(ItemID.Ale,1);
-			recipe.AddIngredient(null, "FieryShard", 2);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.FlaskofFire,1).AddIngredient(ItemID.Ale,1).AddIngredient(null, "FieryShard", 2).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 	public class FlaskOfBlazeBuff : ModBuff
 	{
 		public virtual FlaskOfBlaze FlaskType => ModContent.GetModItem(ModContent.ItemType<FlaskOfBlaze>()) as FlaskOfBlaze;
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Weapon Imbue: Thermal Blaze");
 			Description.SetDefault("Melee attacks scorch enemies Ablaze");
@@ -121,12 +115,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bottle, 1);
-			recipe.AddIngredient(null, "VialofAcid", 3);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bottle, 1).AddIngredient(null, "VialofAcid", 3).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 	public class FlaskOfAcidBuff : FlaskOfBlazeBuff
@@ -147,7 +136,7 @@ namespace SGAmod.Items.Consumables
         public override void Update(Player player, ref int buffIndex)
         {
 			base.Update(player, ref buffIndex);
-			player.meleeDamage -= 0.10f;
+			player.GetDamage(DamageClass.Melee) -= 0.10f;
         }
     }
 	public class FlaskOfLifeLeech : FlaskOfBlaze
@@ -164,7 +153,7 @@ namespace SGAmod.Items.Consumables
 			if (player.HasBuff(ModContent.BuffType<LifeLeechDebuff>()))
 				return;
 
-			if (proj == null || Main.rand.Next(100) < ((proj.modProjectile != null && proj.modProjectile is ITrueMeleeProjectile) ? 100 : 5));
+			if (proj == null || Main.rand.Next(100) < ((proj.ModProjectile != null && proj.ModProjectile is ITrueMeleeProjectile) ? 100 : 5));
 			{
 				Projectile projectile = new Projectile();
 				projectile.Center = npc.Center;
@@ -208,13 +197,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bottle, 1);
-			recipe.AddIngredient(ItemID.Mushroom, 1);
-			recipe.AddIngredient(ModContent.ItemType<HopeHeart>(), 1);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bottle, 1).AddIngredient(ItemID.Mushroom, 1).AddIngredient(ModContent.ItemType<HopeHeart>(), 1).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 
@@ -256,7 +239,7 @@ namespace SGAmod.Items.Consumables
 				return;
 			}
 
-			if (proj == null || Main.rand.Next(100) < ((proj.modProjectile != null && proj.modProjectile is ITrueMeleeProjectile) ? 100 : 20));
+			if (proj == null || Main.rand.Next(100) < ((proj.ModProjectile != null && proj.ModProjectile is ITrueMeleeProjectile) ? 100 : 20));
 			{
 				if (npc.SGANPCs().flaskCooldown < 1)
 				{
@@ -311,13 +294,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bottle, 1);
-			recipe.AddIngredient(ItemID.FallenStar, 1);
-			recipe.AddIngredient(ModContent.ItemType<HopeHeart>(), 1);
-			recipe.AddTile(TileID.ImbuingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bottle, 1).AddIngredient(ItemID.FallenStar, 1).AddIngredient(ModContent.ItemType<HopeHeart>(), 1).AddTile(TileID.ImbuingStation).Register();
 		}
 	}
 
@@ -351,7 +328,7 @@ namespace SGAmod.Items.Consumables
 			texture = "Terraria/Buff_"+BuffID.MoonLeech;
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			base.SetDefaults();
 			DisplayName.SetDefault("Life Leeched");
@@ -372,7 +349,7 @@ namespace SGAmod.Items.Consumables
 			texture = "Terraria/Buff_" + BuffID.MoonLeech;
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			base.SetDefaults();
 			DisplayName.SetDefault("Soul Sapped");

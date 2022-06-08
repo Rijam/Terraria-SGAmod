@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 using Idglibrary;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs.Cratrosity
 {
@@ -25,8 +26,8 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cratrogeddon");
-			Main.npcFrameCount[npc.type] = 1;
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 
 		public override string Texture
@@ -49,24 +50,24 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			npc.damage = 80;
-			npc.defense = 50;
-			npc.lifeMax = 40000;
-			npc.value = Item.buyPrice(1, 0, 0, 0);
+			NPC.damage = 80;
+			NPC.defense = 50;
+			NPC.lifeMax = 40000;
+			NPC.value = Item.buyPrice(1, 0, 0, 0);
 			//music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Evoland 2 OST - Track 46 (Ceres Battle)");
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
 		}
 
 		public override void NPCLoot()
 		{
 			if (Main.expertMode)
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TerrariacoCrateKeyUber"));
-			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MoneySign"), Main.rand.Next(40, Main.expertMode ? 85 : 65));
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("TerrariacoCrateKeyUber").Type);
+			Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("MoneySign").Type, Main.rand.Next(40, Main.expertMode ? 85 : 65));
 			if (Main.rand.Next(7) == 0)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Armors.Vanity.CratrogeddonMask>());
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<Items.Armors.Vanity.CratrogeddonMask>());
 			}
 			Achivements.SGAAchivements.UnlockAchivement("Cratrogeddon", Main.LocalPlayer);
 			if (SGAWorld.downedCratrosityPML == false)
@@ -94,7 +95,7 @@ namespace SGAmod.NPCs.Cratrosity
 			if (pmlphase == 2 && pmlphasetimer > -30000)
 			{
 				int timer = 3000000 - pmlphasetimer;
-				Vector2 playerdiff = P.MountedCenter - npc.Center;
+				Vector2 playerdiff = P.MountedCenter - NPC.Center;
 				nonaispin = nonaispin + 0.6f;
 				for (int layer = 0; layer < phase; layer++)
 				{
@@ -113,7 +114,7 @@ namespace SGAmod.NPCs.Cratrosity
 							{
 								crate.crateAngle = crateangle2;
 
-								SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_DarkMageAttack, npc.Center);
+								SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack, NPC.Center);
 								if (sound != null)
 								{
 									sound.Pitch = -0.25f;
@@ -152,7 +153,7 @@ namespace SGAmod.NPCs.Cratrosity
 								foreach(Player player in Main.player.Where(testby => testby.active && !testby.dead && testby.Hitbox.Intersects(rect)))
                                 {
 									if (player!= null)
-									player.Hurt(PlayerDeathReason.ByCustomReason(player.name + "Got smashed"), npc.damage*2, npc.direction);
+									player.Hurt(PlayerDeathReason.ByCustomReason(player.name + "Got smashed"), NPC.damage*2, NPC.direction);
                                 }
 
 							}
@@ -163,7 +164,7 @@ namespace SGAmod.NPCs.Cratrosity
 							//Cratesangle[a, i] = (float)(Cratesangle[a, i])
 							float dist = ((index * layer)+index)*32f;
 
-							Vector2 goHere = (npc.Center + (Vector2.UnitX).RotatedBy(anglediff.ToRotation()) * dist);
+							Vector2 goHere = (NPC.Center + (Vector2.UnitX).RotatedBy(anglediff.ToRotation()) * dist);
 
 							float crateangle = crate.crateAngle;
 							if ((timer + adder) > 150)
@@ -202,47 +203,47 @@ namespace SGAmod.NPCs.Cratrosity
 			Idglib.Chat("Impressive, but not good enough", 144, 79, 16);
 			if (pmlphase == 1)
 			{
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfSlowing"));
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfSlowing").Type);
 			}
 			if (pmlphase == 2)
 			{
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfSlowing"));
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfPoisoned"));
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfSlowing").Type);
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfPoisoned").Type);
 			}
 			if (pmlphase == 3)
 			{
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfWitheredArmor"));
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfWitheredWeapon"));
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfWitheredArmor").Type);
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfWitheredWeapon").Type);
 			}
 			if (pmlphase > 3)
 			{
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfPoisoned"));
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfSlowing"));
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfWitheredArmor"));
-				summons.Insert(0, mod.NPCType("CratrosityCrateOfWitheredWeapon"));
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfPoisoned").Type);
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfSlowing").Type);
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfWitheredArmor").Type);
+				summons.Insert(0, Mod.Find<ModNPC>("CratrosityCrateOfWitheredWeapon").Type);
 			}
 			for (int ii = 0; ii < summons.Count; ii += 1)
 			{
-				int spawnedint = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, summons[0]); summons.RemoveAt(0);
+				int spawnedint = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, summons[0]); summons.RemoveAt(0);
 				NPC him = Main.npc[spawnedint];
-				him.life = (int)(npc.life * 0.25f);
-				him.lifeMax = (int)(npc.lifeMax * 0.25f);
+				him.life = (int)(NPC.life * 0.25f);
+				him.lifeMax = (int)(NPC.lifeMax * 0.25f);
 			}
 		}
 
 		public override void AI()
 		{
 			Player P = Target;
-			Cratrosity origin = npc.modNPC as Cratrosity;
+			Cratrosity origin = npc.ModNPC as Cratrosity;
 			pmlphasetimer--;
-			npc.dontTakeDamage = false;
+			NPC.dontTakeDamage = false;
 
-			if (NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.WoodenCrate.ToString())) + NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.IronCrate.ToString())) > 0 || (pmlphasetimer>0 && P.DistanceSQ(npc.Center) > 1000 * 1000))
-				npc.dontTakeDamage = true;
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.WoodenCrate.ToString()).Type) + NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.IronCrate.ToString()).Type) > 0 || (pmlphasetimer>0 && P.DistanceSQ(NPC.Center) > 1000 * 1000))
+				NPC.dontTakeDamage = true;
 
 			if (pmlphasetimer > 0)
 			{
-				npc.localAI[0] = 5;
+				NPC.localAI[0] = 5;
 
 				//phase 1
 				if (pmlphase == 1)
@@ -250,21 +251,21 @@ namespace SGAmod.NPCs.Cratrosity
 					OrderOfTheCrates(P);
 					origin.compressvargoal = 4f;
 					origin.themode = 1;
-					npc.rotation = Idglib.LookAt(npc.Center, P.Center);
+					NPC.rotation = Idglib.LookAt(NPC.Center, P.Center);
 					//npc.dontTakeDamage = true;
-					npc.velocity = (npc.velocity * 0.97f);
+					NPC.velocity = (NPC.velocity * 0.97f);
 					if (pmlphasetimer < 1000)
 					{
-						Vector2 it = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
+						Vector2 it = new Vector2(P.Center.X - NPC.Center.X, P.Center.Y - NPC.Center.Y);
 						it.Normalize();
 						if (pmlphasetimer % 120 == 0)
 						{
-							npc.velocity = (it * (30f - pmlphasetimer * 0.02f));
+							NPC.velocity = (it * (30f - pmlphasetimer * 0.02f));
 						}
 						if (pmlphasetimer % 120 < 60 && pmlphasetimer % 20 == 0)
 						{
-							Idglib.Shattershots(npc.Center, npc.Center + it * 50, new Vector2(0, 0), ProjectileID.NanoBullet, 40, (float)6, 80, 3, true, 0, false, 600);
-							Idglib.PlaySound(13, npc.Center, 0);
+							Idglib.Shattershots(NPC.Center, NPC.Center + it * 50, new Vector2(0, 0), ProjectileID.NanoBullet, 40, (float)6, 80, 3, true, 0, false, 600);
+							Idglib.PlaySound(13, NPC.Center, 0);
 						}
 					}
 				}
@@ -272,39 +273,39 @@ namespace SGAmod.NPCs.Cratrosity
 				if (pmlphase == 2)
 				{
 					OrderOfTheCrates(P);
-					npc.velocity = (npc.velocity * 0.77f);
-					Vector2 it = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
+					NPC.velocity = (NPC.velocity * 0.77f);
+					Vector2 it = new Vector2(P.Center.X - NPC.Center.X, P.Center.Y - NPC.Center.Y);
 					it.Normalize();
-					npc.velocity += it * 0.3f;
+					NPC.velocity += it * 0.3f;
 					//npc.Opacity += (0.1f - npc.Opacity) / 30f;
 				}
 
 				//phase 3
 				if (pmlphase == 3)
 				{
-					npc.ai[0] = 0;
+					NPC.ai[0] = 0;
 
 					if (pmlphasetimer > 1000)
 					{
-						int spawnedint = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("CratrosityNight"));
-						spawnedint = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("CratrosityLight"));
+						int spawnedint = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("CratrosityNight").Type);
+						spawnedint = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, Mod.Find<ModNPC>("CratrosityLight").Type);
 						pmlphasetimer = 105;
-						npc.netUpdate = true;
+						NPC.netUpdate = true;
 						Idglib.Chat("Give in to Temptation!", 144, 79, 16);
 					}
 
-					if (NPC.CountNPCS(mod.NPCType("Cratrosity")) > 0)
+					if (NPC.CountNPCS(Mod.Find<ModNPC>("Cratrosity").Type) > 0)
 					{
 						pmlphasetimer = 100;
 					}
 
-					npc.dontTakeDamage = true;
+					NPC.dontTakeDamage = true;
 					base.OrderOfTheCrates(P);
-					npc.velocity = (npc.velocity * 0.77f);
-					Vector2 it = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
+					NPC.velocity = (NPC.velocity * 0.77f);
+					Vector2 it = new Vector2(P.Center.X - NPC.Center.X, P.Center.Y - NPC.Center.Y);
 					it.Normalize();
-					npc.velocity += it * 0.3f;
-					npc.Opacity += (0.1f - npc.Opacity) / 30f;
+					NPC.velocity += it * 0.3f;
+					NPC.Opacity += (0.1f - NPC.Opacity) / 30f;
 
 
 				}
@@ -313,12 +314,12 @@ namespace SGAmod.NPCs.Cratrosity
 				if (pmlphase > 3)
 				{
 					if (pmlphasetimer < 300)
-						npc.dontTakeDamage = false;
+						NPC.dontTakeDamage = false;
 
-					npc.velocity /= 1.4f;
+					NPC.velocity /= 1.4f;
 					if (pmlphasetimer > 1000)
 					{
-						npc.netUpdate = true;
+						NPC.netUpdate = true;
 						pmlphasetimer = 400;
 					}
 
@@ -328,8 +329,8 @@ namespace SGAmod.NPCs.Cratrosity
 			}
 			else
 			{
-				npc.rotation = npc.rotation * 0.85f;
-				npc.Opacity += (1f - npc.Opacity) / 30f;
+				NPC.rotation = NPC.rotation * 0.85f;
+				NPC.Opacity += (1f - NPC.Opacity) / 30f;
 				base.AI();
 			}
 
@@ -337,20 +338,20 @@ namespace SGAmod.NPCs.Cratrosity
 			if (phase < 1)
 			{
 				int val;
-				val = (int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.WoodenCrate.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.IronCrate.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.GoldenCrate.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.DungeonFishingCrate.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.JungleFishingCrate.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + Cratrosity.EvilCrateType.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.HallowedFishingCrate.ToString()))) +
-(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.FloatingIslandFishingCrate.ToString())));
-				val += NPC.CountNPCS(mod.NPCType("CratrosityCrateOfWitheredWeapon")) +
-					NPC.CountNPCS(mod.NPCType("CratrosityCrateOfWitheredArmor")) +
-					NPC.CountNPCS(mod.NPCType("CratrosityCrateOfPoisoned")) +
-					NPC.CountNPCS(mod.NPCType("CratrosityCrateOfSlowing"));
+				val = (int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.WoodenCrate.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.IronCrate.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.GoldenCrate.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.DungeonFishingCrate.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.JungleFishingCrate.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + Cratrosity.EvilCrateType.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.HallowedFishingCrate.ToString()).Type)) +
+(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.FloatingIslandFishingCrate.ToString()).Type));
+				val += NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrateOfWitheredWeapon").Type) +
+					NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrateOfWitheredArmor").Type) +
+					NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrateOfPoisoned").Type) +
+					NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrateOfSlowing").Type);
 				if (val > 0)
-					npc.dontTakeDamage = true;
+					NPC.dontTakeDamage = true;
 			}
 
 
@@ -359,7 +360,7 @@ namespace SGAmod.NPCs.Cratrosity
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
-			if ((pmlphase == 3 || pmlphase==2) && npc.dontTakeDamage)
+			if ((pmlphase == 3 || pmlphase==2) && NPC.dontTakeDamage)
 				return false;
 
             return base.CanHitPlayer(target, ref cooldownSlot);
@@ -377,7 +378,7 @@ namespace SGAmod.NPCs.Cratrosity
 		{
 			base.SetStaticDefaults();
 			DisplayName.SetDefault("Crate Of Withered Weapon");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 	}
 	public class CratrosityCrateOfWitheredArmor : CratrosityCrateOfSlowing
@@ -387,7 +388,7 @@ namespace SGAmod.NPCs.Cratrosity
 		{
 			base.SetStaticDefaults();
 			DisplayName.SetDefault("Crate Of Withered Armor");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 	}
 
@@ -398,7 +399,7 @@ namespace SGAmod.NPCs.Cratrosity
 		{
 			base.SetStaticDefaults();
 			DisplayName.SetDefault("Crate Of Venom");
-			Main.npcFrameCount[npc.type] = 1;
+			Main.npcFrameCount[NPC.type] = 1;
 		}
 	}
 
@@ -412,9 +413,9 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Crate Of Slowing");
-			Main.npcFrameCount[npc.type] = 1;
-			npc.life = 150000;
-			npc.lifeMax = 150000;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPC.life = 150000;
+			NPC.lifeMax = 150000;
 		}
 
 
@@ -432,9 +433,9 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void AI()
 		{
 			base.AI();
-			int npctype = mod.NPCType("Cratrogeddon");
+			int npctype = Mod.Find<ModNPC>("Cratrogeddon").Type;
 			if (Hellion.Hellion.GetHellion() != null)
-				npctype = mod.NPCType("Hellion");
+				npctype = Mod.Find<ModNPC>("Hellion").Type;
 			if (NPC.CountNPCS(npctype) > 0)
 			{
 
@@ -448,20 +449,20 @@ namespace SGAmod.NPCs.Cratrosity
 				}
 
 				NPC myowner = Main.npc[NPC.FindFirstNPC(npctype)];
-				npc.ai[0] += Main.rand.Next(0, 4);
-				npc.netUpdate = true;
-				npc.velocity = npc.velocity * 0.95f;
-				if (myowner.ai[0] % 350 > 250) { npc.velocity = npc.velocity * 0.45f; }
+				NPC.ai[0] += Main.rand.Next(0, 4);
+				NPC.netUpdate = true;
+				NPC.velocity = NPC.velocity * 0.95f;
+				if (myowner.ai[0] % 350 > 250) { NPC.velocity = NPC.velocity * 0.45f; }
 				if (myowner.ai[0] % 150 == 140)
 				{
 					Player P = Main.player[myowner.target];
-					List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingPlatinumCoin>(), 45, 8, 0, 1, true, 0, false, 220);
+					List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingPlatinumCoin>(), 45, 8, 0, 1, true, 0, false, 220);
 					itz[0].aiStyle = 5;
 				}
 			}
 			else
 			{
-				npc.active = false;
+				NPC.active = false;
 
 			}
 

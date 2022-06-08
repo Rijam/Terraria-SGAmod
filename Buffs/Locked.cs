@@ -1,20 +1,21 @@
 using Terraria;
 using Terraria.ModLoader;
 using SGAmod.NPCs;
+using Terraria.ID;
 
 namespace SGAmod.Buffs
 {
 	public class Locked: ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Locked");
 			Description.SetDefault("There is no escape");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
-			canBeCleared = false;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = false;
 		}
 
 		public override void Update(Player player, ref int buffIndex)

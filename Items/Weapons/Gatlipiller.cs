@@ -20,23 +20,23 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 7;
-			item.ranged = true;
-			item.width = 42;
-			item.height = 16;
-			item.useTime = 4;
-			item.useAnimation = 20;
-			item.reuseDelay = delay;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 2;
-			item.value = 50000;
-			item.rare = 3;
-			item.UseSound = SoundID.Item111;
-			item.autoReuse = true;
-			item.shoot = 10;
-			item.shootSpeed = 26f;
-			item.useAmmo = AmmoID.Bullet;
+			Item.damage = 7;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 42;
+			Item.height = 16;
+			Item.useTime = 4;
+			Item.useAnimation = 20;
+			Item.reuseDelay = delay;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 2;
+			Item.value = 50000;
+			Item.rare = 3;
+			Item.UseSound = SoundID.Item111;
+			Item.autoReuse = true;
+			Item.shoot = 10;
+			Item.shootSpeed = 26f;
+			Item.useAmmo = AmmoID.Bullet;
 		}
 		public override bool ConsumeAmmo(Player player)
 		{
@@ -52,7 +52,7 @@ namespace SGAmod.Items.Weapons
 			writer.Write(delay);
 		}
 
-		public override void NetRecieve(BinaryReader reader)
+		public override void NetReceive(BinaryReader reader)
 		{
 			delay=reader.ReadInt32();
 		}
@@ -65,9 +65,9 @@ namespace SGAmod.Items.Weapons
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			if (delay>8 && !(player.itemAnimation < item.useAnimation - 2))
+			if (delay>8 && !(player.itemAnimation < Item.useAnimation - 2))
 				delay -= 5;
-			item.reuseDelay = delay;
+			Item.reuseDelay = delay;
 
 			float speed = 1.5f;
 			float numberProjectiles = 1;
@@ -81,7 +81,7 @@ namespace SGAmod.Items.Weapons
 				Main.projectile[proj].friendly = true;
 				Main.projectile[proj].hostile = false;
 				Main.projectile[proj].timeLeft = 100;
-				Main.projectile[proj].knockBack = item.knockBack;
+				Main.projectile[proj].knockBack = Item.knockBack;
 				IdgProjectile.AddOnHitBuff(proj, BuffID.Poisoned, 60 * 6);
 			}
 			return false;
@@ -89,14 +89,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.IllegalGunParts, 1);
-			recipe.AddIngredient(mod.ItemType("BiomassBar"), 10);
-			recipe.AddIngredient(mod.ItemType("DankCore"), 2);
-			recipe.AddIngredient(ItemID.Minishark, 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.IllegalGunParts, 1).AddIngredient(mod.ItemType("BiomassBar"), 10).AddIngredient(mod.ItemType("DankCore"), 2).AddIngredient(ItemID.Minishark, 1).AddTile(TileID.Anvils).Register();
 		}
 
 	}

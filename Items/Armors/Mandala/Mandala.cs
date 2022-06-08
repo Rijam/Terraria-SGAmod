@@ -14,6 +14,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.Mandala
 {
@@ -35,12 +36,12 @@ namespace SGAmod.Items.Armors.Mandala
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0,15,0,0);
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 12;
-			item.lifeRegen = 0;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0,15,0,0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 12;
+			Item.lifeRegen = 0;
 		}
         public override bool DrawHead()
         {
@@ -51,7 +52,7 @@ namespace SGAmod.Items.Armors.Mandala
             sgaplayer.mandalaSet.Item2 += 1;
             if (!Main.dedServ)
             {
-                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_WitherBeastAuraPulse, -1, -1);
+                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_WitherBeastAuraPulse, -1, -1);
                 if (sound != null)
                 {
                     sound.Pitch = 0.95f;
@@ -63,7 +64,7 @@ namespace SGAmod.Items.Armors.Mandala
 		{
 			if (sgaplayer.mandalaSet.Item1)
 			{
-				Player player = sgaplayer.player;
+				Player player = sgaplayer.Player;
                 if (player.ownedProjectileCounts[ModContent.ProjectileType<MandalaSummonProj>()] < 1)
                 {
                     Projectile.NewProjectile(player.Center + new Vector2(-player.direction*80f, -600f), Vector2.UnitY * 24, ModContent.ProjectileType<MandalaSummonProj>(), 0, 15f, player.whoAmI);
@@ -74,10 +75,10 @@ namespace SGAmod.Items.Armors.Mandala
 
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 
 			player.maxMinions += 1;
-			player.minionDamage += 0.10f;
+			player.GetDamage(DamageClass.Summon) += 0.10f;
 			sgaplayer.summonweaponspeed += 0.10f;
 
 			if (Dimensions.SGAPocketDim.WhereAmI != null)
@@ -89,18 +90,13 @@ namespace SGAmod.Items.Armors.Mandala
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 				sgaplayer.armorglowmasks[0] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 40);
-			recipe.AddIngredient(ModContent.ItemType<OmniSoul>(), 6);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 40).AddIngredient(ModContent.ItemType<OmniSoul>(), 6).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 
@@ -114,16 +110,16 @@ namespace SGAmod.Items.Armors.Mandala
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 20, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 20;
-			item.lifeRegen = 0;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 20, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 20;
+			Item.lifeRegen = 0;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			player.minionDamage += 0.12f;
+			player.GetDamage(DamageClass.Summon) += 0.12f;
 			player.maxMinions += 2;
 			player.SGAPly().summonweaponspeed += 0.20f;
 
@@ -135,7 +131,7 @@ namespace SGAmod.Items.Armors.Mandala
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			{
 				sgaplayer.armorglowmasks[1] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
@@ -160,34 +156,34 @@ namespace SGAmod.Items.Armors.Mandala
         }
         private void SGAPlayer_PostPostUpdateEquipsEvent(SGAPlayer player)
         {
-            if (!player.player.armor[2].IsAir && player.player.armor[2].type == item.type)
+            if (!player.Player.armor[2].IsAir && player.Player.armor[2].type == Item.type)
             {
                 if (Dimensions.SGAPocketDim.WhereAmI != null)
                 {
-                    player.player.wingTime += 60;
-                    player.player.wingTimeMax += 60;
+                    player.Player.wingTime += 60;
+                    player.Player.wingTimeMax += 60;
                 }
 			}
 		}
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.defense = 10;
-			item.lifeRegen = 0;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.defense = 10;
+			Item.lifeRegen = 0;
 		}
 		public override void UpdateEquip(Player player)
 		{
 			player.maxMinions += 1;
-			player.minionDamage += 0.08f;
+			player.GetDamage(DamageClass.Summon) += 0.08f;
 			player.SGAPly().summonweaponspeed += 0.10f;
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 				sgaplayer.armorglowmasks[3] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 		}
@@ -205,31 +201,31 @@ namespace SGAmod.Items.Armors.Mandala
         public override void SetDefaults()
         {
             //item.CloneDefaults(ItemID.ManaFlower);
-            item.width = 16;
-            item.height = 16;
-            item.rare = ItemRarityID.Blue;
-            item.value = 0;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.damage = 300;
-            item.summon = true;
-            item.shootSpeed = 6f;
-            item.shoot = ModContent.ProjectileType<ManifestedMandalaControlProj>();
-            item.useTurn = true;
+            Item.width = 16;
+            Item.height = 16;
+            Item.rare = ItemRarityID.Blue;
+            Item.value = 0;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.damage = 300;
+            Item.DamageType = DamageClass.Summon;
+            Item.shootSpeed = 6f;
+            Item.shoot = ModContent.ProjectileType<ManifestedMandalaControlProj>();
+            Item.useTurn = true;
             //ProjectileID.CultistBossLightningOrbArc
-            item.width = 16;
-            item.height = 16;
-            item.useAnimation = 20;
-            item.useTime = 20;
-            item.reuseDelay = 0;
-            item.knockBack = 1;
+            Item.width = 16;
+            Item.height = 16;
+            Item.useAnimation = 20;
+            Item.useTime = 20;
+            Item.reuseDelay = 0;
+            Item.knockBack = 1;
             //item.UseSound = SoundID.Item1;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.channel = true;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.channel = true;
         }
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            Desert.ManifestedSandTosser.DrawManifestedItem(item, spriteBatch, position, frame, scale);
+            Desert.ManifestedSandTosser.DrawManifestedItem(Item, spriteBatch, position, frame, scale);
 
             return true;
         }
@@ -239,7 +235,7 @@ namespace SGAmod.Items.Armors.Mandala
             return false;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             return true;
         }
@@ -259,7 +255,7 @@ namespace SGAmod.Items.Armors.Mandala
             {
                 s = key;
             }
-            tooltips.Add(new TooltipLine(mod, "MaldalaTooltip", "Press the 'Toggle Recipe' (" + s + ") hotkey to swap modes"));
+            tooltips.Add(new TooltipLine(Mod, "MaldalaTooltip", "Press the 'Toggle Recipe' (" + s + ") hotkey to swap modes"));
         }
 
     }
@@ -286,21 +282,21 @@ namespace SGAmod.Items.Armors.Mandala
         public override void SetDefaults()
         {
             //projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            aiType = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            AIType = 0;
         }
 
         public override void ChargeUpEffects()
         {
-            foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == projectile.owner && testby.type == ModContent.ProjectileType<MandalaSummonProj>()))
+            foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == Projectile.owner && testby.type == ModContent.ProjectileType<MandalaSummonProj>()))
             {
-                proj.damage = projectile.damage;
-                MandalaSummonProj proj2 = proj.modProjectile as MandalaSummonProj;
+                proj.damage = Projectile.damage;
+                MandalaSummonProj proj2 = proj.ModProjectile as MandalaSummonProj;
                 if (player.SGAPly().mandalaSet.Item2 % 2 == 0)
                     proj2.punching = 5;
                 else
@@ -315,16 +311,16 @@ namespace SGAmod.Items.Armors.Mandala
 
         public override void FireWeapon(Vector2 direction)
         {
-            float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+            float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 
 
             float speed = velocity;
 
             Vector2 perturbedSpeed = (new Vector2(direction.X, direction.Y) * speed).RotatedBy(Main.rand.NextFloat(-MathHelper.Pi / 16f, MathHelper.Pi / 16f));
 
-            int damage = (int)(projectile.damage);
+            int damage = (int)(Projectile.damage);
 
-            projectile.Kill();
+            Projectile.Kill();
         }
     }
 
@@ -333,10 +329,10 @@ namespace SGAmod.Items.Armors.Mandala
 
         public override void ChargeUpEffects()
         {
-            foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == projectile.owner && testby.type == ModContent.ProjectileType<MandalaSummonProj>()))
+            foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == Projectile.owner && testby.type == ModContent.ProjectileType<MandalaSummonProj>()))
             {
-                proj.damage = projectile.damage;
-                MandalaSummonProj proj2 = proj.modProjectile as MandalaSummonProj;
+                proj.damage = Projectile.damage;
+                MandalaSummonProj proj2 = proj.ModProjectile as MandalaSummonProj;
                 proj2.throwing = 5;
             }
         }
@@ -351,11 +347,11 @@ namespace SGAmod.Items.Armors.Mandala
 
         public List<MandalaArm> arms = new List<MandalaArm>();
 
-        Vector2 DrawPosition => Vector2.Lerp(projectile.Center, new Vector2((Owner.MountedCenter.X + projectile.Center.X) / 2f, Owner.MountedCenter.Y + projectile.rotation - 64), MathHelper.Clamp(projectile.timeLeft / 60f, 0f, Math.Min(projectile.localAI[0] / 60f, 1f)));
+        Vector2 DrawPosition => Vector2.Lerp(Projectile.Center, new Vector2((Owner.MountedCenter.X + Projectile.Center.X) / 2f, Owner.MountedCenter.Y + Projectile.rotation - 64), MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, Math.Min(Projectile.localAI[0] / 60f, 1f)));
 
         public List<Projectile> Asteriods => Main.projectile.Where(testby => testby.active && testby.owner == Owner.whoAmI && testby.type == ModContent.ProjectileType<MandalaAsteriodProj>()).ToList();
         public List<Projectile> GrabbableAsteriods => Asteriods.Where(testby => testby.localAI[0] > 30 && testby.timeLeft > 60 && testby.velocity.LengthSquared()<5 && testby.ai[0] < 2 && testby.damage < 1).ToList();
-        Player Owner => Main.player[projectile.owner];
+        Player Owner => Main.player[Projectile.owner];
         int ArmsCount
         {
             get
@@ -409,7 +405,7 @@ namespace SGAmod.Items.Armors.Mandala
             {
                 this.position = position;
                 this.followPosition = player.MountedCenter;
-                Texture2D[] astertype = new Texture2D[] { ModContent.GetTexture("SGAmod/Dimensions/Space/BlueAsteroidSmall"), ModContent.GetTexture("SGAmod/Dimensions/Space/BlueAsteroidSmall2") };
+                Texture2D[] astertype = new Texture2D[] { ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/BlueAsteroidSmall"), ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/BlueAsteroidSmall2") };
                 asteriod = astertype[Main.rand.Next(astertype.Length)];
                 scale = 1f;// Main.rand.NextFloat()
                 angle = Main.rand.NextFloat(MathHelper.TwoPi);
@@ -419,7 +415,7 @@ namespace SGAmod.Items.Armors.Mandala
                 this.player = player;
 
 
-                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_GhastlyGlaiveImpactGhost, (int)position.X, (int)position.Y);
+                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaiveImpactGhost, (int)position.X, (int)position.Y);
                 if (sound != null)
                 {
                     sound.Pitch = -0.5f;
@@ -518,14 +514,14 @@ namespace SGAmod.Items.Armors.Mandala
                             rockToGrab.ai[0] = 10;
                             if (stateVar>30)
                             {
-                                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_JavelinThrowersAttack, (int)Position.X, (int)Position.Y);
+                                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack, (int)Position.X, (int)Position.Y);
                                 if (sound != null)
                                 {
                                     sound.Pitch = 0.5f;
                                 }
 
                                 rockToGrab.ai[0] = 60;
-                                rockToGrab.damage = owner.projectile.damage;
+                                rockToGrab.damage = owner.Projectile.damage;
                                 rockToGrab.velocity = (Vector2.Normalize(velocity)*8f)+ player.velocity/4f;
                                 rockToGrab.netUpdate = true;
                                 ChangeState(10);
@@ -587,7 +583,7 @@ namespace SGAmod.Items.Armors.Mandala
                             int offset = (int)(player.SGAPly().timer + (owner.PunchRate * Percent));
                             if (offset % owner.PunchRate == 0)
                             {
-                                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_JavelinThrowersAttack, (int)Position.X, (int)Position.Y);
+                                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack, (int)Position.X, (int)Position.Y);
                                 if (sound != null)
                                 {
                                     sound.Pitch = 0.5f;
@@ -610,7 +606,7 @@ namespace SGAmod.Items.Armors.Mandala
             public void Draw(SpriteBatch spriteBatch, MandalaSummonProj owner,float alpha,Vector2 pos = default)
             {
                 Vector2 asteriodSize = new Vector2(asteriod.Width, asteriod.Height / 2);
-                spriteBatch.Draw(asteriod, (pos == default ? Position : pos) - Main.screenPosition, new Rectangle(0, 0, (int)asteriodSize.X, (int)asteriodSize.Y), Color.White*alpha, angle, asteriodSize / 2f, scale*owner.projectile.scale, SpriteEffects.None, 0);
+                spriteBatch.Draw(asteriod, (pos == default ? Position : pos) - Main.screenPosition, new Rectangle(0, 0, (int)asteriodSize.X, (int)asteriodSize.Y), Color.White*alpha, angle, asteriodSize / 2f, scale*owner.Projectile.scale, SpriteEffects.None, 0);
             }
 
         }
@@ -626,19 +622,19 @@ namespace SGAmod.Items.Armors.Mandala
         public override void SetDefaults()
         {
             //projectile.CloneDefaults(ProjectileID.ImpFireball);
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.minion = true;
-            projectile.minionSlots = 0f;
-            projectile.netImportant = true;
-            projectile.penetrate = 1;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 1;
-            aiType = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.minion = true;
+            Projectile.minionSlots = 0f;
+            Projectile.netImportant = true;
+            Projectile.penetrate = 1;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 1;
+            AIType = 0;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -658,33 +654,33 @@ namespace SGAmod.Items.Armors.Mandala
         public override void AI()
         {
             float friction = 0.90f;
-            projectile.localAI[0] += 1;
+            Projectile.localAI[0] += 1;
             punching -= 1;
             throwing -= 1;
 
-            if (Owner.active && !Owner.dead && projectile.localAI[1] < 1 && Owner.SGAPly().mandalaSet.Item1)
+            if (Owner.active && !Owner.dead && Projectile.localAI[1] < 1 && Owner.SGAPly().mandalaSet.Item1)
             {
-                projectile.timeLeft = 60;
+                Projectile.timeLeft = 60;
 
                 if (!Main.dedServ && Main.myPlayer == Owner.whoAmI)
                 {
                     eyeLookAt = Main.MouseWorld - Owner.MountedCenter;
-                    projectile.netUpdate = true;
+                    Projectile.netUpdate = true;
                 }
                 eyeCurrentLook = Vector2.SmoothStep(eyeCurrentLook, eyeLookAt, 0.20f);
 
 
                 Vector2 idealspot = Owner.MountedCenter + Vector2.Normalize(eyeCurrentLook) * (64f * (Owner.SGAPly().mandalaSet.Item2 % 2 == 0 ? 1f : -1f));
-                Vector2 difference = idealspot - projectile.Center;
+                Vector2 difference = idealspot - Projectile.Center;
 
-                float lerpSpeed = MathHelper.Clamp(projectile.localAI[0] / 160f, 0f, 1f);
+                float lerpSpeed = MathHelper.Clamp(Projectile.localAI[0] / 160f, 0f, 1f);
 
-                projectile.Center += (idealspot - projectile.Center) * 0.10f * lerpSpeed;
-                projectile.rotation = ((float)Math.Sin(projectile.localAI[0] / 32f) * 10f);
+                Projectile.Center += (idealspot - Projectile.Center) * 0.10f * lerpSpeed;
+                Projectile.rotation = ((float)Math.Sin(Projectile.localAI[0] / 32f) * 10f);
 
                 if (difference.Length() > 128f)
                 {
-                    projectile.velocity += (Vector2.Normalize(difference) * MathHelper.Clamp(difference.Length() - 128f, 0f, 1280f)) * 0.05f * lerpSpeed;
+                    Projectile.velocity += (Vector2.Normalize(difference) * MathHelper.Clamp(difference.Length() - 128f, 0f, 1280f)) * 0.05f * lerpSpeed;
                 };
 
                 //Updates for when arms became "inactive" due to a lack of minion slots, (Update resets despawnTimer to 10, which isn't called here)
@@ -716,10 +712,10 @@ namespace SGAmod.Items.Armors.Mandala
                 }
 
                 //Spawns asteriods over time
-                if (projectile.localAI[0] % 80 == 0 && Owner.ownedProjectileCounts[ModContent.ProjectileType<MandalaAsteriodProj>()] < 10 + Owner.maxTurrets * 2)
+                if (Projectile.localAI[0] % 80 == 0 && Owner.ownedProjectileCounts[ModContent.ProjectileType<MandalaAsteriodProj>()] < 10 + Owner.maxTurrets * 2)
                 {
                     float widrheight = Main.rand.NextFloat(240f, 640f);
-                    Projectile.NewProjectileDirect(Owner.MountedCenter + Main.rand.NextVector2Circular(widrheight, widrheight), Main.rand.NextVector2Circular(2, 2), ModContent.ProjectileType<MandalaAsteriodProj>(), 0, 12, projectile.owner);
+                    Projectile.NewProjectileDirect(Owner.MountedCenter + Main.rand.NextVector2Circular(widrheight, widrheight), Main.rand.NextVector2Circular(2, 2), ModContent.ProjectileType<MandalaAsteriodProj>(), 0, 12, Projectile.owner);
                 }
 
             }
@@ -727,8 +723,8 @@ namespace SGAmod.Items.Armors.Mandala
             {
                 //Up up and away!
 
-                projectile.localAI[1] += 1;
-                projectile.velocity -= Vector2.UnitY * (projectile.localAI[1] / 48f);
+                Projectile.localAI[1] += 1;
+                Projectile.velocity -= Vector2.UnitY * (Projectile.localAI[1] / 48f);
 
                 foreach (MandalaArm arm in arms)
                 {
@@ -741,7 +737,7 @@ namespace SGAmod.Items.Armors.Mandala
             }
 
 
-            float alphalight = MathHelper.Clamp((projectile.localAI[0] - 20) / 40f, 0f, 1f) * MathHelper.Clamp(projectile.timeLeft / 60f, 0f, 1f);
+            float alphalight = MathHelper.Clamp((Projectile.localAI[0] - 20) / 40f, 0f, 1f) * MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 1f);
             //Flashlight functionality
 
             for (float eyeeffect = 0; eyeeffect < 1f; eyeeffect += 0.01f)
@@ -755,7 +751,7 @@ namespace SGAmod.Items.Armors.Mandala
 
                 if (Utils.PlotLine(herethere.Item1, herethere.Item2, (x, y) => Framing.GetTileSafely(x, y).collisionType != 1))
                 {
-                Lighting.AddLight(lighter + projectile.velocity, Color.White.ToVector3() * lightit * lightit2 * alphalight);
+                Lighting.AddLight(lighter + Projectile.velocity, Color.White.ToVector3() * lightit * lightit2 * alphalight);
                 }
                 else
                 {
@@ -766,7 +762,7 @@ namespace SGAmod.Items.Armors.Mandala
 
             // Lighting.AddLight(DrawPosition, Color.White.ToVector3());
 
-            projectile.velocity *= friction;
+            Projectile.velocity *= friction;
 
         }
 
@@ -799,10 +795,10 @@ namespace SGAmod.Items.Armors.Mandala
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            projectile.penetrate += 1;
+            Projectile.penetrate += 1;
             if (SGAmod.ScreenShake<12)
             SGAmod.AddScreenShake(16f, 1200, target.Center);
-            SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_MonkStaffGroundImpact, (int)target.Center.X, (int)target.Center.Y);
+            SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_MonkStaffGroundImpact, (int)target.Center.X, (int)target.Center.Y);
             if (sound != null)
             {
                 sound.Pitch = 0.85f;
@@ -817,24 +813,24 @@ namespace SGAmod.Items.Armors.Mandala
         //Beams and glowing are drawn under the player
         public override bool PreDrawExtras(SpriteBatch spriteBatch)
         {
-            float alpha2 = MathHelper.Clamp((projectile.localAI[0] - 0) / 60f, 0f, 1f) * MathHelper.Clamp(projectile.timeLeft / 60f, 0f, 1f);
+            float alpha2 = MathHelper.Clamp((Projectile.localAI[0] - 0) / 60f, 0f, 1f) * MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 1f);
 
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Texture2D glowOrb = ModContent.GetTexture("SGAmod/GlowOrb");
+            Texture2D glowOrb = ModContent.Request<Texture2D>("SGAmod/GlowOrb");
             Vector2 sizer = glowOrb.Size()/2f;
 
             foreach (Projectile asteriod in Asteriods)
             {
                 float alphaglow = MathHelper.Clamp(asteriod.localAI[0] / 60f, 0f, Math.Min(asteriod.timeLeft / 60f, 1f))*alpha2;
-                spriteBatch.Draw(glowOrb, asteriod.Center - Main.screenPosition, null, Color.Lerp(Color.White, Color.Aqua, 0.50f) * 0.40f* alphaglow, 0, sizer, projectile.scale*0.20f, SpriteEffects.None, 0);
+                spriteBatch.Draw(glowOrb, asteriod.Center - Main.screenPosition, null, Color.Lerp(Color.White, Color.Aqua, 0.50f) * 0.40f* alphaglow, 0, sizer, Projectile.scale*0.20f, SpriteEffects.None, 0);
             }
 
             foreach (MandalaArm arm in arms)
             {
-                float alpha = MathHelper.Clamp((arm.time-60)/30f,0f,1f)* MathHelper.Clamp(projectile.timeLeft / 60f, 0f, 1f)* MathHelper.Clamp(arm.despawnTimer / 8f, 0f, 1f);
+                float alpha = MathHelper.Clamp((arm.time-60)/30f,0f,1f)* MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 1f)* MathHelper.Clamp(arm.despawnTimer / 8f, 0f, 1f);
 
                 List<Vector2> toThem = new List<Vector2>();
 
@@ -865,11 +861,11 @@ namespace SGAmod.Items.Armors.Mandala
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D[] asteriods = new Texture2D[3] { ModContent.GetTexture("SGAmod/Dimensions/Space/GlowAsteriod"), ModContent.GetTexture("SGAmod/Dimensions/Space/GlowAsteriodalt"), ModContent.GetTexture("SGAmod/Dimensions/Space/GlowAsteriodalt2") };
+            Texture2D[] asteriods = new Texture2D[3] { ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/GlowAsteriod"), ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/GlowAsteriodalt"), ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/GlowAsteriodalt2") };
 
-            float alpha = MathHelper.Clamp((projectile.localAI[0] - 20) / 40f, 0f, 1f)*MathHelper.Clamp(projectile.timeLeft / 60f, 0f, 1f);
+            float alpha = MathHelper.Clamp((Projectile.localAI[0] - 20) / 40f, 0f, 1f)*MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 1f);
 
-            Texture2D eyeTex = Main.projectileTexture[projectile.type];
+            Texture2D eyeTex = Main.projectileTexture[Projectile.type];
             Vector2 eyeSize = new Vector2(eyeTex.Width, eyeTex.Height);
 
             Main.spriteBatch.End();
@@ -907,7 +903,7 @@ namespace SGAmod.Items.Armors.Mandala
             foreach (Projectile Asteriod in Asteriods)
             {
                 Color asteriodColor = Lighting.GetColor(((int)Asteriod.Center.X) >> 4, ((int)Asteriod.Center.Y) >> 4, Color.White);
-                (Asteriod.modProjectile as MandalaAsteriodProj).DoDraw(spriteBatch, asteriodColor * alpha);
+                (Asteriod.ModProjectile as MandalaAsteriodProj).DoDraw(spriteBatch, asteriodColor * alpha);
             }
 
             Texture2D tex = asteriods[0];
@@ -918,15 +914,15 @@ namespace SGAmod.Items.Armors.Mandala
 
             Vector2 lookpos = (Vector2.Normalize(eyeCurrentLook) * lenToShow);
 
-            spriteBatch.Draw(tex, DrawPosition - Main.screenPosition, new Rectangle(0, 0, (int)size.X, (int)size.Y), Color.White * alpha, projectile.velocity.X / 12f, size / 2f, projectile.scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(tex, DrawPosition - Main.screenPosition, new Rectangle(0, 0, (int)size.X, (int)size.Y), Color.White * alpha, Projectile.velocity.X / 12f, size / 2f, Projectile.scale, SpriteEffects.None, 0);
 
             for (float f = 0; f < 1f; f += 1 / 10f)
             {
-                float scale = ((MathHelper.Clamp((float)Math.Sin(((projectile.localAI[0]+(f*60f)) * MathHelper.TwoPi) / 60), 0f, 1f)))*((f/2f)+0.75f);
-                spriteBatch.Draw(eyeTex, DrawPosition + lookpos - Main.screenPosition, null, Color.White * alpha*(f/2f)*0.50f, projectile.velocity.X/8f, eyeSize / 2f, (projectile.scale * 1f)+ scale*1f, SpriteEffects.None, 0);
+                float scale = ((MathHelper.Clamp((float)Math.Sin(((Projectile.localAI[0]+(f*60f)) * MathHelper.TwoPi) / 60), 0f, 1f)))*((f/2f)+0.75f);
+                spriteBatch.Draw(eyeTex, DrawPosition + lookpos - Main.screenPosition, null, Color.White * alpha*(f/2f)*0.50f, Projectile.velocity.X/8f, eyeSize / 2f, (Projectile.scale * 1f)+ scale*1f, SpriteEffects.None, 0);
             }
 
-            spriteBatch.Draw(eyeTex, DrawPosition + lookpos - Main.screenPosition, null, Color.White* alpha, 0, eyeSize / 2f, projectile.scale*Main.essScale, SpriteEffects.None, 0);
+            spriteBatch.Draw(eyeTex, DrawPosition + lookpos - Main.screenPosition, null, Color.White* alpha, 0, eyeSize / 2f, Projectile.scale*Main.essScale, SpriteEffects.None, 0);
 
 
             Main.spriteBatch.End();
@@ -953,81 +949,81 @@ namespace SGAmod.Items.Armors.Mandala
 
         public override void SetDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.ImpFireball);
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.aiStyle = -1;
+            Projectile.CloneDefaults(ProjectileID.ImpFireball);
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.aiStyle = -1;
             //projectile.minion = true;
             //projectile.minionSlots = 0f;
-            projectile.netImportant = true;
-            projectile.penetrate = 2;
-            projectile.extraUpdates = 2;
-            projectile.timeLeft = 300;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = -1;
-            aiType = 0;
+            Projectile.netImportant = true;
+            Projectile.penetrate = 2;
+            Projectile.extraUpdates = 2;
+            Projectile.timeLeft = 300;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+            AIType = 0;
         }
 
         public override bool CanDamage()
         {
-            return projectile.damage > 0;
+            return Projectile.damage > 0;
         }
 
-        Player Owner => Main.player[projectile.owner];
+        Player Owner => Main.player[Projectile.owner];
 
-        Vector2 DrawPosition => projectile.Center;
+        Vector2 DrawPosition => Projectile.Center;
 
         public override void AI()
         {
             if (Owner.ownedProjectileCounts[ModContent.ProjectileType<MandalaSummonProj>()] < 1)
             {
-                projectile.timeLeft = 1;
+                Projectile.timeLeft = 1;
                 return;
             }
 
-            projectile.localAI[0] += 1;
-            if (projectile.localAI[0] == 1)
+            Projectile.localAI[0] += 1;
+            if (Projectile.localAI[0] == 1)
             {
-                projectile.localAI[1] = Main.rand.Next(3);
+                Projectile.localAI[1] = Main.rand.Next(3);
                 rotationSpeed = (Main.rand.NextFloat(1f, 3f) * (Main.rand.NextBool() ? 1f : -1f)) * 0.01f;
                 scale = Main.rand.NextFloat(0.6f, 0.8f);
-                projectile.netUpdate = true;
+                Projectile.netUpdate = true;
             }
-            if (projectile.ai[0] > 1)
+            if (Projectile.ai[0] > 1)
             {
-                if (projectile.ai[0]>12)
-                projectile.ai[1] = 1;
+                if (Projectile.ai[0]>12)
+                Projectile.ai[1] = 1;
 
-                projectile.ai[0] -= 1;
-                projectile.timeLeft += 1;
+                Projectile.ai[0] -= 1;
+                Projectile.timeLeft += 1;
             }
             else
             {
-                if (projectile.velocity.Length() > 2f)
+                if (Projectile.velocity.Length() > 2f)
                 {
-                    projectile.velocity *= 0.996f;
+                    Projectile.velocity *= 0.996f;
                 }
                 else
                 {
-                    projectile.damage = 0;
+                    Projectile.damage = 0;
                 }
 
             }
 
-            if (projectile.ai[1] < 1)
+            if (Projectile.ai[1] < 1)
             {
-                Vector2 tohim = Owner.Center - projectile.Center;
-                Vector2 there = Owner.Center + (new Vector2(256f, 0).RotatedBy(tohim.ToRotation() + MathHelper.Pi + 0.05f)) - projectile.Center;
+                Vector2 tohim = Owner.Center - Projectile.Center;
+                Vector2 there = Owner.Center + (new Vector2(256f, 0).RotatedBy(tohim.ToRotation() + MathHelper.Pi + 0.05f)) - Projectile.Center;
 
-                projectile.Center += there / 32f;
-                projectile.timeLeft += 1;
+                Projectile.Center += there / 32f;
+                Projectile.timeLeft += 1;
             }
 
-            projectile.rotation += rotationSpeed;
+            Projectile.rotation += rotationSpeed;
         }
 
         public override bool PreKill(int timeLeft)
@@ -1043,10 +1039,10 @@ namespace SGAmod.Items.Armors.Mandala
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            projectile.penetrate += 1;
+            Projectile.penetrate += 1;
             if (SGAmod.ScreenShake < 12)
                 SGAmod.AddScreenShake(12f, 1200, target.Center);
-            SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_MonkStaffGroundImpact, (int)target.Center.X, (int)target.Center.Y);
+            SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_MonkStaffGroundImpact, (int)target.Center.X, (int)target.Center.Y);
             if (sound != null)
             {
                 sound.Pitch = 0.85f;
@@ -1067,15 +1063,15 @@ namespace SGAmod.Items.Armors.Mandala
 
         public void DoDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D[] asteriods = new Texture2D[3] {ModContent.GetTexture("SGAmod/Dimensions/Space/MeteorLarge3"), ModContent.GetTexture("SGAmod/Dimensions/Space/MeteorLarge4"), ModContent.GetTexture("SGAmod/Dimensions/Space/MeteorLarge5") };
+            Texture2D[] asteriods = new Texture2D[3] {ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/MeteorLarge3"), ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/MeteorLarge4"), ModContent.Request<Texture2D>("SGAmod/Dimensions/Space/MeteorLarge5") };
 
-            float alpha = MathHelper.Clamp((projectile.localAI[0] - 20) / 40f, 0f, 1f) * MathHelper.Clamp(projectile.timeLeft / 60f, 0f, 1f);
+            float alpha = MathHelper.Clamp((Projectile.localAI[0] - 20) / 40f, 0f, 1f) * MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 1f);
 
-            Texture2D tex = asteriods[(int)projectile.localAI[1]];
+            Texture2D tex = asteriods[(int)Projectile.localAI[1]];
 
             Vector2 size = new Vector2(tex.Width, tex.Height / 2f);
 
-            spriteBatch.Draw(tex, DrawPosition - Main.screenPosition, new Rectangle(0, 0, (int)size.X, (int)size.Y), lightColor * alpha, projectile.rotation, size / 2f, projectile.scale*scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(tex, DrawPosition - Main.screenPosition, new Rectangle(0, 0, (int)size.X, (int)size.Y), lightColor * alpha, Projectile.rotation, size / 2f, Projectile.scale*scale, SpriteEffects.None, 0);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

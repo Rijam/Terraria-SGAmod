@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Audio;
 using SGAmod.Items.Weapons.Technical;
 using SGAmod.Items.Weapons.SeriousSam;
 using Terraria.Graphics.Shaders;
+using Terraria.Audio;
 
 //What's mine is mine to reuse, maybe next time make me sign a binding contract
 //Sigh, hopefully we can reach a compromise, I really want to keep this...
@@ -31,27 +32,21 @@ namespace SGAmod.Items.Armors.Engineer
         }
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 28;
-            item.value = 0;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 4;
+            Item.width = 28;
+            Item.height = 28;
+            Item.value = 0;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 4;
         }
         public override void UpdateEquip(Player player)
         {
             player.maxTurrets += 1;
-            player.minionDamage += 0.10f;
+            player.GetDamage(DamageClass.Summon) += 0.10f;
             player.SGAPly().electricChargeMax += 2000;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("AdvancedPlating"), 4);
-            recipe.AddIngredient(ItemID.Glass, 25);
-            recipe.AddIngredient(ItemID.KingSlimeMask, 1);
-            recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(mod.ItemType("AdvancedPlating"), 4).AddIngredient(ItemID.Glass, 25).AddIngredient(ItemID.KingSlimeMask, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
         }
         public override bool Autoload(ref string name)
         {
@@ -75,11 +70,11 @@ namespace SGAmod.Items.Armors.Engineer
 
         public override void SetDefaults()
         {
-            item.width = 34;
-            item.height = 20;
-            item.value = Item.buyPrice(0,0,silver: 50);
-            item.rare = ItemRarityID.Orange;
-            item.defense = 8;
+            Item.width = 34;
+            Item.height = 20;
+            Item.value = Item.buyPrice(0,0,silver: 50);
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 8;
         }
         public override void UpdateEquip(Player player)
         {
@@ -92,15 +87,11 @@ namespace SGAmod.Items.Armors.Engineer
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("AdvancedPlating"), 12);
-            recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(mod.ItemType("AdvancedPlating"), 12).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
         }
         private void PostMovementUpdate(SGAPlayer sgaplayer)
         {
-            EngineerArmorPlayer SGAply = sgaplayer.player.GetModPlayer<EngineerArmorPlayer>();
+            EngineerArmorPlayer SGAply = sgaplayer.Player.GetModPlayer<EngineerArmorPlayer>();
             SGAply.HandleEngineerArmor();
         }
     }
@@ -115,15 +106,15 @@ namespace SGAmod.Items.Armors.Engineer
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 20;
-            item.value = 0;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 3;
+            Item.width = 30;
+            Item.height = 20;
+            Item.value = 0;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 3;
         }
         public override void UpdateEquip(Player player)
         {
-            player.minionDamage += 0.10f;
+            player.GetDamage(DamageClass.Summon) += 0.10f;
 
             SGAPlayer sgaply = player.SGAPly();
 
@@ -134,12 +125,7 @@ namespace SGAmod.Items.Armors.Engineer
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<AdvancedPlating>(), 6);
-            recipe.AddIngredient(ModContent.ItemType <Placeable.TechPlaceable.HopperItem>(), 2);
-            recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ModContent.ItemType<AdvancedPlating>(), 6).AddIngredient(ModContent.ItemType <Placeable.TechPlaceable.HopperItem>(), 2).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
         }
     }
 
@@ -156,7 +142,7 @@ namespace SGAmod.Items.Armors.Engineer
         public float transformVisual = 0;
         public float[] RecoilEffect = { 0, 0 };
         public bool TransformActive => (EngineerTransform >= MaxTransform);
-        SGAPlayer sgaplayer => player.GetModPlayer<SGAPlayer>();
+        SGAPlayer sgaplayer => Player.GetModPlayer<SGAPlayer>();
         public int EngieAttack => (EngineerModes >> 1);//chop off the 4th bit, leaving a number between 0-7
 
         public override void Initialize()
@@ -196,7 +182,7 @@ namespace SGAmod.Items.Armors.Engineer
             {
                 ModPacket packet = SGAmod.Instance.GetPacket();
                 packet.Write(501);
-                packet.Write(player.whoAmI);
+                packet.Write(Player.whoAmI);
                 packet.Write((double)aimDir);
                 packet.Write((byte)AttackCheck);
                 packet.Write((byte)EngineerModes);
@@ -206,7 +192,7 @@ namespace SGAmod.Items.Armors.Engineer
 
         public bool EngieArmor()
         {
-            return (!player.armor[0].IsAir && !player.armor[1].IsAir && !player.armor[2].IsAir) && (player.armor[0].type == ItemType<EngineerHead>() && player.armor[1].type == ItemType<EngineerChest>() && player.armor[2].type == ItemType<EngineerLegs>());//Really is there a better way?
+            return (!Player.armor[0].IsAir && !Player.armor[1].IsAir && !Player.armor[2].IsAir) && (Player.armor[0].type == ItemType<EngineerHead>() && Player.armor[1].type == ItemType<EngineerChest>() && Player.armor[2].type == ItemType<EngineerLegs>());//Really is there a better way?
         }
         private void RaycastTile(int z, int zz, ref int highest, ref int middleheight, ref int middletouch, ref int average, Point16 playerpos, ref Vector2 touchpoint)
         {
@@ -216,7 +202,7 @@ namespace SGAmod.Items.Armors.Engineer
                 Tile tile = Framing.GetTileSafely(playerpos.X + offset, playerpos.Y + i);
                 if (WorldGen.InWorld(playerpos.X + offset, playerpos.Y + i))
                 {
-                    if ((tile.active() && Main.tileSolid[tile.type]) || (tile.liquid >= 32 && !player.wet))
+                    if ((tile.HasTile && Main.tileSolid[tile.TileType]) || (tile.liquid >= 32 && !Player.wet))
                     {
                         if (touchpoint == default)
                         {
@@ -243,7 +229,7 @@ namespace SGAmod.Items.Armors.Engineer
         public void ToggleEngieArmor()
         {
             EngineerModes ^= 4;
-            CombatText.NewText(new Rectangle(player.Hitbox.X, player.Hitbox.Y - 8, 0, player.Hitbox.Width), Color.Orange, "Jetpack " + ((EngineerModes & 4)!=0 ? "ACTIVE" : "inactive"), false, false);
+            CombatText.NewText(new Rectangle(Player.Hitbox.X, Player.Hitbox.Y - 8, 0, Player.Hitbox.Width), Color.Orange, "Jetpack " + ((EngineerModes & 4)!=0 ? "ACTIVE" : "inactive"), false, false);
             //Main.NewText("Bit test: " + EngineerModes);
             //Main.NewText("Bit Test: " + (EngineerModes&4));
         }
@@ -251,14 +237,14 @@ namespace SGAmod.Items.Armors.Engineer
         {
             if (EngieArmor())//Do engie things here
             {
-                EaseXVel += (player.velocity.X - EaseXVel) / 15f;
-                EaseYVel += (player.velocity.Y - EaseYVel) / 12f;
+                EaseXVel += (Player.velocity.X - EaseXVel) / 15f;
+                EaseYVel += (Player.velocity.Y - EaseYVel) / 12f;
                 for (int i = 0; i < RecoilEffect.Length; i += 1)
                 {
                     RecoilEffect[i] *= 0.75f;
                 }
 
-                bool weaponOut = player.HeldItem.type == ModContent.ItemType<ManifestedEngieControls>();
+                bool weaponOut = Player.HeldItem.type == ModContent.ItemType<ManifestedEngieControls>();
 
                 transformVisual = MathHelper.Clamp(transformVisual + (EngineerTransform<=0 && weaponOut ? 0.15f : -0.15f),0f,1f);
 
@@ -273,12 +259,12 @@ namespace SGAmod.Items.Armors.Engineer
 
                 bool JetpackOn = (EngineerModes & (4)) != 0;//1th bit switch is 1! So it is on!
 
-                if (player.controlJump && JetpackOn && sgaplayer.ConsumeElectricCharge(40, 30, false, sgaplayer.timer % 4 == 0))
+                if (Player.controlJump && JetpackOn && sgaplayer.ConsumeElectricCharge(40, 30, false, sgaplayer.timer % 4 == 0))
                 {
                     EngineerTransform = (short)Math.Min(EngineerTransform + 1, MaxTransform);
                     if (TransformActive)
                     {
-                        Point16 playerpos = new Point16((int)player.Center.X / 16, (int)player.Center.Y / 16);
+                        Point16 playerpos = new Point16((int)Player.Center.X / 16, (int)Player.Center.Y / 16);
                         Vector2 touchpoint = default;
                         int middleheight = 0;
                         int average = 0;
@@ -301,33 +287,33 @@ namespace SGAmod.Items.Armors.Engineer
                                 //Dust.NewDustPerfect(touchpoint + new Vector2(Main.rand.Next(0, 16), 0), ModContent.DustType<BioLumen>(), Vector2.Zero, 120, Color.Red, 2f);
                                 if (middleheight < 8 && Main.rand.Next(2, 8) > middleheight)
                                 {
-                                    Vector2 speed = new Vector2((Main.rand.NextFloat(-8, 8) * scale) - player.velocity.X, Main.rand.NextFloat(-1, 1));
+                                    Vector2 speed = new Vector2((Main.rand.NextFloat(-8, 8) * scale) - Player.velocity.X, Main.rand.NextFloat(-1, 1));
                                     Dust dust = Dust.NewDustPerfect(new Vector2(touchpoint.X + Main.rand.Next(0, 16), middletouch), ModContent.DustType<AdaptedEngieSmokeEffect>(), speed, 120, Color.Gray, scale / 2f);
                                     dust.color = new Color(196, 179, 143);
 
                                     //int num316 = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, ModContent.DustType<AdaptedEngieSmokeEffect>(), player.velocity.X * 0.1f, (player.velocity.Y) * 0.1f, 250, Color.White, 4.5f);
                                     //Main.dust[num316].shader = GameShaders.Armor.GetSecondaryShader((int)player.dye[0].dye, player);
 
-                                    dust.shader = GameShaders.Armor.GetSecondaryShader((int)player.dye[1].dye, player);
-                                    if (player.cWings > 0)
-                                        dust.shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);
+                                    dust.shader = GameShaders.Armor.GetSecondaryShader((int)Player.dye[1].dye, Player);
+                                    if (Player.cWings > 0)
+                                        dust.shader = GameShaders.Armor.GetSecondaryShader(Player.cWings, Player);
                                 }
                                 if (middleheight < 7)
                                 {
-                                    float velocityammount = 15f / (((float)touchpoint.Y) - ((float)player.Center.Y));
-                                    player.velocity.Y -= (velocityammount + 0.2f);
+                                    float velocityammount = 15f / (((float)touchpoint.Y) - ((float)Player.Center.Y));
+                                    Player.velocity.Y -= (velocityammount + 0.2f);
                                 }
 
-                                if (player.velocity.Y > 0)
-                                    player.velocity.Y /= 1.05f;
+                                if (Player.velocity.Y > 0)
+                                    Player.velocity.Y /= 1.05f;
 
-                                player.maxRunSpeed += 5; //Only a bit faster run speed
-                                player.runAcceleration += 0.5f;
+                                Player.maxRunSpeed += 5; //Only a bit faster run speed
+                                Player.runAcceleration += 0.5f;
                             }
 
                         }
 
-                        player.fallStart = (int)(player.position.Y / 16f);
+                        Player.fallStart = (int)(Player.position.Y / 16f);
                     }
                     return;
                 }
@@ -378,17 +364,17 @@ namespace SGAmod.Items.Armors.Engineer
                 void DrawEngineerArm(PlayerDrawInfo info, int part, Vector2 bodyoffset)
                 {
 
-                    SpriteEffects direction = player.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                    Vector2 facingdirection = new Vector2(player.direction,1f);
+                    SpriteEffects direction = Player.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                    Vector2 facingdirection = new Vector2(Player.direction,1f);
 
                     //Ugly guessing-game-coded bobber effect
-                    if ((player.bodyFrame.Y+ player.bodyFrame.Height*2) % (player.bodyFrame.Height*6) > player.bodyFrame.Height*3 && player.bodyFrame.Y > player.bodyFrame.Height*6)
+                    if ((Player.bodyFrame.Y+ Player.bodyFrame.Height*2) % (Player.bodyFrame.Height*6) > Player.bodyFrame.Height*3 && Player.bodyFrame.Y > Player.bodyFrame.Height*6)
                         bodyoffset -= new Vector2(0, 2);
                     
-                    if (player.direction < 0)
+                    if (Player.direction < 0)
                     {
                         bodyoffset *= facingdirection;
-                        bodyoffset.X -= player.width;
+                        bodyoffset.X -= Player.width;
                     }                /*if (!Main.dedServ && weaponOut && Main.LocalPlayer == player)
                 {
                     player.ChangeDir(Math.Sign(Main.MouseWorld.X - player.Center.X));
@@ -398,7 +384,7 @@ namespace SGAmod.Items.Armors.Engineer
 
                     //Alotta predefined stuff for each part
                     string directory = "SGAmod/Items/Armors/Engineer/";
-                    Texture2D[] ShoulderMounts = { ModContent.GetTexture(directory + "ShoulderMount1"), ModContent.GetTexture(directory + "ShoulderMount2"), ModContent.GetTexture(directory + "ShoulderLauncher1"), ModContent.GetTexture(directory + "ShoulderLauncher2") };
+                    Texture2D[] ShoulderMounts = { ModContent.Request<Texture2D>(directory + "ShoulderMount1"), ModContent.Request<Texture2D>(directory + "ShoulderMount2"), ModContent.Request<Texture2D>(directory + "ShoulderLauncher1"), ModContent.Request<Texture2D>(directory + "ShoulderLauncher2") };
                     Vector2[] spriteorigins = { new Vector2(ShoulderMounts[0].Width - 4, ShoulderMounts[0].Height - 4),
                         new Vector2(2, ShoulderMounts[1].Height - 2),
                         new Vector2(4, ShoulderMounts[2].Height / 2),
@@ -411,16 +397,16 @@ namespace SGAmod.Items.Armors.Engineer
                     new Vector2((ShoulderMounts[3].Width/4) - 8,-(ShoulderMounts[3].Height - 4)) };
 
                 //Redefined angles and some gentle idle animations
-                float[] rotationangles = { (float)Math.Sin(Main.GlobalTime*0.75f)*0.04f, 
-                        (float)Math.Sin(Main.GlobalTime *1f) * 0.06f,
-                        (float)Math.Sin(Main.GlobalTime * 1.33f) * 0.05f,
+                float[] rotationangles = { (float)Math.Sin(Main.GlobalTimeWrappedHourly*0.75f)*0.04f, 
+                        (float)Math.Sin(Main.GlobalTimeWrappedHourly *1f) * 0.06f,
+                        (float)Math.Sin(Main.GlobalTimeWrappedHourly * 1.33f) * 0.05f,
                         (float)Noise.Noise(sgaplayer.timer * (bodyoffset.X<-11 ? 1 : -1),sgaplayer.timer)/5f};
 
-                    if (transformVisual>0 && Main.LocalPlayer == player)
+                    if (transformVisual>0 && Main.LocalPlayer == Player)
                     {
-                        Vector2 vecx = (Vector2.Normalize(Main.MouseWorld - player.MountedCenter) * 8f);
+                        Vector2 vecx = (Vector2.Normalize(Main.MouseWorld - Player.MountedCenter) * 8f);
 
-                        if (player.direction > 0)
+                        if (Player.direction > 0)
                         {
                             vecx.X = Math.Max(0f, vecx.X);
                         }
@@ -429,9 +415,9 @@ namespace SGAmod.Items.Armors.Engineer
                             vecx.X = Math.Min(0f, vecx.X);
                         }
 
-                        aimDir = (vecx).ToRotation() * player.direction;
+                        aimDir = (vecx).ToRotation() * Player.direction;
 
-                        if (player.direction < 0)
+                        if (Player.direction < 0)
                         {
                             aimDir += MathHelper.Pi;
                         }
@@ -451,7 +437,7 @@ namespace SGAmod.Items.Armors.Engineer
                     //Transformation angles
                     rotationangles[1] += ((float)EngineerTransform / (float)MaxTransform) * (MathHelper.Pi / 1.5f);
                     if (TransformActive)
-                        rotationangles[3] += (float)Math.Pow(Math.Abs((EaseXVel + (player.velocity.X/ 3f)) / 18f), 0.60) * Math.Sign(EaseXVel+(player.velocity.X / 3f)) *player.direction;
+                        rotationangles[3] += (float)Math.Pow(Math.Abs((EaseXVel + (Player.velocity.X/ 3f)) / 18f), 0.60) * Math.Sign(EaseXVel+(Player.velocity.X / 3f)) *Player.direction;
 
                     float localroteffect = 0f;
                     localroteffect -= MathHelper.PiOver2 * MathHelper.Clamp(RecoilEffect[bodyoffset.X >= 0 ? 0 : 1] / 15f, 0f, 1f) * 1.00f;
@@ -469,11 +455,11 @@ namespace SGAmod.Items.Armors.Engineer
 
                                 Vector2 partoffset = ((partoffsets[i] * facingdirection).RotatedBy(i < 1 ? 0f : rotationangles[i - 1] * facingdirection.X));
 
-                                Vector2 drawhere = player.position + info.bodyOrigin + bodyoffset + partoffset;
+                                Vector2 drawhere = Player.position + info.bodyOrigin + bodyoffset + partoffset;
                                 DrawData drawarm = new DrawData(ShoulderMounts[i], drawhere - Main.screenPosition, null, info.middleArmorColor, rotationangles[i] * facingdirection.X, spriteoriginlocal, Vector2.One, direction, 0);
-                                drawarm.shader = (int)player.dye[1].dye;
-                                if (player.cWings>0)
-                                drawarm.shader = (int)player.cWings;
+                                drawarm.shader = (int)Player.dye[1].dye;
+                                if (Player.cWings>0)
+                                drawarm.shader = (int)Player.cWings;
 
                                 Main.playerDrawData.Add(drawarm);
                             }
@@ -491,7 +477,7 @@ namespace SGAmod.Items.Armors.Engineer
                             GLOffset += (partoffsets[i] * facingdirection).RotatedBy(i < 1 ? 0f : rotationangles[i - 1] * facingdirection.X);
                         }
 
-                        Vector2 drawhere = player.position + info.bodyOrigin + bodyoffset + (GLOffset);
+                        Vector2 drawhere = Player.position + info.bodyOrigin + bodyoffset + (GLOffset);
                         DrawData drawGL;
 
                         if (isjetpack == 3)
@@ -508,9 +494,9 @@ namespace SGAmod.Items.Armors.Engineer
                             drawGL = new DrawData(ShoulderMounts[2], drawhere - Main.screenPosition, null, info.middleArmorColor, (rotationangles[2]+transformanimation) * facingdirection.X, spriteoriginlocal, Vector2.One, direction, 0);
                         }
 
-                        drawGL.shader = (int)player.dye[1].dye;
-                        if (player.cWings > 0)
-                            drawGL.shader = (int)player.cWings;
+                        drawGL.shader = (int)Player.dye[1].dye;
+                        if (Player.cWings > 0)
+                            drawGL.shader = (int)Player.cWings;
 
                         Main.playerDrawData.Add(drawGL);
 
@@ -522,7 +508,7 @@ namespace SGAmod.Items.Armors.Engineer
                         if (tex == ShoulderMounts[3])
                             texwidth /= 4;
 
-                        if (player.direction < 1)
+                        if (Player.direction < 1)
                             x = texwidth - x;
                         return x;
                     }
@@ -575,31 +561,31 @@ namespace SGAmod.Items.Armors.Engineer
         public override void SetDefaults()
         {
             //item.CloneDefaults(ItemID.ManaFlower);
-            item.width = 12;
-            item.height = 24;
-            item.rare = ItemRarityID.Blue;
-            item.value = 0;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.damage = 30;
-            item.summon = true;
-            item.shootSpeed = 6f;
-            item.shoot = ModContent.ProjectileType<ManifestedEngieControlsCharging>();
-            item.useTurn = true;
+            Item.width = 12;
+            Item.height = 24;
+            Item.rare = ItemRarityID.Blue;
+            Item.value = 0;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.damage = 30;
+            Item.DamageType = DamageClass.Summon;
+            Item.shootSpeed = 6f;
+            Item.shoot = ModContent.ProjectileType<ManifestedEngieControlsCharging>();
+            Item.useTurn = true;
             //ProjectileID.CultistBossLightningOrbArc
-            item.width = 16;
-            item.height = 16;
-            item.useAnimation = 4;
-            item.useTime = 4;
-            item.reuseDelay = 16;
-            item.knockBack = 1;
+            Item.width = 16;
+            Item.height = 16;
+            Item.useAnimation = 4;
+            Item.useTime = 4;
+            Item.reuseDelay = 16;
+            Item.knockBack = 1;
             //item.UseSound = SoundID.Item1;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.channel = true;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.channel = true;
         }
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            Desert.ManifestedSandTosser.DrawManifestedItem(item, spriteBatch, position, frame, scale);
+            Desert.ManifestedSandTosser.DrawManifestedItem(Item, spriteBatch, position, frame, scale);
 
             return true;
         }
@@ -656,7 +642,7 @@ namespace SGAmod.Items.Armors.Engineer
         public override float spacing => 32f;
         public override int fireRate => 4;
         int chargeUpTimer = 0;
-        public override int FireCount => 1+(int)(projectile.ai[0] / 20f);
+        public override int FireCount => 1+(int)(Projectile.ai[0] / 20f);
         public override (float, float) AimSpeed => (1f, 1f);
         public override void SetStaticDefaults()
         {
@@ -670,13 +656,13 @@ namespace SGAmod.Items.Armors.Engineer
         public override void SetDefaults()
         {
             //projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            aiType = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            AIType = 0;
         }
 
         public override void ChargeUpEffects()
@@ -684,11 +670,11 @@ namespace SGAmod.Items.Armors.Engineer
             chargeUpTimer += 1;
             EngineerArmorPlayer engiePlayer = player.GetModPlayer<EngineerArmorPlayer>();
             if (engiePlayer.TransformActive)
-                projectile.Kill();
+                Projectile.Kill();
 
             if ((chargeUpTimer+0) % 20 == 0 && chargeUpTimer < 140)
             {
-                SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 61);
+                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 61);
                 if (sound != null)
                 {
                     sound.Pitch += chargeUpTimer / 200f;
@@ -706,15 +692,15 @@ namespace SGAmod.Items.Armors.Engineer
 
         public override void FireWeapon(Vector2 direction)
         {
-            float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+            float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 
             float speed = velocity;
 
             Vector2 perturbedSpeed = (new Vector2(direction.X, direction.Y) * speed).RotatedBy(Main.rand.NextFloat(-MathHelper.Pi/16f, MathHelper.Pi/16f));
 
-            projectile.Center += projectile.velocity;
+            Projectile.Center += Projectile.velocity;
 
-            int damage = (int)(projectile.damage);// * (projectile.ai[0] / chargeuptime));
+            int damage = (int)(Projectile.damage);// * (projectile.ai[0] / chargeuptime));
 
             EngineerArmorPlayer engiePlayer = player.GetModPlayer<EngineerArmorPlayer>();
             bool shift = false;
@@ -738,10 +724,10 @@ namespace SGAmod.Items.Armors.Engineer
 
             int type = ProjectileID.Grenade;
 
-            int probg = Projectile.NewProjectile(loc.X, loc.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, projectile.knockBack, player.whoAmI);
+            int probg = Projectile.NewProjectile(loc.X, loc.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, Projectile.knockBack, player.whoAmI);
             if (probg >= 0)
             {
-                Main.projectile[probg].thrown = false;
+                // Main.projectile[probg].thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                 Main.projectile[probg].minion = true;
                 Main.projectile[probg].usesLocalNPCImmunity = true;
                 Main.projectile[probg].localNPCHitCooldown = -1;
@@ -749,14 +735,14 @@ namespace SGAmod.Items.Armors.Engineer
 
             }
 
-            SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 60);
+            SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 60);
             if (sound != null)
             {
                 sound.Pitch = 0.5f + (engiePlayer.AttackCheck % 2) * 0.25f;
             }
 
             if (firedCount>=FireCount)
-            projectile.Kill();
+            Projectile.Kill();
         }
 
     }

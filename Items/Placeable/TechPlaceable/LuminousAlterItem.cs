@@ -85,11 +85,11 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 			SGAmod.Instance.AddItem("AlterCraft_BloodSun", new LuminousAlterCraftingHint("Blood Sun", "Requires Blood Moon or Eclipse", "Terraria/Sun", Color.Red));
 			SGAmod.Instance.AddItem("AlterCraft_Time", new LuminousAlterCraftingHint("Time", "Seconds to infuse", "Terraria/Item_" + ItemID.Timer1Second));
 
-			Idglib.AbsentItemDisc.Add(SGAmod.Instance.ItemType("AlterCraft_Moon"), "No, you don't need the real moon ya dummy, this is just a guide");
-			Idglib.AbsentItemDisc.Add(SGAmod.Instance.ItemType("AlterCraft_BloodMoon"), "No, you don't need the real blood moon ya dummy, this is just a guide");
-			Idglib.AbsentItemDisc.Add(SGAmod.Instance.ItemType("AlterCraft_Eclipse"), "This Eclipse item isn't obtainable, this is just a guide");
-			Idglib.AbsentItemDisc.Add(SGAmod.Instance.ItemType("AlterCraft_BloodSun"), "No, you don't need the a... well this techically doesn't exist, but anyways this is just a guide");
-			Idglib.AbsentItemDisc.Add(SGAmod.Instance.ItemType("AlterCraft_Time"), "This isn't a recipe you craft, read it more carefully and use the tile with a right click");
+			Idglib.AbsentItemDisc.Add(SGAmod.Instance.Find<ModItem>("AlterCraft_Moon").Type, "No, you don't need the real moon ya dummy, this is just a guide");
+			Idglib.AbsentItemDisc.Add(SGAmod.Instance.Find<ModItem>("AlterCraft_BloodMoon").Type, "No, you don't need the real blood moon ya dummy, this is just a guide");
+			Idglib.AbsentItemDisc.Add(SGAmod.Instance.Find<ModItem>("AlterCraft_Eclipse").Type, "This Eclipse item isn't obtainable, this is just a guide");
+			Idglib.AbsentItemDisc.Add(SGAmod.Instance.Find<ModItem>("AlterCraft_BloodSun").Type, "No, you don't need the a... well this techically doesn't exist, but anyways this is just a guide");
+			Idglib.AbsentItemDisc.Add(SGAmod.Instance.Find<ModItem>("AlterCraft_Time").Type, "This isn't a recipe you craft, read it more carefully and use the tile with a right click");
 
 		}
 
@@ -106,15 +106,15 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 				modRecipe.AddIngredient(catalyst, numIn);
 
 				if (Cond == BloodSunCondition)
-					modRecipe.AddIngredient(SGAmod.Instance.ItemType("AlterCraft_BloodSun"));
+					modRecipe.AddIngredient(SGAmod.Instance.Find<ModItem>("AlterCraft_BloodSun").Type);
 				else if (Cond == BlackSunCondition)
-					modRecipe.AddIngredient(SGAmod.Instance.ItemType("AlterCraft_Eclipse"));
+					modRecipe.AddIngredient(SGAmod.Instance.Find<ModItem>("AlterCraft_Eclipse").Type);
 				else if (Cond == BloodmoonCondition)
-					modRecipe.AddIngredient(SGAmod.Instance.ItemType("AlterCraft_BloodMoon"));
+					modRecipe.AddIngredient(SGAmod.Instance.Find<ModItem>("AlterCraft_BloodMoon").Type);
 				else
-					modRecipe.AddIngredient(SGAmod.Instance.ItemType("AlterCraft_Moon"));
+					modRecipe.AddIngredient(SGAmod.Instance.Find<ModItem>("AlterCraft_Moon").Type);
 
-				modRecipe.AddIngredient(SGAmod.Instance.ItemType("AlterCraft_Time"), (int)Math.Ceiling(time / 60f));
+				modRecipe.AddIngredient(SGAmod.Instance.Find<ModItem>("AlterCraft_Time").Type, (int)Math.Ceiling(time / 60f));
 				modRecipe.AddTile(ModContent.TileType<Tiles.TechTiles.LuminousAlter>());
 				modRecipe.SetResult(outputItem, numOut);
 				modRecipe.AddRecipe();
@@ -139,19 +139,19 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		{
 			DisplayName.SetDefault(name2[0]);
 			Tooltip.SetDefault(name2[1]);
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 			if (texture == "Terraria/Moon_0")
 			{
-				Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 8));
+				Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 8));
 			}
 		}
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 32;
-			item.value = 0;
-			item.maxStack = 1;
-			item.rare = ItemRarityID.White;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = 0;
+			Item.maxStack = 1;
+			Item.rare = ItemRarityID.White;
 		}
 		public override string Texture
 		{
@@ -167,10 +167,10 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					//Color rainbowColor = Main.hslToRgb((Main.GlobalTime * 0.085f) % 1f, 1f, 0.75f);
-					line.overrideColor = LuminousAlterItem.AuroraLineColor;
+					//Color rainbowColor = Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.085f) % 1f, 1f, 0.75f);
+					line.OverrideColor = LuminousAlterItem.AuroraLineColor;
 				}
 			}
 		}
@@ -189,26 +189,26 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.TechTiles.LuminousAlter>();
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.TechTiles.LuminousAlter>();
 		}
 		public static Color AuroraLineColor
         {
             get
             {
-				Color rainbowColor = Main.hslToRgb((Main.GlobalTime * 0.085f) % 1f, 1f, 0.75f);
-				return Color.Lerp(rainbowColor, Color.Lerp(Color.Pink, Color.Aqua, 0.5f + (float)Math.Sin(Main.GlobalTime * 0.735f)), 0.5f + (float)Math.Sin(Main.GlobalTime * 0.375f));
+				Color rainbowColor = Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.085f) % 1f, 1f, 0.75f);
+				return Color.Lerp(rainbowColor, Color.Lerp(Color.Pink, Color.Aqua, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.735f)), 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 0.375f));
 			}
         }
 		/*public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -217,20 +217,14 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 			{
 				if (line.mod == "Terraria" && line.Name == "ItemName")
 				{
-					Color rainbowColor = Main.hslToRgb((Main.GlobalTime * 0.085f) % 1f, 1f, 0.75f);
+					Color rainbowColor = Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.085f) % 1f, 1f, 0.75f);
 					line.overrideColor = AuroraLineColor;
 				}
 			}
 		}*/
 		public override void AddRecipes()
 		{		
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("AuroraTear"), 1);
-			recipe.AddIngredient(mod.ItemType("IlluminantEssence"), 12);
-			recipe.AddTile(TileID.LihzahrdAltar);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(mod.ItemType("AuroraTear"), 1).AddIngredient(mod.ItemType("IlluminantEssence"), 12).AddTile(TileID.LihzahrdAltar).Register();
 		}
 	}
 }

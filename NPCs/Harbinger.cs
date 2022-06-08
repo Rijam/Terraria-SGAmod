@@ -25,26 +25,26 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Doom Harbinger");
-			Main.npcFrameCount[npc.type] = 1;
-			NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPCID.Sets.NeedsExpertScaling[NPC.type] = true;
 		}
         public override void SetDefaults()
 		{
-			npc.width = 24;
-			npc.height = 24;
-			npc.damage = 0;
-			npc.defense = 50;
-			npc.lifeMax = 25000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0.2f;
-			npc.aiStyle = -1;
-			npc.boss=true;
+			NPC.width = 24;
+			NPC.height = 24;
+			NPC.damage = 0;
+			NPC.defense = 50;
+			NPC.lifeMax = 25000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0.2f;
+			NPC.aiStyle = -1;
+			NPC.boss=true;
 			music=MusicID.Boss5;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = Item.buyPrice(0, 50, 0, 0);
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = Item.buyPrice(0, 50, 0, 0);
 		}
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -59,8 +59,8 @@ namespace SGAmod.NPCs
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 
 		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
@@ -71,12 +71,12 @@ namespace SGAmod.NPCs
 		public override void NPCLoot()
 		{
 
-			if (Math.Abs(npc.ai[2]) > 200)
+			if (Math.Abs(NPC.ai[2]) > 200)
 			{
-				if (npc.ai[0]>6)
+				if (NPC.ai[0]>6)
 				{
-					npc.type = oldtype;
-					NPC myguy = Main.npc[(int)npc.ai[1]];
+					NPC.type = oldtype;
+					NPC myguy = Main.npc[(int)NPC.ai[1]];
 					myguy.active = false;
 					Achivements.SGAAchivements.UnlockAchivement("Harbinger", Main.LocalPlayer);
 					if (SGAWorld.downedHarbinger == false)
@@ -88,19 +88,19 @@ namespace SGAmod.NPCs
 				}
 				else
 				{
-				npc.boss = false;
+				NPC.boss = false;
 
 				}
 
 			}
 			else
 			{
-				npc.boss = false;
+				NPC.boss = false;
 				Idglib.Chat("You are not ready for this...", 15, 15, 150);
 				for (int i = 180; i <= 361; i+=180)
 				{
-					int harbinger2 = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, npc.type);
-					Main.npc[harbinger2].ai[2] = MathHelper.ToRadians(npc.ai[2]+i);
+					int harbinger2 = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, NPC.type);
+					Main.npc[harbinger2].ai[2] = MathHelper.ToRadians(NPC.ai[2]+i);
 					Main.npc[harbinger2].netUpdate = true;
 				}
 
@@ -111,34 +111,34 @@ namespace SGAmod.NPCs
 		{
 			if (oldtype < 1)
 			{
-				oldtype = npc.type;
+				oldtype = NPC.type;
 			}
-			npc.netUpdate = true;
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active || Main.dayTime)
+			NPC.netUpdate = true;
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active || Main.dayTime)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead || Main.dayTime)
 				{
-					npc.active = false;
-					Main.npc[(int)npc.ai[1]].active = false;
+					NPC.active = false;
+					Main.npc[(int)NPC.ai[1]].active = false;
 				}
 			}
 			else
 			{
 
-                double angleval = npc.ai[2];
+                double angleval = NPC.ai[2];
 				Vector2 itt = P.Center + new Vector2((float)Math.Cos(angleval), (float)Math.Sin(angleval)) * 300f;
 
-				if (Math.Abs(npc.ai[2]) > 0)
+				if (Math.Abs(NPC.ai[2]) > 0)
 				{
-					npc.ai[2] += 1f;
-					npc.GivenName = "Doom Harbingers";
-					float speedz = Main.npc[(int)npc.ai[1]].velocity.Length();
-					Vector2 poz = Main.npc[(int)npc.ai[1]].position;
-					if (NPC.CountNPCS(npc.type) > 1)
-						Main.npc[(int)npc.ai[1]].position += (((itt - poz) / 10f) * (speedz / 30f));
+					NPC.ai[2] += 1f;
+					NPC.GivenName = "Doom Harbingers";
+					float speedz = Main.npc[(int)NPC.ai[1]].velocity.Length();
+					Vector2 poz = Main.npc[(int)NPC.ai[1]].position;
+					if (NPC.CountNPCS(NPC.type) > 1)
+						Main.npc[(int)NPC.ai[1]].position += (((itt - poz) / 10f) * (speedz / 30f));
 
 
 				}
@@ -146,62 +146,62 @@ namespace SGAmod.NPCs
 
 
 
-				npc.ai[0] += 1;
-				if (npc.ai[0] == 2)
+				NPC.ai[0] += 1;
+				if (NPC.ai[0] == 2)
 				{
 					//npc.ai[2]=NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.MoonLordHead);
 					//Main.npc[(int)npc.ai[2]].aiStyle=-1;
 					//Main.npc[(int)npc.ai[2]].timeLeft=999999;
 					//Main.npc[(int)npc.ai[2]].dontTakeDamage=true;
 					//Main.npc[(int)npc.ai[2]].boss=false;
-					npc.type = NPCID.MoonLordCore;
-					npc.ai[1] = NPC.NewNPC((int)P.Center.X, (int)P.Center.Y - 200, NPCID.MoonLordFreeEye);
-					Main.npc[(int)npc.ai[1]].ai[3] = npc.whoAmI;
-					Main.npc[(int)npc.ai[1]].lifeMax = npc.lifeMax;
-					Main.npc[(int)npc.ai[1]].life = npc.lifeMax;
-					Main.npc[(int)npc.ai[1]].defense = npc.defense;
-                    Main.npc[(int)npc.ai[1]].defDefense = npc.defDefense;
-					Main.npc[(int)npc.ai[1]].damage = 0;
-					Main.npc[(int)npc.ai[1]].defDamage = 0;
-					Main.npc[(int)npc.ai[1]].netUpdate = true;
+					NPC.type = NPCID.MoonLordCore;
+					NPC.ai[1] = NPC.NewNPC((int)P.Center.X, (int)P.Center.Y - 200, NPCID.MoonLordFreeEye);
+					Main.npc[(int)NPC.ai[1]].ai[3] = NPC.whoAmI;
+					Main.npc[(int)NPC.ai[1]].lifeMax = NPC.lifeMax;
+					Main.npc[(int)NPC.ai[1]].life = NPC.lifeMax;
+					Main.npc[(int)NPC.ai[1]].defense = NPC.defense;
+                    Main.npc[(int)NPC.ai[1]].defDefense = NPC.defDefense;
+					Main.npc[(int)NPC.ai[1]].damage = 0;
+					Main.npc[(int)NPC.ai[1]].defDamage = 0;
+					Main.npc[(int)NPC.ai[1]].netUpdate = true;
 				}
 				//Main.npc[(int)npc.ai[1]].active=true;
 				//Main.npc[(int)npc.ai[1]].aiStyle=1;
-				NPC myguy = Main.npc[(int)npc.ai[1]];
+				NPC myguy = Main.npc[(int)NPC.ai[1]];
 				if (myguy.active == false)
 				{
-					npc.type = oldtype;
-					npc.StrikeNPCNoInteraction(9999, 0f, 0, false, false, false);
+					NPC.type = oldtype;
+					NPC.StrikeNPCNoInteraction(9999, 0f, 0, false, false, false);
 				}
 				else
 				{
-					if (npc.ai[0] > 1)
+					if (NPC.ai[0] > 1)
 					{
-						if (npc.life > (int)(npc.lifeMax / 1.5) || NPC.CountNPCS(npc.type) > 1)
-							npc.ai[0] = Math.Min(npc.ai[0] + 1, 5);
-						if (npc.ai[0] > 60)
+						if (NPC.life > (int)(NPC.lifeMax / 1.5) || NPC.CountNPCS(NPC.type) > 1)
+							NPC.ai[0] = Math.Min(NPC.ai[0] + 1, 5);
+						if (NPC.ai[0] > 60)
 						{
-							if (npc.ai[0] == 65)
+							if (NPC.ai[0] == 65)
 							{
-								Idglib.Chat(npc.ai[2] > 0 ? "VERY Impressive, you just might stand a chance..." : "Most impressive child...", 15, 15, 150);
-								if (npc.ai[2] > 0)
+								Idglib.Chat(NPC.ai[2] > 0 ? "VERY Impressive, you just might stand a chance..." : "Most impressive child...", 15, 15, 150);
+								if (NPC.ai[2] > 0)
 								{
-									myguy.life = (int)(npc.lifeMax / 1.55);
+									myguy.life = (int)(NPC.lifeMax / 1.55);
 								}
 							}
 
-							if (npc.ai[0] % 600 == 62)
+							if (NPC.ai[0] % 600 == 62)
 							{
 								for (int i = 0; i < 5; i++)
 								{
-									int newb = Projectile.NewProjectile(npc.Center, npc.Center, ProjectileID.PhantasmalSphere, 60, 5, Main.myPlayer, 0f, (float)npc.whoAmI);
+									int newb = Projectile.NewProjectile(NPC.Center, NPC.Center, ProjectileID.PhantasmalSphere, 60, 5, Main.myPlayer, 0f, (float)NPC.whoAmI);
 									orbitors[i] = newb;
 									Main.projectile[orbitors[i]].timeLeft = 1000;
 								}
 							}
 
 
-							if (npc.ai[0] > 65)
+							if (NPC.ai[0] > 65)
 							{
 								for (int i = 0; i < 5; i++)
 								{
@@ -209,9 +209,9 @@ namespace SGAmod.NPCs
 									{
 										if (orbitors[i] > 0 && Main.projectile[orbitors[i]] != null && Main.projectile[orbitors[i]].timeLeft > 120)
 										{
-											double angle = (npc.ai[0] / 5) + 2.0 * Math.PI * (i / ((double)5f));
+											double angle = (NPC.ai[0] / 5) + 2.0 * Math.PI * (i / ((double)5f));
 											float timeleft = Main.projectile[orbitors[i]].timeLeft;
-											Main.projectile[orbitors[i]].Center = npc.Center + new Vector2((float)(Math.Cos(angle) * (150f - (150f / (timeleft - 1450f)))), (float)(Math.Sin(angle) * (150f - (150f / (timeleft - 1450f)))));
+											Main.projectile[orbitors[i]].Center = NPC.Center + new Vector2((float)(Math.Cos(angle) * (150f - (150f / (timeleft - 1450f)))), (float)(Math.Sin(angle) * (150f - (150f / (timeleft - 1450f)))));
 											Main.projectile[orbitors[i]].velocity = new Vector2((float)(Math.Cos(angle) * 8f), (float)(Math.Sin(angle) * 8f));
 										}
 									}
@@ -219,17 +219,17 @@ namespace SGAmod.NPCs
 							}
 
 
-							if (npc.ai[0] % 600 == 62 && npc.ai[2] > 5)
+							if (NPC.ai[0] % 600 == 62 && NPC.ai[2] > 5)
 							{
 								for (int i = 6; i <= 10; i++)
 								{
-									int newb = Projectile.NewProjectile(npc.Center, npc.Center, ProjectileID.PhantasmalSphere, 60, 5, Main.myPlayer, 0f, (float)npc.whoAmI);
+									int newb = Projectile.NewProjectile(NPC.Center, NPC.Center, ProjectileID.PhantasmalSphere, 60, 5, Main.myPlayer, 0f, (float)NPC.whoAmI);
 									orbitors[i] = newb;
 									Main.projectile[orbitors[i]].timeLeft = 1000;
 								}
 							}
 
-							if (npc.ai[0] > 65 && npc.ai[2] > 5)
+							if (NPC.ai[0] > 65 && NPC.ai[2] > 5)
 							{
 								for (int i = 6; i <= 10; i++)
 								{
@@ -237,9 +237,9 @@ namespace SGAmod.NPCs
 									{
 										if (orbitors[i] > 0 && Main.projectile[orbitors[i]] != null && Main.projectile[orbitors[i]].timeLeft > 120)
 										{
-											double angle = (-npc.ai[0] / 45f) + 2.0 * Math.PI * (i / ((double)5f));
+											double angle = (-NPC.ai[0] / 45f) + 2.0 * Math.PI * (i / ((double)5f));
 											float timeleft = Main.projectile[orbitors[i]].timeLeft;
-											Main.projectile[orbitors[i]].Center = npc.Center + new Vector2((float)(Math.Cos(angle) * (550f - (550f / (timeleft - 1450f)))), (float)(Math.Sin(angle) * (550f - (550f / (timeleft - 1450f)))));
+											Main.projectile[orbitors[i]].Center = NPC.Center + new Vector2((float)(Math.Cos(angle) * (550f - (550f / (timeleft - 1450f)))), (float)(Math.Sin(angle) * (550f - (550f / (timeleft - 1450f)))));
 											Main.projectile[orbitors[i]].velocity = new Vector2((float)(Math.Cos(angle) * 24f), (float)(Math.Sin(angle) * 24f));
 										}
 									}
@@ -257,16 +257,16 @@ namespace SGAmod.NPCs
 							}
 						}
 
-						if (npc.ai[0] > 1)
+						if (NPC.ai[0] > 1)
 						{
-							npc.position = myguy.Center;
-							npc.life = System.Math.Max(myguy.life, 200);
+							NPC.position = myguy.Center;
+							NPC.life = System.Math.Max(myguy.life, 200);
 							myguy.dontTakeDamage = false;
 							myguy.aiStyle = 81;
 							//myguy.Name="Doom Harbinger";
 						}
 					}
-					npc.timeLeft = 30;
+					NPC.timeLeft = 30;
 				}
 
 

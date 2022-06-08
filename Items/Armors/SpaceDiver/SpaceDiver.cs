@@ -19,15 +19,15 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(gold: 15);
-			item.rare = 6;
-			item.defense=8;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(gold: 15);
+			Item.rare = 6;
+			Item.defense=8;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
         if (player.wet){
 		Lighting.AddLight(player.Center, 0.2f, 0.0f, 0.5f);
 		}
@@ -39,7 +39,7 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 
 			if (!Main.dedServ)
 				sgaplayer.armorglowmasks[0] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
@@ -50,12 +50,7 @@ namespace SGAmod.Items.Armors.SpaceDiver
         }
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 12);
-			//recipe.AddIngredient(ItemID.ArcticDivingGear, 1);
-			recipe.AddTile(mod.TileType("PrismalStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalBar"), 12).AddTile(mod.TileType("PrismalStation")).Register();
 		}
 	}
 
@@ -69,15 +64,15 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(gold: 15);
-			item.rare = 6;
-			item.defense=16;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(gold: 15);
+			Item.rare = 6;
+			Item.defense=16;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
             player.arcticDivingGear = true;
             player.accFlipper = true;
 			player.accDivingHelm = true;
@@ -93,7 +88,7 @@ namespace SGAmod.Items.Armors.SpaceDiver
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			{
 				sgaplayer.armorglowmasks[1] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
@@ -102,11 +97,7 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 15);
-			recipe.AddTile(mod.TileType("PrismalStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalBar"), 15).AddTile(mod.TileType("PrismalStation")).Register();
 		}
 	}
 
@@ -120,11 +111,11 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(gold: 15);
-			item.rare = 6;
-			item.defense = 8;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(gold: 15);
+			Item.rare = 6;
+			Item.defense = 8;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -145,7 +136,7 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			{
 				sgaplayer.armorglowmasks[3] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
@@ -153,11 +144,7 @@ namespace SGAmod.Items.Armors.SpaceDiver
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 12);
-			recipe.AddTile(mod.TileType("PrismalStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalBar"), 12).AddTile(mod.TileType("PrismalStation")).Register();
 		}
 	}
 

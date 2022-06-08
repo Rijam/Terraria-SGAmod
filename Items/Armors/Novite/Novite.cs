@@ -17,11 +17,11 @@ namespace SGAmod.Items.Armors.Novite
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense = 3;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense = 3;
 		}
 		public override bool DrawHead()
 		{
@@ -35,11 +35,7 @@ namespace SGAmod.Items.Armors.Novite
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NoviteBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -53,11 +49,11 @@ namespace SGAmod.Items.Armors.Novite
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense = 5;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense = 5;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -68,11 +64,7 @@ namespace SGAmod.Items.Armors.Novite
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 15);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NoviteBar"), 15).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -86,11 +78,11 @@ namespace SGAmod.Items.Armors.Novite
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
-			item.defense = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.defense = 2;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -100,11 +92,7 @@ namespace SGAmod.Items.Armors.Novite
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NoviteBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 

@@ -18,24 +18,24 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void SetDefaults()
         {
-            item.width = 10;
-            item.height = 10;
-            item.damage = 15;
-            item.melee = true;
-            item.noMelee = true;
-            item.useTurn = true;
-            item.noUseGraphic = true;
-            item.useAnimation = 30;
-            item.useStyle = 5;
-            item.useTime = 30;
-            item.knockBack = 7f;
-            item.UseSound = SoundID.Item1;
-            item.autoReuse = false;
-            item.maxStack = 1;
-            item.value = 800;
-            item.rare = 1;
-            item.shoot = mod.ProjectileType("TidalWaveProj");
-            item.shootSpeed = 9f;
+            Item.width = 10;
+            Item.height = 10;
+            Item.damage = 15;
+            Item.DamageType = DamageClass.Melee;
+            Item.noMelee = true;
+            Item.useTurn = true;
+            Item.noUseGraphic = true;
+            Item.useAnimation = 30;
+            Item.useStyle = 5;
+            Item.useTime = 30;
+            Item.knockBack = 7f;
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = false;
+            Item.maxStack = 1;
+            Item.value = 800;
+            Item.rare = 1;
+            Item.shoot = Mod.Find<ModProjectile>("TidalWaveProj").Type;
+            Item.shootSpeed = 9f;
         }
     }
 }

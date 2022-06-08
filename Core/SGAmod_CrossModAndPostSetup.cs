@@ -1,4 +1,4 @@
-//#define WebmilioCommonsPresent
+﻿//#define WebmilioCommonsPresent
 #define DEBUG
 #define DefineHellionUpdate
 #define Dimensions
@@ -22,11 +22,11 @@ using Terraria.GameContent.UI;
 using Idglibrary;
 using System.IO;
 using System.Diagnostics;
-using CalamityMod;
-using CalamityMod.CalPlayer;
-using CalamityMod.World;
-using ThoriumMod.ModSupport;
-using ThoriumMod;
+//using CalamityMod;
+//using CalamityMod.CalPlayer;
+//using CalamityMod.World;
+//using ThoriumMod.ModSupport;
+//using ThoriumMod;
 using SGAmod.NPCs;
 using SGAmod.NPCs.Wraiths;
 using SGAmod.NPCs.Hellion;
@@ -87,18 +87,19 @@ namespace SGAmod
 			}
 		}
 
+		//Commenting out all of this cross mod stuff
 		public static ModdedDamage PropertyBoostCalDamage
 		{
 			set
 			{
-				if (SGAmod.Calamity.Item1)
+				/*if (SGAmod.Calamity.Item1)
 				{
 					SGAmod.Calamity.Item2 = ModLoader.GetMod("CalamityMod");
 
 					CalamityPlayer calply = value.player.GetModPlayer<CalamityPlayer>();
 					calply.throwingDamage += value.damage;
 					calply.throwingCrit += value.crit;
-				}
+				}*/
 			}
 		}
 
@@ -106,7 +107,7 @@ namespace SGAmod
 		{
 			set
 			{
-				if (SGAmod.Thorium.Item1)
+				/*if (SGAmod.Thorium.Item1)
 				{
 					SGAmod.Thorium.Item2 = ModLoader.GetMod("ThoriumMod");
 
@@ -120,11 +121,11 @@ namespace SGAmod
 					thorply.symphonicCrit += value.crit;
 					thorply.radiantBoost += value.damage;
 					thorply.radiantCrit += value.crit;
-				}
+				}*/
 
 			}
 		}
-		public static void CalamityNoRevengenceNoDeathNoU()
+		/*public static void CalamityNoRevengenceNoDeathNoU()
 		{
 			if (SGAmod.Calamity.Item1)
 			{
@@ -149,7 +150,7 @@ namespace SGAmod
 
 				return true;
 			}
-		}
+		}*/
 
 		public override void PostSetupContent()
 		{
@@ -177,7 +178,8 @@ namespace SGAmod
             {
 				PrivateClassEdits.LoadAntiCheats();
 			}
-
+			//Commenting out all of the cross mod stuff. ModLoader.TryGetMod("Census", out Mod censusMod)
+			/* 
 			//Why do people still use Luiafk in legit playthroughs? I donno...
 			Luiafk.Item2 = ModLoader.GetMod("Luiafk");
 			Luiafk.Item1 = Luiafk.Item2 != null;
@@ -223,52 +225,52 @@ namespace SGAmod
 
 				//bossList.Call("AddBoss", "TPD", 5.5f, (Func<bool>)(() => ExampleWorld.SGAWorld.downedTPD));
 				//bossList.Call("AddBossWithInfo", "Copper Wraith", 0.05f, (Func<bool>)(() => (SGAWorld.downedWraiths > 0)), string.Format("Use a [i:{0}] at anytime, defeat this boss to unlock crafting the furnace,bars, and anything else made there", ItemType("WraithCoreFragment")));
-				bossList.Call("AddBoss", 0.05f, ModContent.NPCType<CopperWraith>(), this, "Copper Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 0)), ModContent.ItemType<WraithCoreFragment>(), new List<int>() { SGAmod.Instance.ItemType("CopperWraithTrophy"), ModContent.ItemType<CopperWraithMask>(), SGAmod.Instance.ItemType("MusicBox_Wraith"), ModContent.ItemType<CopperTack>() }, new List<int>() { ModContent.ItemType<WraithFragment>(), ModContent.ItemType<WraithFragment2>(), ItemID.CopperOre, ItemID.TinOre, ItemID.IronOre, ItemID.LeadOre, ItemID.SilverOre, ItemID.TungstenOre, ItemID.GoldOre, ItemID.PlatinumOre }, "Use a [i:" + ItemType("WraithCoreFragment") + "] at anytime, will also spawn should you craft too many bars at a furnace before beating it", "Copper Wraith makes a hasty retreat", "SGAmod/NPCs/Wraiths/CopperWraithLog", "SGAmod/NPCs/Wraiths/CopperWraith_Head_Boss");
+				bossList.Call("AddBoss", 0.05f, ModContent.NPCType<CopperWraith>(), this, "Copper Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 0)), ModContent.ItemType<WraithCoreFragment>(), new List<int>() { SGAmod.Instance.Find<ModItem>("CopperWraithTrophy").Type, ModContent.ItemType<CopperWraithMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Wraith").Type, ModContent.ItemType<CopperTack>() }, new List<int>() { ModContent.ItemType<WraithFragment>(), ModContent.ItemType<WraithFragment2>(), ItemID.CopperOre, ItemID.TinOre, ItemID.IronOre, ItemID.LeadOre, ItemID.SilverOre, ItemID.TungstenOre, ItemID.GoldOre, ItemID.PlatinumOre }, "Use a [i:" + ItemType("WraithCoreFragment") + "] at anytime, will also spawn should you craft too many bars at a furnace before beating it", "Copper Wraith makes a hasty retreat", "SGAmod/NPCs/Wraiths/CopperWraithLog", "SGAmod/NPCs/Wraiths/CopperWraith_Head_Boss");
 
-				bossList.Call("AddMiniBoss", 2.9f, ModContent.NPCType<CaliburnGuardian>(), this, "The Caliburn Guardians", (Func<bool>)(() => SGAWorld.downedCaliburnGuardians > 2), new List<int>() { }, new List<int>() { SGAmod.Instance.ItemType("CaliburnATrophy"), SGAmod.Instance.ItemType("CaliburnBTrophy"), SGAmod.Instance.ItemType("CaliburnCTrophy"), SGAmod.Instance.ItemType("MusicBox_Caliburn") }, new List<int>() { ModContent.ItemType<CaliburnTypeA>(), ModContent.ItemType<CaliburnTypeB>(), ModContent.ItemType<CaliburnTypeC>() }, "Find Caliburn Alters in Dank Shrines Underground and right click them to fight a Caliburn Spirit, after beating a spirit you can retrive your reward by breaking the Alter; each guardian is stronger than the previous", "The Caliburn Spirit returns to its slumber");
+				bossList.Call("AddMiniBoss", 2.9f, ModContent.NPCType<CaliburnGuardian>(), this, "The Caliburn Guardians", (Func<bool>)(() => SGAWorld.downedCaliburnGuardians > 2), new List<int>() { }, new List<int>() { SGAmod.Instance.Find<ModItem>("CaliburnATrophy").Type, SGAmod.Instance.Find<ModItem>("CaliburnBTrophy").Type, SGAmod.Instance.Find<ModItem>("CaliburnCTrophy").Type, SGAmod.Instance.Find<ModItem>("MusicBox_Caliburn") .Type}, new List<int>() { ModContent.ItemType<CaliburnTypeA>(), ModContent.ItemType<CaliburnTypeB>(), ModContent.ItemType<CaliburnTypeC>() }, "Find Caliburn Alters in Dank Shrines Underground and right click them to fight a Caliburn Spirit, after beating a spirit you can retrive your reward by breaking the Alter; each guardian is stronger than the previous", "The Caliburn Spirit returns to its slumber");
 
-				bossList.Call("AddBoss", 3.5f, ModContent.NPCType<SpiderQueen>(), this, "Spider Queen", (Func<bool>)(() => SGAWorld.downedSpiderQueen), new List<int>() { ModContent.ItemType<AcidicEgg>() }, new List<int>() { SGAmod.Instance.ItemType("SpiderQueenTrophy"), ModContent.ItemType<SpiderQueenMask>(), SGAmod.Instance.ItemType("MusicBox_SpiderQueen"), ModContent.ItemType<SpiderlingEggs>() }, new List<int>() { ModContent.ItemType<VialofAcid>(), ModContent.ItemType<AmberGlowSkull>(), ModContent.ItemType<CorrodedShield>(), ModContent.ItemType<AlkalescentHeart>() }, "Use a [i: " + ItemType("AcidicEgg") + "] underground, anytime", "The Spider Queen will be feasting quite well tonight", "SGAmod/NPCs/SpiderQueen/SpiderQueenLog");
+				bossList.Call("AddBoss", 3.5f, ModContent.NPCType<SpiderQueen>(), this, "Spider Queen", (Func<bool>)(() => SGAWorld.downedSpiderQueen), new List<int>() { ModContent.ItemType<AcidicEgg>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("SpiderQueenTrophy").Type, ModContent.ItemType<SpiderQueenMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_SpiderQueen").Type, ModContent.ItemType<SpiderlingEggs>() }, new List<int>() { ModContent.ItemType<VialofAcid>(), ModContent.ItemType<AmberGlowSkull>(), ModContent.ItemType<CorrodedShield>(), ModContent.ItemType<AlkalescentHeart>() }, "Use a [i: " + ItemType("AcidicEgg") + "] underground, anytime", "The Spider Queen will be feasting quite well tonight", "SGAmod/NPCs/SpiderQueen/SpiderQueenLog");
 
 				bossList.Call("AddMiniBoss", 5.4f, ModContent.NPCType<BossFlyMiniboss1>(), this, "Killer Fly Swarm", (Func<bool>)(() => SGAWorld.downedMurk > 0), new List<int>() { ModContent.ItemType<RoilingSludge>() }, new List<int>() { }, new List<int>() { ModContent.ItemType<RoilingSludge>() }, "Use a [i:" + ItemType("RoilingSludge") + "] in the jungle");
 
-				bossList.Call("AddBoss", 5.5f, ModContent.NPCType<Murk>(), this, "Murk", (Func<bool>)(() => SGAWorld.downedMurk > 1), new List<int>() { ModContent.ItemType<RoilingSludge>() }, new List<int>() { SGAmod.Instance.ItemType("MurkTrophy"), ModContent.ItemType<MurkMask>(), SGAmod.Instance.ItemType("MusicBox_Boss2Remix"), ModContent.ItemType<ImperatorialOdious>() }, new List<int>() { ModContent.ItemType<MurkBossBag>(), ModContent.ItemType<MudAbsorber>(), ModContent.ItemType<MurkyGel>(), ModContent.ItemType<MurkFlail>(), ModContent.ItemType<Mudmore>(), ModContent.ItemType<Mossthorn>(), ModContent.ItemType<Landslide>(), ModContent.ItemType<SwarmGrenade>(), ModContent.ItemType<GnatStaff>(), ModContent.ItemType<SwarmGun>(), ModContent.ItemType<BustlingFungus>() }, "Use a [i:" + ItemType("RoilingSludge") + "] in the jungle after killing the fly swarm", "Murk slinks back into the depths of the jungle");
+				bossList.Call("AddBoss", 5.5f, ModContent.NPCType<Murk>(), this, "Murk", (Func<bool>)(() => SGAWorld.downedMurk > 1), new List<int>() { ModContent.ItemType<RoilingSludge>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("MurkTrophy").Type, ModContent.ItemType<MurkMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Boss2Remix").Type, ModContent.ItemType<ImperatorialOdious>() }, new List<int>() { ModContent.ItemType<MurkBossBag>(), ModContent.ItemType<MudAbsorber>(), ModContent.ItemType<MurkyGel>(), ModContent.ItemType<MurkFlail>(), ModContent.ItemType<Mudmore>(), ModContent.ItemType<Mossthorn>(), ModContent.ItemType<Landslide>(), ModContent.ItemType<SwarmGrenade>(), ModContent.ItemType<GnatStaff>(), ModContent.ItemType<SwarmGun>(), ModContent.ItemType<BustlingFungus>() }, "Use a [i:" + ItemType("RoilingSludge") + "] in the jungle after killing the fly swarm", "Murk slinks back into the depths of the jungle");
 
-				bossList.Call("AddBoss", 6.4f, ModContent.NPCType<CobaltWraith>(), this, "Cobalt Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 1)), ModContent.ItemType<WraithCoreFragment2>(), new List<int>() { SGAmod.Instance.ItemType("CobaltWraithTrophy"), ModContent.ItemType<CobaltWraithMask>(), SGAmod.Instance.ItemType("MusicBox_Wraith"), ModContent.ItemType<CobaltTack>() }, new List<int>() { ModContent.ItemType<WraithFragment4>(), ItemID.Hellstone, ItemID.SoulofLight, ItemID.SoulofNight, ItemID.PalladiumOre, ItemID.CobaltOre, ItemID.MythrilOre, ItemID.OrichalcumOre, ItemID.AdamantiteOre, ItemID.TitaniumOre }, "Use a [i:" + ItemType("WraithCoreFragment2") + "] at anytime, defeat this boss to unlock crafting a Hardmode forge, as well as anything crafted at one", "Cobalt Wraith completes its mission", "SGAmod/NPCs/Wraiths/CobaltWraithLog", "SGAmod/NPCs/Wraiths/CobaltWraith_Head_Boss");
+				bossList.Call("AddBoss", 6.4f, ModContent.NPCType<CobaltWraith>(), this, "Cobalt Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 1)), ModContent.ItemType<WraithCoreFragment2>(), new List<int>() { SGAmod.Instance.Find<ModItem>("CobaltWraithTrophy").Type, ModContent.ItemType<CobaltWraithMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Wraith").Type, ModContent.ItemType<CobaltTack>() }, new List<int>() { ModContent.ItemType<WraithFragment4>(), ItemID.Hellstone, ItemID.SoulofLight, ItemID.SoulofNight, ItemID.PalladiumOre, ItemID.CobaltOre, ItemID.MythrilOre, ItemID.OrichalcumOre, ItemID.AdamantiteOre, ItemID.TitaniumOre }, "Use a [i:" + ItemType("WraithCoreFragment2") + "] at anytime, defeat this boss to unlock crafting a Hardmode forge, as well as anything crafted at one", "Cobalt Wraith completes its mission", "SGAmod/NPCs/Wraiths/CobaltWraithLog", "SGAmod/NPCs/Wraiths/CobaltWraith_Head_Boss");
 
-				bossList.Call("AddBoss", 6.45f, ModContent.NPCType<Murk>(), this, "Murk-Lord of the Flies", (Func<bool>)(() => SGAWorld.GennedVirulent), new List<int>() { ModContent.ItemType<RoilingSludge>() }, new List<int>() { SGAmod.Instance.ItemType("MurkTrophy"), ModContent.ItemType<MurkMask>(), SGAmod.Instance.ItemType("MusicBox_Boss2Remix"), ModContent.ItemType<ImperatorialOdious>() }, new List<int>() { ModContent.ItemType<MurkBossBag>(), ModContent.ItemType<MudAbsorber>(), ModContent.ItemType<MurkyGel>(), ModContent.ItemType<MurkFlail>(), ModContent.ItemType<Mudmore>(), ModContent.ItemType<Mossthorn>(), ModContent.ItemType<Landslide>(), ModContent.ItemType<SwarmGrenade>(), ModContent.ItemType<GnatStaff>(), ModContent.ItemType<SwarmGun>(), ModContent.ItemType<BustlingFungus>() }, "Use a [i:" + ItemType("RoilingSludge") + "] in the jungle during Hardmode and after killing the fly swarm, defeating this buffed version causes a new ore to generate", "Empowered Murk slinks back into the depths of the jungle");
+				bossList.Call("AddBoss", 6.45f, ModContent.NPCType<Murk>(), this, "Murk-Lord of the Flies", (Func<bool>)(() => SGAWorld.GennedVirulent), new List<int>() { ModContent.ItemType<RoilingSludge>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("MurkTrophy").Type, ModContent.ItemType<MurkMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Boss2Remix").Type, ModContent.ItemType<ImperatorialOdious>() }, new List<int>() { ModContent.ItemType<MurkBossBag>(), ModContent.ItemType<MudAbsorber>(), ModContent.ItemType<MurkyGel>(), ModContent.ItemType<MurkFlail>(), ModContent.ItemType<Mudmore>(), ModContent.ItemType<Mossthorn>(), ModContent.ItemType<Landslide>(), ModContent.ItemType<SwarmGrenade>(), ModContent.ItemType<GnatStaff>(), ModContent.ItemType<SwarmGun>(), ModContent.ItemType<BustlingFungus>() }, "Use a [i:" + ItemType("RoilingSludge") + "] in the jungle during Hardmode and after killing the fly swarm, defeating this buffed version causes a new ore to generate", "Empowered Murk slinks back into the depths of the jungle");
 
-				bossList.Call("AddBoss", 6.5f, ModContent.NPCType<Cirno>(), this, "Cirno", (Func<bool>)(() => SGAWorld.downedCirno), new List<int>() { ModContent.ItemType<Nineball>() }, new List<int>() { SGAmod.Instance.ItemType("CirnoTrophy"), ModContent.ItemType<CirnoMask>(), SGAmod.Instance.ItemType("MusicBox_Cirno"), ModContent.ItemType<FrozenBow>() }, new List<int>() { ModContent.ItemType<CirnoWings>(), ModContent.ItemType<CryostalBar>(), ModContent.ItemType<IceScepter>(), ModContent.ItemType<Snowfall>(), ModContent.ItemType<RubiedBlade>(), ModContent.ItemType<Starburster>(), ModContent.ItemType<IcicleFall>(), ModContent.ItemType<Magishield>() }, "Use a [i:" + ItemType("Nineball") + "] in in the snow biome during the day", "Cirno retains their title of 'The Strongest'");
+				bossList.Call("AddBoss", 6.5f, ModContent.NPCType<Cirno>(), this, "Cirno", (Func<bool>)(() => SGAWorld.downedCirno), new List<int>() { ModContent.ItemType<Nineball>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("CirnoTrophy").Type, ModContent.ItemType<CirnoMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Cirno").Type, ModContent.ItemType<FrozenBow>() }, new List<int>() { ModContent.ItemType<CirnoWings>(), ModContent.ItemType<CryostalBar>(), ModContent.ItemType<IceScepter>(), ModContent.ItemType<Snowfall>(), ModContent.ItemType<RubiedBlade>(), ModContent.ItemType<Starburster>(), ModContent.ItemType<IcicleFall>(), ModContent.ItemType<Magishield>() }, "Use a [i:" + ItemType("Nineball") + "] in in the snow biome during the day", "Cirno retains their title of 'The Strongest'");
 
-				bossList.Call("AddBoss", 9.1f, ModContent.NPCType<CaliburnGuardianHardmode>(), this, "Wrath of Caliburn", (Func<bool>)(() => SGAWorld.downedCaliburnGuardianHardmode), new List<int>() { ModContent.ItemType<CaliburnCompess>() }, new List<int>() { ModContent.ItemType<CaliburnCompess>() }, new List<int>() { SGAmod.Instance.ItemType("CaliburnATrophy"), SGAmod.Instance.ItemType("CaliburnBTrophy"), SGAmod.Instance.ItemType("CaliburnCTrophy"), SGAmod.Instance.ItemType("MusicBox_Caliburn") }, new List<int>() { ModContent.ItemType<CaliburnTypeA>(), ModContent.ItemType<CaliburnTypeB>(), ModContent.ItemType<CaliburnTypeC>() }, "Use a [i:" + ItemType("CaliburnCompess") + "] in Dank Shrines in hardmode", "The Caliburn Spirit returns to its slumber");
+				bossList.Call("AddBoss", 9.1f, ModContent.NPCType<CaliburnGuardianHardmode>(), this, "Wrath of Caliburn", (Func<bool>)(() => SGAWorld.downedCaliburnGuardianHardmode), new List<int>() { ModContent.ItemType<CaliburnCompess>() }, new List<int>() { ModContent.ItemType<CaliburnCompess>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("CaliburnATrophy").Type, SGAmod.Instance.Find<ModItem>("CaliburnBTrophy").Type, SGAmod.Instance.Find<ModItem>("CaliburnCTrophy").Type, SGAmod.Instance.Find<ModItem>("MusicBox_Caliburn") .Type}, new List<int>() { ModContent.ItemType<CaliburnTypeA>(), ModContent.ItemType<CaliburnTypeB>(), ModContent.ItemType<CaliburnTypeC>() }, "Use a [i:" + ItemType("CaliburnCompess") + "] in Dank Shrines in hardmode", "The Caliburn Spirit returns to its slumber");
 
-				bossList.Call("AddBoss", 9.5f, ModContent.NPCType<SharkvernHead>(), this, "Sharkvern", (Func<bool>)(() => SGAWorld.downedSharkvern), new List<int>() { ModContent.ItemType<ConchHorn>() }, new List<int>() { SGAmod.Instance.ItemType("SharkvernTrophy"), ModContent.ItemType<SharkvernMask>(), SGAmod.Instance.ItemType("MusicBox_Sharkvern") }, new List<int>() { ModContent.ItemType<SerratedTooth>(), ModContent.ItemType<SharkTooth>(), ModContent.ItemType<Jaws>(), ModContent.ItemType<SnappyShark>(), ModContent.ItemType<SkytoothStorm>(), ModContent.ItemType<SharkBait>(), ItemID.Starfish, ItemID.Seashell, ItemID.Coral, ItemID.SharkFin, ItemID.SoulofFlight }, "Use a [i:" + ItemType("ConchHorn") + "] at the ocean", "The Sharkvern retreats back into seclusion", "SGAmod/NPCs/Sharkvern/SharkvernWhole");
+				bossList.Call("AddBoss", 9.5f, ModContent.NPCType<SharkvernHead>(), this, "Sharkvern", (Func<bool>)(() => SGAWorld.downedSharkvern), new List<int>() { ModContent.ItemType<ConchHorn>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("SharkvernTrophy").Type, ModContent.ItemType<SharkvernMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Sharkvern") .Type}, new List<int>() { ModContent.ItemType<SerratedTooth>(), ModContent.ItemType<SharkTooth>(), ModContent.ItemType<Jaws>(), ModContent.ItemType<SnappyShark>(), ModContent.ItemType<SkytoothStorm>(), ModContent.ItemType<SharkBait>(), ItemID.Starfish, ItemID.Seashell, ItemID.Coral, ItemID.SharkFin, ItemID.SoulofFlight }, "Use a [i:" + ItemType("ConchHorn") + "] at the ocean", "The Sharkvern retreats back into seclusion", "SGAmod/NPCs/Sharkvern/SharkvernWhole");
 
-				bossList.Call("AddMiniBoss", 9.5f, ModContent.NPCType<SharkvernHead>(), this, "Tempest Sharkvern", (Func<bool>)(() => SGAWorld.tidalCharmUnlocked), new List<int>() { ModContent.ItemType<ConchHorn>() }, new List<int>() { SGAmod.Instance.ItemType("SharkvernTrophy"), ModContent.ItemType<SharkvernMask>(), SGAmod.Instance.ItemType("MusicBox_Sharkvern") }, new List<int>() { ModContent.ItemType<SerratedTooth>(), ModContent.ItemType<SharkTooth>(), ModContent.ItemType<Jaws>(), ModContent.ItemType<SnappyShark>(), ModContent.ItemType<SkytoothStorm>(), ModContent.ItemType<SharkBait>(), ItemID.Starfish, ItemID.Seashell, ItemID.Coral, ItemID.SharkFin, ItemID.SoulofFlight }, "Use a [i:" + ItemType("ConchHorn") + "] at the ocean while it is raining", "The Tidal Sharkvern retreats back into seclusion", "SGAmod/NPCs/Sharkvern/SharkvernWhole", "SGAmod/NPCs/Sharkvern/SharkvernHead_Head_Boss", (Func<bool>)(() => SGAWorld.downedSharkvern));
+				bossList.Call("AddMiniBoss", 9.5f, ModContent.NPCType<SharkvernHead>(), this, "Tempest Sharkvern", (Func<bool>)(() => SGAWorld.tidalCharmUnlocked), new List<int>() { ModContent.ItemType<ConchHorn>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("SharkvernTrophy").Type, ModContent.ItemType<SharkvernMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Sharkvern") .Type}, new List<int>() { ModContent.ItemType<SerratedTooth>(), ModContent.ItemType<SharkTooth>(), ModContent.ItemType<Jaws>(), ModContent.ItemType<SnappyShark>(), ModContent.ItemType<SkytoothStorm>(), ModContent.ItemType<SharkBait>(), ItemID.Starfish, ItemID.Seashell, ItemID.Coral, ItemID.SharkFin, ItemID.SoulofFlight }, "Use a [i:" + ItemType("ConchHorn") + "] at the ocean while it is raining", "The Tidal Sharkvern retreats back into seclusion", "SGAmod/NPCs/Sharkvern/SharkvernWhole", "SGAmod/NPCs/Sharkvern/SharkvernHead_Head_Boss", (Func<bool>)(() => SGAWorld.downedSharkvern));
 
-				bossList.Call("AddBoss", 10.5f, ModContent.NPCType<Cratrosity>(), this, "Cratrosity", (Func<bool>)(() => SGAWorld.downedCratrosity), new List<int>() { ModContent.ItemType<TerrariacoCrateBase>(), ItemID.GoldenKey, ItemID.NightKey, ItemID.LightKey }, new List<int>() { SGAmod.Instance.ItemType("CratrosityTrophy"), ModContent.ItemType<CratrosityMask>(), SGAmod.Instance.ItemType("MusicBox_Cratrosity") }, new List<int>() { ModContent.ItemType<IdolOfMidas>(), ModContent.ItemType<TerrariacoCrateKey>(), ModContent.ItemType<CrateBossWeaponMelee>(), ModContent.ItemType<CrateBossWeaponRanged>(), ModContent.ItemType<CrateBossWeaponMagic>(), ModContent.ItemType<CrateBossWeaponSummon>(), ModContent.ItemType<CrateBossWeaponThrown>(), ModContent.ItemType<TF2Emblem>(), ModContent.ItemType<AureateVaultItem>() }, "Right Click a [i:" + ItemType("TerrariacoCrateBase") + "] while you have any of the listed keys in your inventory at night", "All players have paid up their lives to microtransactions", "SGAmod/NPCs/Cratrosity/CratrosityLog");
+				bossList.Call("AddBoss", 10.5f, ModContent.NPCType<Cratrosity>(), this, "Cratrosity", (Func<bool>)(() => SGAWorld.downedCratrosity), new List<int>() { ModContent.ItemType<TerrariacoCrateBase>(), ItemID.GoldenKey, ItemID.NightKey, ItemID.LightKey }, new List<int>() { SGAmod.Instance.Find<ModItem>("CratrosityTrophy").Type, ModContent.ItemType<CratrosityMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Cratrosity") .Type}, new List<int>() { ModContent.ItemType<IdolOfMidas>(), ModContent.ItemType<TerrariacoCrateKey>(), ModContent.ItemType<CrateBossWeaponMelee>(), ModContent.ItemType<CrateBossWeaponRanged>(), ModContent.ItemType<CrateBossWeaponMagic>(), ModContent.ItemType<CrateBossWeaponSummon>(), ModContent.ItemType<CrateBossWeaponThrown>(), ModContent.ItemType<TF2Emblem>(), ModContent.ItemType<AureateVaultItem>() }, "Right Click a [i:" + ItemType("TerrariacoCrateBase") + "] while you have any of the listed keys in your inventory at night", "All players have paid up their lives to microtransactions", "SGAmod/NPCs/Cratrosity/CratrosityLog");
 
-				bossList.Call("AddBoss", 11.25f, ModContent.NPCType<TPD>(), this, "Twin Prime Destroyers", (Func<bool>)(() => SGAWorld.downedTPD), new List<int>() { ModContent.ItemType<Mechacluskerf>() }, new List<int>() { SGAmod.Instance.ItemType("TwinPrimeDestroyersTrophy"), ModContent.ItemType<TPDMask>() }, new List<int>() { ModContent.ItemType<StarMetalMold>(), ItemID.ChlorophyteBar, ItemID.ShroomiteBar, ItemID.SpectreBar, ItemID.Ectoplasm}, "Use a [i:" + ItemType("Mechacluskerf") + "] anywhere at night", "Terraria/OneDropLogo", "Terraria/OneDropLogo", (Func<bool>)(() => SGAWorld.downedTPD));
+				bossList.Call("AddBoss", 11.25f, ModContent.NPCType<TPD>(), this, "Twin Prime Destroyers", (Func<bool>)(() => SGAWorld.downedTPD), new List<int>() { ModContent.ItemType<Mechacluskerf>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("TwinPrimeDestroyersTrophy").Type, ModContent.ItemType<TPDMask>() }, new List<int>() { ModContent.ItemType<StarMetalMold>(), ItemID.ChlorophyteBar, ItemID.ShroomiteBar, ItemID.SpectreBar, ItemID.Ectoplasm}, "Use a [i:" + ItemType("Mechacluskerf") + "] anywhere at night", "Terraria/OneDropLogo", "Terraria/OneDropLogo", (Func<bool>)(() => SGAWorld.downedTPD));
 
-				bossList.Call("AddBoss", 11.85f, ModContent.NPCType<Harbinger>(), this, "Doom Harbinger", (Func<bool>)(() => SGAWorld.downedHarbinger), new List<int>() { ModContent.ItemType<TruelySusEye>() }, new List<int>() { SGAmod.Instance.ItemType("DoomHarbingerTrophy") }, new List<int>() { }, "Use a [i:" + ItemType("TruelySusEye") + "] (Semi-removed Boss)","Harbinger is gone", "Terraria/OneDropLogo", "Terraria/OneDropLogo", (Func<bool>)(() => SGAWorld.downedHarbinger));
+				bossList.Call("AddBoss", 11.85f, ModContent.NPCType<Harbinger>(), this, "Doom Harbinger", (Func<bool>)(() => SGAWorld.downedHarbinger), new List<int>() { ModContent.ItemType<TruelySusEye>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("DoomHarbingerTrophy") .Type}, new List<int>() { }, "Use a [i:" + ItemType("TruelySusEye") + "] (Semi-removed Boss)","Harbinger is gone", "Terraria/OneDropLogo", "Terraria/OneDropLogo", (Func<bool>)(() => SGAWorld.downedHarbinger));
 
 				if (SGAmod.SpaceBossActive)
 				{
 					List<int> PhaethonDrops = new List<int>() { ModContent.ItemType<OverseenCrystal>(), ModContent.ItemType<StarMetalMold>(), ModContent.ItemType<PhaethonEye>() };
-					bossList.Call("AddBoss", 11.86f, ModContent.NPCType<Dimensions.NPCs.SpaceBoss>(), this, "Phaethon", (Func<bool>)(() => SGAWorld.downedSpaceBoss), new List<int>() { }, new List<int>() { SGAmod.Instance.ItemType("PhaethonTrophy"), ModContent.ItemType<PhaethonMask>(), SGAmod.Instance.ItemType("MusicBox_SpaceBoss") }, PhaethonDrops, "Found in Near Orbit", "The cosmos accept another prey", "SGAmod/NPCs/DimBosses/PhaethonLog", "SGAmod/Doom_Harbinger_Resprite_pupil");
+					bossList.Call("AddBoss", 11.86f, ModContent.NPCType<Dimensions.NPCs.SpaceBoss>(), this, "Phaethon", (Func<bool>)(() => SGAWorld.downedSpaceBoss), new List<int>() { }, new List<int>() { SGAmod.Instance.Find<ModItem>("PhaethonTrophy").Type, ModContent.ItemType<PhaethonMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_SpaceBoss") .Type}, PhaethonDrops, "Found in Near Orbit", "The cosmos accept another prey", "SGAmod/NPCs/DimBosses/PhaethonLog", "SGAmod/Doom_Harbinger_Resprite_pupil");
 				}
 
 				bossList.Call("AddBoss", 13.1f, ModContent.NPCType<LuminiteWraith>(), this, "Terra Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 2)), new List<int>() { ModContent.ItemType<WraithCoreFragment3>() }, new List<int>() { }, new List<int>() { ItemID.LunarCraftingStation }, "Use a [i:" + ItemType("WraithCoreFragment3") + "], defeat this boss to get the Ancient Manipulator.", "", "SGAmod/NPCs/Wraiths/LWraithLog", "SGAmod/NPCs/Wraiths/LuminiteWraith_Head_Boss");
 
-				bossList.Call("AddMiniBoss", 14.5f, ModContent.NPCType<PrismBanshee>(), this, "Prismic Banshee", (Func<bool>)(() => SGAWorld.downedPrismBanshee > 0), new List<int>() { }, new List<int>() { SGAmod.Instance.ItemType("PrismicBansheeTrophy"), ModContent.ItemType<PrismicBansheeMask>(), ModContent.ItemType<VisitantStar>() }, new List<int>() { ModContent.ItemType<AuroraTear>() }, "Find its seed spawning underground in the Hallow after Moonlord's defeat, if the seed is not destroyed in time the Prism Banshee will hatch. Prismic Banshee's defeat makes the seed spawn far less often and allows Illuminant Essence to drop", "Banshee has left", "SGAmod/NPCs/PrismicBansheeLog", "SGAmod/NPCs/PrismBanshee_Head_Boss");
+				bossList.Call("AddMiniBoss", 14.5f, ModContent.NPCType<PrismBanshee>(), this, "Prismic Banshee", (Func<bool>)(() => SGAWorld.downedPrismBanshee > 0), new List<int>() { }, new List<int>() { SGAmod.Instance.Find<ModItem>("PrismicBansheeTrophy").Type, ModContent.ItemType<PrismicBansheeMask>(), ModContent.ItemType<VisitantStar>() }, new List<int>() { ModContent.ItemType<AuroraTear>() }, "Find its seed spawning underground in the Hallow after Moonlord's defeat, if the seed is not destroyed in time the Prism Banshee will hatch. Prismic Banshee's defeat makes the seed spawn far less often and allows Illuminant Essence to drop", "Banshee has left", "SGAmod/NPCs/PrismicBansheeLog", "SGAmod/NPCs/PrismBanshee_Head_Boss");
 
-				bossList.Call("AddBoss", 14.8f, ModContent.NPCType<LuminiteWraith>(), this, "Luminite Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 3)), new List<int>() { ModContent.ItemType<WraithCoreFragment3>() }, new List<int>() { SGAmod.Instance.ItemType("LuminiteWraithTrophy"), ModContent.ItemType<LuminiteWraithMask>(), ModContent.ItemType<LuminiteTack>() }, new List<int>() { ModContent.ItemType<CosmicFragment>(), ModContent.ItemType<LuminiteWraithNotch>(), ItemID.FragmentNebula, ItemID.FragmentVortex, ItemID.FragmentStardust, ItemID.FragmentSolar, ItemID.LunarBar, ItemID.LunarOre }, "Use a [i:" + ItemType("WraithCoreFragment3") + "] after the first fight when Moonlord is defeated; the true battle begins...", "", "SGAmod/NPCs/Wraiths/LWraithLog2", "SGAmod/NPCs/Wraiths/LuminiteWraith_Head_Boss");
+				bossList.Call("AddBoss", 14.8f, ModContent.NPCType<LuminiteWraith>(), this, "Luminite Wraith", (Func<bool>)(() => (SGAWorld.downedWraiths > 3)), new List<int>() { ModContent.ItemType<WraithCoreFragment3>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("LuminiteWraithTrophy").Type, ModContent.ItemType<LuminiteWraithMask>(), ModContent.ItemType<LuminiteTack>() }, new List<int>() { ModContent.ItemType<CosmicFragment>(), ModContent.ItemType<LuminiteWraithNotch>(), ItemID.FragmentNebula, ItemID.FragmentVortex, ItemID.FragmentStardust, ItemID.FragmentSolar, ItemID.LunarBar, ItemID.LunarOre }, "Use a [i:" + ItemType("WraithCoreFragment3") + "] after the first fight when Moonlord is defeated; the true battle begins...", "", "SGAmod/NPCs/Wraiths/LWraithLog2", "SGAmod/NPCs/Wraiths/LuminiteWraith_Head_Boss");
 
-				bossList.Call("AddMiniBoss", 14.9f, ModContent.NPCType<PrismBanshee>(), this, "Aurora Banshee", (Func<bool>)(() => SGAWorld.downedPrismBanshee > 1), new List<int>() { ModContent.ItemType<PrismaticBansheeStar>() }, new List<int>() { SGAmod.Instance.ItemType("PrismicBansheeTrophy"), ModContent.ItemType<PrismicBansheeMask>(), ModContent.ItemType<VisitantStar>() }, new List<int>() { ModContent.ItemType<AuroraTear>() }, "Use a [i:" + ModContent.ItemType<PrismaticBansheeStar>() + "] in the underground Hallow, this version drops double the resources, but it is quite stronger", "Banshee has left", "SGAmod/NPCs/PrismicBansheeLog", "SGAmod/NPCs/PrismBanshee_Head_Boss", (Func<bool>)(() => SGAWorld.downedPrismBanshee > 0));
+				bossList.Call("AddMiniBoss", 14.9f, ModContent.NPCType<PrismBanshee>(), this, "Aurora Banshee", (Func<bool>)(() => SGAWorld.downedPrismBanshee > 1), new List<int>() { ModContent.ItemType<PrismaticBansheeStar>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("PrismicBansheeTrophy").Type, ModContent.ItemType<PrismicBansheeMask>(), ModContent.ItemType<VisitantStar>() }, new List<int>() { ModContent.ItemType<AuroraTear>() }, "Use a [i:" + ModContent.ItemType<PrismaticBansheeStar>() + "] in the underground Hallow, this version drops double the resources, but it is quite stronger", "Banshee has left", "SGAmod/NPCs/PrismicBansheeLog", "SGAmod/NPCs/PrismBanshee_Head_Boss", (Func<bool>)(() => SGAWorld.downedPrismBanshee > 0));
 
-				bossList.Call("AddBoss", 15f, ModContent.NPCType<Cratrogeddon>(), this, "Cratrogeddon", (Func<bool>)(() => SGAWorld.downedCratrosityPML), new List<int>() { ModContent.ItemType<SalvagedCrate>(), ItemID.TempleKey }, new List<int>() { SGAmod.Instance.ItemType("CratrogeddonTrophy"), ModContent.ItemType<CratrogeddonMask>(), SGAmod.Instance.ItemType("MusicBox_Cratrosity") }, new List<int>() { ModContent.ItemType<TerrariacoCrateKeyUber>(), ModContent.ItemType<MoneySign>() }, "Right Click a [i:" + ItemType("SalvagedCrate") + "] while you have a [i:" + ItemID.TempleKey + "] in your inventory at night", "All players have paid up their lives to microtransactions, again", "SGAmod/NPCs/Cratrosity/CratrosityLog");
+				bossList.Call("AddBoss", 15f, ModContent.NPCType<Cratrogeddon>(), this, "Cratrogeddon", (Func<bool>)(() => SGAWorld.downedCratrosityPML), new List<int>() { ModContent.ItemType<SalvagedCrate>(), ItemID.TempleKey }, new List<int>() { SGAmod.Instance.Find<ModItem>("CratrogeddonTrophy").Type, ModContent.ItemType<CratrogeddonMask>(), SGAmod.Instance.Find<ModItem>("MusicBox_Cratrosity") .Type}, new List<int>() { ModContent.ItemType<TerrariacoCrateKeyUber>(), ModContent.ItemType<MoneySign>() }, "Right Click a [i:" + ItemType("SalvagedCrate") + "] while you have a [i:" + ItemID.TempleKey + "] in your inventory at night", "All players have paid up their lives to microtransactions, again", "SGAmod/NPCs/Cratrosity/CratrosityLog");
 
 				List<int> SPinkyDrops = new List<int>() { ModContent.ItemType<LunarSlimeHeart>(), ModContent.ItemType<IlluminantHelmet>(), ModContent.ItemType<IlluminantChestplate>(), ModContent.ItemType<IlluminantLeggings>(), ModContent.ItemType<LunarRoyalGel>() };
-				bossList.Call("AddBoss", 16f, ModContent.NPCType<SPinky>(), this, "Supreme Pinky", (Func<bool>)(() => SGAWorld.downedSPinky), new List<int>() { ModContent.ItemType<Prettygel>() }, new List<int>() { SGAmod.Instance.ItemType("SupremePinkyTrophy"), ModContent.ItemType<SupremePinkyMask>(), ModContent.ItemType<MonarchicalCate>() }, SPinkyDrops, "Use a [i:" + ItemType("Prettygel") + "] at night, infuse 20 [i: " + ItemID.PinkGel + "] at a [i: " + ModContent.ItemType<LuminousAlterItem>() + "]", "Supreme Pinky is content with the justice they have dealt");
+				bossList.Call("AddBoss", 16f, ModContent.NPCType<SPinky>(), this, "Supreme Pinky", (Func<bool>)(() => SGAWorld.downedSPinky), new List<int>() { ModContent.ItemType<Prettygel>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("SupremePinkyTrophy").Type, ModContent.ItemType<SupremePinkyMask>(), ModContent.ItemType<MonarchicalCate>() }, SPinkyDrops, "Use a [i:" + ItemType("Prettygel") + "] at night, infuse 20 [i: " + ItemID.PinkGel + "] at a [i: " + ModContent.ItemType<LuminousAlterItem>() + "]", "Supreme Pinky is content with the justice they have dealt");
 
 				//string.Concat(Enumerable.Repeat("¿", Main.rand.Next(1,10)))
 				bossList.Call("AddBoss", 17.5f, ModContent.NPCType<Hellion>(), this, "                                                                                                                                                              hi", (Func<bool>)(() => false), new List<int>() { ModContent.ItemType<HellionSummon>() }, new List<int>() { }, new List<int>() {ModContent.ItemType<ByteSoul>()}, "Craft & Use the [i:" + ModContent.ItemType < HellionSummon>() + "] or talk to Draken when the time is right... (Expert Only)", "Pathetic...", "SGAmod/NPCs/Hellion/Hellioncore", "SGAmod/NPCs/Hellion/Hellion_map_icon", (Func<bool>)(() => SGAWorld.downedHellion == 0));
@@ -279,7 +281,7 @@ namespace SGAmod
 
 				moaritems.AddRange(HellionItems);
 
-				bossList.Call("AddBoss", 17.5f, ModContent.NPCType<Hellion>(), this, "Helon 'Hellion' Weygold", (Func<bool>)(() => SGAWorld.downedHellion > 1), new List<int>() { ModContent.ItemType<HellionSummon>() }, new List<int>() { SGAmod.Instance.ItemType("HellionTrophy") }, moaritems, "Craft & Use the [i:" + ModContent.ItemType<HellionSummon>() + "]. Equip the [i:" + ModContent.ItemType<DevPower>() + "] to unlock the 2nd phase (Expert Only)", "...", "SGAmod/NPCs/Hellion/Hellion", "SGAmod/NPCs/Hellion/Hellion_map_icon", (Func<bool>)(() => SGAWorld.downedHellion != 0));
+				bossList.Call("AddBoss", 17.5f, ModContent.NPCType<Hellion>(), this, "Helon 'Hellion' Weygold", (Func<bool>)(() => SGAWorld.downedHellion > 1), new List<int>() { ModContent.ItemType<HellionSummon>() }, new List<int>() { SGAmod.Instance.Find<ModItem>("HellionTrophy") .Type}, moaritems, "Craft & Use the [i:" + ModContent.ItemType<HellionSummon>() + "]. Equip the [i:" + ModContent.ItemType<DevPower>() + "] to unlock the 2nd phase (Expert Only)", "...", "SGAmod/NPCs/Hellion/Hellion", "SGAmod/NPCs/Hellion/Hellion_map_icon", (Func<bool>)(() => SGAWorld.downedHellion != 0));
 
 				//CaliburnCompess
 				//bossList.Call("AddMiniBossWithInfo", "The Caliburn Guardians", 1.4f, (Func<bool>)(() => SGAWorld.downedCaliburnGuardians > 2), "Find Caliburn Alters in Dank Shrines Underground and right click them to fight a Caliburn Spirit, after beating a sprite you can retrive your reward by breaking the Alter; each guardian is stronger than the previous");
@@ -322,7 +324,7 @@ namespace SGAmod
 				yabhb.Call("RegisterHealthBarMini", NPCType("PrismBanshee"));
 				yabhb.Call("RegisterHealthBarMini", NPCType("CirnoHellion"));
 				yabhb.Call("RegisterMechHealthBar", NPCType("TPD"));
-			}
+			}*/
 
 			SGAmod.EnchantmentCatalyst.Add(ItemID.Amethyst, new EnchantmentCraftingMaterial(2, 50, "Produces a weak, but stable enchantment"));
 			SGAmod.EnchantmentCatalyst.Add(ItemID.Sapphire, new EnchantmentCraftingMaterial(3, 80, "Produces a balanced enchantment, water-related enchantments are more common"));
@@ -340,14 +342,14 @@ namespace SGAmod
 			//If the item were to be turned into air via the last stack, the new item takes its place on the Alter for you to pickup
 
 			//SGAWorld.downedCopperWraith==0 ? true : false)
-			Idglib.AbsentItemDisc.Add(this.ItemType("Tornado"), "5% to drop from Wyverns after Golem");
-			Idglib.AbsentItemDisc.Add(this.ItemType("Upheaval"), "20% to drop from Golem");
-			Idglib.AbsentItemDisc.Add(this.ItemType("Powerjack"), "10% to drop from Wall of Flesh");
-			Idglib.AbsentItemDisc.Add(this.ItemType("Fieryheart"), "This item is a secret...");
-			Idglib.AbsentItemDisc.Add(this.ItemType("Sunbringer"), "This item is not obtainable yet");
-			Idglib.AbsentItemDisc.Add(this.ItemType("StoneBarrierStaff"), "Found in the Deeper Dungeons");
-			Idglib.AbsentItemDisc.Add(this.ItemType("SecondCylinder"), "Sold by the Arms Dealer in a world with tin, or in Hardmode");
-			Idglib.AbsentItemDisc.Add(this.ItemType("GunBarrelParts"), "Sold by the Arms Dealer in a world with copper, or in Hardmode");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Tornado").Type, "5% to drop from Wyverns after Golem");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Upheaval").Type, "20% to drop from Golem");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Powerjack").Type, "10% to drop from Wall of Flesh");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Fieryheart").Type, "This item is a secret...");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Sunbringer").Type, "This item is not obtainable yet");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("StoneBarrierStaff").Type, "Found in the Deeper Dungeons");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("SecondCylinder").Type, "Sold by the Arms Dealer in a world with tin, or in Hardmode");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("GunBarrelParts").Type, "Sold by the Arms Dealer in a world with copper, or in Hardmode");
 			Idglib.AbsentItemDisc.Add(ModContent.ItemType<SwordofTheBlueMoon>(), "10% (20% expert mode) drop from Moon Lord");
 			Idglib.AbsentItemDisc.Add(ModContent.ItemType<SoulPincher>(), "Part of Moon Lord's item pool, can drop as an extra item in the teasure bag");
 
@@ -358,42 +360,42 @@ namespace SGAmod
 			Idglib.AbsentItemDisc.Add(ModContent.ItemType<SoldierRocketLauncher>(), "Sold by the Traveling Merchant in Hardmode, comes with rocket I's for sale too");
 			Idglib.AbsentItemDisc.Add(ModContent.ItemType<BustlingFungus>(), "Defeat Murk while the Engineer Armor is worn");
 
-			Idglib.AbsentItemDisc.Add(this.ItemType("PrimordialSkull"), "Sold by the Dergon (Draken)");
-			Idglib.AbsentItemDisc.Add(this.ItemType("CaliburnCompess"), "Sold by the Dergon (Draken)");
-			Idglib.AbsentItemDisc.Add(this.ItemType("EmptyCharm"), "Sold by the Dergon (Draken)");
-			Idglib.AbsentItemDisc.Add(this.ItemType("SOATT"), "Sold by the Dergon (Draken)");
-			Idglib.AbsentItemDisc.Add(this.ItemType("RedManaStar"), "Sold by the Dergon (Draken)");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("PrimordialSkull").Type, "Sold by the Dergon (Draken)");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("CaliburnCompess").Type, "Sold by the Dergon (Draken)");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("EmptyCharm").Type, "Sold by the Dergon (Draken)");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("SOATT").Type, "Sold by the Dergon (Draken)");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("RedManaStar").Type, "Sold by the Dergon (Draken)");
 
-			Idglib.AbsentItemDisc.Add(this.ItemType("OmegaSigil"), "Drops from Betsy");
-			Idglib.AbsentItemDisc.Add(this.ItemType("SybariteGem"), "Drops from enemies worth 3 or more gold rarely, some greed infused enemies are more likely to drop it");
-			Idglib.AbsentItemDisc.Add(this.ItemType("EntropyTransmuter"), "Sold By Merchant in Multiplayer, crafted in Single Player");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("OmegaSigil").Type, "Drops from Betsy");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("SybariteGem").Type, "Drops from enemies worth 3 or more gold rarely, some greed infused enemies are more likely to drop it");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("EntropyTransmuter").Type, "Sold By Merchant in Multiplayer, crafted in Single Player");
 
-			Idglib.AbsentItemDisc.Add(this.ItemType("FieryShard"), "Drops from Hell/Lava bats and Red Devils");
-			Idglib.AbsentItemDisc.Add(this.ItemType("FrigidShard"), "Drops from icicle blocks");
-			Idglib.AbsentItemDisc.Add(this.ItemType("VialofAcid"), "Drops from Spider Queen");
-			Idglib.AbsentItemDisc.Add(this.ItemType("MurkyGel"), "Drops from Murk and Dank Slimes");
-			Idglib.AbsentItemDisc.Add(this.ItemType("DankCore"), "Is found in Dank Shrines, including crates fished from there");
-			Idglib.AbsentItemDisc.Add(this.ItemType("DankWood"), "Is found in Dank Shrines, including crates fished from there");
-			Idglib.AbsentItemDisc.Add(this.ItemType("IceFairyDust"), "Drops from Ice Fairies, they spawn during the day on the surface biome in hardmode");
-			Idglib.AbsentItemDisc.Add(this.ItemType("Entrophite"), "Found in Limbo, Is also created via an Entropy Transmuter");
-			Idglib.AbsentItemDisc.Add(this.ItemType("HopeHeart"), "Found in the depths of Limbo");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("FieryShard").Type, "Drops from Hell/Lava bats and Red Devils");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("FrigidShard").Type, "Drops from icicle blocks");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("VialofAcid").Type, "Drops from Spider Queen");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("MurkyGel").Type, "Drops from Murk and Dank Slimes");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("DankCore").Type, "Is found in Dank Shrines, including crates fished from there");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("DankWood").Type, "Is found in Dank Shrines, including crates fished from there");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("IceFairyDust").Type, "Drops from Ice Fairies, they spawn during the day on the surface biome in hardmode");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Entrophite").Type, "Found in Limbo, Is also created via an Entropy Transmuter");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("HopeHeart").Type, "Found in the depths of Limbo");
 
-			Idglib.AbsentItemDisc.Add(this.ItemType("EldritchTentacle"), "Drops from Moonlord");
-			Idglib.AbsentItemDisc.Add(this.ItemType("IlluminantEssence"), "Drops from Prismic Banshee, and after her defeat, enemies, the glowing ones... Obviously");
-			Idglib.AbsentItemDisc.Add(this.ItemType("LunarRoyalGel"), "Drops from Supreme Pinky");
-			Idglib.AbsentItemDisc.Add(this.ItemType("CryostalBar"), "Drops from Cirno");
-			Idglib.AbsentItemDisc.Add(this.ItemType("MoneySign"), "Drops from Cratogeddon");
-			Idglib.AbsentItemDisc.Add(this.ItemType("ByteSoul"), "Drops from Hellion Core's 'arms'");
-			Idglib.AbsentItemDisc.Add(this.ItemType("StarMetalMold"), "Drops from Phaethon in Single Player, Twin Prime Destroyers in Multiplayer");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("EldritchTentacle").Type, "Drops from Moonlord");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("IlluminantEssence").Type, "Drops from Prismic Banshee, and after her defeat, enemies, the glowing ones... Obviously");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("LunarRoyalGel").Type, "Drops from Supreme Pinky");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("CryostalBar").Type, "Drops from Cirno");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("MoneySign").Type, "Drops from Cratogeddon");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("ByteSoul").Type, "Drops from Hellion Core's 'arms'");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("StarMetalMold").Type, "Drops from Phaethon in Single Player, Twin Prime Destroyers in Multiplayer");
 
-			Idglib.AbsentItemDisc.Add(this.ItemType("DrakeniteBar"), "Drops Hellion's 2nd form");
-			Idglib.AbsentItemDisc.Add(this.ItemType("UnmanedOre"), "Spawns one type in world,otherwise throw Transmutation Powder onto Novite Ore!");
-			Idglib.AbsentItemDisc.Add(this.ItemType("NoviteOre"), "Spawns one type in world, otherwise throw Transmutation Powder onto Novus Ore!");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("DrakeniteBar").Type, "Drops Hellion's 2nd form");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("UnmanedOre").Type, "Spawns one type in world,otherwise throw Transmutation Powder onto Novite Ore!");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("NoviteOre").Type, "Spawns one type in world, otherwise throw Transmutation Powder onto Novus Ore!");
 
-			Idglib.AbsentItemDisc.Add(this.ItemType("HeliosFocusCrystal"), "Drops from Focus Crystals in space IF Phaethon is not present");
-			Idglib.AbsentItemDisc.Add(this.ItemType("AncientFabric"), "Found in the bottom layer of Limbo, use a Braxsaw to mine it");
-			Idglib.AbsentItemDisc.Add(this.ItemType("OverseenCrystal"), "Found in near orbit space, just fly up up and away!");
-			Idglib.AbsentItemDisc.Add(this.ItemType("Glowrock"), "Found in near orbit space, just go fly up and away!");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("HeliosFocusCrystal").Type, "Drops from Focus Crystals in space IF Phaethon is not present");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("AncientFabric").Type, "Found in the bottom layer of Limbo, use a Braxsaw to mine it");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("OverseenCrystal").Type, "Found in near orbit space, just fly up up and away!");
+			Idglib.AbsentItemDisc.Add(this.Find<ModItem>("Glowrock").Type, "Found in near orbit space, just go fly up and away!");
 
 			/*SGAmod.StuffINeedFuckingSpritesFor.Add(ItemType("PrismalBooster"), "Recolor because lack of spriters");
 			SGAmod.StuffINeedFuckingSpritesFor.Add(ItemType("NovusCore"), "Don't complain about the placeholder sprite, my spriters wouldn't do jack shit about despite my efforts");

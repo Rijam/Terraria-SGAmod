@@ -128,7 +128,7 @@ namespace SGAmod.Dimensions
 			DisplayName.SetDefault("Debug-Go to Limborinth");
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			//SLWorld.EnterSubworld("SGAmod_Blank");
 			SGAPocketDim.EnterSubworld(mod.GetType().Name + "_Limborinth");
@@ -148,7 +148,7 @@ namespace SGAmod.Dimensions
 			DisplayName.SetDefault("Debug-Go to The Gate");
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			//SLWorld.EnterSubworld("SGAmod_Blank");
 			SGAPocketDim.EnterSubworld(mod.GetType().Name + "_TheGate");
@@ -167,7 +167,7 @@ namespace SGAmod.Dimensions
 		{
 			DisplayName.SetDefault("Debug-Go to Test Dim");
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			//SLWorld.EnterSubworld("SGAmod_Blank");
 			SGAPocketDim.EnterSubworld(mod.GetType().Name + "_FakeOverworld");
@@ -186,7 +186,7 @@ namespace SGAmod.Dimensions
 		{
 			DisplayName.SetDefault("Debug-Go to Deeper Dungeons");
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			//SLWorld.EnterSubworld("SGAmod_Blank");
 			SGAPocketDim.EnterSubworld(mod.GetType().Name+"_DeeperDungeon");
@@ -208,19 +208,19 @@ namespace SGAmod.Dimensions
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item9;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item9;
+			Item.consumable = true;
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			//SLWorld.EnterSubworld("SGAmod_Blank");
 

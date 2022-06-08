@@ -17,29 +17,29 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 48;
-			item.damage = 30;
-			item.melee = true;
-			item.noMelee = true;
-			item.useTurn = false;
-			item.noUseGraphic = true;
-			item.useAnimation = 10;
-			item.useStyle = 5;
-			item.useTime = 11;
-			item.knockBack = 4.5f;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.maxStack = 1;
-			item.value = Item.sellPrice(0, 3, 0, 0);
-			item.rare = 3;
-			item.shoot = mod.ProjectileType("MossthornProj");
-			item.shootSpeed = 4.5f;
+			Item.width = 40;
+			Item.height = 48;
+			Item.damage = 30;
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true;
+			Item.useTurn = false;
+			Item.noUseGraphic = true;
+			Item.useAnimation = 10;
+			Item.useStyle = 5;
+			Item.useTime = 11;
+			Item.knockBack = 4.5f;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.maxStack = 1;
+			Item.value = Item.sellPrice(0, 3, 0, 0);
+			Item.rare = 3;
+			Item.shoot = Mod.Find<ModProjectile>("MossthornProj").Type;
+			Item.shootSpeed = 4.5f;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.ownedProjectileCounts[item.shoot] < 1;
+			return player.ownedProjectileCounts[Item.shoot] < 1;
 		}
 	}
 

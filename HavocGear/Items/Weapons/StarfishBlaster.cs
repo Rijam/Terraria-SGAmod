@@ -12,7 +12,7 @@ namespace SGAmod.HavocGear.Items.Weapons
         {
             if (item.type == ItemID.Starfish)
             {
-                item.shoot = mod.ProjectileType("StarfishProjectile");
+                item.shoot = Mod.Find<ModProjectile>("StarfishProjectile").Type;
                 item.ammo = item.type;
             }
         }
@@ -33,20 +33,20 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void SetDefaults()
         {
-            item.damage = 27;
-            item.useTime = 25;
-            item.useAnimation = 25;
-            item.useStyle = 5;
-            item.noMelee = true;
-            item.ranged = true;
-            item.knockBack = 2;
-            item.value = 10;
-            item.rare = 8;
-            item.UseSound = SoundID.Item11;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("StarfishProjectile");
-            item.shootSpeed = 13f;
-            item.useAmmo = 2626;
+            Item.damage = 27;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
+            Item.useStyle = 5;
+            Item.noMelee = true;
+            Item.DamageType = DamageClass.Ranged;
+            Item.knockBack = 2;
+            Item.value = 10;
+            Item.rare = 8;
+            Item.UseSound = SoundID.Item11;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("StarfishProjectile").Type;
+            Item.shootSpeed = 13f;
+            Item.useAmmo = 2626;
         }
 
         public override Vector2? HoldoutOffset()

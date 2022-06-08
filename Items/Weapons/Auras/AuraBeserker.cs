@@ -17,19 +17,19 @@ namespace SGAmod.Items.Weapons.Auras
 		{
 			DisplayName.SetDefault("Berserker Aura Staff");
 			Tooltip.SetDefault("Summons Berserker Gauntlets around the player to boost their attack power\nBut in your rage, you forget to breath");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			base.ModifyTooltips(tooltips);
 			int thetarget = -1;
-			if (Main.LocalPlayer.ownedProjectileCounts[item.shoot] > 0)
+			if (Main.LocalPlayer.ownedProjectileCounts[Item.shoot] > 0)
 			{
 				for (int i = 0; i < Main.maxProjectiles; i += 1)
 				{
-					if (Main.projectile[i].active && Main.projectile[i].type == item.shoot && Main.projectile[i].owner == Main.LocalPlayer.whoAmI)
+					if (Main.projectile[i].active && Main.projectile[i].type == Item.shoot && Main.projectile[i].owner == Main.LocalPlayer.whoAmI)
 					{
 						thetarget = i;
 						break;
@@ -37,36 +37,36 @@ namespace SGAmod.Items.Weapons.Auras
 				}
 			}
 
-			if (thetarget > -1 && Main.projectile[thetarget].active && Main.projectile[thetarget].type == item.shoot)
+			if (thetarget > -1 && Main.projectile[thetarget].active && Main.projectile[thetarget].type == Item.shoot)
 			{
-				AuraMinionBeserker shoot = Main.projectile[thetarget].modProjectile as AuraMinionBeserker;
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Power Level: " + shoot.thepower));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Power scales the breath drain and damage bonuses"));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Grants 5% increased damage to allies in range per Power Level"));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "However their breath drains faster"));
+				AuraMinionBeserker shoot = Main.projectile[thetarget].ModProjectile as AuraMinionBeserker;
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Power Level: " + shoot.thepower));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Power scales the breath drain and damage bonuses"));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Grants 5% increased damage to allies in range per Power Level"));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "However their breath drains faster"));
 			}
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 0;
-			item.knockBack = 3f;
-			item.mana = 10;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 36;
-			item.useAnimation = 36;
-			item.useStyle = 1;
-			item.value = Item.buyPrice(0, 1, 50, 0);
-			item.rare = 1;
-			item.UseSound = SoundID.Item44;
+			Item.damage = 0;
+			Item.knockBack = 3f;
+			Item.mana = 10;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 36;
+			Item.useAnimation = 36;
+			Item.useStyle = 1;
+			Item.value = Item.buyPrice(0, 1, 50, 0);
+			Item.rare = 1;
+			Item.UseSound = SoundID.Item44;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = mod.BuffType("AuraBuffBeserker");
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = Mod.Find<ModBuff>("AuraBuffBeserker").Type;
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = ModContent.ProjectileType<AuraMinionBeserker>();
+			Item.shoot = ModContent.ProjectileType<AuraMinionBeserker>();
 		}
 
 	}
@@ -80,33 +80,33 @@ namespace SGAmod.Items.Weapons.Auras
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Midas Portal");
-			Main.projFrames[projectile.type] = 1;
-			Main.projPet[projectile.type] = true;
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			Main.projFrames[Projectile.type] = 1;
+			Main.projPet[Projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.tileCollide = false;
-			projectile.friendly = false;
-			projectile.minion = true;
-			projectile.minionSlots = 1f;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.tileCollide = false;
+			Projectile.friendly = false;
+			Projectile.minion = true;
+			Projectile.minionSlots = 1f;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
 		}
 
 		public override float CalcAuraPower(Player player)
 		{
-			float temp = 1f+(player.minionDamage * (projectile.minionSlots / 2f));
+			float temp = 1f+(player.GetDamage(DamageClass.Summon) * (Projectile.minionSlots / 2f));
 			return temp;
 		}
 
 		public override void AuraAI(Player player)
 		{
-			Lighting.AddLight(projectile.Center, Color.Red.ToVector3() * 0.78f);
+			Lighting.AddLight(Projectile.Center, Color.Red.ToVector3() * 0.78f);
 		}
 
 		public override void InsideAura<T>(T type, Player player)
@@ -118,7 +118,7 @@ namespace SGAmod.Items.Weapons.Auras
 				theply.beserk[0] = 5;
 				theply.beserk[1] = (int)((float)thepower*1f);
 
-				theply.player.BoostAllDamage((float)(theply.beserk[1] * 0.05f), 0);
+				theply.Player.BoostAllDamage((float)(theply.beserk[1] * 0.05f), 0);
 			}
 
 		}
@@ -126,9 +126,9 @@ namespace SGAmod.Items.Weapons.Auras
 		public override void AuraEffects(Player player, int type)
 		{
 
-			for (float i = 0; i < 360; i += 360f / projectile.minionSlots)
+			for (float i = 0; i < 360; i += 360f / Projectile.minionSlots)
 			{
-				float angle = MathHelper.ToRadians(i + projectile.localAI[0] * -2f);
+				float angle = MathHelper.ToRadians(i + Projectile.localAI[0] * -2f);
 				Vector2 loc2 = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 				Vector2 loc = loc2 * thesize;
 				Vector2 loc3 = loc2;
@@ -137,10 +137,10 @@ namespace SGAmod.Items.Weapons.Auras
 				if (type == 1)
 				{
 					Texture2D tex = Main.itemTexture[ItemID.FireGauntlet];
-					int frame = (int)((projectile.localAI[0] + (i / 3f)) / 5f);
+					int frame = (int)((Projectile.localAI[0] + (i / 3f)) / 5f);
 					frame %= 1;
 
-					Main.spriteBatch.Draw(tex, (projectile.Center + loc) - Main.screenPosition, new Rectangle(0, frame * (int)tex.Height / 1, tex.Width, (int)tex.Height / 1), Color.Red*0.5f, angle + MathHelper.ToRadians(90), new Vector2(tex.Width / 2f, (tex.Height / 5f) / 2f), projectile.scale, SpriteEffects.None, 0f);
+					Main.spriteBatch.Draw(tex, (Projectile.Center + loc) - Main.screenPosition, new Rectangle(0, frame * (int)tex.Height / 1, tex.Width, (int)tex.Height / 1), Color.Red*0.5f, angle + MathHelper.ToRadians(90), new Vector2(tex.Width / 2f, (tex.Height / 5f) / 2f), Projectile.scale, SpriteEffects.None, 0f);
 
 				}
 
@@ -156,7 +156,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 					Vector2 vels = loc2.RotatedBy(-90) * 0f;
 
-					int dustIndex = Dust.NewDust(projectile.Center + loc, 0, 0, DustID.Fire, 0, 0, 150, default(Color), 0.75f);
+					int dustIndex = Dust.NewDust(Projectile.Center + loc, 0, 0, DustID.Fire, 0, 0, 150, default(Color), 0.75f);
 					Main.dust[dustIndex].velocity = vels + player.velocity;
 					Main.dust[dustIndex].noGravity = true;
 					Main.dust[dustIndex].color = Color.Red;
@@ -167,7 +167,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			AuraEffects(Main.player[projectile.owner], 1);
+			AuraEffects(Main.player[Projectile.owner], 1);
 			return false;
 		}
 
@@ -175,7 +175,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 	public class AuraBuffBeserker : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Berserker Aura");
 			Description.SetDefault("The Aura enrages your attacks, but you forget to breath");
@@ -185,7 +185,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			if (player.ownedProjectileCounts[mod.ProjectileType("AuraMinionBeserker")] > 0)
+			if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("AuraMinionBeserker").Type] > 0)
 			{
 				player.buffTime[buffIndex] = 18000;
 			}

@@ -21,6 +21,8 @@ using SGAmod.Items;
 using SGAmod.Tiles.TechTiles;
 using SGAmod.HavocGear.Items;
 using ReLogic.Graphics;
+using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace SGAmod
 {
@@ -35,7 +37,7 @@ namespace SGAmod
             {
                 Player player = Main.LocalPlayer;
                 SGAPlayer modplayer = player.GetModPlayer<SGAPlayer>();
-                int whichone = (int)Main.GlobalTime % 4;
+                int whichone = (int)Main.GlobalTimeWrappedHourly % 4;
                 string[] theones = { "Melee", "Ranged", "Magic", "Throwing" };
                 string text = Math.Round(modplayer.apocalypticalChance[whichone],2) + "% " + theones[whichone] + " Apocalyptical Chance";
 
@@ -102,16 +104,16 @@ namespace SGAmod
         public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
         {
 
-            if (item.modItem != null && item.modItem is IAuroraItem)
+            if (item.ModItem != null && item.ModItem is IAuroraItem)
             {
-                if (line.mod == "Terraria" && line.Name == "ItemName")
+                if (line.Mod == "Terraria" && line.Name == "ItemName")
                 {
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Main.UIScaleMatrix);
 
                     Effect hallowed = SGAmod.HallowedEffect;
 
-                    Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White);
+                    Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
 
                     hallowed.Parameters["alpha"].SetValue(0.5f);
                     hallowed.Parameters["prismAlpha"].SetValue(0f);
@@ -119,13 +121,13 @@ namespace SGAmod
                     hallowed.Parameters["rainbowScale"].SetValue(0.25f);
                     hallowed.Parameters["overlayScale"].SetValue(new Vector2(1f, 1f));
                     hallowed.Parameters["overlayTexture"].SetValue(SGAmod.PearlIceBackground);
-                    hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTime / 14f, 0));
+                    hallowed.Parameters["overlayProgress"].SetValue(new Vector3(0, Main.GlobalTimeWrappedHourly / 14f, 0));
                     hallowed.Parameters["overlayAlpha"].SetValue(1.5f);
                     hallowed.Parameters["overlayStrength"].SetValue(new Vector3(1f, 0f, 0f));
                     hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
                     hallowed.CurrentTechnique.Passes["PrismNoRainbow"].Apply();
 
-                    Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White);
+                    Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
 
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
@@ -133,16 +135,16 @@ namespace SGAmod
                 }
             }
 
-            if (item.modItem != null && item.modItem is IDedicatedItem)
+            if (item.ModItem != null && item.ModItem is IDedicatedItem)
             {
-                if (line.mod == "SGAmod" && line.Name == "DedicatedItem")
+                if (line.Mod == "SGAmod" && line.Name == "DedicatedItem")
                 {
                     Effect hallowed = SGAmod.HallowedEffect;
 
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.UIScaleMatrix);
 
-                    Texture2D DedTex = SGAmod.Instance.GetTexture("Voronoi");
+                    Texture2D DedTex = SGAmod.Instance.Assets.Request<Texture2D>("Voronoi").Value;
 
                     Effect effect = SGAmod.TextureBlendEffect;
                     
@@ -151,16 +153,16 @@ namespace SGAmod
                     effect.Parameters["noiseMultiplier"].SetValue(new Vector2(1f, 1f));
                     effect.Parameters["noiseOffset"].SetValue(new Vector2(0,0));
 
-                    effect.Parameters["Texture"].SetValue(SGAmod.Instance.GetTexture("SmallLaser"));
-                    effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.GetTexture("GlowOrb"));
-                    effect.Parameters["noiseProgress"].SetValue(Main.GlobalTime / 1f);
+                    effect.Parameters["Texture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaser").Value);
+                    effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("GlowOrb").Value);
+                    effect.Parameters["noiseProgress"].SetValue(Main.GlobalTimeWrappedHourly / 1f);
                     effect.Parameters["textureProgress"].SetValue(0);
                     effect.Parameters["noiseBlendPercent"].SetValue(1f);
                     effect.Parameters["strength"].SetValue(1f);
                     effect.Parameters["alphaChannel"].SetValue(true);
 
-                    Vector4 col1 = Main.hslToRgb(((Main.GlobalTime / 12f)) % 1f, 0.50f, 0.75f).ToVector4();
-                    Vector4 col2 = Main.hslToRgb((((Main.GlobalTime) / 12f) + 0.50f) % 1f, 0.15f, 0.50f).ToVector4();
+                    Vector4 col1 = Main.hslToRgb(((Main.GlobalTimeWrappedHourly / 12f)) % 1f, 0.50f, 0.75f).ToVector4();
+                    Vector4 col2 = Main.hslToRgb((((Main.GlobalTimeWrappedHourly) / 12f) + 0.50f) % 1f, 0.15f, 0.50f).ToVector4();
 
                     effect.Parameters["colorTo"].SetValue(col1);
                     effect.Parameters["colorFrom"].SetValue(col2);
@@ -169,7 +171,7 @@ namespace SGAmod
 
                     float offset = 64f;
 
-                    Vector2 textSize = Main.fontMouseText.MeasureString(line.text) + new Vector2(offset * 2f, 0);
+                    Vector2 textSize = /*FontAssets.MouseText.MeasureString(line.Text) + */ new Vector2(offset * 2f, 0);
 
                     Main.spriteBatch.Draw(DedTex,new Vector2(line.X- offset, line.Y), null, Color.White,0, new Vector2(0f, 0), (textSize/ new Vector2(DedTex.Width, DedTex.Height))*new Vector2(1f,0.75f), default, 0);
 
@@ -178,7 +180,7 @@ namespace SGAmod
 
                     for (float ff = 0; ff < MathHelper.TwoPi; ff += MathHelper.TwoPi / 4f) 
                     {
-                        Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y)+ff.ToRotationVector2()*3f, Color.Black);
+                        Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y)+ff.ToRotationVector2()*3f, Color.Black);
                     }
 
                     Main.spriteBatch.End();
@@ -188,27 +190,27 @@ namespace SGAmod
                     {
 
                         effect.Parameters["coordMultiplier"].SetValue(new Vector2(1f, 1f));
-                        effect.Parameters["coordOffset"].SetValue(new Vector2((Main.GlobalTime / 20f)*f, Main.GlobalTime / 200f));
+                        effect.Parameters["coordOffset"].SetValue(new Vector2((Main.GlobalTimeWrappedHourly / 20f)*f, Main.GlobalTimeWrappedHourly / 200f));
                         effect.Parameters["noiseMultiplier"].SetValue(new Vector2(2f, 2f));
-                        effect.Parameters["noiseOffset"].SetValue(new Vector2((Main.GlobalTime / 100f) * f, Main.GlobalTime / -80f));
+                        effect.Parameters["noiseOffset"].SetValue(new Vector2((Main.GlobalTimeWrappedHourly / 100f) * f, Main.GlobalTimeWrappedHourly / -80f));
 
-                        effect.Parameters["Texture"].SetValue(SGAmod.Instance.GetTexture("Voronoi"));
-                        effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.GetTexture("Voronoi"));
-                        effect.Parameters["noiseProgress"].SetValue(Main.GlobalTime / 1f);
+                        effect.Parameters["Texture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Voronoi").Value);
+                        effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Voronoi").Value);
+                        effect.Parameters["noiseProgress"].SetValue(Main.GlobalTimeWrappedHourly / 1f);
                         effect.Parameters["textureProgress"].SetValue(0);
                         effect.Parameters["noiseBlendPercent"].SetValue(0.5f);
                         effect.Parameters["strength"].SetValue(0.50f);
                         effect.Parameters["alphaChannel"].SetValue(true);
 
-                        col1 = Main.hslToRgb(((Main.GlobalTime / 6f)+(f/2f)) % 1f, 1f, 0.75f).ToVector4();
-                        col2 = Main.hslToRgb((((Main.GlobalTime) / 6f) + 0.50f + (f / 2f)) % 1f, 0.8f, 0.50f).ToVector4();
+                        col1 = Main.hslToRgb(((Main.GlobalTimeWrappedHourly / 6f)+(f/2f)) % 1f, 1f, 0.75f).ToVector4();
+                        col2 = Main.hslToRgb((((Main.GlobalTimeWrappedHourly) / 6f) + 0.50f + (f / 2f)) % 1f, 0.8f, 0.50f).ToVector4();
 
                         effect.Parameters["colorTo"].SetValue(col1);
                         effect.Parameters["colorFrom"].SetValue(col2);
 
                         effect.CurrentTechnique.Passes["TextureBlend"].Apply();
 
-                        Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White);
+                        Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
                     }
 
                     Main.spriteBatch.End();
@@ -227,19 +229,19 @@ namespace SGAmod
             {
                 if (item.type == ItemID.Bomb || item.type == ItemID.Dynamite || item.type == ItemID.BombFish || item.type == ItemID.StickyBomb || item.type == ItemID.BouncyBomb || item.type == ItemID.BouncyDynamite || item.type == ItemID.StickyDynamite)
                 {
-                    tooltips.Add(new TooltipLine(mod, "BombHint", "Use these to destroy blocking walls of spikes"));
+                    tooltips.Add(new TooltipLine(Mod, "BombHint", "Use these to destroy blocking walls of spikes"));
                 }
             }
 
-            if (item.modItem != null)
+            if (item.ModItem != null)
             {
-                if (item.owner > -1)
+                if (item.playerIndexTheItemIsReservedFor > -1)
                 {
-                    SGAPlayer sgaply = (Main.player[item.owner].GetModPlayer<SGAPlayer>());
+                    SGAPlayer sgaply = (Main.player[item.playerIndexTheItemIsReservedFor].GetModPlayer<SGAPlayer>());
                     pboostertextboost = "\nCurrent boost: " + sgaply.SpaceDiverWings;
                     pboostertext = pboostertextbase2 + pboostertextboost;
                 }
-                var myType = (item.modItem).GetType();
+                var myType = (item.ModItem).GetType();
                 var n = myType.Namespace;
                 string asastring = (string)n;
                 //int ishavocitem = (asastring.Split('.').Length - 1);
@@ -247,42 +249,42 @@ namespace SGAmod
                 if (ishavocitem > 0)
                 {
                     Color c = Main.hslToRgb(0.9f, 0.5f, 0.35f);
-                    tooltips.Add(new TooltipLine(mod, "HavocItem", Idglib.ColorText(c, "Former Havoc mod item")));
+                    tooltips.Add(new TooltipLine(Mod, "HavocItem", Idglib.ColorText(c, "Former Havoc mod item")));
                 }
                 if (SGAmod.UsesPlasma.ContainsKey(item.type))
                 {
                     Color c = Main.hslToRgb(0.7f, 0.15f, 0.7f);
-                    tooltips.Add(new TooltipLine(mod, "PlasmaItem", Idglib.ColorText(c, "This weapon uses plasma cells for recharging")));
+                    tooltips.Add(new TooltipLine(Mod, "PlasmaItem", Idglib.ColorText(c, "This weapon uses plasma cells for recharging")));
                 }
 
-                if (item.modItem is IManifestedItem)
+                if (item.ModItem is IManifestedItem)
                 {
                     string tt = "This is a placeholder sprite";
                     Color c = Main.hslToRgb(0f, 0.75f, 0.7f);
-                    tooltips.Add(new TooltipLine(mod, "Manifested Item", Idglib.ColorText(Color.Yellow, "This item is a manifestion of your armor set, bound to you")));
+                    tooltips.Add(new TooltipLine(Mod, "Manifested Item", Idglib.ColorText(Color.Yellow, "This item is a manifestion of your armor set, bound to you")));
                 }
-                if (item.modItem is IMangroveSet)
+                if (item.ModItem is IMangroveSet)
                 {
-                    tooltips.Add(new TooltipLine(mod, "MangroveSet", "Having more of the mangrove weapon set in your inventory improves the damage"));
-                    tooltips.Add(new TooltipLine(mod, "MangroveSet", "Up to 50% with all the weapons"));
+                    tooltips.Add(new TooltipLine(Mod, "MangroveSet", "Having more of the mangrove weapon set in your inventory improves the damage"));
+                    tooltips.Add(new TooltipLine(Mod, "MangroveSet", "Up to 50% with all the weapons"));
                 }
 
-                if (item.modItem is INoHitItem)
+                if (item.ModItem is INoHitItem)
                 {
-                    tooltips.Add(new TooltipLine(mod, "NoHitItem",Idglib.ColorText(Items.Placeable.Relics.SGAPlacableRelic.RelicColor,"No-hit exclusive")));
+                    tooltips.Add(new TooltipLine(Mod, "NoHitItem",Idglib.ColorText(Items.Placeable.Relics.SGAPlacableRelic.RelicColor,"No-hit exclusive")));
                 }
-                if (item.modItem is IRadioactiveItem radactive)
+                if (item.ModItem is IRadioactiveItem radactive)
                 {
                     string tt = "This is a placeholder sprite";
                     Color c = Main.hslToRgb(0f, 0.75f, 0.7f);
-                    tooltips.Add(new TooltipLine(mod, "RadioactiveItemText", Idglib.ColorText(Color.Lime, "This item is Radioactive")));
+                    tooltips.Add(new TooltipLine(Mod, "RadioactiveItemText", Idglib.ColorText(Color.Lime, "This item is Radioactive")));
                     if (radactive.RadioactiveHeld() > 0)
                     {
-                        tooltips.Add(new TooltipLine(mod, "RadioactiveItemText", Idglib.ColorText(Color.Lime, "You suffer Radiation "+ radactive.RadioactiveHeld()+" while holding this")));
+                        tooltips.Add(new TooltipLine(Mod, "RadioactiveItemText", Idglib.ColorText(Color.Lime, "You suffer Radiation "+ radactive.RadioactiveHeld()+" while holding this")));
                     }
                     if (radactive.RadioactiveInventory() > 0)
                     {
-                        tooltips.Add(new TooltipLine(mod, "RadioactiveItemText", Idglib.ColorText(Color.Lime, "You suffer Radiation " + radactive.RadioactiveInventory() + " while this is in your inventory")));
+                        tooltips.Add(new TooltipLine(Mod, "RadioactiveItemText", Idglib.ColorText(Color.Lime, "You suffer Radiation " + radactive.RadioactiveInventory() + " while this is in your inventory")));
                     }
                 }
 
@@ -290,48 +292,48 @@ namespace SGAmod
                 if (ammoclip > 0)
                 {
                     Color c = Main.hslToRgb(0.7f, 0.15f, 0.7f);
-                    tooltips.Add(new TooltipLine(mod, "Clip Item", Idglib.ColorText(c, ammoclip == 2 ? "Counts as a revolver: Automatically Reloads itself when held" : "This weapon has a clip and requires manual reloading")));
+                    tooltips.Add(new TooltipLine(Mod, "Clip Item", Idglib.ColorText(c, ammoclip == 2 ? "Counts as a revolver: Automatically Reloads itself when held" : "This weapon has a clip and requires manual reloading")));
                 }
 
-                if (item?.modItem is IRustBurnText)
+                if (item?.ModItem is IRustBurnText)
                 {
-                    tooltips.Add(new TooltipLine(mod, "RustBurnText", RustBurn.RustText));
+                    tooltips.Add(new TooltipLine(Mod, "RustBurnText", RustBurn.RustText));
                 }
 
-                if (item?.modItem is IDankSlowText)
+                if (item?.ModItem is IDankSlowText)
                 {
-                    tooltips.Add(new TooltipLine(mod, "DankSlowText", DankSlow.DankText));
+                    tooltips.Add(new TooltipLine(Mod, "DankSlowText", DankSlow.DankText));
                 }
-                if (item.modItem is IRadioactiveDebuffText)
+                if (item.ModItem is IRadioactiveDebuffText)
                 {
-                    tooltips.Add(new TooltipLine(mod, "RadioactiveDebuffText", RadioDebuff.RadioactiveDebuffText));
+                    tooltips.Add(new TooltipLine(Mod, "RadioactiveDebuffText", RadioDebuff.RadioactiveDebuffText));
                 }
-                if (item?.modItem is IDevItem)
+                if (item?.ModItem is IDevItem)
                 {
-                    (string, string) dev = ((IDevItem)item.modItem).DevName();
-                    Color c = Main.hslToRgb((float)(Main.GlobalTime / 4) % 1f, 0.4f, 0.45f);
-                    tooltips.Add(new TooltipLine(mod, "IDG Dev Item", Idglib.ColorText(c, dev.Item1 + "'s "+(dev.Item2+ (dev.Item2 != "" ? " " : "")) + "dev weapon")));
+                    (string, string) dev = ((IDevItem)item.ModItem).DevName();
+                    Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 4) % 1f, 0.4f, 0.45f);
+                    tooltips.Add(new TooltipLine(Mod, "IDG Dev Item", Idglib.ColorText(c, dev.Item1 + "'s "+(dev.Item2+ (dev.Item2 != "" ? " " : "")) + "dev weapon")));
                 }
 
-                if (item?.modItem is IDedicatedItem)
+                if (item?.ModItem is IDedicatedItem)
                 {
-                    string ded = ((IDedicatedItem)item.modItem).DedicatedItem();
-                    Color c = Main.hslToRgb((float)(Main.GlobalTime / 4) % 1f, 0.4f, 0.45f);
-                    tooltips.Add(new TooltipLine(mod, "DedicatedItem", "-- Dedicated --"));
-                    tooltips.Add(new TooltipLine(mod, "DedicatedItem", ded));
+                    string ded = ((IDedicatedItem)item.ModItem).DedicatedItem();
+                    Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 4) % 1f, 0.4f, 0.45f);
+                    tooltips.Add(new TooltipLine(Mod, "DedicatedItem", "-- Dedicated --"));
+                    tooltips.Add(new TooltipLine(Mod, "DedicatedItem", ded));
                 }
             }
 
             if (item.type == ItemID.ManaRegenerationPotion && (SGAConfig.Instance.ManaPotionChange || SGAmod.DRMMode))
             {
-                tooltips.Add(new TooltipLine(mod, "ManaRegenPotionOPPlzNerf", Idglib.ColorText(Color.Red, "Mana Sickness decays very slowly")));
-                tooltips.Add(new TooltipLine(mod, "ManaRegenPotionOPPlzNerf", Idglib.ColorText(Color.Red, "Max Mana is reduced by 60")));
+                tooltips.Add(new TooltipLine(Mod, "ManaRegenPotionOPPlzNerf", Idglib.ColorText(Color.Red, "Mana Sickness decays very slowly")));
+                tooltips.Add(new TooltipLine(Mod, "ManaRegenPotionOPPlzNerf", Idglib.ColorText(Color.Red, "Max Mana is reduced by 60")));
             }
 
             if (SGAWorld.downedWraiths < 1)
             {
 
-                RecipeFinder finder = new RecipeFinder();
+                /*RecipeFinder finder = new RecipeFinder();
                 finder.AddTile(TileID.Furnaces);
                 List<Recipe> reclist = finder.SearchRecipes();
 
@@ -340,24 +342,24 @@ namespace SGAmod
                 if (foundone != null)
                 {
                     Color c = Main.hslToRgb(0.5f, 0.10f, 0.1f);
-                    tooltips.Add(new TooltipLine(mod, "Wraithclue", Idglib.ColorText(c, "Crafting this will anger something...")));
-                }
+                    tooltips.Add(new TooltipLine(Mod, "Wraithclue", Idglib.ColorText(c, "Crafting this will anger something...")));
+                }*/
             }
             if (item.type == ItemID.LunarBar)
             {
                 if (SGAWorld.downedWraiths < 4)
                 {
                     Color c = Main.hslToRgb(0.5f, 0.20f, 0.7f);
-                    tooltips.Add(new TooltipLine(mod, "Wraithclue", Idglib.ColorText(c, "A very strong being has locked it away from your possession, talk to the guide")));
+                    tooltips.Add(new TooltipLine(Mod, "Wraithclue", Idglib.ColorText(c, "A very strong being has locked it away from your possession, talk to the guide")));
                 }
             }
-            if (item?.modItem is ITechItem)//Tech items
+            if (item?.ModItem is ITechItem)//Tech items
             {
                 // Get the vanilla damage tooltip
-                TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.mod == "Terraria");
+                TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.Mod == "Terraria");
                 if (tt != null)
                 {
-                    string[] thetext = tt.text.Split(' ');
+                    string[] thetext = tt.Text.Split(' ');
                     string newline = "";
                     List<string> valuez = new List<string>();
                     foreach (string text2 in thetext)
@@ -369,10 +371,10 @@ namespace SGAmod
                     {
                         newline += text3;
                     }
-                    tt.text = newline;
+                    tt.Text = newline;
 
 
-                    tooltips.Add(new TooltipLine(mod, "Cheating", Idglib.ColorText(Color.Red, "Technological weapons do less damage at low Electric Charge")));
+                    tooltips.Add(new TooltipLine(Mod, "Cheating", Idglib.ColorText(Color.Red, "Technological weapons do less damage at low Electric Charge")));
                 }
             }
 
@@ -441,7 +443,7 @@ namespace SGAmod
                 return "Illuminant";
             }                
             int[] vibraniumSet = { ModContent.ItemType<Items.Armors.Vibranium.VibraniumMask>(), ModContent.ItemType<Items.Armors.Vibranium.VibraniumHelmet>(), ModContent.ItemType<Items.Armors.Vibranium.VibraniumHeadgear>(), ModContent.ItemType<Items.Armors.Vibranium.VibraniumHood>(), ModContent.ItemType<Items.Armors.Vibranium.VibraniumHat>() };
-            if (vibraniumSet.Any(testby => testby == head.type) && body.type == mod.ItemType("VibraniumChestplate") && legs.type == mod.ItemType("VibraniumLeggings"))
+            if (vibraniumSet.Any(testby => testby == head.type) && body.type == Mod.Find<ModItem>("VibraniumChestplate") .Type&& legs.type == Mod.Find<ModItem>("VibraniumLeggings").Type)
             {
                 return "Vibranium";
             }
@@ -451,11 +453,11 @@ namespace SGAmod
                 {
                     return "MisterCreeper";
                 }
-                if (head.type == mod.ItemType("IDGHead") && body.type == mod.ItemType("IDGBreastplate") && legs.type == mod.ItemType("IDGLegs"))
+                if (head.type == Mod.Find<ModItem>("IDGHead") .Type&& body.type == Mod.Find<ModItem>("IDGBreastplate") .Type&& legs.type == Mod.Find<ModItem>("IDGLegs").Type)
                 {
                     return "IDG";
                 }
-                if (head.type == ModContent.ItemType<Items.Armors.Dev.JellybruHelmet>() && body.type == mod.ItemType("JellybruChestplate") && legs.type == mod.ItemType("JellybruLeggings"))
+                if (head.type == ModContent.ItemType<Items.Armors.Dev.JellybruHelmet>() && body.type == Mod.Find<ModItem>("JellybruChestplate") .Type&& legs.type == Mod.Find<ModItem>("JellybruLeggings").Type)
                 {
                     return "Jellybru";
                 }
@@ -465,7 +467,7 @@ namespace SGAmod
 
         public override void UpdateArmorSet(Player player, string set)
         {
-            SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+            SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 
             string s = "Not Binded!";
             foreach (string key in SGAmod.ToggleRecipeHotKey.GetAssignedKeys())
@@ -520,7 +522,7 @@ namespace SGAmod
                         "\nImmune to fireblocks as well as immunity to On Fire! and Thermal Blaze\nGain an additional free Cooldown Stack";
                 player.fireWalk = true;
                 player.buffImmune[BuffID.OnFire] = true;///
-                player.buffImmune[mod.BuffType("ThermalBlaze")] = true;
+                player.buffImmune[Mod.Find<ModBuff>("ThermalBlaze").Type] = true;
                 sgaplayer.Blazewyrmset = true;
                 sgaplayer.MaxCooldownStacks += 1;
             }
@@ -651,15 +653,15 @@ namespace SGAmod
             {
                 if (player.SGAPly().Novusset > 3)
                 {
-                    RecipeFinder finder = new RecipeFinder();
-                    finder.AddIngredient(mod.ItemType("UnmanedBar"));
-                    List<Recipe> reclist = finder.SearchRecipes();
+                    //RecipeFinder finder = new RecipeFinder();
+                    //finder.AddIngredient(Mod.Find<ModItem>("UnmanedBar").Type);
+                    //List<Recipe> reclist = finder.SearchRecipes();
 
-                    Recipe foundone = reclist.Find(rec => rec.createItem.type == item.type);
+                    //Recipe foundone = reclist.Find(rec => rec.createItem.type == item.type);
 
-                    if (foundone != null)
+                    /*if (foundone != null)
                     {
-                        /*if (sgaply.novusBoost < 3331)
+                        if (sgaply.novusBoost < 3331)
                         {
                             var snd = Main.PlaySound(SoundID.DD2_KoboldIgnite, player.Center);
                             if (snd != null)
@@ -672,36 +674,36 @@ namespace SGAmod
                                 Main.dust[dust].color = new Color(180, 60, 140);
                                 Main.dust[dust].alpha = 181;
                             }
-                        }*/
+                        }
                         sgaply.novusBoost = 450;
                         return true;
-                    }
+                    }*/
 
-                    finder = new RecipeFinder();
-                    finder.AddIngredient(mod.ItemType("FieryShard"));
-                    reclist = finder.SearchRecipes();
+                    //finder = new RecipeFinder();
+                    //finder.AddIngredient(Mod.Find<ModItem>("FieryShard").Type);
+                    //reclist = finder.SearchRecipes();
 
-                    Recipe foundanother = reclist.Find(rec => rec.createItem.type == item.type);
+                    //Recipe foundanother = reclist.Find(rec => rec.createItem.type == item.type);
 
-                    if (foundanother != null)
+                    //if (foundanother != null)
+                    //{
+                    /*if (sgaply.novusBoost < 3331)
                     {
-                        /*if (sgaply.novusBoost < 3331)
+                        var snd = Main.PlaySound(SoundID.DD2_KoboldIgnite, player.Center);
+                        if (snd != null)
                         {
-                            var snd = Main.PlaySound(SoundID.DD2_KoboldIgnite, player.Center);
-                            if (snd != null)
-                            {
-                                snd.Pitch = -0.750f;
-                            }
-                            for (int i = 0; i < 32; i += 1)
-                            {
-                                int dust = Dust.NewDust(player.Hitbox.TopLeft(), player.Hitbox.Width, player.Hitbox.Height, mod.DustType("NovusSparkle"));
-                                Main.dust[dust].color = new Color(180, 60, 140);
-                                Main.dust[dust].alpha = 181;
-                            }
-                        }*/
-                        sgaply.novusBoost = 600;
-                        return true;
-                    }
+                            snd.Pitch = -0.750f;
+                        }
+                        for (int i = 0; i < 32; i += 1)
+                        {
+                            int dust = Dust.NewDust(player.Hitbox.TopLeft(), player.Hitbox.Width, player.Hitbox.Height, mod.DustType("NovusSparkle"));
+                            Main.dust[dust].color = new Color(180, 60, 140);
+                            Main.dust[dust].alpha = 181;
+                        }
+                    }*/
+                    //sgaply.novusBoost = 600;
+                    //return true;
+                    //}
 
                 }
                 sgaply.novusBoost = 200;
@@ -712,18 +714,18 @@ namespace SGAmod
 
         public override void MeleeEffects(Item item, Player player, Rectangle hitbox)
         {
-            SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+            SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
             sgaplayer.FlaskEffects(hitbox, player.velocity);
             if (Main.rand.Next(7) == 0)
             {
                 if (NovusCoreCheck(player, item))
                 {
-                    int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("NovusSparkle"));
+                    int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, Mod.Find<ModDust>("NovusSparkle").Type);
                     Main.dust[dust].color = new Color(180, 60, 140);
                     Main.dust[dust].alpha = 181;
                 }
             }
-            if (!player.frostBurn && player.SGAPly().glacialStone && item.melee && !item.noMelee && !item.noUseGraphic && Main.rand.Next(2) == 0)
+            if (!player.frostBurn && player.SGAPly().glacialStone && item.DamageType == DamageClass.Melee && !item.noMelee && !item.noUseGraphic && Main.rand.Next(2) == 0)
             {
                 int num288 = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, 135, player.velocity.X * 0.2f + (float)(player.direction * 3), player.velocity.Y * 0.2f, 100, default(Color), 2.5f);
                 Main.dust[num288].noGravity = true;
@@ -745,17 +747,17 @@ namespace SGAmod
 
             float basemul = 1f;
 
-            SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+            SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 
-            if (item.shoot < 1 && item.melee && item.pick + item.axe + item.hammer < 1)
+            if (item.shoot < 1 && item.DamageType == DamageClass.Melee && item.pick + item.axe + item.hammer < 1)
                 damage = (int)((float)damage * sgaplayer.trueMeleeDamage);
 
             if (NovusCoreCheck(player, item))
                 basemul += 0.1f;
 
-            if (item.modItem != null)
+            if (item.ModItem != null)
             {
-                var myType = (item.modItem).GetType();
+                var myType = (item.ModItem).GetType();
                 var n = myType.Namespace;
                 string asastring = (string)n;
                 int ishavocitem = asastring.Length - asastring.Replace("HavocGear.", "").Length;
@@ -767,10 +769,10 @@ namespace SGAmod
 
             if (sgaplayer.Dankset > 0)
             {
-                damage = (int)(damage + (damage * ((player.magicDamage + player.minionDamage + player.rangedDamage + player.meleeDamage + player.Throwing().thrownDamage) - 5f) * (sgaplayer.Dankset > 3 ? 0.05f : 0.10f)));
+                //damage = (int)(damage + (damage * ((player.GetDamage(DamageClass.Magic) + player.GetDamage(DamageClass.Summon) + player.GetDamage(DamageClass.Ranged) + player.GetDamage(DamageClass.Melee) + player.Throwing().thrownDamage) - 5f) * (sgaplayer.Dankset > 3 ? 0.05f : 0.10f)));
             }
 
-            if (sgaplayer.IDGset && sgaplayer.digiStacks > 0 && item.ranged)
+            if (sgaplayer.IDGset && sgaplayer.digiStacks > 0 && item.DamageType == DamageClass.Ranged)
             {
                 damage = damage + (int)((float)damage * ((float)sgaplayer.digiStacks / (float)sgaplayer.digiStacksMax) * 1.00f);
             }
@@ -799,7 +801,7 @@ namespace SGAmod
             {
                 grabRange += 400;
             }            
-            if (player.armor[0].type == ModContent.ItemType<VibraniumHat>() && item.maxStack > 1 && ((item.modItem != null && (item.Throwing().thrown || item.modItem is IJablinItem)) || item.thrown))
+            if (player.armor[0].type == ModContent.ItemType<VibraniumHat>() && item.maxStack > 1 && (item.ModItem != null && (item.DamageType == DamageClass.Throwing || item.ModItem is IJablinItem)))
             {
                 grabRange += (int)(720 * player.Throwing().thrownVelocity);
             }
@@ -823,7 +825,7 @@ namespace SGAmod
             {
                 float speed = 0.025f;
                 bool pullIn = player.SGAPly().graniteMagnet;
-                if (player.armor[0].type == ModContent.ItemType<VibraniumHat>() && item.maxStack > 1 && ((item.modItem != null && (item.Throwing().thrown || item.modItem is IJablinItem)) || item.thrown))
+                if (player.armor[0].type == ModContent.ItemType<VibraniumHat>() && item.maxStack > 1 && (item.ModItem != null && (item.DamageType == DamageClass.Throwing || item.ModItem is IJablinItem)))
                 {
                     speed += 0.75f;
                     pullIn = true;
@@ -837,7 +839,7 @@ namespace SGAmod
 
                     if ((player.SGAPly().timer + item.whoAmI) % 10 == 0 && player.armor[0].type == ModContent.ItemType<VibraniumHat>() && player.ownedProjectileCounts[ModContent.ProjectileType<VibraniumThrownExplosion>()] < 20)
                     {
-                        Projectile.NewProjectile(item.Center.X, item.Center.Y, 0, 0, ModContent.ProjectileType<VibraniumThrownExplosion>(), (int)((100 * player.Throwing().thrownDamage) * MathHelper.Clamp((item.stack / 25f), 0.5f, 3f)), 0, player.whoAmI, 0f, 0f);
+                        //Projectile.NewProjectile(null, item.Center.X, item.Center.Y, 0, 0, ModContent.ProjectileType<VibraniumThrownExplosion>(), (int)((100 * player.GetDamage(DamageClass.Throwing)) * MathHelper.Clamp((item.stack / 25f), 0.5f, 3f)), 0, player.whoAmI, 0f, 0f);
                     }
 
                     return true;
@@ -855,7 +857,7 @@ namespace SGAmod
                 item.stack -= 1;
         }
 
-        public override bool UseItem(Item item, Player player)
+        public override bool? UseItem(Item item, Player player)
         {
 
             SGAPlayer sga = player.SGAPly();
@@ -883,8 +885,9 @@ namespace SGAmod
                     {
                         Vector2 myspeed = Main.rand.NextFloat(0f, MathHelper.TwoPi).ToRotationVector2();
                         myspeed *= Main.rand.NextFloat(14f, 22f);
-                        int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, myspeed.X, myspeed.Y, ProjectileID.BouncyGrenade, 1000, 10f, player.whoAmI);
-                        Main.projectile[prog].thrown = true; Main.projectile[prog].ranged = false; Main.projectile[prog].netUpdate = true;
+                        int prog = Projectile.NewProjectile(null, player.Center.X, player.Center.Y, myspeed.X, myspeed.Y, ProjectileID.BouncyGrenade, 1000, 10f, player.whoAmI);
+                        Main.projectile[prog].DamageType = DamageClass.Throwing; //Main.projectile[prog].ranged = false; 
+                        Main.projectile[prog].netUpdate = true;
                         IdgProjectile.Sync(prog);
                     }
 
@@ -897,12 +900,12 @@ namespace SGAmod
 
         public override bool OnPickup(Item item, Player player)
         {
-            SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+            SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 
             if (item.type == ItemID.Heart || item.type == ItemID.CandyApple || item.type == ItemID.CandyCane)
             {
                 if (sgaplayer.EALogo)
-                    player.QuickSpawnItem(ItemID.SilverCoin, 8);
+                    player.QuickSpawnItem(null, ItemID.SilverCoin, 8);
                 if (sgaplayer.HeartGuard)
                 {
                     player.HealEffect(5);
@@ -919,7 +922,7 @@ namespace SGAmod
             if (item.type == ItemID.Star || item.type == ItemID.SugarPlum || item.type == ItemID.SoulCake)
             {
                 if (sgaplayer.EALogo)
-                    player.QuickSpawnItem(ItemID.SilverCoin, 4);
+                    player.QuickSpawnItem(null, ItemID.SilverCoin, 4);
 
                 if (player.SGAPly().starCollector && player.HasBuff(BuffID.ManaSickness))
                 {
@@ -950,13 +953,13 @@ namespace SGAmod
                  }
                  if (totalcount>0)*/
                 
-                if (ItemID.Sets.NeverShiny[item.type])
+                /*if (ItemID.Sets.NeverShiny[item.type]) //Idk what happened to NeverShiny
                 {
                     sgaplayer.midasMoneyConsumed += (item.value*item.stack)/5;
 
                     if (item.type == ItemID.CopperCoin)
                     {
-                        Main.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.5f);
+                        SoundEngine.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.5f);
                         if (sgaplayer.MidasIdol == 2)
                             player.AddBuff(Main.rand.Next(0, 2) == 0 ? BuffID.Campfire : BuffID.Swiftness, 60 * 5);
                         else
@@ -965,7 +968,7 @@ namespace SGAmod
                     }
                     if (item.type == ItemID.SilverCoin)
                     {
-                        Main.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.6f);
+                        SoundEngine.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.6f);
                         if (sgaplayer.MidasIdol == 2)
                             player.AddBuff(Main.rand.Next(0, 2) == 0 ? BuffID.Endurance : BuffID.Honey, 60 * 5);
                         else
@@ -974,19 +977,19 @@ namespace SGAmod
                     }
                     if (item.type == ItemID.GoldCoin)
                     {
-                        Main.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.7f);
+                        SoundEngine.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.7f);
                         player.AddBuff(Main.rand.Next(0, 2) == 0 ? BuffID.DryadsWard : BuffID.Ironskin, 60 * 10);
                         player.AddBuff(Main.rand.Next(0, 2) == 0 ? BuffID.Wrath : BuffID.Rage, 60 * 20);
                         return false;
                     }
                     if (item.type == ItemID.PlatinumCoin)
                     {
-                        Main.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.8f);
+                        SoundEngine.PlaySound(SoundID.CoinPickup, (int)player.position.X, (int)player.position.Y, 0, 1f, -0.8f);
                         player.AddBuff(Main.rand.Next(0, 2) == 0 ? BuffID.RapidHealing : BuffID.ShadowDodge, 60 * 30);
                         player.AddBuff(Main.rand.Next(0, 2) == 0 ? BuffID.SolarShield2 : BuffID.IceBarrier, 60 * 30);
                         return false;
                     }
-                }
+                }*/
 
 
             }
@@ -1043,11 +1046,11 @@ namespace SGAmod
                 return 1f;
 
             float usetimetemp = 1f;
-            SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+            SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
             if (item.pick + item.hammer + item.axe > 0) {
                 usetimetemp *= sgaplayer.UseTimeMulPickaxe;
             }
-            if (item.ranged)
+            if (item.DamageType == DamageClass.Ranged)
             {
                 int type;
                 if ((item.useAmmo == AmmoID.Bullet && item.autoReuse == false) || SGAmod.UsesClips.TryGetValue(item.type, out type))
@@ -1057,14 +1060,14 @@ namespace SGAmod
             }
 
 
-            if (item.summon)
+            if (item.DamageType == DamageClass.Summon)
             {
                 usetimetemp *= (sgaplayer.summonweaponspeed);
             }
-            if ((item.Throwing().thrown || item.thrown) && item.type != ItemID.Beenade) {
+            if (item.DamageType == DamageClass.Throwing && item.type != ItemID.Beenade) {
                 usetimetemp *= sgaplayer.ThrowingSpeed;
             }
-            /*ModItem mitem = item.modItem;
+            /*ModItem mitem = item.ModItem;
             bool hasshoot = false;
             if (mitem != null)
             {
@@ -1073,7 +1076,7 @@ namespace SGAmod
             }*/
             if (sgaplayer.MisterCreeperset)
             {
-                if (item.shoot < 1 && item.melee && item.pick + item.axe + item.hammer < 1)
+                if (item.shoot < 1 && item.DamageType == DamageClass.Melee && item.pick + item.axe + item.hammer < 1)
                 {
                     usetimetemp += 1.5f;
                 }
@@ -1098,38 +1101,38 @@ namespace SGAmod
             }
         }
 
-        public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
+        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damge)
         {
             SGAPlayer sgaply = player.SGAPly();
             if (item.useAmmo > 0 && sgaply.russianRoulette)
             {
-                if (item.ranged && item.useAmmo != AmmoID.Rocket && item.useAmmo != AmmoID.Bullet && item.useAmmo != AmmoID.Arrow)
+                if (item.DamageType == DamageClass.Ranged && item.useAmmo != AmmoID.Rocket && item.useAmmo != AmmoID.Bullet && item.useAmmo != AmmoID.Arrow)
                 {
-                    if (player.armor[0].type == ModContent.ItemType<VibraniumHelmet>())
-                        add += 0.30f;
+                    //if (player.armor[0].type == ModContent.ItemType<VibraniumHelmet>())
+                        //add += 0.30f;
                 }
 
-                add += item?.modItem is Items.Weapons.RevolverBase ? 1f : 0.5f;
+                //add += item?.ModItem is Items.Weapons.RevolverBase ? 1f : 0.5f;
             }
 
-            if (item.modItem != null)
+            if (item.ModItem != null)
             {
 
-                if (item.modItem is ITechItem)
+                if (item.ModItem is ITechItem)
                 {
                     float value = sgaply.electricChargeMax>0 ? sgaply.electricCharge / ((float)sgaply.electricChargeMax) : 0;
                     float floaterdam = (sgaply.techdamage * (MathHelper.Clamp(value * 4f, 0f, 1f)));
-                    add = Math.Max(add+(floaterdam - 1f),0f);
+                    //add = Math.Max(add+(floaterdam - 1f),0f);
                 }
 
-                if (item.modItem is IMangroveSet)
+                if (item.ModItem is IMangroveSet)
                 {
                     List<int> mangroves = new List<int>();
-                    mangroves.Add(mod.ItemType("MangroveStriker"));
-                    mangroves.Add(mod.ItemType("MangroveShiv"));
-                    mangroves.Add(mod.ItemType("MangroveStaff"));
-                    mangroves.Add(mod.ItemType("MangroveBow"));
-                    mangroves.Add(mod.ItemType("MossYoyo"));
+                    mangroves.Add(Mod.Find<ModItem>("MangroveStriker").Type);
+                    mangroves.Add(Mod.Find<ModItem>("MangroveShiv").Type);
+                    mangroves.Add(Mod.Find<ModItem>("MangroveStaff").Type);
+                    mangroves.Add(Mod.Find<ModItem>("MangroveBow").Type);
+                    mangroves.Add(Mod.Find<ModItem>("MossYoyo").Type);
 
                     float bonusdamage = 0;
 
@@ -1143,16 +1146,16 @@ namespace SGAmod
                             }
                         }
                     }
-                    add += bonusdamage;
+                    //add += bonusdamage;
                 }
             }
         }
 
-        public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 
-            if (item?.modItem is ITechItem tehky)
+            if (item?.ModItem is ITechItem tehky)
             {
                 float scalieVal = sgaplayer.techdamage * tehky.ElectricChargeScalingPerUse();
                 sgaplayer.ConsumeElectricCharge(5+(int)((damage * scalieVal) * 1f), 60);
@@ -1161,12 +1164,12 @@ namespace SGAmod
             if ((item.useAmmo == AmmoID.Gel) && player.GetModPlayer<SGAPlayer>().FridgeflameCanister && item.type != ModContent.ItemType<HavocGear.Items.Weapons.Starduster>())
             {
 
-                int probg = Projectile.NewProjectile(position.X + (int)(speedX * 2f), position.Y + (int)(speedY * 2f), speedX, speedY, mod.ProjectileType("IceFlames"), (int)(damage * 0.75), knockBack, player.whoAmI);
-                Main.projectile[probg].ranged = item.ranged;
-                Main.projectile[probg].magic = item.magic;
+                int probg = Projectile.NewProjectile(null, position.X + (int)(velocity.X * 2f), position.Y + (int)(velocity.Y * 2f), velocity.X, velocity.Y, Mod.Find<ModProjectile>("IceFlames").Type, (int)(damage * 0.75), knockback, player.whoAmI);
+                Main.projectile[probg].DamageType = DamageClass.Ranged;
+                Main.projectile[probg].DamageType = DamageClass.Magic;
                 Main.projectile[probg].friendly = true;
                 Main.projectile[probg].hostile = false;
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(15));
+                Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(15));
                 Main.projectile[probg].velocity.X = perturbedSpeed.X * 0.6f;
                 Main.projectile[probg].velocity.Y = perturbedSpeed.Y * 0.6f;
                 Main.projectile[probg].owner = player.whoAmI;
@@ -1189,31 +1192,31 @@ namespace SGAmod
                 CombatText.NewText(new Rectangle((int)Main.screenPosition.X, (int)Main.screenPosition.Y,Main.screenWidth,Main.screenHeight), Main.DiscoColor, texts[Main.rand.Next(texts.Length)], true);
             }
 
-            int itt = Projectile.NewProjectile(player.Center, new Vector2(0, -5), ProjectileID.RocketFireworkYellow,100,0, player.whoAmI);
+            int itt = Projectile.NewProjectile(null, player.Center, new Vector2(0, -5), ProjectileID.RocketFireworkYellow,100,0, player.whoAmI);
             Main.projectile[itt].timeLeft = 72;
-            itt = Projectile.NewProjectile(player.Center, new Vector2(2, -4), ProjectileID.RocketFireworkGreen, 100, 0, player.whoAmI);
+            itt = Projectile.NewProjectile(null, player.Center, new Vector2(2, -4), ProjectileID.RocketFireworkGreen, 100, 0, player.whoAmI);
             Main.projectile[itt].timeLeft = 72;
-            itt = Projectile.NewProjectile(player.Center, new Vector2(-2, -4), ProjectileID.RocketFireworkBlue, 100, 0, player.whoAmI);
+            itt = Projectile.NewProjectile(null, player.Center, new Vector2(-2, -4), ProjectileID.RocketFireworkBlue, 100, 0, player.whoAmI);
             Main.projectile[itt].timeLeft = 72;
 
             switch (Main.rand.Next(0,3))
             {
                 case 2:
-                    player.QuickSpawnItem(ModContent.ItemType<JellybruHelmet>(), 1);
-                    player.QuickSpawnItem(ModContent.ItemType < JellybruChestplate>(), 1);
-                    player.QuickSpawnItem(ModContent.ItemType < JellybruLeggings>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType<JellybruHelmet>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < JellybruChestplate>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < JellybruLeggings>(), 1);
                     break;
 
                 case 1:
-                    player.QuickSpawnItem(ModContent.ItemType < MisterCreeperHead>(), 1);
-                    player.QuickSpawnItem(ModContent.ItemType < MisterCreeperBody>(), 1);
-                    player.QuickSpawnItem(ModContent.ItemType < MisterCreeperLegs>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < MisterCreeperHead>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < MisterCreeperBody>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < MisterCreeperLegs>(), 1);
                     break;
 
                 default:
-                    player.QuickSpawnItem(ModContent.ItemType < IDGHead>(), 1);
-                    player.QuickSpawnItem(ModContent.ItemType < IDGBreastplate>(), 1);
-                    player.QuickSpawnItem(ModContent.ItemType < IDGLegs>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < IDGHead>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < IDGBreastplate>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType < IDGLegs>(), 1);
                     break;
             }
         }
@@ -1224,20 +1227,20 @@ namespace SGAmod
             {
 
                 if (arg == ItemID.GolemBossBag && Main.rand.Next(100) < 20)
-                    player.QuickSpawnItem(mod.ItemType("Upheaval"), 1);
+                    player.QuickSpawnItem(null, Mod.Find<ModItem>("Upheaval").Type, 1);
                 if (arg == ItemID.MoonLordBossBag)
                 {
-                    player.QuickSpawnItem(ModContent.ItemType<EldritchTentacle>(), Main.rand.Next(20, 40));
+                    player.QuickSpawnItem(null, ModContent.ItemType<EldritchTentacle>(), Main.rand.Next(20, 40));
                     if (Main.rand.Next(6)<1)
-                    player.QuickSpawnItem(ModContent.ItemType<Items.Weapons.SoulPincher>());
+                    player.QuickSpawnItem(null, ModContent.ItemType<Items.Weapons.SoulPincher>());
 
                 }
                 if (arg == ItemID.BossBagBetsy)
-                    player.QuickSpawnItem(mod.ItemType("OmegaSigil"), 1);
+                    player.QuickSpawnItem(null, Mod.Find<ModItem>("OmegaSigil").Type, 1);
                 if (arg == ItemID.WallOfFleshBossBag && Main.rand.Next(100) <= 10)
-                    player.QuickSpawnItem(mod.ItemType("Powerjack"), 1);
+                    player.QuickSpawnItem(null, Mod.Find<ModItem>("Powerjack").Type, 1);
                 if (arg == ItemID.WallOfFleshBossBag && Main.rand.Next(100) <= 25)
-                    player.QuickSpawnItem(ModContent.ItemType<Items.Weapons.LeechYoyo>(), 1);
+                    player.QuickSpawnItem(null, ModContent.ItemType<Items.Weapons.LeechYoyo>(), 1);
 
 
             }
@@ -1247,7 +1250,7 @@ namespace SGAmod
         {
             if (item.type == ItemID.FloatingIslandFishingCrate && Main.rand.Next(5) == 0)
             {
-                player.QuickSpawnItem(ModContent.ItemType<StarCollector>());
+                player.QuickSpawnItem(null, ModContent.ItemType<StarCollector>());
             }   
         }
 
@@ -1255,7 +1258,7 @@ namespace SGAmod
         {
             if (item.type == ItemID.SandBlock && item.velocity.Y == 0 && item.wet && Main.rand.Next(50)<1 && item.stack>=1)
             {
-                int item2 = Item.NewItem(item.Center, ModContent.ItemType<MoistSand>(), 1);
+                int item2 = Item.NewItem(null, item.Center, ModContent.ItemType<MoistSand>(), 1);
                 Item item3 = Main.item[item2];
                 if (item3 != null && item3.active)
                 {
@@ -1291,16 +1294,16 @@ namespace SGAmod
 
             string[] buffTier = { "", "RadiationOne", "RadiationTwo", "RadiationThree" };
 
-            if (item.modItem != null && item.modItem is IRadioactiveItem)
+            if (item.ModItem != null && item.ModItem is IRadioactiveItem)
             {
-                int buffID = (item.modItem as IRadioactiveItem).RadioactiveInventory() - (player.SGAPly().grippinggloves > 1 ? 1 : 0);
+                int buffID = (item.ModItem as IRadioactiveItem).RadioactiveInventory() - (player.SGAPly().grippinggloves > 1 ? 1 : 0);
                 int indexer = (int)MathHelper.Clamp(buffID, 0, buffTier.Length - 1);
 
-                if (indexer > 0)
-                    player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff(buffTier[indexer]).Type, 2);
+                //if (indexer > 0)
+                    //player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff(buffTier[indexer]).Type, 2); //GetBuff changed
             }
 
-            if (item.modItem != null && item.modItem is IManifestedItem)
+            if (item.ModItem != null && item.ModItem is IManifestedItem)
             {
                 if (player.inventory[player.selectedItem] != item)
                 {
@@ -1312,9 +1315,9 @@ namespace SGAmod
 
         }
 
-        public override bool NewPreReforge(Item item)
+        public override bool PreReforge(Item item)
         {
-            return base.NewPreReforge(item);
+            return base.PreReforge(item);
         }
 
     }
@@ -1358,12 +1361,12 @@ namespace SGAmod
             return 1f;
         }
 
-        public override bool NeedsSaving(Item item)
+        /*public override bool NeedsSaving(Item item)
         {
             if (item.GetGlobalItem<SGAUpgradableItemInstance>().toolType > 0)
                 return true;
             return false;
-        }
+        }*/
         public override void NetSend(Item item, BinaryWriter writer)
         {
             writer.Write((byte)item.GetGlobalItem<SGAUpgradableItemInstance>().toolType);
@@ -1372,15 +1375,15 @@ namespace SGAmod
         {
             item.GetGlobalItem<SGAUpgradableItemInstance>().toolType = (int)reader.ReadByte();
         }
-        public override TagCompound Save(Item item)
+        public override void SaveData(Item item, TagCompound tag)
         {
-            TagCompound tag = new TagCompound
-            {
-                ["toolType"] = item.GetGlobalItem<SGAUpgradableItemInstance>().toolType
-            };
-            return tag;
+            //TagCompound tag = new TagCompound
+            //{
+                tag["toolType"] = item.GetGlobalItem<SGAUpgradableItemInstance>().toolType;
+            //};
+            //return tag;
         }
-        public override void Load(Item item, TagCompound tag)
+        public override void LoadData(Item item, TagCompound tag)
         {
             SGAUpgradableItemInstance upgrades = item.GetGlobalItem<SGAUpgradableItemInstance>();
             if (tag.ContainsKey("toolType"))
@@ -1396,7 +1399,7 @@ namespace SGAmod
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             if (item.GetGlobalItem<SGAUpgradableItemInstance>().toolType == 1)
-                tooltips.Add(new TooltipLine(mod, "PowerToolTip", Idglib.ColorText(Color.SkyBlue,"Power Tools Upgrade Applied")));
+                tooltips.Add(new TooltipLine(Mod, "PowerToolTip", Idglib.ColorText(Color.SkyBlue,"Power Tools Upgrade Applied")));
         }
     }
 
@@ -1543,7 +1546,7 @@ namespace SGAmod
             item.crit += (int)uber[6];
             myitem.damagecrit += (int)uber[6];
 
-            int itt = Projectile.NewProjectile(Main.LocalPlayer.Center, new Vector2(0,-5), ProjectileID.FireworkFountainRainbow, 0,0);
+            int itt = Projectile.NewProjectile(null, Main.LocalPlayer.Center, new Vector2(0,-5), ProjectileID.FireworkFountainRainbow, 0,0);
             Main.projectile[itt].timeLeft = 90;
             base.Apply(item);
         }
@@ -1585,9 +1588,9 @@ namespace SGAmod
 
         public override bool CanRoll(Item item)
         {
-            if (item.modItem != null)
+            if (item.ModItem != null)
             {
-                if (item.modItem is IShieldItem)
+                if (item.ModItem is IShieldItem)
                     return true;
             }
 
@@ -1634,7 +1637,7 @@ namespace SGAmod
         public float apocochancestrength = 0f;
         public int misc = 0;
 
-        public static byte? GetBustedPrefix
+        /*public static byte? GetBustedPrefix
         {
             get
             {
@@ -1645,7 +1648,7 @@ namespace SGAmod
                 }
                 return null;
             }
-        }
+        }*/
 
         public override PrefixCategory Category { get { return PrefixCategory.AnyWeapon; } }
         public TrapPrefix()
@@ -1656,6 +1659,8 @@ namespace SGAmod
             this.armorbreak = armorbreak;
             this.damage = damage;
         }
+        //Autoload was removed I think. IsLoadingEnabled(Mod mod) ?
+        /*
         public override bool Autoload(ref string name)
         {
             if (base.Autoload(ref name))
@@ -1674,56 +1679,56 @@ namespace SGAmod
                 {
                     if (!SGAConfig.Instance.BestPrefixes)
                     {
-                        mod.AddPrefix("Edged", new TrapPrefix(0.05f, 0.05f));
-                        mod.AddPrefix("Sundering", new TrapPrefix(0.08f, 0.10f));
-                        mod.AddPrefix("Undercut", new TrapPrefix(0.12f, 0.10f));
+                        Mod.AddPrefix("Edged", new TrapPrefix(0.05f, 0.05f));
+                        Mod.AddPrefix("Sundering", new TrapPrefix(0.08f, 0.10f));
+                        Mod.AddPrefix("Undercut", new TrapPrefix(0.12f, 0.10f));
                     }
-                    mod.AddPrefix("Razor Sharp", new TrapPrefix(0.2f, 0.15f));
+                    Mod.AddPrefix("Razor Sharp", new TrapPrefix(0.2f, 0.15f));
                 }
                 if (GetType() == typeof(TrapPrefixAccessory))
                 {
-                    mod.AddPrefix("Defensive", new ShieldPrefix(3));
+                    Mod.AddPrefix("Defensive", new ShieldPrefix(3));
 
-                    mod.AddPrefix("Busted", new BustedPrefix(2));
-                    mod.AddPrefix("Screwed Up", new BustedAccessoryPrefix(2));
+                    Mod.AddPrefix("Busted", new BustedPrefix(2));
+                    Mod.AddPrefix("Screwed Up", new BustedAccessoryPrefix(2));
 
                     if (!SGAConfig.Instance.BestPrefixes)
                     {
-                        mod.AddPrefix("Tinkering", new TrapPrefixAccessory(0f, 0.04f));
-                        mod.AddPrefix("Knowledgeable", new TrapPrefixAccessory(0.06f, 0f));
-                        mod.AddPrefix("Dungeoneer's", new TrapPrefixAccessory(0.04f, 0.05f));
+                        Mod.AddPrefix("Tinkering", new TrapPrefixAccessory(0f, 0.04f));
+                        Mod.AddPrefix("Knowledgeable", new TrapPrefixAccessory(0.06f, 0f));
+                        Mod.AddPrefix("Dungeoneer's", new TrapPrefixAccessory(0.04f, 0.05f));
                     }
-                    mod.AddPrefix("Goblin Tinker's Own", new TrapPrefixAccessory(0.05f, 0.075f));
-                    mod.AddPrefix("Energized", new TrapPrefixAccessory(0,0,1));
+                    Mod.AddPrefix("Goblin Tinker's Own", new TrapPrefixAccessory(0.05f, 0.075f));
+                    Mod.AddPrefix("Energized", new TrapPrefixAccessory(0,0,1));
                 }
                 if (GetType() == typeof(ThrowerPrefix))
                 {
                     if (!SGAConfig.Instance.BestPrefixes)
                     {
-                        mod.AddPrefix("Tossable", new ThrowerPrefix(0f, 0f, 0.1f, 0.15f));
-                        mod.AddPrefix("Impacting", new ThrowerPrefix(0f, 0f, 0.15f, 0.2f));
+                        Mod.AddPrefix("Tossable", new ThrowerPrefix(0f, 0f, 0.1f, 0.15f));
+                        Mod.AddPrefix("Impacting", new ThrowerPrefix(0f, 0f, 0.15f, 0.2f));
                     }
-                    mod.AddPrefix("Olympian", new ThrowerPrefix(0f, 0f, 0.25f, 0.4f));
+                    Mod.AddPrefix("Olympian", new ThrowerPrefix(0f, 0f, 0.25f, 0.4f));
                 }
                 if (GetType() == typeof(ThrowerPrefixAccessory))
                 {
                     if (!SGAConfig.Instance.BestPrefixes)
                     {
-                        mod.AddPrefix("Lightweight", new ThrowerPrefixAccessory(0f, 0f, 0.025f, 0.025f, 0f, 0, 0));
-                        mod.AddPrefix("Slinger's", new ThrowerPrefixAccessory(0f, 0f, 0.04f, 0.02f, 0.01f, 0, 0));
-                        mod.AddPrefix("Pocketed", new ThrowerPrefixAccessory(0f, 0f, 0.02f, 0.03f, 0.015f, 0, 0));
-                        mod.AddPrefix("Conserving", new ThrowerPrefixAccessory(0f, 0f, 0.0f, 0.0f, 0.05f, 0, 0));
+                        Mod.AddPrefix("Lightweight", new ThrowerPrefixAccessory(0f, 0f, 0.025f, 0.025f, 0f, 0, 0));
+                        Mod.AddPrefix("Slinger's", new ThrowerPrefixAccessory(0f, 0f, 0.04f, 0.02f, 0.01f, 0, 0));
+                        Mod.AddPrefix("Pocketed", new ThrowerPrefixAccessory(0f, 0f, 0.02f, 0.03f, 0.015f, 0, 0));
+                        Mod.AddPrefix("Conserving", new ThrowerPrefixAccessory(0f, 0f, 0.0f, 0.0f, 0.05f, 0, 0));
                     }
-                    mod.AddPrefix("Roguish", new ThrowerPrefixAccessory(0f, 0f, 0.06f, 0.05f,0.02f,0,0));
+                    Mod.AddPrefix("Roguish", new ThrowerPrefixAccessory(0f, 0f, 0.06f, 0.05f,0.02f,0,0));
 
                     if (!SGAConfig.Instance.BestPrefixes)
                     {
-                        mod.AddPrefix("Doomsayer", new ThrowerPrefixAccessory(0f, 0f, 0f, 0f, 0f, 0.5f, 0.05f));
+                        Mod.AddPrefix("Doomsayer", new ThrowerPrefixAccessory(0f, 0f, 0f, 0f, 0f, 0.5f, 0.05f));
                     }
-                        mod.AddPrefix("Horseman's", new ThrowerPrefixAccessory(0f, 0f, 0f, 0f, 0f, 1f, 0.075f));
+                        Mod.AddPrefix("Horseman's", new ThrowerPrefixAccessory(0f, 0f, 0f, 0f, 0f, 1f, 0.075f));
 
-                    mod.AddPrefix("Disordered", new ThrowerPrefixAccessory(0.05f, 0.075f, 0f, 0f, 0f, 0.25f, 0.06f));
-                    mod.AddPrefix("Rioter's", new ThrowerPrefixAccessory(0f, 0f, 0.04f, 0.03f, 0f, 0.25f, 0.04f));
+                    Mod.AddPrefix("Disordered", new ThrowerPrefixAccessory(0.05f, 0.075f, 0f, 0f, 0f, 0.25f, 0.06f));
+                    Mod.AddPrefix("Rioter's", new ThrowerPrefixAccessory(0f, 0f, 0.04f, 0.03f, 0f, 0.25f, 0.04f));
                 }
                 /*if (GetType() == typeof(UberPrefixAccessory))
                 {
@@ -1732,21 +1737,21 @@ namespace SGAmod
                     //mod.AddPrefix("Darksider", new UberPrefixAccessory(apocochance: 0.75,damageMult: 0.03f,throwersavingchance: 0.075f,shootSpeedMult: 0.05f,manaMult: 0.04f,knockbackMult: 0.1f,critBonus: 2));
                     mod.AddPrefix("Uber", new UberPrefixAccessory(damageMult: 0.05f, throwersavingchance: 0.10f, shootSpeedMult: 0.15f, manaMult: 0.05f, knockbackMult: 0.2f,useTimeMult: 0.075f,critBonus: 5,thrownvelocity: 0.05f));
                 }*/
-                if (GetType() == typeof(EAPrefixAccessory))
+                /*if (GetType() == typeof(EAPrefixAccessory))
                 {
-                    mod.AddPrefix("Greedy", new EAPrefixAccessory(0.025f));
-                    mod.AddPrefix("Grubby", new EAPrefixAccessory(0.05f));
-                    mod.AddPrefix("Share Holding", new EAPrefixAccessory(0.075f));
+                    Mod.AddPrefix("Greedy", new EAPrefixAccessory(0.025f));
+                    Mod.AddPrefix("Grubby", new EAPrefixAccessory(0.05f));
+                    Mod.AddPrefix("Share Holding", new EAPrefixAccessory(0.075f));
                 }          
             }
             return false;
-        }
+        }*/
 
         public override bool CanRoll(Item item)
         {
-            if (item.modItem != null)
+            if (item.ModItem != null)
             {
-                Type myclass = item.modItem.GetType();
+                Type myclass = item.ModItem.GetType();
                 if (myclass.BaseType == typeof(TrapWeapon) || myclass.IsSubclassOf(typeof(TrapWeapon)))
                     return true;
             }
@@ -1819,7 +1824,7 @@ namespace SGAmod
         }
 
 
-        public override bool NewPreReforge(Item item)
+        public override bool PreReforge(Item item)
         {
             damage2 = 0f;
             armorbreak = 0f;
@@ -1832,7 +1837,7 @@ namespace SGAmod
             damagecrit = 0;
             apocochancestrength = 0;
             misc = 0;
-            return base.NewPreReforge(item);
+            return base.PreReforge(item);
         }
 
         public static bool SavingChanceMethod(Player player, bool accountforbuiltinchecks = false)
@@ -1850,7 +1855,7 @@ namespace SGAmod
 
         }
 
-        public override bool CanEquipAccessory(Item item, Player player, int slot)
+        public override bool CanEquipAccessory(Item item, Player player, int slot, bool modded)
         {
             if (misc != 2)
                 return base.CanUseItem(item, player);
@@ -1877,8 +1882,8 @@ namespace SGAmod
             if (misc == 1)
                 player.GetModPlayer<SGAPlayer>().electricrechargerate += 1;
 
-            player.magicDamage += damageacc; player.minionDamage += damageacc; player.rangedDamage += damageacc; player.meleeDamage += damageacc; player.Throwing().thrownDamage += damageacc;
-            player.magicCrit += damagecrit; player.rangedCrit += damagecrit; player.meleeCrit += damagecrit; player.Throwing().thrownCrit += damagecrit;
+            player.GetDamage(DamageClass.Magic) += damageacc; player.GetDamage(DamageClass.Summon) += damageacc; player.GetDamage(DamageClass.Ranged) += damageacc; player.GetDamage(DamageClass.Melee) += damageacc; player.Throwing().thrownDamage += damageacc;
+            player.GetCritChance(DamageClass.Magic) += damagecrit; player.GetCritChance(DamageClass.Ranged) += damagecrit; player.GetCritChance(DamageClass.Melee) += damagecrit; player.Throwing().thrownCrit += damagecrit;
             for (int i = 0; i < player.GetModPlayer<SGAPlayer>().apocalypticalChance.Length; i += 1)
                 player.GetModPlayer<SGAPlayer>().apocalypticalChance[i] += apocochance;
             player.Throwing().thrownVelocity += thrownvelocity;
@@ -1902,8 +1907,8 @@ namespace SGAmod
                 string line2 = "% extra trap damage (while held)";
                 if (item.accessory)
                     line2 = "% extra trap damage";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + ((damage2) * 100f) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + ((damage2) * 100f) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (armorbreak > 0)
@@ -1911,72 +1916,72 @@ namespace SGAmod
                 string line2 = "%";
                 if (item.accessory)
                     line2 = "% trap damage";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + ((armorbreak) * 100f) + line2 + " armor piercing");
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + ((armorbreak) * 100f) + line2 + " armor piercing");
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (throweruserate > 0)
             {
                 string line2 = "% throwing rate";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + ((throweruserate) * 100f) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + ((throweruserate) * 100f) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (thrownvelocity > 0)
             {
                 string line2 = "% throwing velocity";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + ((thrownvelocity) * 100f) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + ((thrownvelocity) * 100f) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (thrownsavingchance > 0)
             {
                 string line2 = "% chance to not consume thrown item";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + ((thrownsavingchance) * 100f) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + ((thrownsavingchance) * 100f) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (greed > 0)
             {
                 string line2 = "% shop discounts";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + (greed*100f) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + (greed*100f) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (apocochancestrength > 0)
             {
                 string line2 = "% Apocalyptical Strength";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + (apocochancestrength*100) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + (apocochancestrength*100) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }              
             if (apocochance > 0)
             {
                 string line2 = "% Apocalyptical Chance";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", "+" + (apocochance) + line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", "+" + (apocochance) + line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
-                tooltips.Add(new TooltipLine(mod, "apocthing", SGAGlobalItem.apocalypticaltext));
+                tooltips.Add(new TooltipLine(Mod, "apocthing", SGAGlobalItem.apocalypticaltext));
             }
             if (misc == 1)
             {
                 string line2 = "+1 passive Electric Charge Rate";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (misc == 2)
             {
                 string line2 = Idglib.ColorText(Color.Red,"This item is busted and needs to be reforged to be used");
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
             if (misc == 3)
             {
                 string line2 = "+5% Shield Block";
-                TooltipLine line = new TooltipLine(mod, "SGAPrefixline", line2);
-                line.isModifier = true;
+                TooltipLine line = new TooltipLine(Mod, "SGAPrefixline", line2);
+                line.IsModifier = true;
                 tooltips.Add(line);
             }
         }
@@ -2040,17 +2045,17 @@ namespace SGAmod
                 if (find)
                 {
                     if (SGAmod.CustomUIMenu.visible && SGAmod.CustomUIMenu.EnchantingCataylstPanel.item.type == item.type)
-                        tooltips.Add(new TooltipLine(mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, valuz.text)));
+                        tooltips.Add(new TooltipLine(Mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, valuz.text)));
                     else
-                        tooltips.Add(new TooltipLine(mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, "This item could be used as a Catalyst Agent in enchanting")));
+                        tooltips.Add(new TooltipLine(Mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, "This item could be used as a Catalyst Agent in enchanting")));
                 }
                 find = SGAmod.EnchantmentFocusCrystal.TryGetValue(item.type, out valuz);
                 if (find)
                 {
                     if (SGAmod.CustomUIMenu.visible && SGAmod.CustomUIMenu.EnchantingStationsPanels[2].item.type == item.type)
-                        tooltips.Add(new TooltipLine(mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, valuz.text)));
+                        tooltips.Add(new TooltipLine(Mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, valuz.text)));
                     else
-                        tooltips.Add(new TooltipLine(mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, "This item could be used as a Focusing Crystal in enchanting")));
+                        tooltips.Add(new TooltipLine(Mod, "EnchantmentCatalyst", Idglib.ColorText(Color.Purple, "This item could be used as a Focusing Crystal in enchanting")));
                 }
             }
         }

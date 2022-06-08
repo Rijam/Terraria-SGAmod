@@ -10,6 +10,7 @@ using Terraria.Enums;
 using Idglibrary;
 using Terraria.DataStructures;
 using SGAmod.Buffs;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons.SeriousSam
 {
@@ -24,37 +25,28 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		
 		public override void SetDefaults()
 		{
-			item.damage = 60;
-			item.crit = 10;
-			item.useStyle = 5;
-			item.autoReuse = true;
-			item.useAnimation = 20;
-			item.useTime = 20;
-			item.width = 50;
-			item.height = 20;
-			item.shoot = mod.ProjectileType("LavaRocks");
-			item.UseSound = SoundID.Item11;
-			item.shootSpeed = 8f;
-			item.noMelee = true;
-			item.value = Item.sellPrice(0, 20, 0, 0);
-			item.knockBack = 7f;
-			item.rare = 7;
-			item.magic = true;
-			item.mana = 8;
+			Item.damage = 60;
+			Item.crit = 10;
+			Item.useStyle = 5;
+			Item.autoReuse = true;
+			Item.useAnimation = 20;
+			Item.useTime = 20;
+			Item.width = 50;
+			Item.height = 20;
+			Item.shoot = Mod.Find<ModProjectile>("LavaRocks").Type;
+			Item.UseSound = SoundID.Item11;
+			Item.shootSpeed = 8f;
+			Item.noMelee = true;
+			Item.value = Item.sellPrice(0, 20, 0, 0);
+			Item.knockBack = 7f;
+			Item.rare = 7;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 8;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.JackOLanternLauncher, 1);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 8);
-			recipe.AddIngredient(ItemID.LihzahrdPowerCell, 2);
-			recipe.AddIngredient(mod.ItemType("ManaBattery"), 3);
-			recipe.AddIngredient(mod.ItemType("FieryShard"), 5);
-			recipe.AddIngredient(mod.ItemType("AdvancedPlating"), 5);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.JackOLanternLauncher, 1).AddIngredient(ItemID.MeteoriteBar, 8).AddIngredient(ItemID.LihzahrdPowerCell, 2).AddIngredient(mod.ItemType("ManaBattery"), 3).AddIngredient(mod.ItemType("FieryShard"), 5).AddIngredient(mod.ItemType("AdvancedPlating"), 5).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 		public override Vector2? HoldoutOffset()
@@ -76,7 +68,7 @@ namespace SGAmod.Items.Weapons.SeriousSam
 				Main.projectile[proj].friendly=true;
 				Main.projectile[proj].hostile=false;
 				Main.projectile[proj].timeLeft=600;
-				Main.projectile[proj].knockBack=item.knockBack;
+				Main.projectile[proj].knockBack=Item.knockBack;
 				if (i > 0)
 				{
 					Main.projectile[proj].width = 15;
@@ -113,16 +105,16 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 18;
-			projectile.height = 18;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.magic = true;
-			projectile.penetrate = 1;
-			projectile.usesLocalNPCImmunity = true;
-			aiType = ProjectileID.WoodenArrowFriendly;
+			Projectile.width = 18;
+			Projectile.height = 18;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.penetrate = 1;
+			Projectile.usesLocalNPCImmunity = true;
+			AIType = ProjectileID.WoodenArrowFriendly;
 		}
 
 		public override string Texture
@@ -132,11 +124,11 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public void DrawLava()
         {
-			bool facingleft = projectile.velocity.X > 0;
+			bool facingleft = Projectile.velocity.X > 0;
 			Microsoft.Xna.Framework.Graphics.SpriteEffects effect = SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically;
-			Texture2D texture = SGAmod.ExtraTextures[104 + (int)projectile.ai[0]];
+			Texture2D texture = SGAmod.ExtraTextures[104 + (int)Projectile.ai[0]];
 			Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
-			Main.spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, new Rectangle?(), Color.White * trans, projectile.rotation + (facingleft ? (float)(1f * Math.PI) : 0f), origin, projectile.scale, facingleft ? effect : SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, new Rectangle?(), Color.White * trans, Projectile.rotation + (facingleft ? (float)(1f * Math.PI) : 0f), origin, Projectile.scale, facingleft ? effect : SpriteEffects.None, 0);
 
 		}
 
@@ -154,33 +146,33 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-			if (projectile.width > 16)
+			if (Projectile.width > 16)
 				damage *= 3;
 
 		}
 
         public override bool PreKill(int timeLeft)
 		{
-			projectile.type = ProjectileID.Fireball;
-			Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			Projectile.type = ProjectileID.Fireball;
+			SoundEngine.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 			for (int num315 = 0; num315 < 40; num315 = num315 + 1)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 				randomcircle*=Main.rand.NextFloat(2f, 6f);
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X - 1, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"), 0,0, 50, Main.hslToRgb(0.15f, 1f, 1.00f), projectile.scale*2f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X - 1, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type, 0,0, 50, Main.hslToRgb(0.15f, 1f, 1.00f), Projectile.scale*2f);
 				Main.dust[num316].noGravity = false;
 				Main.dust[num316].velocity = new Vector2(randomcircle.X, randomcircle.Y);		
 			}
-			if (projectile.width > 16)
+			if (Projectile.width > 16)
 			{
 				for (int num315 = 1; num315 < 4; num315 = num315 + 1)
 				{
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 					float velincrease = Main.rand.NextFloat(4f,8f);
-					int thisone = Projectile.NewProjectile(projectile.Center.X - projectile.velocity.X, projectile.Center.Y - projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ModContent.ProjectileType<LavaRocks>(), (int)(projectile.damage * 0.75), projectile.knockBack, projectile.owner, 0.0f, 0f);
+					int thisone = Projectile.NewProjectile(Projectile.Center.X - Projectile.velocity.X, Projectile.Center.Y - Projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ModContent.ProjectileType<LavaRocks>(), (int)(Projectile.damage * 0.75), Projectile.knockBack, Projectile.owner, 0.0f, 0f);
 					Main.projectile[thisone].netUpdate = true;
-					Main.projectile[thisone].friendly = projectile.friendly;
-					Main.projectile[thisone].hostile = projectile.hostile;
+					Main.projectile[thisone].friendly = Projectile.friendly;
+					Main.projectile[thisone].hostile = Projectile.hostile;
 					Main.projectile[thisone].width = Main.projectile[thisone].width - 6;
 					Main.projectile[thisone].height = Main.projectile[thisone].height - 6;
 					if (hittile)
@@ -189,8 +181,8 @@ namespace SGAmod.Items.Weapons.SeriousSam
 				}
 			}
 
-			int theproj = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, mod.ProjectileType("Explosion"), (int)((double)projectile.damage * 0.25f), projectile.knockBack, projectile.owner, 0f, 0f);
-			Main.projectile[theproj].magic = projectile.magic;
+			int theproj = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, Mod.Find<ModProjectile>("Explosion").Type, (int)((double)Projectile.damage * 0.25f), Projectile.knockBack, Projectile.owner, 0f, 0f);
+			Main.projectile[theproj].DamageType = projectile.magic;
 			Main.projectile[theproj].usesLocalNPCImmunity = true;
 			Main.projectile[theproj].localNPCHitCooldown = -1;
 			Main.projectile[theproj].penetrate = -1;
@@ -208,9 +200,9 @@ namespace SGAmod.Items.Weapons.SeriousSam
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.velocity.Y<0 && hitwhilefalling)
+			if (Projectile.velocity.Y<0 && hitwhilefalling)
 			return false;
-			if (projectile.ai[1] < 5)
+			if (Projectile.ai[1] < 5)
 			return false;
 			return base.CanHitNPC(target);
 		}
@@ -218,32 +210,32 @@ namespace SGAmod.Items.Weapons.SeriousSam
 		public override void AI()
 		{
 
-			Point16 loc = new Point16((int)projectile.Center.X >> 4, (int)projectile.Center.Y >> 4);
+			Point16 loc = new Point16((int)Projectile.Center.X >> 4, (int)Projectile.Center.Y >> 4);
 			if (WorldGen.InWorld(loc.X, loc.Y))
 			{
 				Tile tile = Main.tile[loc.X, loc.Y];
 				if (tile != null)
 					if (tile.liquid > 64)
-						projectile.Kill();
+						Projectile.Kill();
 			}
 
-			projectile.scale = ((float)projectile.width / 24f);
-			for (int i = 0; i < projectile.scale + 0.5; i++)
+			Projectile.scale = ((float)Projectile.width / 24f);
+			for (int i = 0; i < Projectile.scale + 0.5; i++)
 			{
-				int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"));
-				Main.dust[dust].scale = 2.25f*projectile.scale;
+				int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type);
+				Main.dust[dust].scale = 2.25f*Projectile.scale;
 				Main.dust[dust].noGravity = true;
 				Main.dust[dust].color = Main.dust[dust].color * 0.25f;
-				Main.dust[dust].velocity = -projectile.velocity * (float)(Main.rand.Next(20, 100 + (i * 40)) * 0.005f);
+				Main.dust[dust].velocity = -Projectile.velocity * (float)(Main.rand.Next(20, 100 + (i * 40)) * 0.005f);
 			}
 
 
 
 
-			projectile.velocity.Y += 0.1f;
-			projectile.rotation += projectile.velocity.X*0.05f;//(float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.velocity.Y += 0.1f;
+			Projectile.rotation += Projectile.velocity.X*0.05f;//(float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 
-			projectile.ai[1] += 1;
+			Projectile.ai[1] += 1;
 		}
 
 

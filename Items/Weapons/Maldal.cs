@@ -12,6 +12,7 @@ using SGAmod.NPCs.Hellion;
 using Idglibrary;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -22,38 +23,38 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Maldal");
 			Tooltip.SetDefault("Floods your screen with files that explode when they touch an enemy!\nNot usable while your files are on the system");
-			Item.staff[item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
+			Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 200;
-			item.crit = 15;
-			item.magic = true;
-			item.mana = 250;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 40;
-			item.useAnimation = 40;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 1000000;
-			item.rare = 10;
-			item.UseSound = SoundID.Item78;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("MagoldFiles");
-			item.shootSpeed = 8f;
+			Item.damage = 200;
+			Item.crit = 15;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 250;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 40;
+			Item.useAnimation = 40;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 1000000;
+			Item.rare = 10;
+			Item.UseSound = SoundID.Item78;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("MagoldFiles").Type;
+			Item.shootSpeed = 8f;
 		}
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime / 6f) % 1f, 0.85f, 0.45f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly / 6f) % 1f, 0.85f, 0.45f);
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.ownedProjectileCounts[mod.ProjectileType("MagoldFiles")] < 1;
+			return player.ownedProjectileCounts[Mod.Find<ModProjectile>("MagoldFiles").Type] < 1;
 		}
 
 		public override string Texture
@@ -63,15 +64,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("ByteSoul"), 75);
-			//recipe.AddIngredient(mod.ItemType("LostNotes"), 5);
-			recipe.AddRecipeGroup("Fragment", 15);
-			recipe.AddIngredient(ItemID.SpellTome, 1);
-			recipe.AddIngredient(ItemID.Worm, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ByteSoul"), 75).AddRecipeGroup("Fragment", 15).AddIngredient(ItemID.SpellTome, 1).AddIngredient(ItemID.Worm, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -107,8 +100,8 @@ namespace SGAmod.Items.Weapons
 
 			public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 			{
-				Vector2 size = Main.fontDeathText.MeasureString("RaVe" + projectile.whoAmI);
-				spriteBatch.DrawString(Main.fontMouseText, "RaVe" + projectile.whoAmI, (projectile.Center + new Vector2(-size.X / 6f, 24)) - Main.screenPosition, Color.White);
+				Vector2 size = Main.fontDeathText.MeasureString("RaVe" + Projectile.whoAmI);
+				spriteBatch.DrawString(Main.fontMouseText, "RaVe" + Projectile.whoAmI, (Projectile.Center + new Vector2(-size.X / 6f, 24)) - Main.screenPosition, Color.White);
 				return base.PreDraw(spriteBatch, Color.White);
 			}
 
@@ -120,11 +113,11 @@ namespace SGAmod.Items.Weapons
 					float randomx = 48f;//Main.rand.NextFloat(54f, 96f);
 					Vector2 here = new Vector2((float)Math.Cos(angles), (float)Math.Sin(angles));
 
-					SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y,61);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y,61);
 					if (sound != null)
 						sound.Pitch = 0.925f;
 
-					int thisone = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0,0, ModContent.ProjectileType<MaldalBlast>(), projectile.damage, projectile.knockBack, Main.player[projectile.owner].whoAmI, 0.0f, 0f);
+					int thisone = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0,0, ModContent.ProjectileType<MaldalBlast>(), Projectile.damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, 0.0f, 0f);
 					IdgProjectile.Sync(thisone);
 
 
@@ -134,15 +127,15 @@ namespace SGAmod.Items.Weapons
 			public override void SetDefaults()
 			{
 				//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-				projectile.width = 16;
-				projectile.height = 20;
-				projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-				projectile.hostile = false;
-				projectile.friendly = true;
-				projectile.tileCollide = true;
-				projectile.magic = true;
-				projectile.timeLeft = 450;
-				aiType = ProjectileID.Bullet;
+				Projectile.width = 16;
+				Projectile.height = 20;
+				Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+				Projectile.hostile = false;
+				Projectile.friendly = true;
+				Projectile.tileCollide = true;
+				Projectile.DamageType = DamageClass.Magic;
+				Projectile.timeLeft = 450;
+				AIType = ProjectileID.Bullet;
 			}
 
 		}
@@ -158,17 +151,17 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 96;
-			projectile.height = 96;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
+			Projectile.width = 96;
+			Projectile.height = 96;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
 		}
 
 		public override string Texture
@@ -178,20 +171,20 @@ namespace SGAmod.Items.Weapons
 
         public override bool CanDamage()
         {
-            return projectile.ai[0]<30;
+            return Projectile.ai[0]<30;
         }
 
         public override void AI()
 		{
-			Lighting.AddLight(projectile.Center, ((255 - projectile.alpha) * 0.01f) / 255f, ((255 - projectile.alpha) * 0.025f) / 255f, ((255 - projectile.alpha) * 0.25f) / 255f);
-			projectile.ai[0] += 1;
+			Lighting.AddLight(Projectile.Center, ((255 - Projectile.alpha) * 0.01f) / 255f, ((255 - Projectile.alpha) * 0.025f) / 255f, ((255 - Projectile.alpha) * 0.25f) / 255f);
+			Projectile.ai[0] += 1;
 
-			float size = projectile.ai[0] < 2 ? 0f : 1f;
+			float size = Projectile.ai[0] < 2 ? 0f : 1f;
 
-			for (int i = 0; i < 1 + (projectile.ai[0] < 2 ? 32 : 0); i++)
+			for (int i = 0; i < 1 + (Projectile.ai[0] < 2 ? 32 : 0); i++)
 			{
 				Vector2 randomcircle = Main.rand.NextVector2CircularEdge(1f, 1f);
-				int num655 = Dust.NewDust(projectile.Center + Main.rand.NextVector2Circular(projectile.width, projectile.width)* size, 0, 0, ModContent.DustType<Dusts.ViralDust>(), projectile.velocity.X + randomcircle.X * (4f), projectile.velocity.Y + randomcircle.Y * (4f), 150, Main.hslToRgb(Main.rand.NextFloat(), 1f, (projectile.timeLeft / 60f)), 0.5f);
+				int num655 = Dust.NewDust(Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.width)* size, 0, 0, ModContent.DustType<Dusts.ViralDust>(), Projectile.velocity.X + randomcircle.X * (4f), Projectile.velocity.Y + randomcircle.Y * (4f), 150, Main.hslToRgb(Main.rand.NextFloat(), 1f, (Projectile.timeLeft / 60f)), 0.5f);
 				Main.dust[num655].noGravity = true;
 			}
 		}

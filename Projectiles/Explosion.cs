@@ -16,14 +16,14 @@ namespace SGAmod.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = 96;
-            projectile.height = 96;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 2;
+            Projectile.width = 96;
+            Projectile.height = 96;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 2;
         }
 
         public override string Texture
@@ -33,7 +33,7 @@ namespace SGAmod.Projectiles
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.immune[projectile.owner] = 2;
+            target.immune[Projectile.owner] = 2;
         }
 
     }

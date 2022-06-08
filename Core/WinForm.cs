@@ -18,7 +18,7 @@ namespace SGAmod.Core
 
         public static void MakeTexture()
         {
-            Texture2D atex = ModContent.GetTexture("SGAmod/Extra_60b");
+            Texture2D atex = ModContent.Request<Texture2D>("SGAmod/Extra_60b");
             Texture2D tex = new Texture2D(Main.graphics.GraphicsDevice, atex.Width, atex.Height);
 
             var datacolors2 = new Color[atex.Width * atex.Height];

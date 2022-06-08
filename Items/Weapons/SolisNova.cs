@@ -10,6 +10,7 @@ using Terraria.DataStructures;
 using Idglibrary;
 using SGAmod.Items.Weapons.SeriousSam;
 using SGAmod.Projectiles;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -24,27 +25,27 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 75;
-			item.magic = true;
-			item.width = 56;
-			item.height = 28;
-			item.useTime = 40;
-			item.useAnimation = 40;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 18;
-			item.value = 75000;
-			item.rare = ItemRarityID.Cyan;
-			item.UseSound = SoundID.Item100;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("SolisNovaproj");
-			item.shootSpeed = 16f;
-			item.mana = 15;
-			item.channel = true;
-			Item.staff[item.type] = true;
+			Item.damage = 75;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 56;
+			Item.height = 28;
+			Item.useTime = 40;
+			Item.useAnimation = 40;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 18;
+			Item.value = 75000;
+			Item.rare = ItemRarityID.Cyan;
+			Item.UseSound = SoundID.Item100;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("SolisNovaproj").Type;
+			Item.shootSpeed = 16f;
+			Item.mana = 15;
+			Item.channel = true;
+			Item.staff[Item.type] = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/RodofEnforcement_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/RodofEnforcement_Glow").Value;
 			}
 		}
 
@@ -55,16 +56,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("FieryMoon"), 1);
-			recipe.AddIngredient(mod.ItemType("StygianCore"), 2);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(ItemID.SpellTome, 1);
-			recipe.AddIngredient(ItemID.FragmentSolar, 6);
-			recipe.AddIngredient(ItemID.FragmentNebula, 8);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("FieryMoon"), 1).AddIngredient(mod.ItemType("StygianCore"), 2).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(ItemID.SpellTome, 1).AddIngredient(ItemID.FragmentSolar, 6).AddIngredient(ItemID.FragmentNebula, 8).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -97,15 +89,15 @@ namespace SGAmod.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.light = 0.5f;
-			projectile.width = 64;
-			projectile.height = 64;
-			projectile.penetrate = -1;
-			projectile.magic = true;
-			projectile.tileCollide = false;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.light = 0.5f;
+			Projectile.width = 64;
+			Projectile.height = 64;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.tileCollide = false;
 		}
 
 		public override bool? CanHitNPC(NPC target)
@@ -117,7 +109,7 @@ namespace SGAmod.Items.Weapons
 
 		public override bool PreKill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item45, projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item45, Projectile.Center);
 
 			return true;
 		}
@@ -129,15 +121,15 @@ namespace SGAmod.Items.Weapons
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
-			Vector2 there = targetHitbox.Center.ToVector2() - projectile.Center;
+			Vector2 there = targetHitbox.Center.ToVector2() - Projectile.Center;
 			there.Normalize();
 			there *= growsize * 1.4f;
-			there += projectile.Center;
+			there += Projectile.Center;
 
 			float point = 0f;
 			// Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
 			// It will look for collisions on the given line using AABB
-			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center,
+			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
 				there, 28, ref point) || projHitbox.Intersects(targetHitbox);
 		}
 
@@ -146,8 +138,8 @@ namespace SGAmod.Items.Weapons
 
 			//int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("AcidDust"), projectile.velocity.X * 1f, projectile.velocity.Y * 1f, 20, default(Color), 1f);
 
-			bool cond = projectile.ai[1] < 1 || projectile.timeLeft == 2 || (growsize >= 64f && !largeenough);
-			for (int num621 = 0; num621 < (cond ? (projectile.timeLeft == 2 && growsize>160 ? 1500 : 100) : 2); num621++)
+			bool cond = Projectile.ai[1] < 1 || Projectile.timeLeft == 2 || (growsize >= 64f && !largeenough);
+			for (int num621 = 0; num621 < (cond ? (Projectile.timeLeft == 2 && growsize>160 ? 1500 : 100) : 2); num621++)
 			{
 
 				Vector2 vectz = new Vector2(Main.rand.Next(-9000, 9000), Main.rand.Next(-9000, 9000));
@@ -155,7 +147,7 @@ namespace SGAmod.Items.Weapons
 
 				float aversize = growsize;
 
-				int num622 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y)+(vectz*Main.rand.NextFloat(0f,1f)* aversize), 0, 0, 6, vectz.X * (cond ? 1f : 0f), vectz.Y * (cond ? 1f : 0f), 80, Main.hslToRgb(((Main.GlobalTime / 10f) + 0.50f) % 1f, 1f, 0.75f), 1f);
+				int num622 = Dust.NewDust(new Vector2(Projectile.Center.X, Projectile.Center.Y)+(vectz*Main.rand.NextFloat(0f,1f)* aversize), 0, 0, 6, vectz.X * (cond ? 1f : 0f), vectz.Y * (cond ? 1f : 0f), 80, Main.hslToRgb(((Main.GlobalTimeWrappedHourly / 10f) + 0.50f) % 1f, 1f, 0.75f), 1f);
 				if (Main.rand.Next(2) == 0)
 				{
 					Main.dust[num622].scale = 0.5f;
@@ -166,7 +158,7 @@ namespace SGAmod.Items.Weapons
 				vectz = new Vector2(Main.rand.Next(-9000, 9000), Main.rand.Next(-9000, 9000));
 				vectz.Normalize();
 
-				num622 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y) + (vectz * Main.rand.NextFloat(0.75f, 1.2f)* (aversize +64f)), 0, 0, 6, Vector2.Zero.X, Vector2.Zero.Y, 80, Main.hslToRgb(((Main.GlobalTime / 10f) + 0f) % 1f, 1f, 0.75f), 1f);
+				num622 = Dust.NewDust(new Vector2(Projectile.Center.X, Projectile.Center.Y) + (vectz * Main.rand.NextFloat(0.75f, 1.2f)* (aversize +64f)), 0, 0, 6, Vector2.Zero.X, Vector2.Zero.Y, 80, Main.hslToRgb(((Main.GlobalTimeWrappedHourly / 10f) + 0f) % 1f, 1f, 0.75f), 1f);
 				Main.dust[num622].velocity = -vectz* Main.rand.NextFloat(0.5f, 3f)*(cond ? -3f : 1f);
 				if (Main.rand.Next(2) == 0)
 				{
@@ -176,13 +168,13 @@ namespace SGAmod.Items.Weapons
 				Main.dust[num622].noGravity = true;
 			}
 
-			Player player = Main.player[projectile.owner];
-			projectile.ai[1] += 1;
-			projectile.position -= projectile.velocity;
+			Player player = Main.player[Projectile.owner];
+			Projectile.ai[1] += 1;
+			Projectile.position -= Projectile.velocity;
 
 			if (player.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 			else
 			{
@@ -192,7 +184,7 @@ namespace SGAmod.Items.Weapons
 				if (growsize >= 64f)
 				{
 					if (!largeenough)
-					Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 73, 1f, -0.50f);
+					SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 73, 1f, -0.50f);
 
 					largeenough = true;
 
@@ -201,15 +193,15 @@ namespace SGAmod.Items.Weapons
 						NPC guy = Main.npc[i];
 						if (guy != null && guy.active && !guy.friendly && !guy.townNPC && guy.CanBeChasedBy() && !guy.IsDummy())
 						{
-							Vector2 there = guy.Center - projectile.Center;
+							Vector2 there = guy.Center - Projectile.Center;
 							there.Normalize();
-							float distance = (guy.Center - projectile.Center).Length();
+							float distance = (guy.Center - Projectile.Center).Length();
 							float maxdist = (160f + growsize * 2f);
 							if (distance < maxdist && distance>16)
 							{
 								guy.GetGlobalNPC<SGAnpcs>().TimeSlow += (0.20f + (growsize / 100f)) * (1f - (distance / maxdist));
 
-								if (Collision.CanHitLine(guy.Center, 8, 8, projectile.Center, 8, 8))
+								if (Collision.CanHitLine(guy.Center, 8, 8, Projectile.Center, 8, 8))
 								{
 									float speed = (1f + (growsize / 10f));
 									guy.position -= there * Math.Min(distance, speed * MathHelper.Clamp(guy.knockBackResist * 3f, 0.10f, 1f) * (1f - (distance / maxdist)));
@@ -219,12 +211,12 @@ namespace SGAmod.Items.Weapons
 					}
 				}
 
-				if (((projectile.ai[0] > 0 || !player.CheckMana(player.HeldItem,10)) || !player.channel) && projectile.ai[1]>1)
+				if (((Projectile.ai[0] > 0 || !player.CheckMana(player.HeldItem,10)) || !player.channel) && Projectile.ai[1]>1)
 				{
-					projectile.ai[0] += 1;
-					if (projectile.ai[0] == 1)
+					Projectile.ai[0] += 1;
+					if (Projectile.ai[0] == 1)
 					{
-						Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 113, 0.5f, -0.25f);
+						SoundEngine.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 113, 0.5f, -0.25f);
 
 					}
 					if (growsize < 159f)
@@ -238,10 +230,10 @@ namespace SGAmod.Items.Weapons
 				}
 				else
 				{
-					if (projectile.ai[0] < 1)
+					if (Projectile.ai[0] < 1)
 					{
 
-						if (projectile.ai[1] % 6 == 0)
+						if (Projectile.ai[1] % 6 == 0)
 						{
 							player.CheckMana(player.HeldItem,(int)(0.20f + (growsize / 20f)),true);
 							if (player.statMana < 1 && player.manaFlower)
@@ -257,30 +249,30 @@ namespace SGAmod.Items.Weapons
 						growsize = 160f;
 
 						Vector2 mousePos = Main.MouseWorld;
-						if (projectile.owner == Main.myPlayer && projectile.ai[1] < 2)
+						if (Projectile.owner == Main.myPlayer && Projectile.ai[1] < 2)
 						{
-							projectile.Center = mousePos;
-							projectile.netUpdate = true;
+							Projectile.Center = mousePos;
+							Projectile.netUpdate = true;
 						}
-						if (projectile.owner == Main.myPlayer && mousePos!= projectile.Center)
+						if (Projectile.owner == Main.myPlayer && mousePos!= Projectile.Center)
 						{
-							Vector2 diff2 = mousePos - projectile.Center;
+							Vector2 diff2 = mousePos - Projectile.Center;
 							diff2.Normalize();
-							projectile.velocity = diff2 * 0f;
-							projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-							projectile.netUpdate = true;
+							Projectile.velocity = diff2 * 0f;
+							Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+							Projectile.netUpdate = true;
 
 						}
 
-						projectile.timeLeft = 80;
+						Projectile.timeLeft = 80;
 
-						int dir = projectile.direction;
+						int dir = Projectile.direction;
 						player.ChangeDir(dir);
 						player.itemTime = 40;
 						player.itemAnimation = 38;
 
 
-						Vector2 distz = projectile.Center - player.Center;
+						Vector2 distz = Projectile.Center - player.Center;
 						player.itemRotation = (float)Math.Atan2(distz.Y * dir, distz.X*dir);
 					}
 				}
@@ -299,10 +291,10 @@ namespace SGAmod.Items.Weapons
 			for (float i = 1; i < Math.Min(growth, 50f); i += 0.25f)
 			{
 				float scale = 1f + Math.Max(growsize-160f, 0f)/60f;
-				float timefraq = (float)projectile.timeLeft / 80f;
+				float timefraq = (float)Projectile.timeLeft / 80f;
 				float alpha = MathHelper.Clamp(((growsize / 3f) + 1f)/(i+ 0.25f),0f, 1f);
-				spriteBatch.Draw(sun, projectile.Center - Main.screenPosition, null, Main.hslToRgb((((Main.GlobalTime/10f)+0.50f)+ i/75f) %1f,1f,0.75f) * (alpha2 * (0.05f * alpha)), (-Main.GlobalTime+i / 10f), new Vector2(sun.Width / 2f, sun.Height / 2f), (new Vector2(i*timefraq, i*0.75f)/4f)*(Math.Min(growsize/64f,1f))* scale, SpriteEffects.None, 0f);
-				spriteBatch.Draw(sun, projectile.Center - Main.screenPosition, null, Main.hslToRgb(((Main.GlobalTime / 10f) + i / 75f) %1f, 1f, 0.75f) * (alpha2 * (0.05f * alpha)), (-Main.GlobalTime + i/10f)+(float)Math.PI, new Vector2(sun.Width / 2f, sun.Height / 2f), (new Vector2(i*0.75f, i*timefraq)/4f)*(Math.Min(growsize / 64f, 1f))* scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(sun, Projectile.Center - Main.screenPosition, null, Main.hslToRgb((((Main.GlobalTimeWrappedHourly/10f)+0.50f)+ i/75f) %1f,1f,0.75f) * (alpha2 * (0.05f * alpha)), (-Main.GlobalTimeWrappedHourly+i / 10f), new Vector2(sun.Width / 2f, sun.Height / 2f), (new Vector2(i*timefraq, i*0.75f)/4f)*(Math.Min(growsize/64f,1f))* scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(sun, Projectile.Center - Main.screenPosition, null, Main.hslToRgb(((Main.GlobalTimeWrappedHourly / 10f) + i / 75f) %1f, 1f, 0.75f) * (alpha2 * (0.05f * alpha)), (-Main.GlobalTimeWrappedHourly + i/10f)+(float)Math.PI, new Vector2(sun.Width / 2f, sun.Height / 2f), (new Vector2(i*0.75f, i*timefraq)/4f)*(Math.Min(growsize / 64f, 1f))* scale, SpriteEffects.None, 0f);
 			}
 
 			return false;

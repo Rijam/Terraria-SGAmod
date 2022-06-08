@@ -16,22 +16,18 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.MythrilDrill);
-			item.shoot = ModContent.ProjectileType<NoviteDrillProj>();
-			item.useAnimation = 40;
-			item.value = Item.buyPrice(0, 0, 50, 0);
-			item.useTime = 12;
-			item.damage = 8;
-			item.pick = 55;
+			Item.CloneDefaults(ItemID.MythrilDrill);
+			Item.shoot = ModContent.ProjectileType<NoviteDrillProj>();
+			Item.useAnimation = 40;
+			Item.value = Item.buyPrice(0, 0, 50, 0);
+			Item.useTime = 12;
+			Item.damage = 8;
+			Item.pick = 55;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 12);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("NoviteBar"), 12).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -50,7 +46,7 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.MythrilDrill);
+			Projectile.CloneDefaults(ProjectileID.MythrilDrill);
 		}
 
 	}
@@ -64,23 +60,23 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.MythrilDrill);
-			item.damage = 7;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.tileBoost = -2;
-			item.axe = 15;
-			item.pick = 0;
-			item.useStyle = 1;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<NoviteChainsawProj>();
+			Item.CloneDefaults(ItemID.MythrilDrill);
+			Item.damage = 7;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.tileBoost = -2;
+			Item.axe = 15;
+			Item.pick = 0;
+			Item.useStyle = 1;
+			Item.knockBack = 6;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<NoviteChainsawProj>();
 		}
 
 	}
@@ -99,7 +95,7 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.MythrilDrill);
+			Projectile.CloneDefaults(ProjectileID.MythrilDrill);
 		}
 
 	}

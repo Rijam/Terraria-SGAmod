@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SGAmod.Dusts
 {
@@ -10,7 +11,7 @@ namespace SGAmod.Dusts
 		public override void OnSpawn(Dust dust)
 		{
 			dust.noGravity = true;
-			dust.frame = new Rectangle(0, 0, ModContent.GetTexture("SGAmod/Dusts/FadeDust").Width, ModContent.GetTexture("SGAmod/Dusts/FadeDust").Height);
+			dust.frame = new Rectangle(0, 0, ModContent.Request<Texture2D>("SGAmod/Dusts/FadeDust").Width, ModContent.Request<Texture2D>("SGAmod/Dusts/FadeDust").Height);
 		}
 
 		public override bool Update(Dust dust)

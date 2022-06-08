@@ -14,6 +14,7 @@ using Terraria.GameContent.Events;
 using Microsoft.Xna.Framework.Audio;
 using SGAmod.Effects;
 using System.Linq;
+using Terraria.Audio;
 
 
 namespace SGAmod.NPCs
@@ -43,47 +44,47 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cirno");
-			Main.npcFrameCount[npc.type] = 20;
+			Main.npcFrameCount[NPC.type] = 20;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 50;
-			npc.height = 60;
-			npc.damage = 90;
-			npc.defense = 10;
-			npc.lifeMax = 15000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.value = Item.buyPrice(0, 20, 0, 0);
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			npc.boss = true;
-			aiType = NPCID.Wraith;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Cirno_v2");
-			bossBag = mod.ItemType("CirnoBag");
-			npc.coldDamage = true;
-			npc.value = Item.buyPrice(0, 15, 0, 0);
+			NPC.width = 50;
+			NPC.height = 60;
+			NPC.damage = 90;
+			NPC.defense = 10;
+			NPC.lifeMax = 15000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.value = Item.buyPrice(0, 20, 0, 0);
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			NPC.boss = true;
+			AIType = NPCID.Wraith;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Cirno_v2");
+			bossBag = Mod.Find<ModItem>("CirnoBag").Type;
+			NPC.coldDamage = true;
+			NPC.value = Item.buyPrice(0, 15, 0, 0);
 		}
 
 		public int owner
 		{
 			get
 			{
-				return (int)npc.ai[0];
+				return (int)NPC.ai[0];
 			}
 			set
 			{
-				npc.ai[0] = value;
+				NPC.ai[0] = value;
 			}
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.750f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.5f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.750f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.5f);
 		}
 		public override void BossLoot(ref string name, ref int potionType)
 		{
@@ -91,26 +92,26 @@ namespace SGAmod.NPCs
 		}
 		public override void NPCLoot()
 		{
-			if (npc.boss)
+			if (NPC.boss)
 			{
 
 
-				List<Projectile> itz = Idglib.Shattershots(npc.Center - new Vector2(npc.spriteDirection * 20, 100), npc.Center - new Vector2(npc.spriteDirection * 20, 100), new Vector2(0, 0), mod.ProjectileType("SnowCloud"), 40, 4f, 0, 1, true, 0, false, 1000);
+				List<Projectile> itz = Idglib.Shattershots(NPC.Center - new Vector2(NPC.spriteDirection * 20, 100), NPC.Center - new Vector2(NPC.spriteDirection * 20, 100), new Vector2(0, 0), Mod.Find<ModProjectile>("SnowCloud").Type, 40, 4f, 0, 1, true, 0, false, 1000);
 
 				if (Main.expertMode)
 				{
-					npc.DropBossBags();
+					NPC.DropBossBags();
 				}
 				else
 				{
 					string[] dropitems = { "Starburster", "Snowfall", "IceScepter", "RubiedBlade", "IcicleFall", "RodOfTheMistyLake", "Magishield" };
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType(dropitems[Main.rand.Next(0, dropitems.Length)]));
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CryostalBar"), Main.rand.Next(15, 25));
+					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>(dropitems[Main.rand.Next(0, dropitems.Length)]).Type);
+					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("CryostalBar").Type, Main.rand.Next(15, 25));
 					if (Main.rand.Next(3)==0)
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("GlacialStone"));
+					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("GlacialStone").Type);
 					if (Main.rand.Next(7) == 0)
                     {
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Armors.Vanity.CirnoMask>());
+						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<Items.Armors.Vanity.CirnoMask>());
 					}
 				}
 			}
@@ -124,75 +125,75 @@ namespace SGAmod.NPCs
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-			writer.Write((int)npc.localAI[3]);
+			writer.Write((int)NPC.localAI[3]);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-			npc.localAI[3] = reader.ReadInt32();
+			NPC.localAI[3] = reader.ReadInt32();
         }
 
         public override bool CheckDead()
 		{
-			if (npc.localAI[3] < 360)
+			if (NPC.localAI[3] < 360)
 			{
-				npc.active = true;
-				npc.life = 5;
-				npc.localAI[3] = Math.Min(npc.localAI[3] + 1, 5);
-				npc.netUpdate = true;
+				NPC.active = true;
+				NPC.life = 5;
+				NPC.localAI[3] = Math.Min(NPC.localAI[3] + 1, 5);
+				NPC.netUpdate = true;
 			}
-			return npc.localAI[3]>320;
+			return NPC.localAI[3]>320;
 		}
 
 		public override void AI()
 		{
-			if (npc.localAI[3]>0)
+			if (NPC.localAI[3]>0)
             {
 
-				if (npc.localAI[3] == 360)
+				if (NPC.localAI[3] == 360)
 				{
-					Gore.NewGore(npc.Center + new Vector2(0, -24), new Vector2(0, -18), mod.GetGoreSlot("Gores/CirnoHeadGore"));
-					Gore.NewGore(npc.Center + new Vector2(0, -24), new Vector2(0, -18), mod.GetGoreSlot("Gores/Cirno_bow_gib"), 1f);
-					Gore.NewGore(npc.Center + new Vector2(0, 8), new Vector2(-1, -0), mod.GetGoreSlot("Gores/Cirno_leg_gib"), 1f);
-					Gore.NewGore(npc.Center + new Vector2(0, 8), new Vector2(1, -0), mod.GetGoreSlot("Gores/Cirno_leg_gib"), 1f);
-					Gore.NewGore(npc.Center, new Vector2(-2, -1), mod.GetGoreSlot("Gores/Cirno_arm_gib"), 1f);
-					Gore.NewGore(npc.Center, new Vector2(2, -1), mod.GetGoreSlot("Gores/Cirno_arm_gib"), 1f);
-					npc.localAI[3] = 2000;
-					npc.StrikeNPCNoInteraction(100000, 0, 0);
-					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 117, 1f,-0.75f);
+					Gore.NewGore(NPC.Center + new Vector2(0, -24), new Vector2(0, -18), Mod.GetGoreSlot("Gores/CirnoHeadGore"));
+					Gore.NewGore(NPC.Center + new Vector2(0, -24), new Vector2(0, -18), Mod.GetGoreSlot("Gores/Cirno_bow_gib"), 1f);
+					Gore.NewGore(NPC.Center + new Vector2(0, 8), new Vector2(-1, -0), Mod.GetGoreSlot("Gores/Cirno_leg_gib"), 1f);
+					Gore.NewGore(NPC.Center + new Vector2(0, 8), new Vector2(1, -0), Mod.GetGoreSlot("Gores/Cirno_leg_gib"), 1f);
+					Gore.NewGore(NPC.Center, new Vector2(-2, -1), Mod.GetGoreSlot("Gores/Cirno_arm_gib"), 1f);
+					Gore.NewGore(NPC.Center, new Vector2(2, -1), Mod.GetGoreSlot("Gores/Cirno_arm_gib"), 1f);
+					NPC.localAI[3] = 2000;
+					NPC.StrikeNPCNoInteraction(100000, 0, 0);
+					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 117, 1f,-0.75f);
 				}
 
-				if (npc.localAI[3] % (int)(40 / (1 + ((npc.localAI[3] / 120f))))==0 || npc.localAI[3] == 360)
+				if (NPC.localAI[3] % (int)(40 / (1 + ((NPC.localAI[3] / 120f))))==0 || NPC.localAI[3] == 360)
 				{
-					SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 100,0.75f);
-					npc.velocity += Main.rand.NextVector2Circular(4f, 4f);
-					if (sound != null && npc.localAI[3]<400)
-						sound.Pitch = -0.80f + (npc.localAI[3] / 200f);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 100,0.75f);
+					NPC.velocity += Main.rand.NextVector2Circular(4f, 4f);
+					if (sound != null && NPC.localAI[3]<400)
+						sound.Pitch = -0.80f + (NPC.localAI[3] / 200f);
 
-					for (int num654 = 0; num654 < 1 + npc.localAI[3] / 8f; num654++)
+					for (int num654 = 0; num654 < 1 + NPC.localAI[3] / 8f; num654++)
 					{
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-						Dust num655 = Dust.NewDustPerfect(npc.position + new Vector2(Main.rand.Next(npc.width), Main.rand.Next(npc.height)), 59, randomcircle * (12f + (npc.localAI[3] > 350 ? Main.rand.NextFloat(8f,15f) : 0f)), 150, Color.Aqua, 2f+(npc.localAI[3]>350 ? 2f : 0f));
+						Dust num655 = Dust.NewDustPerfect(NPC.position + new Vector2(Main.rand.Next(NPC.width), Main.rand.Next(NPC.height)), 59, randomcircle * (12f + (NPC.localAI[3] > 350 ? Main.rand.NextFloat(8f,15f) : 0f)), 150, Color.Aqua, 2f+(NPC.localAI[3]>350 ? 2f : 0f));
 						num655.noGravity = true;
 						num655.noLight = true;
 					}
 				}
 
-				npc.localAI[3] += 1;
-					npc.velocity /= 1.15f;
-				npc.dontTakeDamage = true;
+				NPC.localAI[3] += 1;
+					NPC.velocity /= 1.15f;
+				NPC.dontTakeDamage = true;
 				return;
             }
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active || (!Main.dayTime && GetType() == typeof(Cirno)))
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active || (!Main.dayTime && GetType() == typeof(Cirno)))
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead || !Main.dayTime)
 				{
 					float speed = ((-10f));
-					npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-					npc.active = false;
+					NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+					NPC.active = false;
 				}
 
 			}
@@ -200,21 +201,21 @@ namespace SGAmod.NPCs
 			{
 				if (Main.expertMode)
 				{
-					if (npc.life < npc.lifeMax * 0.20 && npc.ai[3] == 0)
+					if (NPC.life < NPC.lifeMax * 0.20 && NPC.ai[3] == 0)
 					{
-						npc.ai[3] = 1;
-						NPC.SpawnOnPlayer(P.whoAmI, mod.NPCType("CirnoIceFairy"));
-						NPC.SpawnOnPlayer(P.whoAmI, mod.NPCType("CirnoIceFairy2"));
+						NPC.ai[3] = 1;
+						NPC.SpawnOnPlayer(P.whoAmI, Mod.Find<ModNPC>("CirnoIceFairy").Type);
+						NPC.SpawnOnPlayer(P.whoAmI, Mod.Find<ModNPC>("CirnoIceFairy2").Type);
 					}
-					npc.defense = 20 + (NPC.CountNPCS(mod.NPCType("CirnoIceFairy")) * 50) + (NPC.CountNPCS(mod.NPCType("CirnoIceFairy2")) * 50);
+					NPC.defense = 20 + (NPC.CountNPCS(Mod.Find<ModNPC>("CirnoIceFairy").Type) * 50) + (NPC.CountNPCS(Mod.Find<ModNPC>("CirnoIceFairy2").Type) * 50);
 				}
 
 				bool snow = P.ZoneSnow;
 				//npc.dontTakeDamage = (!snow);
-				npc.netUpdate = true;
-				npc.timeLeft = 99999;
+				NPC.netUpdate = true;
+				NPC.timeLeft = 99999;
 				bobbing = bobbing + 1;
-				npc.spriteDirection = -npc.direction;
+				NPC.spriteDirection = -NPC.direction;
 				aicounter = aicounter + 1;
 
 				Vector2 playerloc = P.Center;
@@ -224,7 +225,7 @@ namespace SGAmod.NPCs
 					npc.dontTakeDamage = true;
 				}*/
 
-				Vector2 dist = playerloc - npc.Center;
+				Vector2 dist = playerloc - NPC.Center;
 
 				if (card > 0)
 				{
@@ -242,10 +243,10 @@ namespace SGAmod.NPCs
 						if (!Main.dedServ)
 						{
 							ScreenShaderData shad = Filters.Scene["SGAmod:CirnoBlizzard"].GetShader();
-							shad.UseColor(Color.Lerp(Color.Blue, Color.Turquoise, 0.5f + (float)Math.Sin(Main.GlobalTime)));
+							shad.UseColor(Color.Lerp(Color.Blue, Color.Turquoise, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly)));
 						}
 						Main.raining = true;
-						Main.windSpeed = MathHelper.Clamp(Main.windSpeed + Math.Sign((P.Center.X - npc.Center.X)) * (-0.002f / 3f), -0.4f, 0.4f);
+						Main.windSpeed = MathHelper.Clamp(Main.windSpeed + Math.Sign((P.Center.X - NPC.Center.X)) * (-0.002f / 3f), -0.4f, 0.4f);
 						Main.maxRaining = Math.Min(Main.maxRaining + 0.001f, 0.10f);
 						Main.rainTime = 5;
 						Main.UseStormEffects = true;
@@ -288,13 +289,13 @@ namespace SGAmod.NPCs
 				{
 					spellcard(card, aicounter, P);
 					float floater = (float)(Math.Sin(bobbing / 14f) * 4f);
-					npc.direction = -1;
+					NPC.direction = -1;
 					if (dist.X > 0)
 					{
-						npc.direction = 1;
+						NPC.direction = 1;
 					}
-					npc.velocity = new Vector2(((playerloc.X - ((npc.Center.X))) / 150), ((playerloc.Y - ((npc.Center.Y + 120))) / 110) + floater);
-					if (npc.life < npc.lifeMax * damagetospellcard)
+					NPC.velocity = new Vector2(((playerloc.X - ((NPC.Center.X))) / 150), ((playerloc.Y - ((NPC.Center.Y + 120))) / 110) + floater);
+					if (NPC.life < NPC.lifeMax * damagetospellcard)
 					{
 						aistate = 0;
 						aicounter = 0;
@@ -314,39 +315,39 @@ namespace SGAmod.NPCs
 					if (aicounter > 15)
 					{
 						int dustType = 113;
-						int dustIndex = Dust.NewDust(npc.Center + new Vector2(-16, -16), 32, 32, dustType);
+						int dustIndex = Dust.NewDust(NPC.Center + new Vector2(-16, -16), 32, 32, dustType);
 						Dust dust = Main.dust[dustIndex];
-						dust.velocity.X = dust.velocity.X - npc.velocity.X;
-						dust.velocity.Y = dust.velocity.Y - npc.velocity.Y;
+						dust.velocity.X = dust.velocity.X - NPC.velocity.X;
+						dust.velocity.Y = dust.velocity.Y - NPC.velocity.Y;
 						dust.scale *= 3f + Main.rand.Next(-30, 31) * 0.01f;
 						dust.fadeIn = 0f;
 						dust.noGravity = true;
 
-						npc.velocity = npc.velocity + (npc.DirectionTo(playerloc+(P.velocity*3f)) * (0.75f+((float)bobbing/120f)));
-						npc.velocity *= 0.96f;
+						NPC.velocity = NPC.velocity + (NPC.DirectionTo(playerloc+(P.velocity*3f)) * (0.75f+((float)bobbing/120f)));
+						NPC.velocity *= 0.96f;
 						float extraspeed = (bobbing / 180f);
 
-						if (npc.velocity.Length() > 6f+extraspeed)
+						if (NPC.velocity.Length() > 6f+extraspeed)
 						{
-							npc.velocity.Normalize();
-							npc.velocity = npc.velocity * (6f+extraspeed);
+							NPC.velocity.Normalize();
+							NPC.velocity = NPC.velocity * (6f+extraspeed);
 						}
-						if (npc.velocity.X > 0)
+						if (NPC.velocity.X > 0)
 						{
-							npc.rotation = (float)Math.Atan2(npc.velocity.Y, npc.velocity.X);
-							npc.direction = 1;
+							NPC.rotation = (float)Math.Atan2(NPC.velocity.Y, NPC.velocity.X);
+							NPC.direction = 1;
 						}
 						else
 						{
-							npc.rotation = (float)Math.Atan2(-npc.velocity.Y, -npc.velocity.X);
-							npc.direction = -1;
+							NPC.rotation = (float)Math.Atan2(-NPC.velocity.Y, -NPC.velocity.X);
+							NPC.direction = -1;
 						}
 						if (bobbing > 220)
 						{
 							float aimer = Main.rand.Next(-1000, 1000);
 							if (bobbing % 25 == 0)
 							{
-								List<Projectile> bolts = Idglib.Shattershots(new Vector2(npc.Center.X, npc.Center.Y), P.position, new Vector2(P.width, P.height), ProjectileID.IceBolt, 20, 32f, 25, 3, true, (float)(aimer / 8000), false, 60);
+								List<Projectile> bolts = Idglib.Shattershots(new Vector2(NPC.Center.X, NPC.Center.Y), P.position, new Vector2(P.width, P.height), ProjectileID.IceBolt, 20, 32f, 25, 3, true, (float)(aimer / 8000), false, 60);
 							}
 						}
 						if (snow)
@@ -364,18 +365,18 @@ namespace SGAmod.NPCs
 					else
 					{
 						bobbing = 0;
-						npc.velocity = npc.velocity * 0.9f;
+						NPC.velocity = NPC.velocity * 0.9f;
 					}
 				}
 				else
 				{
-					npc.rotation = (float)0f;
+					NPC.rotation = (float)0f;
 				}
 
 
 				if (aistate == 0)
 				{
-					if (npc.life < npc.lifeMax * damagetospellcard)
+					if (NPC.life < NPC.lifeMax * damagetospellcard)
 					{
 						aistate = 2;
 						aicounter = 0;
@@ -408,28 +409,28 @@ namespace SGAmod.NPCs
 
 					//}
 					float floater = (float)(Math.Sin(bobbing / 17f) * 9f);
-					if (npc.Center.X < playerloc.X)
+					if (NPC.Center.X < playerloc.X)
 					{
-						npc.direction = 1;
-						npc.velocity = new Vector2(2, ((playerloc.Y - npc.Center.Y) / 12) + floater);
+						NPC.direction = 1;
+						NPC.velocity = new Vector2(2, ((playerloc.Y - NPC.Center.Y) / 12) + floater);
 					}
 					else
 					{
-						npc.velocity = new Vector2(-2, ((playerloc.Y - npc.Center.Y) / 12) + floater);
-						npc.direction = -1;
+						NPC.velocity = new Vector2(-2, ((playerloc.Y - NPC.Center.Y) / 12) + floater);
+						NPC.direction = -1;
 					}
 
-					npc.velocity.Normalize();
-					npc.velocity = npc.velocity * 2;
-					Vector2 offset = (new Vector2(playerloc.X, playerloc.Y) - npc.Center);
+					NPC.velocity.Normalize();
+					NPC.velocity = NPC.velocity * 2;
+					Vector2 offset = (new Vector2(playerloc.X, playerloc.Y) - NPC.Center);
 					if (offset.Length() > 640)
 					{
-						npc.velocity += (Vector2.Normalize(offset)*((offset.Length()-640f) / 96f));
+						NPC.velocity += (Vector2.Normalize(offset)*((offset.Length()-640f) / 96f));
 					}
 				}
 				if (aistate == 1 || aistate == 10)
 				{
-					npc.velocity = new Vector2(0, 0);
+					NPC.velocity = new Vector2(0, 0);
 
 					if (aistate == 10)
 					{
@@ -442,9 +443,9 @@ namespace SGAmod.NPCs
 							//Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), 348, 10, (float)26, 0, 1, true, (float)(aimer / 8000), false, Main.rand.Next(100, 120));
 
 							float circle = aicounter/30f;
-									Vector2 offset = Vector2.Lerp(npc.Center,P.MountedCenter-new Vector2(0,200), circle);
-									int proj2 = Projectile.NewProjectile(offset,Vector2.UnitY*(aicounter % 6 == 0 ? 16f : 10f), mod.ProjectileType("CirnoIceShardHinted"), 40, 4, 0);
-									(Main.projectile[proj2].modProjectile as CirnoIceShardHinted).CirnoStart = npc.Center;
+									Vector2 offset = Vector2.Lerp(NPC.Center,P.MountedCenter-new Vector2(0,200), circle);
+									int proj2 = Projectile.NewProjectile(offset,Vector2.UnitY*(aicounter % 6 == 0 ? 16f : 10f), Mod.Find<ModProjectile>("CirnoIceShardHinted").Type, 40, 4, 0);
+									(Main.projectile[proj2].ModProjectile as CirnoIceShardHinted).CirnoStart = NPC.Center;
 									Main.projectile[proj2].netUpdate = true;
 
 						}
@@ -457,7 +458,7 @@ namespace SGAmod.NPCs
 
 								for (int num315 = 0; num315 < 60; num315 = num315 + 1)
 								{
-									int dust = Dust.NewDust(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), 0, 0, 113, Main.rand.Next(-5, 5), Main.rand.Next(-5, 5), 25, Main.hslToRgb(0.6f, 0.9f, 1f), 3f);
+									int dust = Dust.NewDust(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), 0, 0, 113, Main.rand.Next(-5, 5), Main.rand.Next(-5, 5), 25, Main.hslToRgb(0.6f, 0.9f, 1f), 3f);
 									Main.dust[dust].noGravity = true;
 								}
 							}
@@ -470,7 +471,7 @@ namespace SGAmod.NPCs
 
 						if (aicounter == 19 && mixup == 1)
 						{
-							List<Projectile> itz = Idglib.Shattershots(npc.Center - new Vector2(0, 30), npc.Center - new Vector2(-npc.direction * 20, 30), new Vector2(0, 0), mod.ProjectileType("SnowCloud"), 40, 5f, 0, 1, true, 0, false, 500);
+							List<Projectile> itz = Idglib.Shattershots(NPC.Center - new Vector2(0, 30), NPC.Center - new Vector2(-NPC.direction * 20, 30), new Vector2(0, 0), Mod.Find<ModProjectile>("SnowCloud").Type, 40, 5f, 0, 1, true, 0, false, 500);
 							itz[0].velocity = itz[0].velocity + new Vector2(0, -6);
 						}
 
@@ -490,8 +491,8 @@ namespace SGAmod.NPCs
 										//if (circle % MathHelper.Pi > 1f)
 										//{
 											Vector2 offset = Vector2.One.RotatedBy(circle + rotter);
-											int proj2 = Projectile.NewProjectile(P.Center.X + (offset.X * 300f), P.Center.Y + (offset.Y * 300f), -offset.X * 5f, -offset.Y * 5f, mod.ProjectileType("CirnoIceShardHinted"), 40, 4, 0);
-											(Main.projectile[proj2].modProjectile as CirnoIceShardHinted).CirnoStart = npc.Center;
+											int proj2 = Projectile.NewProjectile(P.Center.X + (offset.X * 300f), P.Center.Y + (offset.Y * 300f), -offset.X * 5f, -offset.Y * 5f, Mod.Find<ModProjectile>("CirnoIceShardHinted").Type, 40, 4, 0);
+											(Main.projectile[proj2].ModProjectile as CirnoIceShardHinted).CirnoStart = NPC.Center;
 											Main.projectile[proj2].netUpdate = true;
 										//}
 									}
@@ -502,8 +503,8 @@ namespace SGAmod.NPCs
 								if (aicounter > 19 && aicounter < 46 && aicounter % 3 == 0)
 								{
 									float aimer = Main.rand.Next(-1000, 1000);
-									List<Projectile> bolts = Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), mod.ProjectileType("CirnoBolt"), 50, (float)Main.rand.Next(60, 80) / 10f, 0, 1, true, (float)(aimer / 8000), false, 200);
-									CirnoBolt Cbolt = bolts[0].modProjectile as CirnoBolt;
+									List<Projectile> bolts = Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), Mod.Find<ModProjectile>("CirnoBolt").Type, 50, (float)Main.rand.Next(60, 80) / 10f, 0, 1, true, (float)(aimer / 8000), false, 200);
+									CirnoBolt Cbolt = bolts[0].ModProjectile as CirnoBolt;
 									Cbolt.homing = 0.04f;
 									bolts[0].netUpdate = true;
 
@@ -519,7 +520,7 @@ namespace SGAmod.NPCs
 							{
 								if (aicounter == 20)
 								{
-									Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), mod.ProjectileType("CirnoBolt"), 50, 8f, 85, 4, false, 0, false, 450);
+									Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), Mod.Find<ModProjectile>("CirnoBolt").Type, 50, 8f, 85, 4, false, 0, false, 450);
 								}
 							}
 
@@ -531,11 +532,11 @@ namespace SGAmod.NPCs
 									{
 										float rotter = Main.rand.NextFloat(MathHelper.TwoPi);
 										Vector2 offset = Main.rand.NextVector2Circular(Main.rand.NextFloat(-320, 320), Main.rand.NextFloat(-480, 240));
-										Vector2 playerAim = Vector2.Normalize(P.MountedCenter - npc.Center);
+										Vector2 playerAim = Vector2.Normalize(P.MountedCenter - NPC.Center);
 
 										float speed = aicounter / 2f;
-										int proj2 = Projectile.NewProjectile(npc.Center.X + (offset.X), npc.Center.Y + (offset.Y), playerAim.X * speed, playerAim.Y * speed, mod.ProjectileType("CirnoIceShardHinted"), 40, 4, 0);
-										(Main.projectile[proj2].modProjectile as CirnoIceShardHinted).CirnoStart = npc.Center;
+										int proj2 = Projectile.NewProjectile(NPC.Center.X + (offset.X), NPC.Center.Y + (offset.Y), playerAim.X * speed, playerAim.Y * speed, Mod.Find<ModProjectile>("CirnoIceShardHinted").Type, 40, 4, 0);
+										(Main.projectile[proj2].ModProjectile as CirnoIceShardHinted).CirnoStart = NPC.Center;
 										Main.projectile[proj2].netUpdate = true;
 
 									}
@@ -688,7 +689,7 @@ namespace SGAmod.NPCs
 			}
 			//npc.spriteDirection = (int)npc.ai[1]*14;
 			if (frameid == 2) { frameid = 3; }
-			npc.frame.Y = frameid * 80;
+			NPC.frame.Y = frameid * 80;
 		}
 
 
@@ -707,10 +708,10 @@ namespace SGAmod.NPCs
 						float aimer = Main.rand.Next(-1000, 1000);
 						if ((counter % 600) > 540 && Main.expertMode)
 						{
-							Idglib.Shattershots(new Vector2(P.Center.X - 800, P.Center.Y), new Vector2(P.Center.X + 800, P.Center.Y), new Vector2(0, 0), mod.ProjectileType("CirnoBolt"), 25, (float)Main.rand.Next(60, 80) / 8, 0, 1, true, (float)(aimer / 9000), false, 200);
-							Idglib.Shattershots(new Vector2(P.Center.X + 800, P.Center.Y), new Vector2(P.Center.X - 800, P.Center.Y), new Vector2(0, 0), mod.ProjectileType("CirnoBolt"), 25, (float)Main.rand.Next(60, 80) / 8, 0, 1, true, (float)(aimer / 9000), false, 200);
+							Idglib.Shattershots(new Vector2(P.Center.X - 800, P.Center.Y), new Vector2(P.Center.X + 800, P.Center.Y), new Vector2(0, 0), Mod.Find<ModProjectile>("CirnoBolt").Type, 25, (float)Main.rand.Next(60, 80) / 8, 0, 1, true, (float)(aimer / 9000), false, 200);
+							Idglib.Shattershots(new Vector2(P.Center.X + 800, P.Center.Y), new Vector2(P.Center.X - 800, P.Center.Y), new Vector2(0, 0), Mod.Find<ModProjectile>("CirnoBolt").Type, 25, (float)Main.rand.Next(60, 80) / 8, 0, 1, true, (float)(aimer / 9000), false, 200);
 						}
-						Idglib.Shattershots(new Vector2(vis.X, P.Center.Y - 600f), new Vector2(vis.X, vis.Y + 600f), new Vector2(0, 0), mod.ProjectileType("CirnoIceShard"), 20, (float)Main.rand.Next(60, 80) / 10, 0, 1, true, (float)(aimer / 5000), false, 200);
+						Idglib.Shattershots(new Vector2(vis.X, P.Center.Y - 600f), new Vector2(vis.X, vis.Y + 600f), new Vector2(0, 0), Mod.Find<ModProjectile>("CirnoIceShard").Type, 20, (float)Main.rand.Next(60, 80) / 10, 0, 1, true, (float)(aimer / 5000), false, 200);
 
 					}
 
@@ -725,7 +726,7 @@ namespace SGAmod.NPCs
 							mixup = 100;
 							for (int i = -400; i <= 401; i = i + 800)
 							{
-								List<Projectile> itz = Idglib.Shattershots(npc.Center - new Vector2(i * 3, 50), npc.Center, new Vector2(0, -50), mod.ProjectileType("SnowCloud"), 40, 2f, 0, 1, true, 0, false, 1000);
+								List<Projectile> itz = Idglib.Shattershots(NPC.Center - new Vector2(i * 3, 50), NPC.Center, new Vector2(0, -50), Mod.Find<ModProjectile>("SnowCloud").Type, 40, 2f, 0, 1, true, 0, false, 1000);
 								itz[0].velocity = itz[0].velocity + new Vector2(0, -4);
 							}
 						}
@@ -733,25 +734,25 @@ namespace SGAmod.NPCs
 
 						if (counter % 350 == 0)
 						{
-							Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 30, 1f, -0.5f);
+							SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 30, 1f, -0.5f);
 							for (int i = -200; i <= 201; i = i + 50)
 							{
-								Idglib.Shattershots(new Vector2(P.Center.X - 600, P.Center.Y + i), P.Center + new Vector2(0, i), new Vector2(0, 0), mod.ProjectileType("CirnoIceShard"), 30, (float)2, 0, 1, true, 0, false, 190);
-								Idglib.Shattershots(new Vector2(P.Center.X + 600, P.Center.Y + i), P.Center + new Vector2(0, i), new Vector2(0, 0), mod.ProjectileType("CirnoIceShard"), 30, (float)2, 0, 1, true, 0, false, 190);
+								Idglib.Shattershots(new Vector2(P.Center.X - 600, P.Center.Y + i), P.Center + new Vector2(0, i), new Vector2(0, 0), Mod.Find<ModProjectile>("CirnoIceShard").Type, 30, (float)2, 0, 1, true, 0, false, 190);
+								Idglib.Shattershots(new Vector2(P.Center.X + 600, P.Center.Y + i), P.Center + new Vector2(0, i), new Vector2(0, 0), Mod.Find<ModProjectile>("CirnoIceShard").Type, 30, (float)2, 0, 1, true, 0, false, 190);
 							}
 						}
 					}
-					if ((counter) % 180 == 0) { Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), ProjectileID.EnchantedBeam, 50, (float)13, 0, 1, true, 0, false, 120); }
-					if ((counter - 40) % 180 == 0) { Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), mod.ProjectileType("CirnoIceShard"), 20, (float)7, 135, 8, true, 0, false, 160); Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 30, 1f, 0f); }
-					if ((counter - 80) % 180 == 0) { Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), mod.ProjectileType("CirnoIceShard"), 20, (float)9, 85, 4, false, 0, false, 140); Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 30, 1f, 0.30f); }
+					if ((counter) % 180 == 0) { Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), ProjectileID.EnchantedBeam, 50, (float)13, 0, 1, true, 0, false, 120); }
+					if ((counter - 40) % 180 == 0) { Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), Mod.Find<ModProjectile>("CirnoIceShard").Type, 20, (float)7, 135, 8, true, 0, false, 160); SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 30, 1f, 0f); }
+					if ((counter - 80) % 180 == 0) { Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), Mod.Find<ModProjectile>("CirnoIceShard").Type, 20, (float)9, 85, 4, false, 0, false, 140); SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 30, 1f, 0.30f); }
 				}
 
 				if (card == 3)
 				{
 					if (counter % 8 == 0)
 					{
-						Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), 263, 35, (float)(counter / 8), 0, 1, true, (float)(counter - 140) / 70, true, 120);
-						Idglib.Shattershots(new Vector2(npc.Center.X + (npc.direction * 48), npc.Center.Y), P.position, new Vector2(P.width, P.height), 263, 35, (float)(counter / 8), 0, 1, true, -(float)(counter - 140) / 70, true, 120);
+						Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), 263, 35, (float)(counter / 8), 0, 1, true, (float)(counter - 140) / 70, true, 120);
+						Idglib.Shattershots(new Vector2(NPC.Center.X + (NPC.direction * 48), NPC.Center.Y), P.position, new Vector2(P.width, P.height), 263, 35, (float)(counter / 8), 0, 1, true, -(float)(counter - 140) / 70, true, 120);
 					}
 					if (counter % 200 == 0)
 					{
@@ -783,15 +784,15 @@ namespace SGAmod.NPCs
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = false;
-			projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 600;
-			projectile.tileCollide=false;
+			Projectile.timeLeft = 600;
+			Projectile.tileCollide=false;
 		}
 
 				public override string Texture
@@ -807,22 +808,22 @@ namespace SGAmod.NPCs
 	}
 		public override void AI()
 		{
-			projectile.velocity = new Vector2(projectile.velocity.X, projectile.velocity.Y * 0.95f);
+			Projectile.velocity = new Vector2(Projectile.velocity.X, Projectile.velocity.Y * 0.95f);
 			int q = 0;
 			for (q = 0; q < 4; q++)
 			{
 
-				int dust = Dust.NewDust(projectile.position - new Vector2(100, 0), 200, 12, DustID.Smoke, 0f, projectile.velocity.Y * 0.4f, 100, colorcloud, 3f);
+				int dust = Dust.NewDust(Projectile.position - new Vector2(100, 0), 200, 12, DustID.Smoke, 0f, Projectile.velocity.Y * 0.4f, 100, colorcloud, 3f);
 				Main.dust[dust].noGravity = true;
 				//Main.dust[dust].velocity *= 1.8f;
 				//Main.dust[dust].velocity.Y -= 0.5f;
 				//Main.playerDrawDust.Add(dust);
 			}
-			projectile.ai[0]++;
-			int target2 = Idglib.FindClosestTarget(projectile.friendly ? 0 : 1, projectile.position, new Vector2(0, 0));
+			Projectile.ai[0]++;
+			int target2 = Idglib.FindClosestTarget(Projectile.friendly ? 0 : 1, Projectile.position, new Vector2(0, 0));
 			Entity target;
 			target = Main.player[target2] as Player;
-			if (projectile.friendly)
+			if (Projectile.friendly)
 			{
 				target = Main.npc[target2] as NPC;
 				//target=Main.player[target2];
@@ -831,9 +832,9 @@ namespace SGAmod.NPCs
 			if (target is Player)
 			{
 				Player targetasplayer = target as Player;
-				if (targetasplayer != null && targetasplayer.ownedProjectileCounts[mod.ProjectileType("SnowfallCloud")] > 0)
+				if (targetasplayer != null && targetasplayer.ownedProjectileCounts[Mod.Find<ModProjectile>("SnowfallCloud").Type] > 0)
 				{
-					projectile.Kill();
+					Projectile.Kill();
 				}
 			}
 
@@ -842,18 +843,18 @@ namespace SGAmod.NPCs
 
 
 
-				Vector2 dist = target.Center - projectile.position;
+				Vector2 dist = target.Center - Projectile.position;
 				if (System.Math.Abs(dist.X) < 250)
 				{
-					if (projectile.ai[0] % rate == 0)
+					if (Projectile.ai[0] % rate == 0)
 					{
-						List<Projectile> itz = Idglib.Shattershots(projectile.Center + new Vector2(Main.rand.Next(-100, 100), 0), projectile.Center + new Vector2(Main.rand.Next(-200, 200), 500), new Vector2(0, 0), projectileid, (int)projectile.damage, 8f, 0, 1, true, 0, true, 220);
-						itz[0].friendly = projectile.friendly;
-						itz[0].hostile = projectile.hostile;
+						List<Projectile> itz = Idglib.Shattershots(Projectile.Center + new Vector2(Main.rand.Next(-100, 100), 0), Projectile.Center + new Vector2(Main.rand.Next(-200, 200), 500), new Vector2(0, 0), projectileid, (int)Projectile.damage, 8f, 0, 1, true, 0, true, 220);
+						itz[0].friendly = Projectile.friendly;
+						itz[0].hostile = Projectile.hostile;
 						itz[0].coldDamage = true;
 						itz[0].netUpdate = true;
-						itz[0].ranged = false;
-						itz[0].Throwing().thrown = false;
+						// itz[0].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+						// itz[0].Throwing().thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 						itz[0].minion = true;
 					}
 				}
@@ -881,7 +882,7 @@ return false;
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cirno's Grace");
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override string Texture
@@ -891,13 +892,13 @@ return false;
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.IceBolt);
-			projectile.width = 30;
-			projectile.height = 30;
-			projectile.magic = true;
-			projectile.coldDamage = true;
-			projectile.npcProj = true;
-			aiType = 0;//ProjectileID.IceBolt;
+			Projectile.CloneDefaults(ProjectileID.IceBolt);
+			Projectile.width = 30;
+			Projectile.height = 30;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.coldDamage = true;
+			Projectile.npcProj = true;
+			AIType = 0;//ProjectileID.IceBolt;
 		}
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -927,10 +928,10 @@ return false;
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type=ProjectileID.IceBolt;
+			Projectile.type=ProjectileID.IceBolt;
 			for (int num315 = 0; num315 < 15; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 92, projectile.velocity.X+(float)(Main.rand.Next(-20,20)/15f), projectile.velocity.Y+(float)(Main.rand.Next(-20,20)/15f), 50, Main.hslToRgb(0.6f,0.9f, 1f), 2.4f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 92, Projectile.velocity.X+(float)(Main.rand.Next(-20,20)/15f), Projectile.velocity.Y+(float)(Main.rand.Next(-20,20)/15f), 50, Main.hslToRgb(0.6f,0.9f, 1f), 2.4f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.7f;
@@ -942,46 +943,46 @@ return false;
 		{
 		for (int num315 = 0; num315 < 2; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 92, projectile.velocity.X, projectile.velocity.Y, 50, Main.hslToRgb(0.6f,0.9f, 1f), 1.7f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 92, Projectile.velocity.X, Projectile.velocity.Y, 50, Main.hslToRgb(0.6f,0.9f, 1f), 1.7f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.3f;
 				//dust3.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.MidnightRainbowDye);
 			}
 
-			if (projectile.ai[0] < 1)
+			if (Projectile.ai[0] < 1)
 			{
-				if (projectile.hostile)
+				if (Projectile.hostile)
 					homing *= 1f;
-				projectile.ai[1] = -1;
+				Projectile.ai[1] = -1;
 			}
 
-			projectile.ai[0]=projectile.ai[0]+1;
-		if (projectile.ai[0]<2){
-		keepspeed=(projectile.velocity).Length();
+			Projectile.ai[0]=Projectile.ai[0]+1;
+		if (Projectile.ai[0]<2){
+		keepspeed=(Projectile.velocity).Length();
 		}
-			if (gothere==null || projectile.ai[0] % 40 == 0 || projectile.ai[0] == 1)
+			if (gothere==null || Projectile.ai[0] % 40 == 0 || Projectile.ai[0] == 1)
 			{
-				int target3 = Idglib.FindClosestTarget(projectile.friendly ? 0 : 1, projectile.position, new Vector2(0, 0), true, true, true, projectile);
+				int target3 = Idglib.FindClosestTarget(Projectile.friendly ? 0 : 1, Projectile.position, new Vector2(0, 0), true, true, true, Projectile);
 
 				//if (target2 > 0) {
 				Entity target;
 				target = Main.player[target3] as Player;
-				if (projectile.friendly)
+				if (Projectile.friendly)
 				{
 					target = Main.npc[target3] as NPC;
 					//target=Main.player[target2];
 				}
 				gothere = target.Center;
-				projectile.netUpdate = true;
+				Projectile.netUpdate = true;
 			}
-				if (gothere != null && (gothere - projectile.Center).Length() < 1000f)
+				if (gothere != null && (gothere - Projectile.Center).Length() < 1000f)
 				{
-					if (projectile.ai[0] < (Main.expertMode == true ? 150f : 50f) || projectile.friendly)
+					if (Projectile.ai[0] < (Main.expertMode == true ? 150f : 50f) || Projectile.friendly)
 					{
-						projectile.velocity = projectile.velocity + (projectile.DirectionTo(gothere) * ((float)keepspeed * homing));
-						projectile.velocity.Normalize();
-						projectile.velocity = projectile.velocity * (float)keepspeed;
+						Projectile.velocity = Projectile.velocity + (Projectile.DirectionTo(gothere) * ((float)keepspeed * homing));
+						Projectile.velocity.Normalize();
+						Projectile.velocity = Projectile.velocity * (float)keepspeed;
 					}
 				}
 
@@ -997,7 +998,7 @@ return false;
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("2nd Strongest Ice Fairy");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 		public override string Texture
 		{
@@ -1005,22 +1006,22 @@ return false;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 40;
-			npc.height = 40;
-			npc.damage = 0;
-			npc.defense = 4;
-			npc.lifeMax = 1800;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.value = 0f;
-			npc.knockBackResist = 0.0f;
-			npc.aiStyle = 22;
-			aiType = 0;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = 40000f;
-			npc.coldDamage = true;
+			NPC.width = 40;
+			NPC.height = 40;
+			NPC.damage = 0;
+			NPC.defense = 4;
+			NPC.lifeMax = 1800;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0.0f;
+			NPC.aiStyle = 22;
+			AIType = 0;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = 40000f;
+			NPC.coldDamage = true;
 		}
 
 				public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -1030,35 +1031,35 @@ return false;
 
 		public override void AI()
 		{
-		overAI(npc);
+		overAI(NPC);
 		}
 
 		public void overAI(NPC npc2)
 		{
 		base.AI();
 		shooting2=shooting2+1;
-		Player P = Main.player[npc.target];
+		Player P = Main.player[NPC.target];
 		npc2.ai[3]+=Main.rand.Next(-2,4);
-		int npctype=mod.NPCType("Cirno");
+		int npctype=Mod.Find<ModNPC>("Cirno").Type;
 		if (NPC.CountNPCS(npctype)>0){
 		NPC myowner=Main.npc[NPC.FindFirstNPC(npctype)];
 			Vector2 here=myowner.Center;
 		if (npc2.ai[3]%400>150){
-		float leftorright = (npc.type==mod.NPCType("CirnoIceFairy2")) ? -128f : 128f;
+		float leftorright = (NPC.type==Mod.Find<ModNPC>("CirnoIceFairy2").Type) ? -128f : 128f;
 		if (npc2.ai[3]%300>200){
 		here=P.Center;
-		leftorright = (npc.type==mod.NPCType("CirnoIceFairy2")) ? 220f : -220f;
+		leftorright = (NPC.type==Mod.Find<ModNPC>("CirnoIceFairy2").Type) ? 220f : -220f;
 		}
-		float bobbing=-30f+(float)Math.Sin(npc.ai[3]/31)*20f;
+		float bobbing=-30f+(float)Math.Sin(NPC.ai[3]/31)*20f;
 		npc2.velocity=(npc2.velocity+((here+new Vector2(leftorright,bobbing)-(npc2.position))*0.02f)*0.01f)*0.99f;
-		npc.aiStyle = -1;
+		NPC.aiStyle = -1;
 		}else{
-		npc.aiStyle = 22;
+		NPC.aiStyle = 22;
 		}
 		if (shooting2%400>250){
 		if (shooting2%15==0){
-		Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 30, 1f, -0.25f+Main.rand.NextFloat()/2f);
-		Idglib.Shattershots(npc.Center,myowner.Center, new Vector2(0,0), mod.ProjectileType("CirnoIceShard"), 30,15,0,1,true,0,false,180);
+		SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 30, 1f, -0.25f+Main.rand.NextFloat()/2f);
+		Idglib.Shattershots(NPC.Center,myowner.Center, new Vector2(0,0), Mod.Find<ModProjectile>("CirnoIceShard").Type, 30,15,0,1,true,0,false,180);
 		}}
 		npc2.timeLeft=99;
 		}else{
@@ -1080,7 +1081,7 @@ return false;
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("3rd Strongest Ice Fairy");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 		public override string Texture
 		{
@@ -1088,21 +1089,21 @@ return false;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 40;
-			npc.height = 40;
-			npc.damage = 0;
-			npc.defense = 20;
-			npc.lifeMax = 1000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.value = 0f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = 22;
-			aiType = 0;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = 40000f;
+			NPC.width = 40;
+			NPC.height = 40;
+			NPC.damage = 0;
+			NPC.defense = 20;
+			NPC.lifeMax = 1000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.value = 0f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = 22;
+			AIType = 0;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = 40000f;
 		}
 
 	}
@@ -1119,17 +1120,17 @@ return false;
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.CloneDefaults(fakeid);
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.hostile = true;
-			projectile.friendly = false;
-			projectile.penetrate = 1;
-			projectile.extraUpdates = 0;
-			projectile.aiStyle = -1;
-			projectile.timeLeft = 1000;
-			projectile.coldDamage = true;
-			projectile.npcProj = true;
+			Projectile.CloneDefaults(fakeid);
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.penetrate = 1;
+			Projectile.extraUpdates = 0;
+			Projectile.aiStyle = -1;
+			Projectile.timeLeft = 1000;
+			Projectile.coldDamage = true;
+			Projectile.npcProj = true;
 		}
 
 		public override string Texture
@@ -1139,7 +1140,7 @@ return false;
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type = fakeid;
+			Projectile.type = fakeid;
 			return true;
 		}
 
@@ -1147,12 +1148,12 @@ return false;
 		{
 			if (Main.rand.Next(0, 2) == 1)
 			{
-				int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Ice);
+				int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Ice);
 				Main.dust[dust].scale = 1.5f;
 				Main.dust[dust].noGravity = true;
-				Main.dust[dust].velocity = projectile.velocity * (float)(Main.rand.NextFloat(0.1f, 0.25f));
+				Main.dust[dust].velocity = Projectile.velocity * (float)(Main.rand.NextFloat(0.1f, 0.25f));
 			}
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 		}
 
 		public override void AI()
@@ -1170,15 +1171,15 @@ return false;
 		}
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			if (projectile.localAI[0] < 100)
-				projectile.localAI[0] = 100 + Main.rand.Next(0, 3);
+			if (Projectile.localAI[0] < 100)
+				Projectile.localAI[0] = 100 + Main.rand.Next(0, 3);
 			Texture2D tex = SGAmod.HellionTextures[5];
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 5) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-			int timing = (int)(projectile.localAI[0] - 100);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+			int timing = (int)(Projectile.localAI[0] - 100);
 			timing %= 5;
 			timing *= ((tex.Height) / 5);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), lightColor*projectile.Opacity, MathHelper.ToRadians(0) + projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), lightColor*Projectile.Opacity, MathHelper.ToRadians(0) + Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			return false;
 		}
 
@@ -1186,7 +1187,7 @@ return false;
 
 	public class CirnoIceShardHinted : CirnoIceShard
 	{
-		float strength => Math.Min(1f-(projectile.localAI[1] / 110f), 1f);
+		float strength => Math.Min(1f-(Projectile.localAI[1] / 110f), 1f);
 		public Vector2 bezspot1 = default;
 		public Vector2 bezspot2 = default;
 		public Vector2 CirnoStart = default;
@@ -1201,41 +1202,41 @@ return false;
 
 		public override bool CanDamage()
 		{
-			return projectile.localAI[1] >= 100;
+			return Projectile.localAI[1] >= 100;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.timeLeft = 1000;
+			Projectile.timeLeft = 1000;
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[1] += 1;
-			if (projectile.localAI[1] >= homeInTime+10)
+			Projectile.localAI[1] += 1;
+			if (Projectile.localAI[1] >= homeInTime+10)
 			{
 				base.AI();
             }
             else
             {
-				projectile.rotation = MathHelper.Lerp((projectile.Center-VectorEffect).ToRotation()+MathHelper.PiOver2,projectile.velocity.ToRotation()+MathHelper.PiOver2, projectile.localAI[1]/ homeInTime);
+				Projectile.rotation = MathHelper.Lerp((Projectile.Center-VectorEffect).ToRotation()+MathHelper.PiOver2,Projectile.velocity.ToRotation()+MathHelper.PiOver2, Projectile.localAI[1]/ homeInTime);
 			}
-			projectile.Opacity = ((projectile.localAI[1]-30)/70f);
-			projectile.position -= projectile.velocity * MathHelper.Clamp(1f-((projectile.localAI[1] - homeInTime) / 60f),0f, 1f);
+			Projectile.Opacity = ((Projectile.localAI[1]-30)/70f);
+			Projectile.position -= Projectile.velocity * MathHelper.Clamp(1f-((Projectile.localAI[1] - homeInTime) / 60f),0f, 1f);
 
 
-			if (projectile.localAI[1] == 1)
+			if (Projectile.localAI[1] == 1)
 			{
 				bezspot1 = CirnoStart + Main.rand.NextVector2CircularEdge(200, 200);
-				bezspot2 = projectile.Center + Main.rand.NextVector2CircularEdge(500, 500);
+				bezspot2 = Projectile.Center + Main.rand.NextVector2CircularEdge(500, 500);
 				for (int k = oldPos.Length - 1; k > 0; k--)
 				{
 					oldPos[k] = CirnoStart;
 				}
 			}
 
-			VectorEffect = IdgExtensions.BezierCurve(CirnoStart, CirnoStart, bezspot1, bezspot2, projectile.Center, Math.Min(projectile.localAI[1] / homeInTime, 1f));
+			VectorEffect = IdgExtensions.BezierCurve(CirnoStart, CirnoStart, bezspot1, bezspot2, Projectile.Center, Math.Min(Projectile.localAI[1] / homeInTime, 1f));
 			for (int k = oldPos.Length - 1; k > 0; k--)
 			{
 				oldPos[k] = oldPos[k - 1];
@@ -1253,31 +1254,31 @@ return false;
 
 			if (strength > 0)
 			{
-				TrailHelper trail = new TrailHelper("DefaultPass", mod.GetTexture("noise"));
+				TrailHelper trail = new TrailHelper("DefaultPass", Mod.Assets.Request<Texture2D>("noise").Value);
 				trail.color = delegate (float percent)
 				{
 					return Color.Aqua;
 				};
-				trail.projsize = projectile.Hitbox.Size() / 2f;
-				trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
+				trail.projsize = Projectile.Hitbox.Size() / 2f;
+				trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
 				trail.trailThickness = 2;
 				trail.trailThicknessIncrease = 6;
 				trail.capsize = new Vector2(4f, 0f);
 				trail.strength = strength;
-				trail.DrawTrail(oldPos.ToList(), projectile.Center);
+				trail.DrawTrail(oldPos.ToList(), Projectile.Center);
 			}
 
-			if (projectile.Opacity > 0)
+			if (Projectile.Opacity > 0)
 			{
-				if (projectile.localAI[0] < 100)
-					projectile.localAI[0] = 100 + Main.rand.Next(0, 3);
+				if (Projectile.localAI[0] < 100)
+					Projectile.localAI[0] = 100 + Main.rand.Next(0, 3);
 				Texture2D tex = SGAmod.HellionTextures[5];
 				Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 5) / 2f;
 				Vector2 drawPos = ((VectorEffect - Main.screenPosition)) + new Vector2(0f, 4f);
-				int timing = (int)(projectile.localAI[0] - homeInTime);
+				int timing = (int)(Projectile.localAI[0] - homeInTime);
 				timing %= 5;
 				timing *= ((tex.Height) / 5);
-				spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), lightColor * projectile.Opacity, MathHelper.ToRadians(0) + projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), lightColor * Projectile.Opacity, MathHelper.ToRadians(0) + Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			}
 
 			return false;
@@ -1321,8 +1322,8 @@ return false;
 			npc.knockBackResist = 0f;
 			npc.aiStyle = -1;
 			npc.boss = true;
-			aiType = NPCID.Wraith;
-			animationType = 0;
+			AIType = NPCID.Wraith;
+			AnimationType = 0;
 			npc.noTileCollide = true;
 			npc.noGravity = true;
 			music = MusicID.Boss2;

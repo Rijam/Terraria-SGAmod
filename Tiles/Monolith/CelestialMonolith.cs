@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
+using Terraria.Audio;
 
 namespace SGAmod.Tiles.Monolith
 {
@@ -19,7 +20,7 @@ namespace SGAmod.Tiles.Monolith
 	//I don't like doing tiles, lol
 	public class CelestialMonolith : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2xX);
@@ -51,7 +52,7 @@ namespace SGAmod.Tiles.Monolith
 		public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
 			
-			if (Main.tile[x, y].type == base.Type)
+			if (Main.tile[x, y].TileType == base.Type)
 			{
 				if (nextSpecialDrawIndex < Main.specX.Length)
 				{
@@ -68,26 +69,26 @@ namespace SGAmod.Tiles.Monolith
 			Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 
 			Tile tile = Framing.GetTileSafely(i, j);
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
-				if (tile.frameX == 0 && tile.frameY % 56 == 0)//top left
+				if (tile.TileFrameX == 0 && tile.TileFrameY % 56 == 0)//top left
 				{
-					int yFrame = j - (tile.frameY / 18) - (tile.frameY == 56 ? -3 : 0);
+					int yFrame = j - (tile.TileFrameY / 18) - (tile.TileFrameY == 56 ? -3 : 0);
 					//Texture2D inner = Main.tileTexture[Type];
-					Texture2D inner = ModContent.GetTexture("SGAmod/Tiles/Monolith/CelestialMonolithTex");
-					Texture2D star = ModContent.GetTexture("SGAmod/Tiles/TechTiles/LuminousAlterStar");
-					Rectangle rect = new Rectangle(0, (int)((Main.GlobalTime * 1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
-					Rectangle rect2 = new Rectangle(0, (int)(((Main.GlobalTime * 1) + 1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
+					Texture2D inner = ModContent.Request<Texture2D>("SGAmod/Tiles/Monolith/CelestialMonolithTex");
+					Texture2D star = ModContent.Request<Texture2D>("SGAmod/Tiles/TechTiles/LuminousAlterStar");
+					Rectangle rect = new Rectangle(0, (int)((Main.GlobalTimeWrappedHourly * 1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
+					Rectangle rect2 = new Rectangle(0, (int)(((Main.GlobalTimeWrappedHourly * 1) + 1) % 2) * (star.Height / 2), star.Width, star.Height / 2);
 
-					int height = tile.frameY == 36 ? 18 : 16;
+					int height = tile.TileFrameY == 36 ? 18 : 16;
 					int animate = 0;
 
-					if (tile.frameY >= 56)
+					if (tile.TileFrameY >= 56)
 					{
 						animate = Main.tileFrame[Type] * animationFrameHeight;
 					}
 
-					int teid = ModContent.GetInstance<CelestialMonolithTE>().Find(i - (tile.frameX / 18), yFrame);
+					int teid = ModContent.GetInstance<CelestialMonolithTE>().Find(i - (tile.TileFrameX / 18), yFrame);
 
 					if (teid != -1)
 					{
@@ -109,7 +110,7 @@ namespace SGAmod.Tiles.Monolith
 
 							//Main.spriteBatch.Draw(mod.GetTexture("Tiles/Monolith/CelestialMonolith"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY + animate, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
-							float floater = (float)Math.Sin(Main.GlobalTime);
+							float floater = (float)Math.Sin(Main.GlobalTimeWrappedHourly);
 							Vector2 offset = zerooroffset + (new Vector2(i, j) * 16) + new Vector2(16, (38*(1f-te.ActiveState)) - (floater * 8) * te.ActiveState);
 
 							if (te.ActiveState > 0)
@@ -133,7 +134,7 @@ namespace SGAmod.Tiles.Monolith
 							if (Main.dayTime)
 							{
 								int maxFrame = 8;
-								int frame = (int)((Main.GlobalTime*8) % maxFrame);
+								int frame = (int)((Main.GlobalTimeWrappedHourly*8) % maxFrame);
 								int frameHeight = (Main.moonTexture[Main.moonType].Height / maxFrame);
 								Rectangle rectx = new Rectangle(0, frame * frameHeight, (Main.moonTexture[Main.moonType].Width), frameHeight);
 
@@ -142,7 +143,7 @@ namespace SGAmod.Tiles.Monolith
 
 								if (te.ActiveState > 0)
 								{
-									Texture2D glowTex = mod.GetTexture("Glow");
+									Texture2D glowTex = Mod.Assets.Request<Texture2D>("Glow").Value;
 									for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 6f)
 									{
 										Main.spriteBatch.Draw(glowTex, offset - Main.screenPosition, null, Color.Blue * te.ActiveState, f, glowTex.Size() / 2f, new Vector2(3.2f + floater, 0.80f) * te.ActiveState, SpriteEffects.None, 0f);
@@ -152,7 +153,7 @@ namespace SGAmod.Tiles.Monolith
 								Main.spriteBatch.End();
 								Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.Identity);
 
-								Texture2D glowOrb = ModContent.GetTexture("SGAmod/Glow");
+								Texture2D glowOrb = ModContent.Request<Texture2D>("SGAmod/Glow");
 								for(int xx=0;xx<4;xx+=1)
 								Main.spriteBatch.Draw(glowOrb, offset - Main.screenPosition, null, Color.Black * Math.Min(te.ActiveState*2f,1f), 0f, glowOrb.Size() / 2f, 0.60f, SpriteEffects.None, 0f);
 								Main.spriteBatch.Draw(Main.moonTexture[Main.moonType], offset - Main.screenPosition, rectx, Color.White, 0f, rectx.Size() / 2f, 0.25f + (0.75f * te.ActiveState), SpriteEffects.None, 0f);
@@ -167,7 +168,7 @@ namespace SGAmod.Tiles.Monolith
 
 								if (te.ActiveState > 0)
 								{
-									Texture2D glowTex = mod.GetTexture("Glow");
+									Texture2D glowTex = Mod.Assets.Request<Texture2D>("Glow").Value;
 									for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 10f)
 									{
 										Main.spriteBatch.Draw(glowTex, offset - Main.screenPosition, new Rectangle(0, 0, glowTex.Width / 2, glowTex.Height), Color.White * te.ActiveState, f, glowTex.Size() / 2f, new Vector2(3.2f + floater, 0.80f) * te.ActiveState, SpriteEffects.None, 0f);
@@ -196,7 +197,7 @@ namespace SGAmod.Tiles.Monolith
 
 
 			Texture2D texture;
-			Texture2D texture2 = ModContent.GetTexture("SGAmod/Tiles/Monolith/CelestialMonolithTex");
+			Texture2D texture2 = ModContent.Request<Texture2D>("SGAmod/Tiles/Monolith/CelestialMonolithTex");
 			if (Main.canDrawColorTile(i, j))
 			{
 				texture = Main.tileAltTexture[Type, (int)tile.color()];
@@ -211,10 +212,10 @@ namespace SGAmod.Tiles.Monolith
 				zero = Vector2.Zero;
 			}
 
-			int height = tile.frameY == 36 ? 18 : 16;
+			int height = tile.TileFrameY == 36 ? 18 : 16;
 			int animate = 0;
 
-			if (tile.frameY >= 56)
+			if (tile.TileFrameY >= 56)
 			{
 				animate = Main.tileFrame[Type] * animationFrameHeight;
 			}
@@ -224,9 +225,9 @@ namespace SGAmod.Tiles.Monolith
 
 			int yyy = Main.dayTime ? 2 : 3;
 
-			Rectangle recta = new Rectangle(tile.frameX, (tile.frameY >= 56 ? tile.frameY - 56 : tile.frameY) + (int)(yyy * (56)), 16, height);
+			Rectangle recta = new Rectangle(tile.TileFrameX, (tile.TileFrameY >= 56 ? tile.TileFrameY - 56 : tile.TileFrameY) + (int)(yyy * (56)), 16, height);
 
-			if (tile.frameY < 56)
+			if (tile.TileFrameY < 56)
             {
 				//recta = new Rectangle(tile.frameX, (tile.frameY) + (int)(yyy * (0)), 16, height);
 			}
@@ -238,9 +239,9 @@ namespace SGAmod.Tiles.Monolith
 
 		}
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
-			Main.PlaySound(SoundID.Mech, i * 16, j * 16, 0);
+			SoundEngine.PlaySound(SoundID.Mech, i * 16, j * 16, 0);
 			HitWire(i, j);
 			return true;
 		}
@@ -255,8 +256,8 @@ namespace SGAmod.Tiles.Monolith
 
 		public override void HitWire(int i, int j)
 		{
-			int x = i - (Main.tile[i, j].frameX / 18) % 2;
-			int y = j - (Main.tile[i, j].frameY / 18) % 3;
+			int x = i - (Main.tile[i, j].TileFrameX / 18) % 2;
+			int y = j - (Main.tile[i, j].TileFrameY / 18) % 3;
 			for (int l = x; l < x + 2; l++)
 			{
 				for (int m = y; m < y + 3; m++)
@@ -265,15 +266,15 @@ namespace SGAmod.Tiles.Monolith
 					{
 						Main.tile[l, m] = new Tile();
 					}
-					if (Main.tile[l, m].active() && Main.tile[l, m].type == Type)
+					if (Main.tile[l, m].HasTile && Main.tile[l, m].TileType == Type)
 					{
-						if (Main.tile[l, m].frameY < 56)
+						if (Main.tile[l, m].TileFrameY < 56)
 						{
-							Main.tile[l, m].frameY += 56;
+							Main.tile[l, m].TileFrameY += 56;
 						}
 						else
 						{
-							Main.tile[l, m].frameY -= 56;
+							Main.tile[l, m].TileFrameY -= 56;
 						}
 					}
 				}
@@ -365,7 +366,7 @@ namespace SGAmod.Tiles.Monolith
 			if (tile != null)
 			{
 				active = false;
-				if (tile.frameY != 0)
+				if (tile.TileFrameY != 0)
 				{
 					active = true;
 				}
@@ -399,7 +400,7 @@ namespace SGAmod.Tiles.Monolith
 		public override bool ValidTile(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
-			bool valid = tile.active() && tile.type == ModContent.TileType<CelestialMonolith>() && tile.frameX == 0;
+			bool valid = tile.HasTile && tile.TileType == ModContent.TileType<CelestialMonolith>() && tile.TileFrameX == 0;
 
 			//if (_activeState<0.01f)
 			//Tiles.Monolith.CelestialMonolithTE.ResetTEs();

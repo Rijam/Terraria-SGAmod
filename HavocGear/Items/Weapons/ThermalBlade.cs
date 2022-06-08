@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SGAmod.HavocGear.Items.Weapons
 {
@@ -15,39 +16,34 @@ namespace SGAmod.HavocGear.Items.Weapons
 		
 		public override void SetDefaults()
 		{
-			item.damage = 56;
-			item.melee = true;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 28;
-			item.useAnimation = 20;
-			item.useStyle = 1;
-			item.knockBack = 8;
-			item.value = 100000;
-			item.rare = 6;
-	        item.UseSound = SoundID.Item1;		
-			item.autoReuse = true;
+			Item.damage = 56;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 28;
+			Item.useAnimation = 20;
+			Item.useStyle = 1;
+			Item.knockBack = 8;
+			Item.value = 100000;
+			Item.rare = 6;
+	        Item.UseSound = SoundID.Item1;		
+			Item.autoReuse = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/ThermalBlade_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/ThermalBlade_Glow").Value;
 			}
 		}
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "FieryShard", 12);
-            recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "FieryShard", 12).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.MythrilAnvil).Register();
         }
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
 			if (Main.rand.Next(8) == 0)
 			{
-				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("HotDust"));
+				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, Mod.Find<ModDust>("HotDust").Type);
 		Main.dust[dust].scale = 0.8f;
         Main.dust[dust].noGravity = false;
         Main.dust[dust].velocity = player.velocity*(float)(Main.rand.Next(20,100)*0.002f);

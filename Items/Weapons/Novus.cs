@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using SGAmod.Items.Tools;
+using Terraria.Audio;
 
 
 namespace SGAmod.Items.Weapons
@@ -15,27 +16,27 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Novus Staff");
 			Tooltip.SetDefault("Casts homing Novus bolts");
-			Item.staff[item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
+			Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 20;
-			item.magic = true;
-			item.mana = 5;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 35;
-			item.useAnimation = 35;
-			item.useStyle = 5;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = ItemRarityID.Blue;
-			item.UseSound = SoundID.Item20;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("UnmanedBolt");
-			item.shootSpeed = 4f;
+			Item.damage = 20;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 5;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 35;
+			Item.useAnimation = 35;
+			Item.useStyle = 5;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Blue;
+			Item.UseSound = SoundID.Item20;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("UnmanedBolt").Type;
+			Item.shootSpeed = 4f;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -46,11 +47,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -64,22 +61,22 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 16;
-			item.ranged = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 5;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = ItemRarityID.Blue;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item5;
-			item.shoot = ProjectileID.WoodenArrowFriendly;
-			item.shootSpeed = 6f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 16;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 5;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Blue;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item5;
+			Item.shoot = ProjectileID.WoodenArrowFriendly;
+			Item.shootSpeed = 6f;
+			Item.useAmmo = AmmoID.Arrow;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -88,18 +85,14 @@ namespace SGAmod.Items.Weapons
 
 			if (type == ProjectileID.WoodenArrowFriendly)
 			{
-				type = mod.ProjectileType("UnmanedArrow");
+				type = Mod.Find<ModProjectile>("UnmanedArrow").Type;
 			}
 			return true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -111,27 +104,23 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 18;
-			item.melee = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 1;
-			item.knockBack = 2;
-			item.value = Item.sellPrice(0, 0, 20, 0);
-			item.rare = ItemRarityID.Blue;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 18;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 1;
+			Item.knockBack = 2;
+			Item.value = Item.sellPrice(0, 0, 20, 0);
+			Item.rare = ItemRarityID.Blue;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -145,24 +134,24 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 14;
-			item.Throwing().thrown = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.noMelee = true;
-			item.noUseGraphic = true;
-			item.knockBack = 1;
-			item.value = 10;
-			item.consumable = true;
-			item.maxStack = 999;
-			item.rare = ItemRarityID.Blue;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item1;
-			item.shoot = ModContent.ProjectileType<UnmanedShurikenProj>();
-			item.shootSpeed = 10f;
+			Item.damage = 14;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.noMelee = true;
+			Item.noUseGraphic = true;
+			Item.knockBack = 1;
+			Item.value = 10;
+			Item.consumable = true;
+			Item.maxStack = 999;
+			Item.rare = ItemRarityID.Blue;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item1;
+			Item.shoot = ModContent.ProjectileType<UnmanedShurikenProj>();
+			Item.shootSpeed = 10f;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -173,12 +162,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 1);
-			recipe.AddIngredient(ItemID.Shuriken, 100);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this, 100);
-			recipe.AddRecipe();
+			CreateRecipe(100).AddIngredient(mod.ItemType("UnmanedBar"), 1).AddIngredient(ItemID.Shuriken, 100).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -193,62 +177,62 @@ namespace SGAmod.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Novus Shuriken");
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override string Texture => "SGAmod/Items/Weapons/UnmanedShuriken";
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Shuriken);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.thrown = false;
-			projectile.penetrate = 3;
-			projectile.Throwing().thrown = true;
-			aiType = 0;
+			Projectile.CloneDefaults(ProjectileID.Shuriken);
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			// projectile.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Projectile.penetrate = 3;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			AIType = 0;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			Player owner = Main.player[projectile.owner];
-			if (projectile.aiStyle == 3 && (owner.MountedCenter - projectile.Center).Length() < 64)
+			Player owner = Main.player[Projectile.owner];
+			if (Projectile.aiStyle == 3 && (owner.MountedCenter - Projectile.Center).Length() < 64)
 			{
 				owner.QuickSpawnItem(ModContent.ItemType<UnmanedShuriken>(), 1);
 				return true;
 			}
 
 
-			Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			SoundEngine.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 			for (int num315 = 0; num315 < 15; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("NovusSparkle"), projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 15f), 50, Main.hslToRgb(0.4f, 0f, 0.15f), 2.4f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("NovusSparkle").Type, Projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), Projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 15f), 50, Main.hslToRgb(0.4f, 0f, 0.15f), 2.4f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.7f;
 			}
-			projectile.type = ProjectileID.Shuriken;
+			Projectile.type = ProjectileID.Shuriken;
 
 			return true;
 		}
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			if (!target.friendly && projectile.aiStyle != 3)
+			if (!target.friendly && Projectile.aiStyle != 3)
 			{
-				projectile.aiStyle = 3;
-				projectile.extraUpdates = 1;
-				projectile.netUpdate = true;
+				Projectile.aiStyle = 3;
+				Projectile.extraUpdates = 1;
+				Projectile.netUpdate = true;
 			}
 		}
 
 		public override void AI()
 		{
-			for (int num315 = 0; num315 < (projectile.aiStyle == 3 ? 1 : 2); num315++)
+			for (int num315 = 0; num315 < (Projectile.aiStyle == 3 ? 1 : 2); num315++)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("NovusSparkle"), 0f, 0f, 50, Main.hslToRgb(0.4f, 0f, 0.15f), 1.7f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("NovusSparkle").Type, 0f, 0f, 50, Main.hslToRgb(0.4f, 0f, 0.15f), 1.7f);
 				Main.dust[num316].noGravity = true;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.3f;

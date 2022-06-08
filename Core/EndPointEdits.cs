@@ -208,8 +208,8 @@ namespace SGAmod
 
 				//Dergon
 
-				Texture2D Draken = ModContent.GetTexture("SGAmod/NPCs/TownNPCs/Dergon");
-				int frame = (int)(Main.GlobalTime * 8f) % 7;
+				Texture2D Draken = ModContent.Request<Texture2D>("SGAmod/NPCs/TownNPCs/Dergon");
+				int frame = (int)(Main.GlobalTimeWrappedHourly * 8f) % 7;
 
 				Vector2 offset = new Vector2(180, style.Height - 10);
 				//offset.Y += -frame*0.5f;//sprite is slightly offset
@@ -219,9 +219,9 @@ namespace SGAmod
 
 				Rectangle rect = new Rectangle(0, (int)(frame * (frameSize.Y / 7)), (int)frameSize.X, (int)(frameSize.Y / 7));
 
-				SpriteEffects backAndForth = Main.GlobalTime % 38 < 19 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+				SpriteEffects backAndForth = Main.GlobalTimeWrappedHourly % 38 < 19 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-				offset += new Vector2((Main.GlobalTime % 38) + (Main.GlobalTime % 38 < 19 ? 0 : ((Main.GlobalTime - 19) % 19) * -2), 0) * 12;
+				offset += new Vector2((Main.GlobalTimeWrappedHourly % 38) + (Main.GlobalTimeWrappedHourly % 38 < 19 ? 0 : ((Main.GlobalTimeWrappedHourly - 19) % 19) * -2), 0) * 12;
 
 				sb.Draw(Draken, style.Position() + offset, rect, Color.White, 0, new Vector2(frameSize.X, frameSize.Y / 7f) / 2f, 0.50f, backAndForth, 0f);
 
@@ -506,7 +506,7 @@ namespace SGAmod
 		private delegate void hook_FargosPotionDetour(orig_FargosPotionDetour orig, object fargoglobalitem, Item item, Player player);
 		private static void DetourFargosInfPotion(orig_FargosPotionDetour orig, object fargoglobalitem, Item item, Player player)
 		{
-			if (item.modItem != null && item.modItem is IPotionCantBeInfinite)
+			if (item.ModItem != null && item.ModItem is IPotionCantBeInfinite)
 				return;
 
 			orig(fargoglobalitem, item,player);

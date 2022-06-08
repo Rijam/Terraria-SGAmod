@@ -19,18 +19,18 @@ namespace SGAmod.Items.Weapons.Ammo
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 15;
-			item.ranged = true;
-			item.width = 8;
-			item.height = 8;
-			item.maxStack = 1;
-			item.consumable = true;
-			item.knockBack = 1.5f;
-			item.value = 0;
-			item.rare = ItemRarityID.Pink;
-			item.shoot = ProjectileID.Flames;
-			item.shootSpeed = 2.5f;
-			item.ammo = AmmoID.Gel;
+			Item.damage = 15;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 8;
+			Item.height = 8;
+			Item.maxStack = 1;
+			Item.consumable = true;
+			Item.knockBack = 1.5f;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Pink;
+			Item.shoot = ProjectileID.Flames;
+			Item.shootSpeed = 2.5f;
+			Item.ammo = AmmoID.Gel;
 		}
 
 		public override bool ConsumeAmmo(Player player)
@@ -46,12 +46,7 @@ namespace SGAmod.Items.Weapons.Ammo
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Gel, 200);
-			recipe.AddIngredient(ModContent.ItemType<PlasmaCell>(), 3);
-			recipe.AddTile(ModContent.TileType<ReverseEngineeringStation>());
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Gel, 200).AddIngredient(ModContent.ItemType<PlasmaCell>(), 3).AddTile(ModContent.TileType<ReverseEngineeringStation>()).Register();
 		}
 	}
 
@@ -62,7 +57,7 @@ namespace SGAmod.Items.Weapons.Ammo
 			texture = "Terraria/Buff_" + BuffID.Slimed;
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			base.SetDefaults();
 			DisplayName.SetDefault("Gel Uncondensing");

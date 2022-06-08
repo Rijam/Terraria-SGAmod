@@ -11,25 +11,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 14;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 150;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodWorkbench>();
+			Item.width = 28;
+			Item.height = 14;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 150;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodWorkbench>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 10);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 10).Register();
 		}
 	}
     #endregion
@@ -38,26 +35,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 150;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodChair>();
+			Item.width = 12;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 150;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodChair>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 4);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 4).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 	#endregion
@@ -66,26 +59,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 16;
-			item.height = 26;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 150;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodToilet>();
+			Item.width = 16;
+			Item.height = 26;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 150;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodToilet>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 6);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 6).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -94,25 +83,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 22;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodTable>();
+			Item.width = 30;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodTable>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 8);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 8).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 	#endregion
@@ -126,25 +111,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 
 		public override void SetDefaults()
 		{
-			item.width = 26;
-			item.height = 22;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodDresser>();
+			Item.width = 26;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodDresser>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 16);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 16).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -153,26 +134,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 20;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 2000;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBed>();
+			Item.width = 28;
+			Item.height = 20;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 2000;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBed>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 15);
-			recipe.AddIngredient(ItemID.Silk, 5);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 15).AddIngredient(ItemID.Silk, 5).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -181,26 +157,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 38;
-			item.height = 24;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodSofa>();
+			Item.width = 38;
+			Item.height = 24;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodSofa>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 5);
-			recipe.AddIngredient(ItemID.Silk, 2);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 5).AddIngredient(ItemID.Silk, 2).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -209,26 +180,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
     {
         public override void SetDefaults()
         {
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.useTurn = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-			item.autoReuse = true;
-            item.maxStack = 99;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodLantern>();
-            item.width = 10;
-            item.height = 24;
-            item.value = 150;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTurn = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+			Item.autoReuse = true;
+            Item.maxStack = 99;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodLantern>();
+            Item.width = 10;
+            Item.height = 24;
+            Item.value = 150;
         }
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 6);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodTorch>(), 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 6).AddIngredient(ModContent.ItemType<DankWoodTorch>(), 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
     #endregion
@@ -237,27 +203,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.maxStack = 99;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodLamp>();
-			item.width = 10;
-			item.height = 24;
-			item.value = 500;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useTurn = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.autoReuse = true;
+			Item.maxStack = 99;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodLamp>();
+			Item.width = 10;
+			Item.height = 24;
+			Item.value = 500;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodTorch>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 3);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWoodTorch>(), 1).AddIngredient(ModContent.ItemType<DankWood>(), 3).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 	#endregion
@@ -271,26 +232,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 32;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBookcase>();
+			Item.width = 24;
+			Item.height = 32;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBookcase>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 20);
-			recipe.AddIngredient(ItemID.Book, 10);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 20).AddIngredient(ItemID.Book, 10).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -304,20 +260,20 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 
 		public override void SetDefaults()
 		{
-			item.width = 10;
-			item.height = 12;
-			item.maxStack = 999;
-			item.holdStyle = 1;
-			item.noWet = true;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodTorch>();
-			item.flame = true;
-			item.value = 50;
+			Item.width = 10;
+			Item.height = 12;
+			Item.maxStack = 999;
+			Item.holdStyle = 1;
+			Item.noWet = true;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodTorch>();
+			Item.flame = true;
+			Item.value = 50;
 		}
 
 		public override void HoldItem(Player player)
@@ -332,9 +288,9 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 
 		public override void PostUpdate()
 		{
-			if (!item.wet)
+			if (!Item.wet)
 			{
-				Lighting.AddLight((int)((item.position.X + item.width / 2) / 16f), (int)((item.position.Y + item.height / 2) / 16f), 1f, 0.75f, 0.30f);
+				Lighting.AddLight((int)((Item.position.X + Item.width / 2) / 16f), (int)((Item.position.Y + Item.height / 2) / 16f), 1f, 0.75f, 0.30f);
 			}
 		}
 
@@ -344,16 +300,8 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 1);
-			recipe.AddIngredient(ItemID.Gel, 1);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankCore>(), 1);
-			recipe.AddIngredient(ItemID.Torch, 3);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ModContent.ItemType<DankWood>(), 1).AddIngredient(ItemID.Gel, 1).Register();
+			CreateRecipe(3).AddIngredient(ModContent.ItemType<DankCore>(), 1).AddIngredient(ItemID.Torch, 3).Register();
 		}
 	}
 	#endregion
@@ -362,28 +310,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 26;
-			item.height = 22;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodClock>();
+			Item.width = 26;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodClock>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 10);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 3);
-			recipe.AddIngredient(ItemID.Glass, 6);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 10).AddIngredient(ModContent.ItemType<NoviteBar>(), 3).AddIngredient(ItemID.Glass, 6).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -392,27 +334,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 22;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodPiano>();
+			Item.width = 30;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodPiano>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bone, 4);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 15);
-			recipe.AddIngredient(ItemID.Book, 1);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bone, 4).AddIngredient(ModContent.ItemType<DankWood>(), 15).AddIngredient(ItemID.Book, 1).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -421,26 +357,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodSink>();
+			Item.width = 32;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodSink>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 6);
-			recipe.AddIngredient(ItemID.WaterBucket, 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 6).AddIngredient(ItemID.WaterBucket, 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 	#endregion
@@ -449,25 +380,21 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 22;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = 300;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBathtub>();
+			Item.width = 30;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = 300;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBathtub>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 14);
-			recipe.AddTile(TileID.Sawmill);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWood>(), 14).AddTile(TileID.Sawmill).Register();
 		}
 	}
 	#endregion
@@ -476,30 +403,25 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 20;
-			item.maxStack = 999;
-			item.holdStyle = 1;
-			item.noWet = true;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.NoviteCandle>();
-			item.flame = true;
-			item.value = 0; //candles have no value for some reason.
+			Item.width = 12;
+			Item.height = 20;
+			Item.maxStack = 999;
+			Item.holdStyle = 1;
+			Item.noWet = true;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.NoviteCandle>();
+			Item.flame = true;
+			Item.value = 0; //candles have no value for some reason.
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 4);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodTorch>(), 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<NoviteBar>(), 4).AddIngredient(ModContent.ItemType<DankWoodTorch>(), 1).AddTile(TileID.WorkBenches).Register();
 		}
 		public override void HoldItem(Player player)
 		{
@@ -513,9 +435,9 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 
 		public override void PostUpdate()
 		{
-			if (!item.wet)
+			if (!Item.wet)
 			{
-				Lighting.AddLight((int)((item.position.X + item.width / 2) / 16f), (int)((item.position.Y + item.height / 2) / 16f), 1f, 0.75f, 0.30f);
+				Lighting.AddLight((int)((Item.position.X + Item.width / 2) / 16f), (int)((Item.position.Y + Item.height / 2) / 16f), 1f, 0.75f, 0.30f);
 			}
 		}
 
@@ -530,28 +452,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.maxStack = 99;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.NoviteChandelier>();
-			item.width = 30;
-			item.height = 28;
-			item.value = 3000;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useTurn = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.autoReuse = true;
+			Item.maxStack = 99;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.NoviteChandelier>();
+			Item.width = 30;
+			Item.height = 28;
+			Item.value = 3000;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 4);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodTorch>(), 4);
-			recipe.AddIngredient(ItemID.Chain);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<NoviteBar>(), 4).AddIngredient(ModContent.ItemType<DankWoodTorch>(), 4).AddIngredient(ItemID.Chain).AddTile(TileID.Anvils).Register();
 		}
 	}
 	#endregion
@@ -560,27 +476,22 @@ namespace SGAmod.Items.Placeable.DankWoodFurniture
 	{
 		public override void SetDefaults()
 		{
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.maxStack = 99;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.NoviteCandelabra>();
-			item.width = 22;
-			item.height = 28;
-			item.value = 1500;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useTurn = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.autoReuse = true;
+			Item.maxStack = 99;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.NoviteCandelabra>();
+			Item.width = 22;
+			Item.height = 28;
+			Item.value = 1500;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<NoviteBar>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodTorch>(), 3);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<NoviteBar>(), 3).AddIngredient(ModContent.ItemType<DankWoodTorch>(), 3).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 	#endregion

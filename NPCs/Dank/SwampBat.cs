@@ -9,34 +9,34 @@ namespace SGAmod.NPCs.Dank
 	{
 		public override void SetDefaults()
 		{
-			npc.width = 30;
-			npc.height = 22;
-			npc.damage = 15;
-			npc.defense = 5;
-			npc.lifeMax = 29;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath4;
-            npc.value = 600f;
-            npc.noGravity = true;
-			npc.knockBackResist = 0.5f;
-			npc.aiStyle = 14;
-            animationType = NPCID.CaveBat;
-            aiType = NPCID.CaveBat;
-            banner = npc.type;
-            bannerItem = mod.ItemType("SwampBatBanner");
+			NPC.width = 30;
+			NPC.height = 22;
+			NPC.damage = 15;
+			NPC.defense = 5;
+			NPC.lifeMax = 29;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath4;
+            NPC.value = 600f;
+            NPC.noGravity = true;
+			NPC.knockBackResist = 0.5f;
+			NPC.aiStyle = 14;
+            AnimationType = NPCID.CaveBat;
+            AIType = NPCID.CaveBat;
+            banner = NPC.type;
+            bannerItem = Mod.Find<ModItem>("SwampBatBanner").Type;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Swamp Bat");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.CaveBat];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.CaveBat];
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
-                Gore.NewGore(npc.Center, npc.velocity, mod.GetGoreSlot("Gores/SwampBat_gib"), 1f);
+                Gore.NewGore(NPC.Center, NPC.velocity, Mod.GetGoreSlot("Gores/SwampBat_gib"), 1f);
             }
         }
 
@@ -44,17 +44,17 @@ namespace SGAmod.NPCs.Dank
         {
             if (Main.rand.Next(25) == 0)
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.ChainKnife);
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.ChainKnife);
             }
             if (Main.rand.Next(4) == 0 && SGAWorld.downedMurk>1)
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MurkyGel"), Main.rand.Next(6));
+                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("MurkyGel").Type, Main.rand.Next(6));
             }
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return SGAUtils.NoInvasion(spawnInfo) && spawnInfo.spawnTileType == mod.TileType("MoistStone") && spawnInfo.player.SGAPly().DankShrineZone ? 0.75f : 0f;
+            return SGAUtils.NoInvasion(spawnInfo) && spawnInfo.spawnTileType == Mod.Find<ModTile>("MoistStone") .Type&& spawnInfo.Player.SGAPly().DankShrineZone ? 0.75f : 0f;
         }
     }
 }

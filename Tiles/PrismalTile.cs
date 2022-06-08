@@ -7,7 +7,7 @@ namespace SGAmod.Tiles
 {
     public class VibraniumCrystalTile : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
@@ -22,7 +22,7 @@ namespace SGAmod.Tiles
             soundType = SoundID.Item;
             soundStyle = 50;
             dustType = -1;
-            drop = mod.ItemType("VibraniumCrystal");
+            drop = Mod.Find<ModItem>("VibraniumCrystal").Type;
             mineResist = 2.50f;
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Vibranium Crystal");
@@ -60,7 +60,7 @@ namespace SGAmod.Tiles
 
     public class PrismalTile : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
@@ -74,7 +74,7 @@ namespace SGAmod.Tiles
             minPick = 120;
             soundType = 21;
             soundStyle = 1;
-            drop = mod.ItemType("PrismalOre");
+            drop = Mod.Find<ModItem>("PrismalOre").Type;
             mineResist = 1.25f;
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Prismal Ore");

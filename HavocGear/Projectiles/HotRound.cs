@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Idglibrary;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Projectiles
 {
@@ -27,17 +28,17 @@ namespace SGAmod.HavocGear.Projectiles
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.penetrate = 200;
-			projectile.magic = true;
-			projectile.timeLeft = 4 * 60;
-			projectile.scale = 0.75f;
-			aiType = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.penetrate = 200;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 4 * 60;
+			Projectile.scale = 0.75f;
+			AIType = 0;
 		}
 
 		public override void SendExtraAI(BinaryWriter writer)
@@ -51,12 +52,12 @@ namespace SGAmod.HavocGear.Projectiles
 
 		public override bool PreKill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 			for (int num315 = 0; num315 < 20; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"), projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 10f), 50, Main.hslToRgb(0.4f, 0f, 0.95f), 1f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type, Projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), Projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 10f), 50, Main.hslToRgb(0.4f, 0f, 0.95f), 1f);
 				Main.dust[num316].noGravity = true;
-				Vector2 velop = new Vector2(projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 10f));
+				Vector2 velop = new Vector2(Projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), Projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 10f));
 				Main.dust[num316].velocity = velop / 8f;
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.75f;
@@ -64,25 +65,25 @@ namespace SGAmod.HavocGear.Projectiles
 
 			if (timeLeft < 2 && stickin>=0)
 			{
-				var snd = Main.PlaySound(SoundID.Item14, projectile.Center);
+				var snd = SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 				if (snd != null)
 				{
 					snd.Pitch = 0.75f;
 					if (SGAmod.ScreenShake < 20)
-					SGAmod.AddScreenShake(16, 1280, projectile.Center);
+					SGAmod.AddScreenShake(16, 1280, Projectile.Center);
 				}
 
-				Projectile.NewProjectile(projectile.Center, Vector2.Normalize(projectile.velocity) * 2f, ModContent.ProjectileType<HeatedBlowBackShot>(), projectile.damage * 3, projectile.knockBack * 3f, projectile.owner);
+				Projectile.NewProjectile(Projectile.Center, Vector2.Normalize(Projectile.velocity) * 2f, ModContent.ProjectileType<HeatedBlowBackShot>(), Projectile.damage * 3, Projectile.knockBack * 3f, Projectile.owner);
 
 				for (float gg = 1f; gg < 7.26f; gg += 0.25f)
 				{
 					Vector2 velo = Main.rand.NextVector2CircularEdge(gg, gg) * 2f;
-					Gore.NewGore(projectile.Center + new Vector2(0, 0), velo, Main.rand.Next(61, 64), (5f - Math.Abs(gg)) / 3f);
+					Gore.NewGore(Projectile.Center + new Vector2(0, 0), velo, Main.rand.Next(61, 64), (5f - Math.Abs(gg)) / 3f);
 
 					velo = Main.rand.NextVector2CircularEdge(gg, gg);
-					int gorer = Gore.NewGore(projectile.Center + new Vector2(0, 0), Vector2.Zero, Main.rand.Next(61, 64), (5f - Math.Abs(gg)) / 3f);
+					int gorer = Gore.NewGore(Projectile.Center + new Vector2(0, 0), Vector2.Zero, Main.rand.Next(61, 64), (5f - Math.Abs(gg)) / 3f);
 					if (gorer >= 0)
-						Main.gore[gorer].velocity = (Vector2.Normalize(projectile.velocity) * ((gg * 2f) + 3f)) + (velo / 1f);
+						Main.gore[gorer].velocity = (Vector2.Normalize(Projectile.velocity) * ((gg * 2f) + 3f)) + (velo / 1f);
 
 				}
 			}
@@ -92,7 +93,7 @@ namespace SGAmod.HavocGear.Projectiles
 				NPC himz = Main.npc[stickin];
 				if (himz != null && himz.active)
 				{
-					himz.AddBuff(mod.BuffType("ThermalBlaze"), 60 * 3);
+					himz.AddBuff(Mod.Find<ModBuff>("ThermalBlaze").Type, 60 * 3);
 				}
 			}
 			return true;
@@ -100,7 +101,7 @@ namespace SGAmod.HavocGear.Projectiles
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.penetrate < 100)
+			if (Projectile.penetrate < 100)
 				return false;
 			return base.CanHitNPC(target);
 		}
@@ -108,24 +109,24 @@ namespace SGAmod.HavocGear.Projectiles
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			bool foundsticker = false;
-			target.immune[Main.player[projectile.owner].whoAmI] = 1;
+			target.immune[Main.player[Projectile.owner].whoAmI] = 1;
 			int numfound = 0;
 
 			for (int i = 0; i < Main.maxProjectiles; i++) // Loop all projectiles
 			{
 				Projectile currentProjectile = Main.projectile[i];
-				if (i != projectile.whoAmI // Make sure the looped projectile is not the current javelin
+				if (i != Projectile.whoAmI // Make sure the looped projectile is not the current javelin
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
-					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is HotRound HoterRound // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.type == Projectile.type // Make sure the projectile is of the same type as this javelin
+					&& currentprojectile.ModProjectile is HotRound HoterRound // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& HoterRound.stickin == target.whoAmI)
 				{
 					numfound += 1;
 					if (numfound > 2)
 					{
 						foundsticker = true;
-						projectile.Kill();
+						Projectile.Kill();
 						break;
 					}
 				}
@@ -135,46 +136,46 @@ namespace SGAmod.HavocGear.Projectiles
 			if (!foundsticker)
 			{
 
-				if (projectile.penetrate > 1)
+				if (Projectile.penetrate > 1)
 				{
-					projectile.penetrate = 50;
-					offset = (target.Center - projectile.Center);
+					Projectile.penetrate = 50;
+					offset = (target.Center - Projectile.Center);
 					stickin = target.whoAmI;
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 			}
 		}
 
 		public override void AI()
 		{
-			Lighting.AddLight(projectile.Center, Color.Orange.ToVector3() * 0.75f);
+			Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3() * 0.75f);
 
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 
 			if (stickin > -1)
 			{
-				boomGlow = (2.75f - boomGlow)/(1f+(projectile.timeLeft/30f));
+				boomGlow = (2.75f - boomGlow)/(1f+(Projectile.timeLeft/30f));
 				boomGlow = Math.Min(boomGlow, 1f);
 
 				NPC himz = Main.npc[stickin];
-				projectile.tileCollide = false;
+				Projectile.tileCollide = false;
 
 				if (himz != null && himz.active)
 				{
-					projectile.Center = (himz.Center - offset) - (projectile.velocity * 0.2f);
+					Projectile.Center = (himz.Center - offset) - (Projectile.velocity * 0.2f);
 					if (GetType() == typeof(HotRound))
 					himz.AddBuff(BuffID.OnFire, 3);
 				}
 				else
 				{
-					projectile.Kill();
+					Projectile.Kill();
 				}
 
 				for (int num315 = 0; num315 < 3; num315 = num315 + 1)
 				{
-					int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y) + Vector2.Normalize(projectile.velocity) * Main.rand.NextFloat(0f, 32f), projectile.width, projectile.height, mod.DustType("HotDust"), 0,0, 50, Main.hslToRgb(0.4f, 0f, 0.95f), boomGlow/2f);
+					int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y) + Vector2.Normalize(Projectile.velocity) * Main.rand.NextFloat(0f, 32f), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type, 0,0, 50, Main.hslToRgb(0.4f, 0f, 0.95f), boomGlow/2f);
 					Main.dust[num316].noGravity = true;
-					Vector2 velop = new Vector2(projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 10f));
+					Vector2 velop = new Vector2(Projectile.velocity.X + (float)(Main.rand.Next(-250, 250) / 15f), Projectile.velocity.Y + (float)(Main.rand.Next(-250, 250) / 10f));
 					Main.dust[num316].velocity = velop / 8f;
 					Dust dust3 = Main.dust[num316];
 					dust3.velocity *= 0.75f;
@@ -185,7 +186,7 @@ namespace SGAmod.HavocGear.Projectiles
             {
 				for (int num315 = 0; num315 < 2; num315 = num315 + 1)
 				{
-					int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"), 0f, 0f, 50, Main.hslToRgb(0.4f, 0f, 0.95f), 0.9f);
+					int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type, 0f, 0f, 50, Main.hslToRgb(0.4f, 0f, 0.95f), 0.9f);
 					Main.dust[num316].noGravity = true;
 					Dust dust3 = Main.dust[num316];
 					dust3.velocity *= 0.3f;
@@ -197,9 +198,9 @@ namespace SGAmod.HavocGear.Projectiles
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 
-			spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, tex.Size() / 2f, projectile.scale, default, 0);
+			spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, tex.Size() / 2f, Projectile.scale, default, 0);
 
 			return false;
 		}
@@ -208,14 +209,14 @@ namespace SGAmod.HavocGear.Projectiles
 		{
 			if (stickin >= 0)
 			{
-				Texture2D tex = Main.projectileTexture[projectile.type];
-				Texture2D tex2 = ModContent.GetTexture("SGAmod/Glow");
+				Texture2D tex = Main.projectileTexture[Projectile.type];
+				Texture2D tex2 = ModContent.Request<Texture2D>("SGAmod/Glow");
 
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-				spriteBatch.Draw(tex2, projectile.Center - Main.screenPosition, null, Color.OrangeRed*boomGlow, projectile.rotation, tex2.Size() / 2f, projectile.scale, default, 0);
+				spriteBatch.Draw(tex2, Projectile.Center - Main.screenPosition, null, Color.OrangeRed*boomGlow, Projectile.rotation, tex2.Size() / 2f, Projectile.scale, default, 0);
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -229,7 +230,7 @@ namespace SGAmod.HavocGear.Projectiles
 
 				fadeIn.CurrentTechnique.Passes["FadeIn"].Apply();
 
-				spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null,Color.White, projectile.rotation, tex.Size()/2f, projectile.scale, default, 0);
+				spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null,Color.White, Projectile.rotation, tex.Size()/2f, Projectile.scale, default, 0);
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -240,7 +241,7 @@ namespace SGAmod.HavocGear.Projectiles
 
 	public class HeatedBlowBackShot : Dimensions.NPCs.SpaceBossBasicShot, IDrawAdditive
 	{
-        protected override Color BoomColor => Color.Lerp(Color.Red, Color.Orange, projectile.timeLeft/120f);
+        protected override Color BoomColor => Color.Lerp(Color.Red, Color.Orange, Projectile.timeLeft/120f);
 		public override bool DrawFlash => true;
         public override void SetStaticDefaults()
 		{
@@ -250,31 +251,31 @@ namespace SGAmod.HavocGear.Projectiles
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.width = 32;
-			projectile.height = 32;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.timeLeft = 120;
-			projectile.light = 0.75f;
-			projectile.penetrate = -1;
-			projectile.localNPCHitCooldown = -1;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.magic = true;
-			projectile.extraUpdates = 5;
+			Projectile.width = 32;
+			Projectile.height = 32;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.timeLeft = 120;
+			Projectile.light = 0.75f;
+			Projectile.penetrate = -1;
+			Projectile.localNPCHitCooldown = -1;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.extraUpdates = 5;
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 
-			if (projectile.localAI[0] == 1)
+			if (Projectile.localAI[0] == 1)
 			{
-				startOrg = projectile.Center;
+				startOrg = Projectile.Center;
 			}
 
-			if (projectile.ai[0] < 15f)
+			if (Projectile.ai[0] < 15f)
 			{
-				projectile.ai[0] += 0.05f;
+				Projectile.ai[0] += 0.05f;
 			}
 		}
 
@@ -285,7 +286,7 @@ namespace SGAmod.HavocGear.Projectiles
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-			target.AddBuff(mod.BuffType("ThermalBlaze"), 60 * 3);
+			target.AddBuff(Mod.Find<ModBuff>("ThermalBlaze").Type, 60 * 3);
 		}
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

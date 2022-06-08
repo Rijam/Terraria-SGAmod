@@ -26,30 +26,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Red;
-			item.value = 5000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("WarmpedRealityBuff");
-			item.buffTime = 60 * 600;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Red;
+			Item.value = 5000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("WarmpedRealityBuff").Type;
+			Item.buffTime = 60 * 600;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DragonsMightPotion>(), 1);
-			recipe.AddRecipeGroup("Fragment", 3);
-			recipe.AddIngredient(ModContent.ItemType<DrakeniteBar>(), 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DragonsMightPotion>(), 1).AddRecipeGroup("Fragment", 3).AddIngredient(ModContent.ItemType<DrakeniteBar>(), 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -63,22 +57,22 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Expert;
-			item.value = 5000;
-			item.potion = true;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.healLife = 300;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Expert;
+			Item.value = 5000;
+			Item.potion = true;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.healLife = 300;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
 		}
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
 			player.lifeRegenTime += 10000;
 			player.lifeRegenCount += 10000;
@@ -87,39 +81,32 @@ namespace SGAmod.Items.Consumables
 
         public override Color? GetAlpha(Color lightColor)
         {
-            return Main.hslToRgb((Main.GlobalTime*0.75f)%1f,1f,0.75f);
+            return Main.hslToRgb((Main.GlobalTimeWrappedHourly*0.75f)%1f,1f,0.75f);
         }
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frameNotUsed, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Texture2D texture = mod.GetTexture("Items/Consumables/DeificHealingPotionEffect");
+			Texture2D texture = Mod.Assets.Request<Texture2D>("Items/Consumables/DeificHealingPotionEffect").Value;
 			Vector2 drawOrigin = texture.Size() / 2f;
 			position += new Vector2(drawOrigin.X * scale, drawOrigin.Y * scale);
 
-			spriteBatch.Draw(Main.itemTexture[item.type], position, null, GetAlpha(itemColor) == null ? Color.White : (Color)GetAlpha(itemColor), 0f, drawOrigin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], position, null, GetAlpha(itemColor) == null ? Color.White : (Color)GetAlpha(itemColor), 0f, drawOrigin, scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(texture, position, null, Color.White, 0f, drawOrigin, scale, SpriteEffects.None, 0f);
 			return false;
 		}
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
 
-			Texture2D texture = mod.GetTexture("Items/Consumables/DeificHealingPotionEffect");
+			Texture2D texture = Mod.Assets.Request<Texture2D>("Items/Consumables/DeificHealingPotionEffect").Value;
 			Vector2 drawOrigin = texture.Size() / 2f;
 
-			spriteBatch.Draw(Main.itemTexture[item.type], item.Center-Main.screenPosition, null, GetAlpha(lightColor) == null ? Color.White : (Color)GetAlpha(lightColor), rotation, drawOrigin, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(texture, item.Center - Main.screenPosition, null, lightColor, rotation, drawOrigin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], Item.Center-Main.screenPosition, null, GetAlpha(lightColor) == null ? Color.White : (Color)GetAlpha(lightColor), rotation, drawOrigin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, Item.Center - Main.screenPosition, null, lightColor, rotation, drawOrigin, scale, SpriteEffects.None, 0f);
 			return false;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SuperHealingPotion, 1);
-			recipe.AddIngredient(ModContent.ItemType<IlluminantEssence>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<ByteSoul>(), 6);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.SuperHealingPotion, 1).AddIngredient(ModContent.ItemType<IlluminantEssence>(), 2).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 2).AddIngredient(ModContent.ItemType<ByteSoul>(), 6).AddTile(TileID.Bottles).Register();
 		}
 
 	}	
@@ -134,32 +121,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.LightRed;
-			item.value = 5000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("ToxicityPotionBuff");
-			item.buffTime = 60 * 600;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = 5000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("ToxicityPotionBuff").Type;
+			Item.buffTime = 60 * 600;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.StinkPotion, 1);
-			recipe.AddIngredient(ItemID.ThornsPotion, 1);
-			recipe.AddIngredient(ItemID.ShadowScale, 8);
-			recipe.AddIngredient(ItemID.VilePowder, 5);
-			recipe.AddIngredient(ModContent.ItemType<MurkyGel>(), 6);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.StinkPotion, 1).AddIngredient(ItemID.ThornsPotion, 1).AddIngredient(ItemID.ShadowScale, 8).AddIngredient(ItemID.VilePowder, 5).AddIngredient(ModContent.ItemType<MurkyGel>(), 6).AddTile(TileID.Bottles).Register();
 		}
 	}
 	public class IntimacyPotion : ModItem
@@ -172,32 +151,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.LightRed;
-			item.value = 5000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("IntimacyPotionBuff");
-			item.buffTime = 60 * 600;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = 5000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("IntimacyPotionBuff").Type;
+			Item.buffTime = 60 * 600;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LovePotion, 1);
-			recipe.AddIngredient(ItemID.HeartreachPotion, 1);
-			recipe.AddIngredient(ItemID.WarmthPotion, 1);
-			recipe.AddIngredient(ItemID.TissueSample, 4);
-			recipe.AddIngredient(ItemID.LifeCrystal, 1);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.LovePotion, 1).AddIngredient(ItemID.HeartreachPotion, 1).AddIngredient(ItemID.WarmthPotion, 1).AddIngredient(ItemID.TissueSample, 4).AddIngredient(ItemID.LifeCrystal, 1).AddTile(TileID.Bottles).Register();
 		}
 	}	
 	public class TriggerFingerPotion : ModItem
@@ -210,30 +181,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Orange;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("TriggerFingerPotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("TriggerFingerPotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BottledWater, 5);
-			recipe.AddIngredient(ItemID.DesertFossil, 3);
-			recipe.AddIngredient(ItemID.IllegalGunParts, 1);
-			recipe.AddTile(TileID.AlchemyTable);
-			recipe.SetResult(this, 5);
-			recipe.AddRecipe();
+			CreateRecipe(5).AddIngredient(ItemID.BottledWater, 5).AddIngredient(ItemID.DesertFossil, 3).AddIngredient(ItemID.IllegalGunParts, 1).AddTile(TileID.AlchemyTable).Register();
 		}
 	}
 	public class TrueStrikePotion : ModItem
@@ -246,30 +211,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Orange;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("TrueStrikePotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("TrueStrikePotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Ale,1);
-			recipe.AddIngredient(ModContent.ItemType <UnmanedOre>(), 2);
-			recipe.AddIngredient(ModContent.ItemType <WraithFragment3>(), 1);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Ale,1).AddIngredient(ModContent.ItemType <UnmanedOre>(), 2).AddIngredient(ModContent.ItemType <WraithFragment3>(), 1).AddTile(TileID.Bottles).Register();
 		}
 	}
 	public class ClarityPotion : ModItem
@@ -282,31 +241,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Orange;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("ClarityPotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("ClarityPotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BottledWater,2);
-			recipe.AddIngredient(ItemID.Sunflower, 1);
-			recipe.AddIngredient(ItemID.ManaCrystal, 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.Biomass>(), 4);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ItemID.BottledWater,2).AddIngredient(ItemID.Sunflower, 1).AddIngredient(ItemID.ManaCrystal, 1).AddIngredient(ModContent.ItemType<HavocGear.Items.Biomass>(), 4).AddTile(TileID.Bottles).Register();
 		}
 	}
 	public class TinkerPotion : ModItem
@@ -319,32 +271,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Orange;
-			item.value = 250;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("TinkerPotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = 250;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("TinkerPotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType < BottledMud>(), 2);
-			recipe.AddIngredient(ModContent.ItemType <HavocGear.Items.VirulentOre>(), 2);
-			recipe.AddIngredient(ModContent.ItemType < DankWood>(), 6);
-			recipe.AddIngredient(ModContent.ItemType < DankCore>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < VialofAcid>(), 4);
-			recipe.AddTile(ModContent.TileType<ReverseEngineeringStation>());
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ModContent.ItemType < BottledMud>(), 2).AddIngredient(ModContent.ItemType <HavocGear.Items.VirulentOre>(), 2).AddIngredient(ModContent.ItemType < DankWood>(), 6).AddIngredient(ModContent.ItemType < DankCore>(), 1).AddIngredient(ModContent.ItemType < VialofAcid>(), 4).AddTile(ModContent.TileType<ReverseEngineeringStation>()).Register();
 		}
 	}
 	public class TooltimePotion : ModItem
@@ -357,40 +301,25 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Blue;
-			item.value = 50;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("TooltimePotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = 50;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("TooltimePotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType < BottledMud>(), 1);
-			recipe.AddRecipeGroup("Wood", 5);
-			recipe.AddIngredient(ItemID.Acorn, 2);
-			recipe.AddIngredient(ItemID.TungstenOre, 1);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType < BottledMud>(), 1);
-			recipe.AddRecipeGroup("Wood", 3);
-			recipe.AddIngredient(ItemID.Acorn, 1);
-			recipe.AddIngredient(ItemID.SilverOre, 1);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType < BottledMud>(), 1).AddRecipeGroup("Wood", 5).AddIngredient(ItemID.Acorn, 2).AddIngredient(ItemID.TungstenOre, 1).AddTile(TileID.Bottles).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType < BottledMud>(), 1).AddRecipeGroup("Wood", 3).AddIngredient(ItemID.Acorn, 1).AddIngredient(ItemID.SilverOre, 1).AddTile(TileID.Bottles).Register();
 		}
 	}
 
@@ -404,37 +333,29 @@ namespace SGAmod.Items.Consumables
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "apocalypticaltext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "apocalypticaltext", SGAGlobalItem.apocalypticaltext));
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Lime;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("RagnarokBrewBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("RagnarokBrewBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BottledWater,3);
-			recipe.AddIngredient(ModContent.ItemType < Entrophite>(), 15);
-			recipe.AddIngredient(ModContent.ItemType < StygianCore>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < FieryShard>(), 2);
-			recipe.AddIngredient(ModContent.ItemType < UnmanedOre>(), 5);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.BottledWater,3).AddIngredient(ModContent.ItemType < Entrophite>(), 15).AddIngredient(ModContent.ItemType < StygianCore>(), 1).AddIngredient(ModContent.ItemType < FieryShard>(), 2).AddIngredient(ModContent.ItemType < UnmanedOre>(), 5).AddTile(TileID.Bottles).Register();
 		}
 	}
 	public class EnergyPotion : ModItem
@@ -447,32 +368,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Green;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("EnergyPotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Green;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("EnergyPotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BottledWater, 1);
-			recipe.AddIngredient(ItemID.Sunflower);
-			recipe.AddIngredient(ModContent.ItemType < NoviteOre>(), 1);
-			recipe.AddIngredient(ItemID.Meteorite);
-			recipe.AddIngredient(ItemID.RainCloud);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.BottledWater, 1).AddIngredient(ItemID.Sunflower).AddIngredient(ModContent.ItemType < NoviteOre>(), 1).AddIngredient(ItemID.Meteorite).AddIngredient(ItemID.RainCloud).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 	}	
 	public class CondenserPotion : ModItem
@@ -485,30 +398,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Green;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = SGAmod.Instance.BuffType("CondenserPotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Green;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = SGAmod.Instance.Find<ModBuff>("CondenserPotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BottledWater, 3);
-			recipe.AddIngredient(ItemID.CookedMarshmallow);
-			recipe.AddIngredient(ModContent.ItemType <FrigidShard>(), 3);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.BottledWater, 3).AddIngredient(ItemID.CookedMarshmallow).AddIngredient(ModContent.ItemType <FrigidShard>(), 3).AddTile(TileID.Bottles).Register();
 		}
 	}
 
@@ -522,36 +429,29 @@ namespace SGAmod.Items.Consumables
 
 		public override bool CanUseItem(Player player)
 		{
-			return !(player.HasBuff(Idglib.Instance.BuffType("RadCure")) && player.HasBuff(Idglib.Instance.BuffType("LimboFading")));
+			return !(player.HasBuff(Idglib.Instance.Find<ModBuff>("RadCure").Type) && player.HasBuff(Idglib.Instance.Find<ModBuff>("LimboFading").Type));
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Lime;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = Idglib.Instance.BuffType("RadCure");
-			item.buffTime = 60 * 60;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = Idglib.Instance.Find<ModBuff>("RadCure").Type;
+			Item.buffTime = 60 * 60;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.RestorationPotion, 2);
-			recipe.AddIngredient(ItemID.StrangeBrew);
-			recipe.AddIngredient(ItemID.ChlorophyteOre, 4);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SwampSeeds>(), 2);
-			recipe.AddTile(TileID.AlchemyTable);
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ItemID.RestorationPotion, 2).AddIngredient(ItemID.StrangeBrew).AddIngredient(ItemID.ChlorophyteOre, 4).AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SwampSeeds>(), 2).AddTile(TileID.AlchemyTable).Register();
 		}
 	}
 
@@ -566,32 +466,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Lime;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = ModContent.BuffType<DragonsMight>();
-			item.buffTime = 60*30;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = ModContent.BuffType<DragonsMight>();
+			Item.buffTime = 60*30;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.RestorationPotion,2);
-			recipe.AddIngredient(ModContent.ItemType <OmniSoul>(), 2);
-			recipe.AddIngredient(ModContent.ItemType < Fridgeflame>(), 2);
-			recipe.AddIngredient(ModContent.ItemType < MurkyGel>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<Entrophite>(), 20);
-			recipe.AddTile(TileID.AlchemyTable);
-			recipe.SetResult(this,2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ItemID.RestorationPotion,2).AddIngredient(ModContent.ItemType <OmniSoul>(), 2).AddIngredient(ModContent.ItemType < Fridgeflame>(), 2).AddIngredient(ModContent.ItemType < MurkyGel>(), 3).AddIngredient(ModContent.ItemType<Entrophite>(), 20).AddTile(TileID.AlchemyTable).Register();
 		}
 
         public override bool CanUseItem(Player player)
@@ -622,31 +514,24 @@ namespace SGAmod.Items.Consumables
 		
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 20000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = mod.BuffType("IceFirePotionBuff");
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 20000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = Mod.Find<ModBuff>("IceFirePotionBuff").Type;
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.BottledHoney, 2);
-			recipe.AddIngredient(ModContent.ItemType < CryostalBar>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < IceFairyDust>(), 1);
-			recipe.AddIngredient(ModContent.ItemType < Fridgeflame>(), 3);
-			recipe.AddTile(TileID.AlchemyTable);
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ItemID.BottledHoney, 2).AddIngredient(ModContent.ItemType < CryostalBar>(), 1).AddIngredient(ModContent.ItemType < IceFairyDust>(), 1).AddIngredient(ModContent.ItemType < Fridgeflame>(), 3).AddTile(TileID.AlchemyTable).Register();
 		}
 	}
 	public class PhalanxPotion : ModItem
@@ -660,34 +545,23 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 1;
-			item.value = 250;
-			item.useStyle = ItemRarityID.Green;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = ModContent.BuffType<PhalanxPotionBuff>();
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 1;
+			Item.value = 250;
+			Item.useStyle = ItemRarityID.Green;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = ModContent.BuffType<PhalanxPotionBuff>();
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			for (int i = 0; i < 2; i += 1)
-			{
-				ModRecipe recipe = new ModRecipe(mod);
-				recipe.AddIngredient(ItemID.IronskinPotion, 1);
-				recipe.AddIngredient(ModContent.ItemType<BottledMud>(), 1);
-				recipe.AddIngredient(ModContent.ItemType<Glowrock>(), 4);
-				recipe.AddIngredient(i == 0 ? ItemID.SilverOre : ItemID.TungstenOre, 2);
-				recipe.AddTile(TileID.Bottles);
-				recipe.SetResult(this, 2);
-				recipe.AddRecipe();
-			}
 		}
 	}
 
@@ -701,31 +575,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.LightPurple;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = ModContent.BuffType<ReflexPotionBuff>();
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = ModContent.BuffType<ReflexPotionBuff>();
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SwiftnessPotion, 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.MoistSand>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SwampSeeds>(), 1);
-			recipe.AddIngredient(ItemID.Ale, 1);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.SwiftnessPotion, 1).AddIngredient(ModContent.ItemType<HavocGear.Items.MoistSand>(), 2).AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SwampSeeds>(), 1).AddIngredient(ItemID.Ale, 1).AddTile(TileID.Bottles).Register();
 		}
 	}
 
@@ -739,30 +606,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.LightPurple;
-			item.value = 500;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.buffType = ModContent.BuffType<FuryPotionBuff>();
-			item.buffTime = 60 * 300;
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.LightPurple;
+			Item.value = 500;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.buffType = ModContent.BuffType<FuryPotionBuff>();
+			Item.buffTime = 60 * 300;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bottle, 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SwampSeeds>(), 3);
-			recipe.AddIngredient(ItemID.Deathweed, 1);
-			recipe.AddTile(TileID.Bottles);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bottle, 1).AddIngredient(ModContent.ItemType<HavocGear.Items.Weapons.SwampSeeds>(), 3).AddIngredient(ItemID.Deathweed, 1).AddTile(TileID.Bottles).Register();
 		}
 	}
 

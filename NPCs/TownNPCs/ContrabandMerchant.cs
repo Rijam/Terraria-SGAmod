@@ -81,51 +81,51 @@ namespace SGAmod.NPCs.TownNPCs
 		{
 			// DisplayName automatically assigned from .lang files, but the commented line below is the normal approach.
 			// DisplayName.SetDefault("Example Person");
-			Main.npcFrameCount[npc.type] = 25;
-			NPCID.Sets.ExtraFramesCount[npc.type] = 9;
-			NPCID.Sets.AttackFrameCount[npc.type] = 4;
-			NPCID.Sets.DangerDetectRange[npc.type] = 700;
-			NPCID.Sets.AttackType[npc.type] = 0;
-			NPCID.Sets.AttackTime[npc.type] = 90;
-			NPCID.Sets.AttackAverageChance[npc.type] = 30;
-			NPCID.Sets.HatOffsetY[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 25;
+			NPCID.Sets.ExtraFramesCount[NPC.type] = 9;
+			NPCID.Sets.AttackFrameCount[NPC.type] = 4;
+			NPCID.Sets.DangerDetectRange[NPC.type] = 700;
+			NPCID.Sets.AttackType[NPC.type] = 0;
+			NPCID.Sets.AttackTime[NPC.type] = 90;
+			NPCID.Sets.AttackAverageChance[NPC.type] = 30;
+			NPCID.Sets.HatOffsetY[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.townNPC = true;
-			npc.friendly = true;
-			npc.width = 18;
-			npc.height = 40;
-			npc.aiStyle = 7;
-			npc.damage = 10;
-			npc.defense = 15;
-			npc.lifeMax = 250;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0.5f;
-			animationType = NPCID.Guide;
-			npc.homeless = true;
-			Color c = Main.hslToRgb((float)(Main.GlobalTime / 2) % 1f, 0.5f, 0.35f);
+			NPC.townNPC = true;
+			NPC.friendly = true;
+			NPC.width = 18;
+			NPC.height = 40;
+			NPC.aiStyle = 7;
+			NPC.damage = 10;
+			NPC.defense = 15;
+			NPC.lifeMax = 250;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0.5f;
+			AnimationType = NPCID.Guide;
+			NPC.homeless = true;
+			Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 2) % 1f, 0.5f, 0.35f);
 
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
+			if (NPC.life <= 0)
 			{
 				if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
 				{
-					Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Head_alt"), 1f);
+					Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Head_alt"), 1f);
 				}
 				else
 				{
-					Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Head"), 1f);
+					Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Head"), 1f);
 				}
 				for (int k = 0; k < 2; k++)
 				{
-					Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Arm"), 1f);
-					Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Leg"), 1f);
+					Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Arm"), 1f);
+					Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/ContrabandMerchant_Gore_Leg"), 1f);
 				}
 			}
 		}
@@ -141,7 +141,7 @@ namespace SGAmod.NPCs.TownNPCs
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return ((!Main.dayTime && NPC.CountNPCS(npc.type) < 1 && spawnInfo.playerInTown) ? 1f : 0f);
+			return ((!Main.dayTime && NPC.CountNPCS(NPC.type) < 1 && spawnInfo.playerInTown) ? 1f : 0f);
 		}
 
 
@@ -201,7 +201,7 @@ namespace SGAmod.NPCs.TownNPCs
 				chat.Add(Main.npc[npc].GivenName + " thinks he's got the rare stuff, take a look at what I got.");
 			}
 			if (ModLoader.GetMod("CalamityMod") != null) {
-				npc = NPC.FindFirstNPC(ModLoader.GetMod("CalamityMod").NPCType("FAP"));
+				npc = NPC.FindFirstNPC(ModLoader.GetMod("CalamityMod").Find<ModNPC>("FAP").Type);
 				if (npc >= 0 && Main.rand.Next(2) == 0)
 				{
 					chat.Add("I coulda swore I saw " + Main.npc[npc].GivenName + " riding some pastel pony, it might have just been those Unicorns around here, but that one had wings too!");
@@ -257,17 +257,17 @@ namespace SGAmod.NPCs.TownNPCs
 		{
 			if (itemRandomizer == 0)
 			{
-				UnifiedRandom rando = new UnifiedRandom(Main.worldName.GetHashCode() + npc.Center.GetHashCode());
+				UnifiedRandom rando = new UnifiedRandom(Main.worldName.GetHashCode() + NPC.Center.GetHashCode());
 
 				itemRandomizer = rando.Next();
 			}
-			if ((Main.dayTime) && !ContrabandMerchant.IsNpcOnscreen(npc.Center))
+			if ((Main.dayTime) && !ContrabandMerchant.IsNpcOnscreen(NPC.Center))
 			{
-				if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(npc.FullName + " has departed!", 50, 125, 255);
-				else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(npc.FullName + " has departed!"), new Color(50, 125, 255));
-				npc.active = false;
-				npc.netSkip = -1;
-				npc.life = 0;
+				if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(NPC.FullName + " has departed!", 50, 125, 255);
+				else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(NPC.FullName + " has departed!"), new Color(50, 125, 255));
+				NPC.active = false;
+				NPC.netSkip = -1;
+				NPC.life = 0;
 			}
 		}
 
@@ -424,15 +424,15 @@ namespace SGAmod.NPCs.TownNPCs
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 2;
-			projectile.damage = 0;
+			Projectile.width = 8;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 2;
+			Projectile.damage = 0;
 		}
 
 		public override string Texture
@@ -442,19 +442,19 @@ namespace SGAmod.NPCs.TownNPCs
 
 		public override void AI()
 		{
-			if (projectile.ai[0] < 1)
+			if (Projectile.ai[0] < 1)
 			{
 				for (float i = 0f; i < 2f; i += 0.05f)
 				{
 					Vector2 circle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000));
 					circle = circle.SafeNormalize(Vector2.Zero);
-					int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Smoke, circle.X * i, circle.Y * i);
+					int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Smoke, circle.X * i, circle.Y * i);
 					Main.dust[dust].scale = Main.rand.NextFloat(1f, 3f);
 					Main.dust[dust].noGravity = false;
 					Main.dust[dust].alpha = 100;
 					Main.dust[dust].velocity = circle * i;
 				}
-				CombatText.NewText(new Rectangle((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height), Main.DiscoColor, "Oh snap the Fuzz! Gotta run!", true);
+				CombatText.NewText(new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height), Main.DiscoColor, "Oh snap the Fuzz! Gotta run!", true);
 			}
 			int npcguy = NPC.FindFirstNPC(ModContent.NPCType<ContrabandMerchant>());
 
@@ -463,7 +463,7 @@ namespace SGAmod.NPCs.TownNPCs
 				Main.npc[npcguy].active = false;
 				Main.npc[npcguy].type = NPCID.None;
 			}
-			projectile.ai[0] += 1;
+			Projectile.ai[0] += 1;
 		}
 	}
 
@@ -476,11 +476,11 @@ namespace SGAmod.NPCs.TownNPCs
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 250;
-			item.rare = ItemRarityID.Blue;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 250;
+			Item.rare = ItemRarityID.Blue;
 		}
 
         public override bool OnPickup(Player player)

@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Idglibrary;
 using SGAmod.NPCs.Hellion;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs.TrueDraken
 {
@@ -48,45 +49,45 @@ namespace SGAmod.NPCs.TrueDraken
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("TRUE Draken");
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.650f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.650f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 
 		public override void SetDefaults()
 		{
-			npc.boss = true;
-			npc.friendly = false;
-			npc.width = 72;
-			npc.height = 72;
-			npc.aiStyle = -1;
-			npc.damage = 250;
-			npc.noTileCollide = true;
-			npc.defense = 0;
-			npc.netAlways = true;
-			npc.noGravity = true;
-			npc.lifeMax = 3000000;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0f;
+			NPC.boss = true;
+			NPC.friendly = false;
+			NPC.width = 72;
+			NPC.height = 72;
+			NPC.aiStyle = -1;
+			NPC.damage = 250;
+			NPC.noTileCollide = true;
+			NPC.defense = 0;
+			NPC.netAlways = true;
+			NPC.noGravity = true;
+			NPC.lifeMax = 3000000;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0f;
 		}
 
 		public void GetHit(Player player, ref int damage, ref float knockback, ref bool crit)
 		{
 			int ogdamage = damage;
-			if (npc.HasBuff(BuffID.Ichor))
+			if (NPC.HasBuff(BuffID.Ichor))
 				damage += (int)(ogdamage * 0.15);
-			if (npc.HasBuff(BuffID.CursedInferno))
+			if (NPC.HasBuff(BuffID.CursedInferno))
 				damage += (int)(ogdamage * 0.15);
-			if (npc.HasBuff(BuffID.BetsysCurse))
+			if (NPC.HasBuff(BuffID.BetsysCurse))
 				damage += (int)(ogdamage * 0.20);
-			for (int i = 0; i < npc.buffTime.Length; i += 1)
+			for (int i = 0; i < NPC.buffTime.Length; i += 1)
 			{
-				if (npc.buffType[i] > 0)
+				if (NPC.buffType[i] > 0)
 				{
 					damage += (int)(ogdamage * 0.05);
 				}
@@ -131,7 +132,7 @@ namespace SGAmod.NPCs.TrueDraken
 		{
 			if (appear < 0.25f)
 				appear += 0.005f;
-			Rectangle hitbox = new Rectangle((int)npc.position.X - 8, (int)npc.position.Y - 8, npc.height + 16, npc.width + 16);
+			Rectangle hitbox = new Rectangle((int)NPC.position.X - 8, (int)NPC.position.Y - 8, NPC.height + 16, NPC.width + 16);
 
 			for (int k = oldRot.Length - 1; k > 0; k--)
 			{
@@ -140,93 +141,93 @@ namespace SGAmod.NPCs.TrueDraken
 
 				if (Main.rand.Next(0, 10) == 1)
 				{
-					int typr = mod.DustType("TornadoDust");
+					int typr = Mod.Find<ModDust>("TornadoDust").Type;
 
 					int dust = Dust.NewDust(new Vector2(oldPos[k].X, oldPos[k].Y), hitbox.Width, hitbox.Height, typr);
-					Main.dust[dust].scale = (0.75f * appear) + (npc.velocity.Length() / 50f);
+					Main.dust[dust].scale = (0.75f * appear) + (NPC.velocity.Length() / 50f);
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-					Vector2 normvel = npc.velocity;
+					Vector2 normvel = NPC.velocity;
 					normvel.Normalize(); normvel *= 2f;
 
-					Main.dust[dust].velocity = ((randomcircle / 1f) + (-normvel)) - npc.velocity;
+					Main.dust[dust].velocity = ((randomcircle / 1f) + (-normvel)) - NPC.velocity;
 					Main.dust[dust].noGravity = true;
 
 				}
 
 			}
 
-			oldRot[0] = npc.rotation;
-			oldPos[0] = npc.Center;
+			oldRot[0] = NPC.rotation;
+			oldPos[0] = NPC.Center;
 		}
 
 		public override bool CheckActive()
 		{
-			return (!Main.player[npc.target].active || Main.player[npc.target].dead);
+			return (!Main.player[NPC.target].active || Main.player[NPC.target].dead);
 		}
 
 		public override void AI()
 		{
 
 			if (Main.netMode < 1 && Main.LocalPlayer.name != "giuy")
-				npc.active = false;
+				NPC.active = false;
 
 			circletrap -= 1;
 			circlepower = MathHelper.Clamp(circlepower + (circletrap > 0 ? 0.02f : -0.02f), 0f, 1f);
 			intro += 1;
-			npc.dontTakeDamage = false;
-			npc.chaseable = true;
+			NPC.dontTakeDamage = false;
+			NPC.chaseable = true;
 			stealth = Math.Min(1f, stealth+0.01f);
 			if (introstate > 0)
 				trailingeffect();
 			if (DoingIntro())
 			{
-				npc.dontTakeDamage = true;
+				NPC.dontTakeDamage = true;
 				return;
 
 			}
 
 			if (!LivePlayer())
 			{
-				npc.velocity.X *= 0.75f;
-				npc.velocity.Y -= 0.10f;
+				NPC.velocity.X *= 0.75f;
+				NPC.velocity.Y -= 0.10f;
 				return;
 			}
 
-			npc.ai[0] += 1;
+			NPC.ai[0] += 1;
 
 			NoEscape();
 
-			if (npc.ai[1] < 1)
-				npc.ai[0] = npc.ai[0] % 1000;
-			if (npc.ai[1]>1 && (intro>1020) && empowered<1f)
+			if (NPC.ai[1] < 1)
+				NPC.ai[0] = NPC.ai[0] % 1000;
+			if (NPC.ai[1]>1 && (intro>1020) && empowered<1f)
 				empowered+=0.01f;
 
-				Player P = Main.player[npc.target];
+				Player P = Main.player[NPC.target];
 			Vector2 PWhere = P.Center;
-			Vector2 DrakenWhere = npc.Center;
+			Vector2 DrakenWhere = NPC.Center;
 			Vector2 FlyTo = PWhere - new Vector2(0, 200);
 			Vector2 FlySpeed = new Vector2(0.10f, 0.10f);
 			Vector2 FlyFriction = new Vector2(0.95f, 0.95f);
 			StopMoving -= 1; NoFriction -= 1; Ramming -= 1;
 
-			if (npc.life < npc.lifeMax * 0.90 && npc.ai[1] == 10)//0
+			if (NPC.life < NPC.lifeMax * 0.90 && NPC.ai[1] == 10)//0
 			{
-				npc.ai[1] = 1;
+				NPC.ai[1] = 1;
 				intro = 960;
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 			}
-			if (npc.life < npc.lifeMax * 0.950 && npc.ai[1] == 0)//1
+			if (NPC.life < NPC.lifeMax * 0.950 && NPC.ai[1] == 0)//1
 			{
-				npc.ai[1] = 2;
-				npc.life = npc.lifeMax;
+				NPC.ai[1] = 2;
+				NPC.life = NPC.lifeMax;
 				intro = 960;
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 			}
 			Vector2 Turntof = PWhere - DrakenWhere;
 			Turntof.Normalize();
 
 
-			if (npc.ai[1] == 0 && npc.ai[0]%200==190 && npc.ai[0]>0)
+			if (NPC.ai[1] == 0 && NPC.ai[0]%200==190 && NPC.ai[0]>0)
 			{
 				StopMoving = 120;
 				HellionPortals(P, ref PWhere, ref DrakenWhere, ref FlyTo, ref FlySpeed, ref FlyFriction);
@@ -234,26 +235,26 @@ namespace SGAmod.NPCs.TrueDraken
 
 			}
 
-			if (npc.ai[1] == 2 && npc.ai[0] < 1)
+			if (NPC.ai[1] == 2 && NPC.ai[0] < 1)
 			{
 				Phase2Touhou(P, ref PWhere, ref DrakenWhere, ref FlyTo, ref FlySpeed, ref FlyFriction,true);
 				goto Movementstuff;
 
 			}
 
-			if (npc.ai[0] % 2800 > 2200)
+			if (NPC.ai[0] % 2800 > 2200)
 			{
 				LaserBarrage(P, ref PWhere, ref DrakenWhere, ref FlyTo, ref FlySpeed, ref FlyFriction);
 			}
 			else
 			{
-				if ((npc.ai[0] % 400 > 350 || npc.ai[0] % 710 > 650) && npc.ai[1] > 0)
+				if ((NPC.ai[0] % 400 > 350 || NPC.ai[0] % 710 > 650) && NPC.ai[1] > 0)
 				{
 					SpinCycle(P, ref PWhere, ref DrakenWhere, ref FlyTo, ref FlySpeed, ref FlyFriction);
 				}
 				else
 				{
-					if (npc.ai[0] % 1000 > 400)
+					if (NPC.ai[0] % 1000 > 400)
 					{
 						Phase1Hover(P, ref PWhere, ref DrakenWhere, ref FlyTo, ref FlySpeed, ref FlyFriction);
 					}
@@ -274,16 +275,16 @@ namespace SGAmod.NPCs.TrueDraken
 				if (FlySpeed.X < 0)
 				{
 					Thereis.Normalize();
-					npc.velocity += Thereis * -FlySpeed;
+					NPC.velocity += Thereis * -FlySpeed;
 				}
 				else
 				{
-					npc.velocity += (Thereis) * FlySpeed;
+					NPC.velocity += (Thereis) * FlySpeed;
 				}
 
 			}
 			if (NoFriction < 1)
-				npc.velocity *= FlyFriction;
+				NPC.velocity *= FlyFriction;
 
 
 		}
@@ -294,9 +295,9 @@ namespace SGAmod.NPCs.TrueDraken
 			for (int rotz = 0; rotz < 360; rotz += 360 / 3)
 			{
 
-				Vector2 where = npc.Center;
+				Vector2 where = NPC.Center;
 				Vector2 wheretogo2 = new Vector2(96f, rotz);
-				Vector2 where2 = P.Center - npc.Center;
+				Vector2 where2 = P.Center - NPC.Center;
 				where2.Normalize();
 				Vector2 wheretogoxxx = new Vector2(0.40f, 0f);
 				Func<Vector2, Vector2, float, float, float> projectilefacing = delegate (Vector2 playerpos, Vector2 projpos, float time, float current)
@@ -315,7 +316,7 @@ namespace SGAmod.NPCs.TrueDraken
 
 					if (TrueDraken.GetDraken() != null)
 					{
-						Vector2 gothere = TrueDraken.GetDraken().npc.Center + instore;
+						Vector2 gothere = TrueDraken.GetDraken().NPC.Center + instore;
 						Vector2 slideover = gothere - projpos;
 						current = slideover / 2f;
 					}
@@ -332,10 +333,10 @@ namespace SGAmod.NPCs.TrueDraken
 				};
 				Func<float, bool> projectilepattern = (time) => (time > 60 && time%200==0);
 
-				int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 100, 1100, (npc.Center - where).ToRotation(), ProjectileID.EmeraldBolt, projectilepattern, 15f, 200);
-				(Main.projectile[ize2].modProjectile as ParadoxMirror).projectilefacing = projectilefacing;
-				(Main.projectile[ize2].modProjectile as ParadoxMirror).projectilemoving = projectilemoving;
-				Main.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
+				int ize2 = ParadoxMirror.SummonMirror(where, Vector2.Zero, 100, 1100, (NPC.Center - where).ToRotation(), ProjectileID.EmeraldBolt, projectilepattern, 15f, 200);
+				(Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilefacing = projectilefacing;
+				(Main.projectile[ize2].ModProjectile as ParadoxMirror).projectilemoving = projectilemoving;
+				SoundEngine.PlaySound(SoundID.Item, (int)Main.projectile[ize2].position.X, (int)Main.projectile[ize2].position.Y, 33, 0.25f, 0.5f);
 				Main.projectile[ize2].netUpdate = true;
 
 			}
@@ -354,53 +355,53 @@ namespace SGAmod.NPCs.TrueDraken
 			circletrap = 30;
 
 			//Touhou Attack
-			npc.chaseable = false;
+			NPC.chaseable = false;
 			Vector2 Turnto = PWhere - DrakenWhere;
 			appear /= 1.15f;
 			stealth = stealth/1.15f;
 			if (introattack)
-				npc.dontTakeDamage = true;
-			if ((npc.ai[0]) % 100 == 0)
+				NPC.dontTakeDamage = true;
+			if ((NPC.ai[0]) % 100 == 0)
 			{
 				float i = MathHelper.ToDegrees(Turnto.ToRotation());
-					int prog = Projectile.NewProjectile(introattack ? circleloc : npc.Center, ((MathHelper.ToRadians(i)).ToRotationVector2() * 12f), mod.ProjectileType("TrueDrakenCopyNoDeath"), 0, 1f, 255, 0, npc.whoAmI);
-					Main.projectile[prog].ai[1] = npc.whoAmI;
+					int prog = Projectile.NewProjectile(introattack ? circleloc : NPC.Center, ((MathHelper.ToRadians(i)).ToRotationVector2() * 12f), Mod.Find<ModProjectile>("TrueDrakenCopyNoDeath").Type, 0, 1f, 255, 0, NPC.whoAmI);
+					Main.projectile[prog].ai[1] = NPC.whoAmI;
 
 					Func<Vector2, TrueDrakenCopy, int, bool> ProjectileAct = delegate (Vector2 playerpos, TrueDrakenCopy DrakenCopy, int timer)
 							{
-								Vector2 rotspeed = new Vector2(npc.ai[0] % 200 >= 100 ? 0.25f : -0.25f, 0.75f);
-								DrakenCopy.projectile.ai[0] += 1;
-								if (DrakenCopy.projectile.timeLeft > 300)
-									DrakenCopy.projectile.timeLeft = 300;
+								Vector2 rotspeed = new Vector2(NPC.ai[0] % 200 >= 100 ? 0.25f : -0.25f, 0.75f);
+								DrakenCopy.Projectile.ai[0] += 1;
+								if (DrakenCopy.Projectile.timeLeft > 300)
+									DrakenCopy.Projectile.timeLeft = 300;
 
-								float arot = DrakenCopy.projectile.velocity.ToRotation();
-								float ogvel = DrakenCopy.projectile.velocity.Length();
-								if (DrakenCopy.projectile.ai[0] < 2)
+								float arot = DrakenCopy.Projectile.velocity.ToRotation();
+								float ogvel = DrakenCopy.Projectile.velocity.Length();
+								if (DrakenCopy.Projectile.ai[0] < 2)
 								{
-									DrakenCopy.alocation = DrakenCopy.projectile.Center;
-									DrakenCopy.projectile.rotation = arot;
+									DrakenCopy.alocation = DrakenCopy.Projectile.Center;
+									DrakenCopy.Projectile.rotation = arot;
 								}
 
-								Vector2 ShootThere = DrakenCopy.alocation - DrakenCopy.projectile.Center;
+								Vector2 ShootThere = DrakenCopy.alocation - DrakenCopy.Projectile.Center;
 								ShootThere.Normalize();
 
-								float len = DrakenCopy.projectile.velocity.Length();
+								float len = DrakenCopy.Projectile.velocity.Length();
 
-								DrakenCopy.projectile.rotation += MathHelper.ToRadians(rotspeed.X* rotspeed.Y);
-								Vector2 Gowhere = DrakenCopy.projectile.rotation.ToRotationVector2();
+								DrakenCopy.Projectile.rotation += MathHelper.ToRadians(rotspeed.X* rotspeed.Y);
+								Vector2 Gowhere = DrakenCopy.Projectile.rotation.ToRotationVector2();
 								if (ShootThere.Length() > 0)
-									DrakenCopy.projectile.Center -= ShootThere * 6f;
-								DrakenCopy.projectile.velocity = Gowhere * ogvel;
+									DrakenCopy.Projectile.Center -= ShootThere * 6f;
+								DrakenCopy.Projectile.velocity = Gowhere * ogvel;
 
-								if (DrakenCopy.projectile.ai[0] % 30 == 0 && (DrakenCopy.projectile.ai[0] > 100))
+								if (DrakenCopy.Projectile.ai[0] % 30 == 0 && (DrakenCopy.Projectile.ai[0] > 100))
 								{
-									int prog2 = Projectile.NewProjectile(DrakenCopy.projectile.Center, ShootThere * 15f, mod.ProjectileType("TrueDrakenCopyNoDeath"), 80, 1f, 255, 150, npc.whoAmI);
+									int prog2 = Projectile.NewProjectile(DrakenCopy.Projectile.Center, ShootThere * 15f, Mod.Find<ModProjectile>("TrueDrakenCopyNoDeath").Type, 80, 1f, 255, 150, NPC.whoAmI);
 									Main.projectile[prog2].ai[0] = 200;
-									Main.projectile[prog2].ai[1] = npc.whoAmI;
+									Main.projectile[prog2].ai[1] = NPC.whoAmI;
 									Main.projectile[prog2].rotation = -ShootThere.ToRotation();
 									Main.projectile[prog2].timeLeft = 900;
 									Main.projectile[prog2].netUpdate = true;
-									Main.PlaySound(SoundID.NPCHit, (int)npc.Center.X, (int)npc.Center.Y, 37, 0.75f, 0.5f);
+									SoundEngine.PlaySound(SoundID.NPCHit, (int)NPC.Center.X, (int)NPC.Center.Y, 37, 0.75f, 0.5f);
 								}
 
 
@@ -408,22 +409,22 @@ namespace SGAmod.NPCs.TrueDraken
 							};
 
 
-					(Main.projectile[prog].modProjectile as TrueDrakenCopy).ProjectileAct = ProjectileAct;
+					(Main.projectile[prog].ModProjectile as TrueDrakenCopy).ProjectileAct = ProjectileAct;
 					Main.projectile[prog].netUpdate = true;
 
 				//}
 
-				Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 84, 0.75f, 0.5f);
+				SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 84, 0.75f, 0.5f);
 			}
 
 			//if (npc.ai[0] % 90 > 20)
-				npc.rotation = npc.rotation.AngleLerp((Turnto).ToRotation(), 0.04f);
+				NPC.rotation = NPC.rotation.AngleLerp((Turnto).ToRotation(), 0.04f);
 
 			FlyTo = circleloc;
 
 			if (!introattack)
 			{
-				FlyTo = circleloc - new Vector2(256, 0).RotatedBy(MathHelper.ToRadians(npc.ai[0] * 7f));
+				FlyTo = circleloc - new Vector2(256, 0).RotatedBy(MathHelper.ToRadians(NPC.ai[0] * 7f));
 				FlySpeed /= 2f;
 			}
 			else
@@ -437,28 +438,28 @@ namespace SGAmod.NPCs.TrueDraken
 
 			//Charging
 			Vector2 Turnto = PWhere - DrakenWhere;
-			if (npc.ai[0] % 80 == 30)
+			if (NPC.ai[0] % 80 == 30)
 			{
-				Turnto = SGAUtils.PredictiveAim(100f, npc.Center,P.MountedCenter,P.velocity, false) - DrakenWhere;
+				Turnto = SGAUtils.PredictiveAim(100f, NPC.Center,P.MountedCenter,P.velocity, false) - DrakenWhere;
 				Turnto.Normalize();
-				npc.velocity = Turnto * 100f;
+				NPC.velocity = Turnto * 100f;
 				//npc.velocity += Turnto * 70f;
-				npc.rotation = Turnto.ToRotation();
-				npc.spriteDirection = (npc.velocity.X) > 0 ? 1 : -1;
+				NPC.rotation = Turnto.ToRotation();
+				NPC.spriteDirection = (NPC.velocity.X) > 0 ? 1 : -1;
 				Ramming = 30;
 			}
-			if (npc.ai[0] % 80 == 0)
+			if (NPC.ai[0] % 80 == 0)
 			{
 				Turnto = Turnto.RotatedBy(MathHelper.ToRadians((Main.rand.Next(30, 60) * (Main.rand.NextBool() ? 1 : 1))));
 				Turnto.Normalize();
-				npc.velocity = Turnto * 80f;
-				npc.velocity += Turnto * 30f;
-				npc.rotation = Turnto.ToRotation();
-				npc.spriteDirection = (npc.velocity.X) > 0 ? 1 : -1;
+				NPC.velocity = Turnto * 80f;
+				NPC.velocity += Turnto * 30f;
+				NPC.rotation = Turnto.ToRotation();
+				NPC.spriteDirection = (NPC.velocity.X) > 0 ? 1 : -1;
 				Ramming = 32;
 			}
-			if (npc.ai[0] % 90 > 20)
-				npc.rotation = npc.rotation.AngleLerp((Turnto).ToRotation(), 0.15f);
+			if (NPC.ai[0] % 90 > 20)
+				NPC.rotation = NPC.rotation.AngleLerp((Turnto).ToRotation(), 0.15f);
 			StopMoving = 80;
 
 		}
@@ -467,20 +468,20 @@ namespace SGAmod.NPCs.TrueDraken
 		{
 			//Draken Clone Spin Cycle
 			Vector2 Turnto = PWhere - DrakenWhere;
-			npc.rotation = npc.rotation.AngleLerp((Turnto).ToRotation(), 0.025f);
-			Vector2 shootthere = SGAUtils.PredictiveAim(30f, npc.Center, P.MountedCenter, P.velocity, false);
-			npc.Center = npc.Center.RotatedBy(MathHelper.ToRadians(npc.ai[0] % 800 > 400 ? 5f : -5f), PWhere);
+			NPC.rotation = NPC.rotation.AngleLerp((Turnto).ToRotation(), 0.025f);
+			Vector2 shootthere = SGAUtils.PredictiveAim(30f, NPC.Center, P.MountedCenter, P.velocity, false);
+			NPC.Center = NPC.Center.RotatedBy(MathHelper.ToRadians(NPC.ai[0] % 800 > 400 ? 5f : -5f), PWhere);
 			shootthere -= DrakenWhere;
 			shootthere.Normalize();
 			if (StopMoving < 3)
 				StopMoving = 3;
-			if (npc.ai[0] % 3 == 0 && (npc.ai[0] % 400 > 375 || npc.ai[0] % 710 > 675))
+			if (NPC.ai[0] % 3 == 0 && (NPC.ai[0] % 400 > 375 || NPC.ai[0] % 710 > 675))
 			{
-				int prog = Projectile.NewProjectile(npc.Center, shootthere * 15f, mod.ProjectileType("TrueDrakenCopy"), 80, 1f, 255, 150, npc.whoAmI);
+				int prog = Projectile.NewProjectile(NPC.Center, shootthere * 15f, Mod.Find<ModProjectile>("TrueDrakenCopy").Type, 80, 1f, 255, 150, NPC.whoAmI);
 				Main.projectile[prog].ai[0] = 150;
-				Main.projectile[prog].ai[1] = npc.whoAmI;
+				Main.projectile[prog].ai[1] = NPC.whoAmI;
 				Main.projectile[prog].netUpdate = true;
-				Main.PlaySound(SoundID.NPCHit, (int)npc.Center.X, (int)npc.Center.Y, 37, 0.75f, 0.5f);
+				SoundEngine.PlaySound(SoundID.NPCHit, (int)NPC.Center.X, (int)NPC.Center.Y, 37, 0.75f, 0.5f);
 			}
 
 		}
@@ -491,21 +492,21 @@ namespace SGAmod.NPCs.TrueDraken
 			//Hovering
 
 			FlyFriction = new Vector2(0.95f, 0.95f);
-			FlyTo = PWhere - new Vector2((float)Math.Sin(npc.ai[0] / 73f) * 400f, 250);
+			FlyTo = PWhere - new Vector2((float)Math.Sin(NPC.ai[0] / 73f) * 400f, 250);
 			Vector2 Turnto = PWhere - DrakenWhere;
 			Turnto.X *= 3f;
-			npc.rotation = npc.rotation.AngleLerp((Turnto).ToRotation(), 0.025f);
-			npc.spriteDirection = (FlyTo.X - DrakenWhere.X) > 0 ? 1 : -1;
+			NPC.rotation = NPC.rotation.AngleLerp((Turnto).ToRotation(), 0.025f);
+			NPC.spriteDirection = (FlyTo.X - DrakenWhere.X) > 0 ? 1 : -1;
 			FlySpeed = new Vector2(-8.20f, -8.20f) * Math.Min((FlyTo - DrakenWhere).Length() / 400f, 1f);
 
 			Vector2 shootthere = PWhere - DrakenWhere;
-			if (npc.ai[0] % 10 == 0 && npc.ai[0] % 100 > 60)
+			if (NPC.ai[0] % 10 == 0 && NPC.ai[0] % 100 > 60)
 			{
 				shootthere.Normalize();
-				int prog = Projectile.NewProjectile(npc.Center, shootthere * 30f, ProjectileID.CursedFlameHostile, 80, 1f);
+				int prog = Projectile.NewProjectile(NPC.Center, shootthere * 30f, ProjectileID.CursedFlameHostile, 80, 1f);
 			}
-			if (npc.ai[0] % 5 == 0 && npc.ai[0] % 100 > 60 && npc.ai[1] == 0)
-				Idglib.Shattershots(npc.Center, PWhere, new Vector2(0, 0), ProjectileID.CursedFlameHostile, 80, 50, 100, 3, false, 0, false, 100);
+			if (NPC.ai[0] % 5 == 0 && NPC.ai[0] % 100 > 60 && NPC.ai[1] == 0)
+				Idglib.Shattershots(NPC.Center, PWhere, new Vector2(0, 0), ProjectileID.CursedFlameHostile, 80, 50, 100, 3, false, 0, false, 100);
 
 		}
 
@@ -513,33 +514,33 @@ namespace SGAmod.NPCs.TrueDraken
 		{
 			//Laser Barrage
 			StopMoving = 160;
-			if (npc.ai[0] % 2800 < 2300)
+			if (NPC.ai[0] % 2800 < 2300)
 			{
 				Vector2 Turnto = PWhere - DrakenWhere;
 				Turnto.Normalize();
-				npc.velocity -= Turnto * 1f;
-				npc.rotation = npc.rotation.AngleLerp(Turnto.ToRotation(), 0.15f);
+				NPC.velocity -= Turnto * 1f;
+				NPC.rotation = NPC.rotation.AngleLerp(Turnto.ToRotation(), 0.15f);
 			}
 			else
 			{
 				Vector2 Turnto = PWhere - DrakenWhere;
 				for (int i = -12; i < 5; i += 4)
 				{
-					if (npc.ai[0] % 3 == 0 && npc.ai[0] % 150 <= 25)
+					if (NPC.ai[0] % 3 == 0 && NPC.ai[0] % 150 <= 25)
 					{
 						Vector2 Turnto2 = (PWhere - DrakenWhere);
 						Turnto2 = Turnto2.RotatedBy(MathHelper.ToRadians(i));
 						Turnto2.Normalize();
 
-						int prog = Projectile.NewProjectile(npc.Center, Turnto2 * 8f, SGAmod.Instance.ProjectileType("HellionBeam"), 100, 15f);
+						int prog = Projectile.NewProjectile(NPC.Center, Turnto2 * 8f, SGAmod.Instance.Find<ModProjectile>("HellionBeam").Type, 100, 15f);
 
 
 					}
 				}
-				npc.Center = npc.Center.RotatedBy(MathHelper.ToRadians(4), PWhere);
+				NPC.Center = NPC.Center.RotatedBy(MathHelper.ToRadians(4), PWhere);
 				Turnto.Normalize();
-				npc.velocity /= 1.15f;
-				npc.rotation = Turnto.ToRotation();
+				NPC.velocity /= 1.15f;
+				NPC.rotation = Turnto.ToRotation();
 			}
 		}
 			public bool DoingIntro()
@@ -551,7 +552,7 @@ namespace SGAmod.NPCs.TrueDraken
 					introstate = 1;
 				if (intro < 200)
 				{
-					npc.velocity.Y -= 0.5f;
+					NPC.velocity.Y -= 0.5f;
 				}
 				if (intro == 100)
 					Idglib.Chat("Draken: ...", 0, 200, 0);
@@ -568,11 +569,11 @@ namespace SGAmod.NPCs.TrueDraken
 				if (intro == 950)
 				{
 					Idglib.Chat("True Draken: YOU?!!", 200, 0, 0);
-					RippleBoom.MakeShockwave(npc.Center, 8f, 2f, 20f, 100, 3f, true);
-					Main.PlaySound(15, (int)npc.Center.X, (int)npc.Center.Y, 2, 1f, -0.5f);
-					npc.velocity.Y = 0;
+					RippleBoom.MakeShockwave(NPC.Center, 8f, 2f, 20f, 100, 3f, true);
+					SoundEngine.PlaySound(15, (int)NPC.Center.X, (int)NPC.Center.Y, 2, 1f, -0.5f);
+					NPC.velocity.Y = 0;
 				}
-				if (npc.ai[1] < 1)
+				if (NPC.ai[1] < 1)
 				{
 					if (intro == 1100)
 						Idglib.Chat("True Draken: Justice shall fall down on you!", 200, 0, 0);
@@ -580,17 +581,17 @@ namespace SGAmod.NPCs.TrueDraken
 						Idglib.Chat("True Draken: Repent!", 200, 0, 0);
 				}
 
-				if (npc.ai[1] == 1)
+				if (NPC.ai[1] == 1)
 				{
-					npc.ai[0] = 2200;
+					NPC.ai[0] = 2200;
 					if (intro == 1000)
 						Idglib.Chat("True Draken: What do you hope to gain?", 200, 0, 0);
 					if (intro == 1150)
 						Idglib.Chat("True Draken: Tell me what?!", 200, 0, 0);
 				}
-				if (npc.ai[1] == 2)
+				if (NPC.ai[1] == 2)
 				{
-					npc.ai[0] = -999;
+					NPC.ai[0] = -999;
 					if (intro == 1000)
 						Idglib.Chat("True Draken: I won't let you...", 200, 0, 0);
 					if (intro == 1150)
@@ -599,9 +600,9 @@ namespace SGAmod.NPCs.TrueDraken
 
 				if (intro > 700 && intro < 950)
 				{
-					npc.velocity.Y -= (intro - 700f) / 1000f;
+					NPC.velocity.Y -= (intro - 700f) / 1000f;
 				}
-				npc.velocity /= 1.5f;
+				NPC.velocity /= 1.5f;
 				return true;
 			}
 			introstate = 2;
@@ -625,9 +626,9 @@ namespace SGAmod.NPCs.TrueDraken
 
 		public static TrueDraken GetDraken()
 		{
-			if (NPC.CountNPCS(SGAmod.Instance.NPCType("TrueDraken")) > 0)
+			if (NPC.CountNPCS(SGAmod.Instance.Find<ModNPC>("TrueDraken").Type) > 0)
 			{
-				return (Main.npc[NPC.FindFirstNPC(SGAmod.Instance.NPCType("TrueDraken"))].modNPC as TrueDraken);
+				return (Main.npc[NPC.FindFirstNPC(SGAmod.Instance.Find<ModNPC>("TrueDraken").Type)].ModNPC as TrueDraken);
 			}
 			else
 			{
@@ -639,11 +640,11 @@ namespace SGAmod.NPCs.TrueDraken
 		public bool LivePlayer()
 		{
 
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead)
 				{
 					return false;
@@ -683,29 +684,29 @@ namespace SGAmod.NPCs.TrueDraken
 	public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/NPCs/TownNPCs/DrakenFly");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/NPCs/TownNPCs/DrakenFly");
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-			Vector2 drawPos = ((npc.Center - Main.screenPosition));
+			Vector2 drawPos = ((NPC.Center - Main.screenPosition));
 			Vector2 adder = Vector2.Zero;
 			Color color = drawColor;
-			int timing = (int)(Main.GlobalTime * (8f));
+			int timing = (int)(Main.GlobalTimeWrappedHourly * (8f));
 			if (introstate < 1)
-				timing = (int)(Main.GlobalTime * 8f);
+				timing = (int)(Main.GlobalTimeWrappedHourly * 8f);
 
 			timing %= 4;
 
-			int mydirection = npc.rotation.ToRotationVector2().X > 0 ? 1 : -1;
+			int mydirection = NPC.rotation.ToRotationVector2().X > 0 ? 1 : -1;
 
 			if (timing == 0)
 			{
-				adder = ((npc.rotation + (float)Math.PI / 2f).ToRotationVector2() * (8f * mydirection));
+				adder = ((NPC.rotation + (float)Math.PI / 2f).ToRotationVector2() * (8f * mydirection));
 			}
 
 
 			timing *= ((tex.Height) / 4);
 			if (introstate < 1)
 			{
-				spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), color, 0, drawOrigin, npc.scale, (npc.Center - Main.LocalPlayer.Center).X < 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+				spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), color, 0, drawOrigin, NPC.scale, (NPC.Center - Main.LocalPlayer.Center).X < 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 			}
 			else
 			{
@@ -714,9 +715,9 @@ namespace SGAmod.NPCs.TrueDraken
 					for (int i = -1; i < 2; i += 2)
 					{
 						Texture2D texture7 = SGAmod.ExtraTextures[34];
-						spriteBatch.Draw(texture7, npc.Center - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTime) % 1f, 1f, 0.75f) * 0.50f * empowered * stealth, -Main.GlobalTime * 17.134f * i, new Vector2(texture7.Width / 2f, texture7.Height / 2f), new Vector2((float)Math.Abs(Math.Sin(Main.GlobalTime / 1.1694794f)), 1f) * empowered, SpriteEffects.None, 0f);
+						spriteBatch.Draw(texture7, NPC.Center - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTimeWrappedHourly) % 1f, 1f, 0.75f) * 0.50f * empowered * stealth, -Main.GlobalTimeWrappedHourly * 17.134f * i, new Vector2(texture7.Width / 2f, texture7.Height / 2f), new Vector2((float)Math.Abs(Math.Sin(Main.GlobalTimeWrappedHourly / 1.1694794f)), 1f) * empowered, SpriteEffects.None, 0f);
 						texture7 = SGAmod.HellionTextures[6];
-						spriteBatch.Draw(texture7, npc.Center - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTime) % 1f, 1f, 0.75f) * 0.50f * empowered * stealth, Main.GlobalTime * 17.134f * i, new Vector2(texture7.Width / 2f, texture7.Height / 2f), new Vector2((float)Math.Abs(Math.Sin(Main.GlobalTime / 1.1694794f)), 1f) * empowered, SpriteEffects.None, 0f);
+						spriteBatch.Draw(texture7, NPC.Center - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTimeWrappedHourly) % 1f, 1f, 0.75f) * 0.50f * empowered * stealth, Main.GlobalTimeWrappedHourly * 17.134f * i, new Vector2(texture7.Width / 2f, texture7.Height / 2f), new Vector2((float)Math.Abs(Math.Sin(Main.GlobalTimeWrappedHourly / 1.1694794f)), 1f) * empowered, SpriteEffects.None, 0f);
 					}
 				}
 
@@ -730,15 +731,15 @@ namespace SGAmod.NPCs.TrueDraken
 					for (float xx = 0; xx < 1f; xx += 0.05f)
 					{
 						float scaleffect = 2f - ((k + xx) / oldRot.Length);
-						drawPos = ((oldPos[k] - Main.screenPosition)) + (npc.velocity * xx);
-						spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), ((Color.Lerp(drawColor, Main.hslToRgb(((k / oldRot.Length) + Main.GlobalTime) % 1f, 1f, 0.75f), alphaz2) * alphaz) * (appear)) * 0.25f, npc.rotation - (float)(mydirection < 0 ? Math.PI : 0), drawOrigin, scaleffect, mydirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+						drawPos = ((oldPos[k] - Main.screenPosition)) + (NPC.velocity * xx);
+						spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), ((Color.Lerp(drawColor, Main.hslToRgb(((k / oldRot.Length) + Main.GlobalTimeWrappedHourly) % 1f, 1f, 0.75f), alphaz2) * alphaz) * (appear)) * 0.25f, NPC.rotation - (float)(mydirection < 0 ? Math.PI : 0), drawOrigin, scaleffect, mydirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 					}
 				}
 
-				drawPos = ((npc.Center - Main.screenPosition));
-				spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), Color.White * stealth, npc.rotation - (float)(mydirection < 0 ? Math.PI : 0), drawOrigin, npc.scale, mydirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+				drawPos = ((NPC.Center - Main.screenPosition));
+				spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), Color.White * stealth, NPC.rotation - (float)(mydirection < 0 ? Math.PI : 0), drawOrigin, NPC.scale, mydirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 				Texture2D texture6 = SGAmod.ExtraTextures[96];
-				spriteBatch.Draw(texture6, npc.Center - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTime) % 1f, 1f, 0.75f) * 0.50f * empowered * stealth, Main.GlobalTime * 37.134f, new Vector2(texture6.Width / 2f, texture6.Height / 2f), new Vector2((float)Math.Abs(Math.Sin(Main.GlobalTime * 1.694794f)), 3f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture6, NPC.Center - Main.screenPosition, null, Main.hslToRgb((Main.GlobalTimeWrappedHourly) % 1f, 1f, 0.75f) * 0.50f * empowered * stealth, Main.GlobalTimeWrappedHourly * 37.134f, new Vector2(texture6.Width / 2f, texture6.Height / 2f), new Vector2((float)Math.Abs(Math.Sin(Main.GlobalTimeWrappedHourly * 1.694794f)), 3f), SpriteEffects.None, 0f);
 
 
 
@@ -751,12 +752,12 @@ namespace SGAmod.NPCs.TrueDraken
 		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 			Vector2 drawPos = circleloc - Main.screenPosition;
-			float inrc = Main.GlobalTime / 310f;
+			float inrc = Main.GlobalTimeWrappedHourly / 310f;
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/NPCs/TownNPCs/DrakenFly");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/NPCs/TownNPCs/DrakenFly");
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
 
-			int timing = (int)(Main.GlobalTime * (10f));
+			int timing = (int)(Main.GlobalTimeWrappedHourly * (10f));
 			timing %= 4;
 			timing *= ((tex.Height) / 4);
 
@@ -768,7 +769,7 @@ namespace SGAmod.NPCs.TrueDraken
 
 					for (float i = 0; i < 360; i += 18)
 					{
-						float angle = MathHelper.ToRadians((float)(i-a) + (Main.GlobalTime * -100f));
+						float angle = MathHelper.ToRadians((float)(i-a) + (Main.GlobalTimeWrappedHourly * -100f));
 						float dist = (circlerad / 2f)+((float)(circlerad) * (circlepower/2f));
 						Vector2 thisloc = new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist));
 
@@ -780,7 +781,7 @@ namespace SGAmod.NPCs.TrueDraken
 						if (calc1.X > -boundingsize && calc1.Y > -boundingsize && calc1.X < Main.screenWidth + boundingsize && calc1.Y < Main.screenWidth + boundingsize)
 						{
 
-							Color glowingcolors1 = Main.hslToRgb((float)(((float)i / 720f) + Main.GlobalTime / 5f) % 1, 0.9f, 0.65f);
+							Color glowingcolors1 = Main.hslToRgb((float)(((float)i / 720f) + Main.GlobalTimeWrappedHourly / 5f) % 1, 0.9f, 0.65f);
 
 							spriteBatch.Draw(tex, drawthere - Main.screenPosition, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), glowingcolors1 * alphaeffect*0.2f, angle + MathHelper.ToRadians(90), drawOrigin, circlepower*((a+5f)/10f), SpriteEffects.FlipHorizontally, 0f);
 
@@ -802,18 +803,18 @@ namespace SGAmod.NPCs.TrueDraken
 		public Func<Vector2, TrueDrakenCopy, int, bool> ProjectileAct = delegate (Vector2 playerpos, TrueDrakenCopy DrakenCopy, int timer)
 		{
 
-			float len = DrakenCopy.projectile.velocity.Length();
-			Vector2 Gowhere = playerpos - DrakenCopy.projectile.Center;
-			if (timer == DrakenCopy.projectile.ai[0])
+			float len = DrakenCopy.Projectile.velocity.Length();
+			Vector2 Gowhere = playerpos - DrakenCopy.Projectile.Center;
+			if (timer == DrakenCopy.Projectile.ai[0])
 			{
 				Gowhere.Normalize();
-				DrakenCopy.projectile.velocity = DrakenCopy.projectile.rotation.ToRotationVector2() * len;
+				DrakenCopy.Projectile.velocity = DrakenCopy.Projectile.rotation.ToRotationVector2() * len;
 
 			}
-			if (timer < DrakenCopy.projectile.ai[0])
+			if (timer < DrakenCopy.Projectile.ai[0])
 			{
-				DrakenCopy.projectile.rotation = DrakenCopy.projectile.rotation.AngleLerp(Gowhere.ToRotation(), 0.10f);
-				DrakenCopy.projectile.position -= DrakenCopy.projectile.velocity;
+				DrakenCopy.Projectile.rotation = DrakenCopy.Projectile.rotation.AngleLerp(Gowhere.ToRotation(), 0.10f);
+				DrakenCopy.Projectile.position -= DrakenCopy.Projectile.velocity;
 			}
 
 			return true;
@@ -821,11 +822,11 @@ namespace SGAmod.NPCs.TrueDraken
 
 		public Func<TrueDrakenCopy, int, bool> ProjectileDie = delegate (TrueDrakenCopy DrakenCopy, int timer)
 		{
-			Main.PlaySound(SoundID.Item45, DrakenCopy.projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item45, DrakenCopy.Projectile.Center);
 			for (int i = 0; i < 360; i+=360/6)
 			{
-				Vector2 perturbedSpeed = new Vector2(DrakenCopy.projectile.velocity.X, DrakenCopy.projectile.velocity.Y).RotatedBy(MathHelper.ToRadians(i));
-				int hoste=Projectile.NewProjectile(DrakenCopy.projectile.Center.X, DrakenCopy.projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.SwordBeam, 40, DrakenCopy.projectile.knockBack, DrakenCopy.projectile.owner, 0f, 0f);
+				Vector2 perturbedSpeed = new Vector2(DrakenCopy.Projectile.velocity.X, DrakenCopy.Projectile.velocity.Y).RotatedBy(MathHelper.ToRadians(i));
+				int hoste=Projectile.NewProjectile(DrakenCopy.Projectile.Center.X, DrakenCopy.Projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.SwordBeam, 40, DrakenCopy.Projectile.knockBack, DrakenCopy.Projectile.owner, 0f, 0f);
 				Main.projectile[hoste].hostile = true;
 				Main.projectile[hoste].friendly = false;
 				Main.projectile[hoste].netUpdate = true;
@@ -836,14 +837,14 @@ namespace SGAmod.NPCs.TrueDraken
 
 		public override void ReceiveExtraAI(BinaryReader reader)
 		{
-			projectile.friendly = reader.ReadBoolean();
-			projectile.hostile = reader.ReadBoolean();
+			Projectile.friendly = reader.ReadBoolean();
+			Projectile.hostile = reader.ReadBoolean();
 		}
 
 		public override void SendExtraAI(BinaryWriter writer)
 		{
-			writer.Write(projectile.friendly);
-			writer.Write(projectile.hostile);
+			writer.Write(Projectile.friendly);
+			writer.Write(Projectile.hostile);
 		}
 
 		int timer = 0;
@@ -860,17 +861,17 @@ namespace SGAmod.NPCs.TrueDraken
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.penetrate = 10;
-			projectile.light = 0.5f;
-			projectile.timeLeft = 400;
-			projectile.width = 64;
-			projectile.height = 64;
-			projectile.aiStyle = -99;
-			projectile.extraUpdates = 2;
-			projectile.tileCollide = false;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.penetrate = 10;
+			Projectile.light = 0.5f;
+			Projectile.timeLeft = 400;
+			Projectile.width = 64;
+			Projectile.height = 64;
+			Projectile.aiStyle = -99;
+			Projectile.extraUpdates = 2;
+			Projectile.tileCollide = false;
 		}
 		public override bool PreKill(int timeLeft)
 		{
@@ -880,9 +881,9 @@ namespace SGAmod.NPCs.TrueDraken
 
 		public override void AI()
 		{
-			appear = Math.Max(Math.Min(0.75f, (float)timer / 200f), (float)projectile.timeLeft / 400f);
+			appear = Math.Max(Math.Min(0.75f, (float)timer / 200f), (float)Projectile.timeLeft / 400f);
 			trailingeffect();
-			NPC master = Main.npc[(int)projectile.ai[1]];
+			NPC master = Main.npc[(int)Projectile.ai[1]];
 
 				Player player = Main.player[master.target];
 
@@ -891,7 +892,7 @@ namespace SGAmod.NPCs.TrueDraken
 			if (ProjectileAct(player.Center, this, timer))
 			{
 
-				int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("TornadoDust"), projectile.velocity.X * 0.1f, projectile.velocity.Y * 0.1f, 20, Color.Lime * 0.25f, 0.15f);
+				int DustID2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("TornadoDust").Type, Projectile.velocity.X * 0.1f, Projectile.velocity.Y * 0.1f, 20, Color.Lime * 0.25f, 0.15f);
 				Main.dust[DustID2].noGravity = true;
 
 			}
@@ -905,20 +906,20 @@ namespace SGAmod.NPCs.TrueDraken
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/NPCs/TownNPCs/DrakenFly");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/NPCs/TownNPCs/DrakenFly");
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition));
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition));
 			Vector2 adder = Vector2.Zero;
 			Color color = drawColor;
-			int timing = (int)(Main.GlobalTime * (8f));
+			int timing = (int)(Main.GlobalTimeWrappedHourly * (8f));
 
 			timing %= 4;
 
-			int mydirection = projectile.rotation.ToRotationVector2().X > 0 ? 1 : -1;
+			int mydirection = Projectile.rotation.ToRotationVector2().X > 0 ? 1 : -1;
 
 			if (timing == 0)
 			{
-				adder = ((projectile.rotation + (float)Math.PI / 2f).ToRotationVector2() * (8f * mydirection));
+				adder = ((Projectile.rotation + (float)Math.PI / 2f).ToRotationVector2() * (8f * mydirection));
 			}
 
 
@@ -933,7 +934,7 @@ namespace SGAmod.NPCs.TrueDraken
 					float alphaz2 = Math.Max((0.75f - (float)(k + 1) / (float)(oldRot.Length + 2)) * 1f, 0f);
 				float scaleffect = 1f;
 						drawPos = ((oldPos[k] - Main.screenPosition));
-						spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), ((Color.Lerp(drawColor, Main.hslToRgb(((k / oldRot.Length) + Main.GlobalTime) % 1f, 1f, 0.75f), alphaz2) * alphaz) * (appear)) * 0.35f, projectile.rotation - (float)(mydirection < 0 ? Math.PI : 0), drawOrigin, scaleffect, mydirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+						spriteBatch.Draw(tex, drawPos - adder, new Rectangle(0, timing + 2, tex.Width, (tex.Height - 1) / 4), ((Color.Lerp(drawColor, Main.hslToRgb(((k / oldRot.Length) + Main.GlobalTimeWrappedHourly) % 1f, 1f, 0.75f), alphaz2) * alphaz) * (appear)) * 0.35f, Projectile.rotation - (float)(mydirection < 0 ? Math.PI : 0), drawOrigin, scaleffect, mydirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 				}
 
 
@@ -943,7 +944,7 @@ namespace SGAmod.NPCs.TrueDraken
 		public virtual void trailingeffect()
 		{
 
-			Rectangle hitbox = new Rectangle((int)projectile.position.X - 5, (int)projectile.position.Y - 5, projectile.height + 10, projectile.width + 10);
+			Rectangle hitbox = new Rectangle((int)Projectile.position.X - 5, (int)Projectile.position.Y - 5, Projectile.height + 10, Projectile.width + 10);
 
 			for (int k = oldRot.Length - 1; k > 0; k--)
 			{
@@ -952,8 +953,8 @@ namespace SGAmod.NPCs.TrueDraken
 
 			}
 
-			oldRot[0] = projectile.rotation;
-			oldPos[0] = projectile.Center;
+			oldRot[0] = Projectile.rotation;
+			oldPos[0] = Projectile.Center;
 		}
 	}
 
@@ -972,18 +973,18 @@ namespace SGAmod.NPCs.TrueDraken
 			ProjectileAct = delegate (Vector2 playerpos, TrueDrakenCopy DrakenCopy, int timer)
 			{
 
-				float len = DrakenCopy.projectile.velocity.Length();
-				Vector2 Gowhere = DrakenCopy.projectile.velocity - DrakenCopy.projectile.rotation.ToRotationVector2();
-				if (timer == DrakenCopy.projectile.ai[0])
+				float len = DrakenCopy.Projectile.velocity.Length();
+				Vector2 Gowhere = DrakenCopy.Projectile.velocity - DrakenCopy.Projectile.rotation.ToRotationVector2();
+				if (timer == DrakenCopy.Projectile.ai[0])
 				{
 					Gowhere.Normalize();
-					DrakenCopy.projectile.velocity = DrakenCopy.projectile.rotation.ToRotationVector2() * len;
+					DrakenCopy.Projectile.velocity = DrakenCopy.Projectile.rotation.ToRotationVector2() * len;
 
 				}
-				if (timer < DrakenCopy.projectile.ai[0])
+				if (timer < DrakenCopy.Projectile.ai[0])
 				{
-					DrakenCopy.projectile.rotation = DrakenCopy.projectile.rotation.AngleLerp(Gowhere.ToRotation(), 0.10f);
-					DrakenCopy.projectile.position -= DrakenCopy.projectile.velocity;
+					DrakenCopy.Projectile.rotation = DrakenCopy.Projectile.rotation.AngleLerp(Gowhere.ToRotation(), 0.10f);
+					DrakenCopy.Projectile.position -= DrakenCopy.Projectile.velocity;
 				}
 
 				return true;

@@ -10,6 +10,7 @@ using Idglibrary;
 using Terraria.Utilities;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs.Sharkvern
 {
@@ -18,52 +19,52 @@ namespace SGAmod.NPCs.Sharkvern
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Aqua Surge");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.width = 22;
-			npc.height = 28;
-			npc.damage = 26;
-			npc.defense = 18;
-			npc.lifeMax = 300;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			animationType = ItemID.SoulofNight;
-			npc.value = 60f;
-			npc.knockBackResist = 0.5f;
-			npc.aiStyle = 44;
-			aiType = NPCID.Wraith;
+			NPC.width = 22;
+			NPC.height = 28;
+			NPC.damage = 26;
+			NPC.defense = 18;
+			NPC.lifeMax = 300;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			AnimationType = ItemID.SoulofNight;
+			NPC.value = 60f;
+			NPC.knockBackResist = 0.5f;
+			NPC.aiStyle = 44;
+			AIType = NPCID.Wraith;
 		}
 
 		public override void FindFrame(int frameHeight)
 		{
-			npc.spriteDirection = npc.direction;
+			NPC.spriteDirection = NPC.direction;
 		}
 
 		public override void AI()
 		{
-			npc.ai[0]++;
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			NPC.ai[0]++;
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(true);
+				NPC.TargetClosest(true);
 			}
-			npc.netUpdate = true;
+			NPC.netUpdate = true;
 
-			npc.ai[1]++;
-			if (npc.ai[1] % 100 == 0 && Main.netMode != 1)
+			NPC.ai[1]++;
+			if (NPC.ai[1] % 100 == 0 && Main.netMode != 1)
 			{
 				float Speed = 15f;
-				Vector2 vector8 = new Vector2(npc.position.X + (npc.width / 2), npc.position.Y + (npc.height / 2));
+				Vector2 vector8 = new Vector2(NPC.position.X + (NPC.width / 2), NPC.position.Y + (NPC.height / 2));
 				int damage = 35;
-				int type = mod.ProjectileType("WaterTornado");
-				Main.PlaySound(23, (int)npc.position.X, (int)npc.position.Y, 17);
+				int type = Mod.Find<ModProjectile>("WaterTornado").Type;
+				SoundEngine.PlaySound(23, (int)NPC.position.X, (int)NPC.position.Y, 17);
 				float rotation = (float)Math.Atan2(vector8.Y - (P.position.Y + (P.height * 0.5f)), vector8.X - (P.position.X + (P.width * 0.5f)));
 				int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
-				Main.projectile[num54].damage = (int)(npc.damage / 2);
-				npc.netUpdate = true;
+				Main.projectile[num54].damage = (int)(NPC.damage / 2);
+				NPC.netUpdate = true;
 			}
 
 			/*if (npc.ai[1] % 500 == 0 && npc.ai[1] > 0 && Main.expertMode)
@@ -83,8 +84,8 @@ namespace SGAmod.NPCs.Sharkvern
 				}
 				else
 				{
-					npc.life = 0;
-					npc.active = false;
+					NPC.life = 0;
+					NPC.active = false;
 					return;
 				}
 			}
@@ -100,14 +101,14 @@ namespace SGAmod.NPCs.Sharkvern
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Storm Keeper");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 		public override string Texture => "SGAmod/NPCs/Sharkvern/AquaSurge";
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.650f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.650f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
         public override bool CheckActive()
         {
@@ -116,26 +117,26 @@ namespace SGAmod.NPCs.Sharkvern
 
         public override void SetDefaults()
 		{
-			npc.width = 160;
-			npc.height = 48;
-			npc.damage = 0;
-			npc.defense = 0;
-			npc.lifeMax = 4000;
-			npc.noGravity = true;
+			NPC.width = 160;
+			NPC.height = 48;
+			NPC.damage = 0;
+			NPC.defense = 0;
+			NPC.lifeMax = 4000;
+			NPC.noGravity = true;
 			//npc.HitSound = SoundID.NPCHit1;
 			//npc.DeathSound = SoundID.NPCDeath1;
-			animationType = ItemID.SoulofNight;
-			npc.value = 1500f;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			npc.dontTakeDamage = true;
+			AnimationType = ItemID.SoulofNight;
+			NPC.value = 1500f;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			NPC.dontTakeDamage = true;
 		}
 
         public override void HitEffect(int hitDirection, double damage)
         {
-			if (npc.life > 0)
+			if (NPC.life > 0)
 			{
-				SoundEffectInstance sound = Main.PlaySound(SoundID.NPCHit, (int)npc.Center.X, (int)npc.Center.Y,30);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.NPCHit, (int)NPC.Center.X, (int)NPC.Center.Y,30);
 				if (sound != null)
 				{
 					sound.Pitch = -0.75f;
@@ -143,7 +144,7 @@ namespace SGAmod.NPCs.Sharkvern
 			}
 			else
 			{
-				SoundEffectInstance sound = Main.PlaySound(SoundID.NPCKilled, (int)npc.Center.X, (int)npc.Center.Y, 33);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.NPCKilled, (int)NPC.Center.X, (int)NPC.Center.Y, 33);
 				if (sound != null)
 				{
 					sound.Pitch = -0.75f;
@@ -155,7 +156,7 @@ namespace SGAmod.NPCs.Sharkvern
 					Vector2 thecenter = new Vector2((float)((Math.Cos(angle) * i)), (float)((Math.Sin(angle) * i)));
 					thecenter = thecenter.RotatedByRandom(MathHelper.TwoPi);
 					thecenter.Y *= 0.4f;
-					int DustID2 = Dust.NewDust(npc.Center + (thecenter * 2.5f), 0, 0, SGAmod.Instance.DustType("TornadoDust"), thecenter.X * 0.2f, thecenter.X * 0.2f, 255 - (int)(npc.Opacity * 255f), default(Color), 1.5f);
+					int DustID2 = Dust.NewDust(NPC.Center + (thecenter * 2.5f), 0, 0, SGAmod.Instance.Find<ModDust>("TornadoDust").Type, thecenter.X * 0.2f, thecenter.X * 0.2f, 255 - (int)(NPC.Opacity * 255f), default(Color), 1.5f);
 					Main.dust[DustID2].noGravity = true;
 					Main.dust[DustID2].velocity = new Vector2(thecenter.X * 0.2f, thecenter.Y * 0.2f) * -1f;
 				}
@@ -165,36 +166,36 @@ namespace SGAmod.NPCs.Sharkvern
 
         public override void AI()
 		{
-			npc.localAI[0]++;
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			NPC.localAI[0]++;
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(true);
+				NPC.TargetClosest(true);
 			}
 			int shark = NPC.FindFirstNPC(ModContent.NPCType<SharkvernHead>());
 			if (introEffect >= 1f)
 			{
 				int timer = 600;
-				npc.dontTakeDamage = false;
-				npc.ai[0]++;
+				NPC.dontTakeDamage = false;
+				NPC.ai[0]++;
 				if (P.active && !P.dead && shark >= 0 && Main.npc[shark].active)
 				{
-					if (npc.ai[0] % timer < 300)
+					if (NPC.ai[0] % timer < 300)
 					{
-						if (npc.Distance(Main.npc[shark].Center) > 1280)
+						if (NPC.Distance(Main.npc[shark].Center) > 1280)
 						{
-							npc.velocity += Vector2.Normalize(Main.npc[shark].Center - npc.Center) * 0.15f;
+							NPC.velocity += Vector2.Normalize(Main.npc[shark].Center - NPC.Center) * 0.15f;
 						}
                     }
                     else
                     {
-						if (npc.ai[0] % timer < 420)
+						if (NPC.ai[0] % timer < 420)
 						{
-							npc.velocity += Vector2.Normalize(P.MountedCenter + new Vector2(0, -200) - npc.Center) * 2.75f;
+							NPC.velocity += Vector2.Normalize(P.MountedCenter + new Vector2(0, -200) - NPC.Center) * 2.75f;
 						}
 						else
 						{
-							if (npc.ai[0] % timer < 470)
+							if (NPC.ai[0] % timer < 470)
 							{
 								for (int i = 0; i < lightningDelay.Length; i += 1)
 								{
@@ -204,9 +205,9 @@ namespace SGAmod.NPCs.Sharkvern
 							}
 						}
 
-						if (npc.ai[0] % timer == 470)
+						if (NPC.ai[0] % timer == 470)
                         {
-							int proj = Projectile.NewProjectile((int)npc.Center.X, (int)npc.Center.Y, 0,16, ProjectileID.CultistBossLightningOrbArc, 75, 15f);
+							int proj = Projectile.NewProjectile((int)NPC.Center.X, (int)NPC.Center.Y, 0,16, ProjectileID.CultistBossLightningOrbArc, 75, 15f);
 							Main.projectile[proj].ai[0] = MathHelper.PiOver2;
 							Main.projectile[proj].netUpdate = true;
 
@@ -215,21 +216,21 @@ namespace SGAmod.NPCs.Sharkvern
 								lightningDelay[i] = 60;
 							}
 
-							SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 122);
+							SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 122);
 							if (sound != null)
 							{
 								sound.Pitch = 0.95f;
 							}
 
 						}
-						npc.velocity *= 0.92f;
+						NPC.velocity *= 0.92f;
 
 					}
-					npc.velocity *= 0.98f;
+					NPC.velocity *= 0.98f;
 				}
 				else
 				{
-					npc.velocity -= Vector2.UnitY * 0.10f;
+					NPC.velocity -= Vector2.UnitY * 0.10f;
 				}
 			}
 			for (int i = 0; i < lightningDelay.Length; i += 1)
@@ -243,10 +244,10 @@ namespace SGAmod.NPCs.Sharkvern
 		}
 		public override void FindFrame(int frameHeight)
 		{
-			npc.spriteDirection = npc.direction;
-			npc.frame.Y = (((int)(npc.localAI[0] / 6f) % 4) * frameHeight);
+			NPC.spriteDirection = NPC.direction;
+			NPC.frame.Y = (((int)(NPC.localAI[0] / 6f) % 4) * frameHeight);
 		}
-		float introEffect => MathHelper.Clamp(npc.localAI[0] / 160f, 0f, 1f);
+		float introEffect => MathHelper.Clamp(NPC.localAI[0] / 160f, 0f, 1f);
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
@@ -257,10 +258,10 @@ namespace SGAmod.NPCs.Sharkvern
 
 		public void Draw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.npcTexture[npc.type];
-			spriteBatch.Draw(tex, npc.Center - Main.screenPosition, npc.frame, Color.Blue * 0.25f* introEffect, npc.localAI[0]/10f, new Vector2(tex.Width, tex.Height/4f) / 2f, 2f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(tex, npc.Center - Main.screenPosition, npc.frame, Color.Blue * 0.50f* introEffect, MathHelper.Pi-npc.localAI[0]/10f, new Vector2(tex.Width, tex.Height / 4f) / 2f, 1f, SpriteEffects.None, 0f);
-			DrawCloudWisp(npc, npc.Center, npc.localAI[0], spriteBatch, lightColor);
+			Texture2D tex = Main.npcTexture[NPC.type];
+			spriteBatch.Draw(tex, NPC.Center - Main.screenPosition, NPC.frame, Color.Blue * 0.25f* introEffect, NPC.localAI[0]/10f, new Vector2(tex.Width, tex.Height/4f) / 2f, 2f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, NPC.Center - Main.screenPosition, NPC.frame, Color.Blue * 0.50f* introEffect, MathHelper.Pi-NPC.localAI[0]/10f, new Vector2(tex.Width, tex.Height / 4f) / 2f, 1f, SpriteEffects.None, 0f);
+			DrawCloudWisp(NPC, NPC.Center, NPC.localAI[0], spriteBatch, lightColor);
 		}
 
 		public void DrawCloudWisp(Entity id, Vector2 drawWhere, float timer, SpriteBatch spriteBatch, Color lightColor)

@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -22,31 +23,31 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Torch God's Summon");
 			Tooltip.SetDefault("Summons 2 torches per minion slot, and 1 per empty minion slot\nAttacking with torches burns them out for 3 seconds\nGain +10 damage per max minions, and +1 pierce per max Sentries, Biome torches inflict debuffs\nTorches provide a small amount of light in the fog");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 10;
-			item.summon = true;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.knockBack = 10;
-			item.noMelee = true;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.LightRed;
+			Item.damage = 10;
+			Item.DamageType = DamageClass.Summon;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.knockBack = 10;
+			Item.noMelee = true;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.LightRed;
 			//item.UseSound = SoundID.Item71;
-			item.shoot = 10;
-			item.shootSpeed = 30f;
-			item.autoReuse = true;
-			item.useTurn = false;
-			item.mana = 4;
+			Item.shoot = 10;
+			Item.shootSpeed = 30f;
+			Item.autoReuse = true;
+			Item.useTurn = false;
+			Item.mana = 4;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/TorchGodSummon_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/TorchGodSummon_Glow").Value;
 			}
 		}
 
@@ -62,12 +63,12 @@ namespace SGAmod.Items.Weapons
 
 		public void AddFunction(SGAPlayer sgaply)
         {
-			Player player = sgaply.player;
+			Player player = sgaply.Player;
 			if (!player.dead && player.HeldItem.type == ModContent.ItemType<TorchGodSummon>())
 			{
 				for (int i = 0; i < MaxTorches(player) - player.ownedProjectileCounts[ModContent.ProjectileType<TorchGodSummonMinion>()]; i += 1)
 				{
-					Projectile proj = Projectile.NewProjectileDirect(player.Center, Vector2.Zero, ModContent.ProjectileType<TorchGodSummonMinion>(), item.damage, 10f, player.whoAmI, player.ownedProjectileCounts[ModContent.ProjectileType<TorchGodSummonMinion>()]+i, -i);
+					Projectile proj = Projectile.NewProjectileDirect(player.Center, Vector2.Zero, ModContent.ProjectileType<TorchGodSummonMinion>(), Item.damage, 10f, player.whoAmI, player.ownedProjectileCounts[ModContent.ProjectileType<TorchGodSummonMinion>()]+i, -i);
 					if (proj != null)
 					{
 
@@ -80,10 +81,10 @@ namespace SGAmod.Items.Weapons
         {
 			TorchGodSummonMinion sum = null;
 
-			foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == player.whoAmI && testby.modProjectile != null && testby.ai[1]<0 && testby.type == ModContent.ProjectileType<TorchGodSummonMinion>()).OrderBy(testby => testby.ai[1]))
+			foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.owner == player.whoAmI && testby.ModProjectile != null && testby.ai[1]<0 && testby.type == ModContent.ProjectileType<TorchGodSummonMinion>()).OrderBy(testby => testby.ai[1]))
 			{
 				//Main.NewText("test");
-				sum = (proj.modProjectile) as TorchGodSummonMinion;
+				sum = (proj.ModProjectile) as TorchGodSummonMinion;
 				break;
 			}
 			return sum;
@@ -108,12 +109,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new StarMetalRecipes(mod);
-			recipe.AddIngredient(ItemID.Torch, 200);
-			recipe.AddRecipeGroup("SGAmod:Gems",10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Torch, 200).AddRecipeGroup("SGAmod:Gems",10).AddTile(TileID.WorkBenches).Register();
 		}
 
 
@@ -132,24 +128,24 @@ namespace SGAmod.Items.Weapons
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-			aiType = ProjectileID.Boulder;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 1;
-			projectile.light = 0f;
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.knockBack = 0.5f;
-			projectile.magic = false;
-			projectile.minion = true;
-			projectile.tileCollide = true;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
+			AIType = ProjectileID.Boulder;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 1;
+			Projectile.light = 0f;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.knockBack = 0.5f;
+			// projectile.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Projectile.minion = true;
+			Projectile.tileCollide = true;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = Main.PlaySound(SoundID.Item110, projectile.Center);
+			Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Item110, Projectile.Center);
 			if (snd != null)
 			{
 				snd.Pitch = 0.50f;
@@ -159,20 +155,20 @@ namespace SGAmod.Items.Weapons
             {
 				Vector2 velocity = Main.rand.NextVector2Circular(8f,8f) * Main.rand.NextFloat(0.2f, 1f);
 
-				int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.AncientLight);
+				int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight);
 				Main.dust[dust].scale = 1.00f;
 				Main.dust[dust].fadeIn = 1.5f;
-				Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)projectile.ai[0] % 16];
+				Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)Projectile.ai[0] % 16];
 				Main.dust[dust].alpha = 250;
 				Main.dust[dust].velocity = velocity;
 				Main.dust[dust].noGravity = true;
 
 				velocity = Main.rand.NextVector2Circular(16f, 16f);
 
-				dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.AncientLight);
+				dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight);
 				Main.dust[dust].scale = 1.50f;
 				Main.dust[dust].fadeIn = 0.25f;
-				Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)projectile.ai[0] % 16];
+				Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)Projectile.ai[0] % 16];
 				Main.dust[dust].alpha = 250;
 				Main.dust[dust].velocity = velocity;
 				Main.dust[dust].noGravity = true;
@@ -186,24 +182,24 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 
-			if (projectile.ai[1] < 10)
+			if (Projectile.ai[1] < 10)
             {
-				projectile.ai[1] = 10;
-				projectile.penetrate = Main.player[projectile.owner].maxTurrets;
+				Projectile.ai[1] = 10;
+				Projectile.penetrate = Main.player[Projectile.owner].maxTurrets;
 			}
-			Lighting.AddLight(projectile.Center, TorchGodSummonMinion.TorchColors[(int)projectile.ai[0] % 16].ToVector3());
+			Lighting.AddLight(Projectile.Center, TorchGodSummonMinion.TorchColors[(int)Projectile.ai[0] % 16].ToVector3());
 
-			int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.AncientLight);
+			int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight);
 			Main.dust[dust].scale = 1.00f;
 			Main.dust[dust].fadeIn = 1.5f;
-			Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)projectile.ai[0] % 16];
+			Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)Projectile.ai[0] % 16];
 			Main.dust[dust].alpha = 250;
 			Main.dust[dust].noGravity = true;
 
-			dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.AncientLight);
+			dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight);
 			Main.dust[dust].scale = 1.50f;
 			Main.dust[dust].fadeIn = 0.25f;
-			Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)projectile.ai[0] % 16];
+			Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)Projectile.ai[0] % 16];
 			Main.dust[dust].alpha = 250;
 			Main.dust[dust].noGravity = true;
 
@@ -211,7 +207,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			int index = TorchGodSummonMinion.GetBuffIndex((int)projectile.ai[0] % 16);
+			int index = TorchGodSummonMinion.GetBuffIndex((int)Projectile.ai[0] % 16);
 			if (index > 0)
 				target.AddBuff(index, index == ModContent.BuffType< Buffs.MoonLightCurse >() ? 60 * 2 : 60*8);
 
@@ -284,56 +280,56 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			projectile.minion = true;
-			aiType = 0;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			Projectile.minion = true;
+			AIType = 0;
 		}
 
 		public void ShootFlame(int damage, float knockBack, float speed2)
 		{
 			Vector2 mousePos = Main.MouseWorld;
-			projectile.ai[1] = 180;
-			projectile.localAI[0] = 180;
-			projectile.netUpdate = true;
+			Projectile.ai[1] = 180;
+			Projectile.localAI[0] = 180;
+			Projectile.netUpdate = true;
 
-			Vector2 speed = Vector2.Normalize(mousePos - projectile.Center) * speed2;
+			Vector2 speed = Vector2.Normalize(mousePos - Projectile.Center) * speed2;
 
-			Main.PlaySound(SoundID.Item45, projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item45, Projectile.Center);
 
-			Projectile.NewProjectile(projectile.Center, speed, ModContent.ProjectileType<TorchGodSummonProjectile>(), damage, knockBack, projectile.owner, projectile.ai[0]);
+			Projectile.NewProjectile(Projectile.Center, speed, ModContent.ProjectileType<TorchGodSummonProjectile>(), damage, knockBack, Projectile.owner, Projectile.ai[0]);
 
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
-			if (projectile.ai[1] < 1)
-				Lighting.AddLight(projectile.Center, TorchColors[(int)projectile.ai[0] % 16].ToVector3());
+			if (Projectile.ai[1] < 1)
+				Lighting.AddLight(Projectile.Center, TorchColors[(int)Projectile.ai[0] % 16].ToVector3());
 
-			projectile.ai[1] -= 1;
+			Projectile.ai[1] -= 1;
 
-			projectile.localAI[0] -= 1;
+			Projectile.localAI[0] -= 1;
 
-			if (projectile.localAI[0] < 0 && projectile.localAI[0] > -10)
+			if (Projectile.localAI[0] < 0 && Projectile.localAI[0] > -10)
 			{
-				int dust = Dust.NewDust(projectile.position + new Vector2(Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-6, 6) + projectile.height / 4), projectile.width, projectile.height, DustID.AncientLight);
+				int dust = Dust.NewDust(Projectile.position + new Vector2(Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-6, 6) + Projectile.height / 4), Projectile.width, Projectile.height, DustID.AncientLight);
 				Main.dust[dust].scale = 1.50f;
 				Main.dust[dust].fadeIn = 1.2f;
-				Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)projectile.ai[0] % 16];
+				Main.dust[dust].color = TorchGodSummonMinion.TorchColors[(int)Projectile.ai[0] % 16];
 				Main.dust[dust].velocity = -Vector2.UnitY * 3f;
 				Main.dust[dust].alpha = 200;
 				Main.dust[dust].noGravity = true;
 
-				if (projectile.localAI[0] == -1)
+				if (Projectile.localAI[0] == -1)
 				{
-					SoundEffectInstance snd = Main.PlaySound(SoundID.Item45, projectile.Center);
+					SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Item45, Projectile.Center);
 					if (snd != null)
 					{
 						snd.Pitch = 0.6f;
@@ -349,28 +345,28 @@ namespace SGAmod.Items.Weapons
 				Projectile currentProjectile = Main.projectile[i];
 				if (currentProjectile.active // Make sure the projectile is active
 				&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
-				&& currentProjectile.type == projectile.type)
+				&& currentProjectile.type == Projectile.type)
 				{
 
-					if (i == projectile.whoAmI)
+					if (i == Projectile.whoAmI)
 						us = maxus;
 					maxus += 1f;
 
 				}
 			}
 
-			if (!player.active || player.dead || ((us >= TorchGodSummon.MaxTorches(player) || player.HeldItem.type != ModContent.ItemType<TorchGodSummon>()) && projectile.ai[1] < 1))
+			if (!player.active || player.dead || ((us >= TorchGodSummon.MaxTorches(player) || player.HeldItem.type != ModContent.ItemType<TorchGodSummon>()) && Projectile.ai[1] < 1))
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 
 			float angle = (us / maxus) * MathHelper.TwoPi;
 			float dist = 64f;
 			Vector2 wegohere = player.MountedCenter + Vector2.UnitX.RotatedBy(angle) * dist;
 
-			projectile.Center = wegohere;
+			Projectile.Center = wegohere;
 
-			if (projectile.localAI[0]>-10)
+			if (Projectile.localAI[0]>-10)
 			SGAmod.PostDraw.Add(new PostDrawCollection(new Vector3(wegohere.X - Main.screenPosition.X, wegohere.Y - Main.screenPosition.Y, 128)));
 
 		}
@@ -385,19 +381,19 @@ namespace SGAmod.Items.Weapons
 				Texture2D textureFlame = Main.FlameTexture[0];
 
 				Vector2 offset = new Vector2(11, 11);
-				Rectangle rect = new Rectangle(projectile.ai[1] > -9999990 ? 66 : 0, (int)(projectile.ai[0] % 16) * 22, 22, 22);
-				Rectangle rect2 = new Rectangle(0, (int)(projectile.ai[0] % 16) * 22, 22, 22);
+				Rectangle rect = new Rectangle(Projectile.ai[1] > -9999990 ? 66 : 0, (int)(Projectile.ai[0] % 16) * 22, 22, 22);
+				Rectangle rect2 = new Rectangle(0, (int)(Projectile.ai[0] % 16) * 22, 22, 22);
 
 				Vector2 flameoffset = new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3));
 
 
-				spriteBatch.Draw(textureTorch, projectile.Center - Main.screenPosition, rect, Color.White, projectile.rotation, offset, new Vector2(1f, 1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(textureTorch, Projectile.Center - Main.screenPosition, rect, Color.White, Projectile.rotation, offset, new Vector2(1f, 1f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 
-				spriteBatch.Draw(textureFlame, projectile.Center + (flameoffset / 6f) - Main.screenPosition, rect2, (Color.White * 0.75f) * MathHelper.Clamp((1f - projectile.localAI[0] - 5f) / 7f, 0f, 1f), projectile.rotation, offset, new Vector2(1f, 1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(textureFlame, Projectile.Center + (flameoffset / 6f) - Main.screenPosition, rect2, (Color.White * 0.75f) * MathHelper.Clamp((1f - Projectile.localAI[0] - 5f) / 7f, 0f, 1f), Projectile.rotation, offset, new Vector2(1f, 1f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 
 				flameoffset = new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3));
 
-				spriteBatch.Draw(textureFlame, projectile.Center + flameoffset - Main.screenPosition, rect2, Color.White * MathHelper.Clamp((1f - projectile.localAI[0] - 5f) / 10f, 0f, 1f), projectile.rotation, offset, new Vector2(1f, 1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+				spriteBatch.Draw(textureFlame, Projectile.Center + flameoffset - Main.screenPosition, rect2, Color.White * MathHelper.Clamp((1f - Projectile.localAI[0] - 5f) / 10f, 0f, 1f), Projectile.rotation, offset, new Vector2(1f, 1f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 			}
 
 			return false;

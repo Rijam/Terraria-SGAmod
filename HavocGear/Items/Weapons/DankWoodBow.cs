@@ -10,22 +10,22 @@ namespace SGAmod.HavocGear.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			item.damage = 8;
-			item.ranged = true;
-			item.width = 18;
-			item.height = 32;
-			item.useTime = 45;
-			item.useAnimation = 45;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 1;
-			item.value = 3000;
-			item.rare = 1;
-			item.UseSound = SoundID.Item5;
-			item.autoReuse = true;
-			item.shoot = 10;
-			item.shootSpeed = 10f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 8;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 18;
+			Item.height = 32;
+			Item.useTime = 45;
+			Item.useAnimation = 45;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 1;
+			Item.value = 3000;
+			Item.rare = 1;
+			Item.UseSound = SoundID.Item5;
+			Item.autoReuse = true;
+			Item.shoot = 10;
+			Item.shootSpeed = 10f;
+			Item.useAmmo = AmmoID.Arrow;
 		}
 
     public override void SetStaticDefaults()
@@ -37,18 +37,14 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			speedX *= player.ArrowSpeed(); speedY *= player.ArrowSpeed();
 			if (type == ProjectileID.WoodenArrowFriendly)
-				type = mod.ProjectileType("DankArrow");
+				type = Mod.Find<ModProjectile>("DankArrow").Type;
 			return true;
 		}
 
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "DankWood", 25);
-            recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "DankWood", 25).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 }

@@ -25,13 +25,13 @@ namespace SGAmod.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.ImpFireball);
-			aiType = ProjectileID.ImpFireball;
+			Projectile.CloneDefaults(ProjectileID.ImpFireball);
+			AIType = ProjectileID.ImpFireball;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type = ProjectileID.ImpFireball;
+			Projectile.type = ProjectileID.ImpFireball;
 			return true;
 		}
 
@@ -42,7 +42,7 @@ namespace SGAmod.Projectiles
 				//int a = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 11) * .25f, Main.rand.Next(-10, -5) * .25f, ProjectileID.Starfury, (int)(projectile.damage * .5f), 0, projectile.owner);
 				//Main.projectile[a].aiStyle = 1;
 				//Main.projectile[a].tileCollide = true;
-				int newguy=NPC.NewNPC((int)projectile.position.X, (int)projectile.position.Y, NPCID.BlazingWheel);
+				int newguy=NPC.NewNPC((int)Projectile.position.X, (int)Projectile.position.Y, NPCID.BlazingWheel);
 				NPC newguy2=Main.npc[newguy];
 				newguy2.life=88;
 				newguy2.timeLeft=300;

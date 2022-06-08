@@ -15,18 +15,18 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 125;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = 1;
-			item.knockBack = 6;
-			item.value = Item.sellPrice(0, 20, 0, 0);
-			item.rare = 6;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 125;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = 1;
+			Item.knockBack = 6;
+			Item.value = Item.sellPrice(0, 20, 0, 0);
+			Item.rare = 6;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
@@ -35,7 +35,7 @@ namespace SGAmod.Items.Weapons
 		float it=nyx.truthbetold;
 		nyx.truthbetold=it+0.02f;
 		if (nyx.truthbetold>0.5f){nyx.truthbetold=0.5f;
-		IdgNPC.AddBuffBypass(target.whoAmI, mod.BuffType("SunderedDefense"), 60 * 3);
+		IdgNPC.AddBuffBypass(target.whoAmI, Mod.Find<ModBuff>("SunderedDefense").Type, 60 * 3);
 		}
 		damage=(int)(damage+(target.defense*nyx.truthbetold));
 		//Idglib.Chat("Defense: "+nyx.truthbetold,244, 179, 66);

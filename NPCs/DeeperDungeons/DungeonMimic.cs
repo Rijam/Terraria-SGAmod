@@ -14,24 +14,24 @@ namespace SGAmod.NPCs.DeeperDungeons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dungeon Mimic");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.Mimic];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.Mimic];
         }
 
         public override void SetDefaults()
         {
-            npc.CloneDefaults(NPCID.Mimic);
-            aiType = NPCID.Mimic;
-            animationType = NPCID.Mimic;
-            npc.buffImmune[BuffID.Confused] = false;
+            NPC.CloneDefaults(NPCID.Mimic);
+            AIType = NPCID.Mimic;
+            AnimationType = NPCID.Mimic;
+            NPC.buffImmune[BuffID.Confused] = false;
             banner = Item.NPCtoBanner(NPCID.Mimic);
             bannerItem = Item.BannerToItem(banner);
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life < 1)
+            if (NPC.life < 1)
             {
-                Gore.NewGore(npc.Center + new Vector2(npc.spriteDirection * 16, 0), npc.velocity, Main.rand.Next(61, 63), 1f); //Smoke gore
+                Gore.NewGore(NPC.Center + new Vector2(NPC.spriteDirection * 16, 0), NPC.velocity, Main.rand.Next(61, 63), 1f); //Smoke gore
             }
         }
 
@@ -41,7 +41,7 @@ namespace SGAmod.NPCs.DeeperDungeons
             itemx.AddRange(Dimensions.DeeperDungeon.RareItems);
             int itemz = itemx[Main.rand.Next(itemx.Count)];
 
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, itemz, itemz == ModContent.ItemType<Items.Weapons.Almighty.Megido>() ? Main.rand.Next(1, 3) : 1);
+            Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, itemz, itemz == ModContent.ItemType<Items.Weapons.Almighty.Megido>() ? Main.rand.Next(1, 3) : 1);
 
         }
     }

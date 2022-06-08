@@ -7,6 +7,7 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.Illuminant
 {
@@ -28,11 +29,11 @@ namespace SGAmod.Items.Armors.Illuminant
 					time += 60 * 10;
 				}
 
-				sgaplayer.player.AddBuff(ModContent.BuffType<IlluminantBuff>(), time);
-				Point spot = sgaplayer.player.Center.ToPoint();
+				sgaplayer.Player.AddBuff(ModContent.BuffType<IlluminantBuff>(), time);
+				Point spot = sgaplayer.Player.Center.ToPoint();
 
-				Main.PlaySound(SoundID.Item, spot.X, spot.Y, 78, 1f, -0.8f);
-				var snd = Main.PlaySound(SoundID.DD2_EtherianPortalOpen, (int)spot.X, (int)spot.Y);
+				SoundEngine.PlaySound(SoundID.Item, spot.X, spot.Y, 78, 1f, -0.8f);
+				var snd = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, (int)spot.X, (int)spot.Y);
 				if (snd != null)
 				{
 					snd.Pitch = -0.80f;
@@ -64,27 +65,27 @@ namespace SGAmod.Items.Armors.Illuminant
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0,50,0,0);
-			item.rare = ItemRarityID.Purple;
-			item.defense = 24;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0,50,0,0);
+			Item.rare = ItemRarityID.Purple;
+			Item.defense = 24;
 		}
 
 		public static void SetBonus(SGAPlayer sgaplayer)
         {
 			if (sgaplayer.illuminantSet.Item1>0)
             {
-				Player player = sgaplayer.player;
+				Player player = sgaplayer.Player;
 
-				Lighting.AddLight(player.MountedCenter, Color.HotPink.ToVector3() * (0.4f+(float)Math.Sin(Main.GlobalTime*3f)*0.3f) * sgaplayer.illuminantSet.Item2);
+				Lighting.AddLight(player.MountedCenter, Color.HotPink.ToVector3() * (0.4f+(float)Math.Sin(Main.GlobalTimeWrappedHourly*3f)*0.3f) * sgaplayer.illuminantSet.Item2);
 
 				if (sgaplayer.illuminantSet.Item1 > 4)
 				{
 					float bonusRate = player.HasBuff(ModContent.BuffType<IlluminantBuff>()) ? 2f : 1;
 					//Main.NewText(sgaplayer.illuminantSet.Item2);
 					player.BoostAllDamage(sgaplayer.activestacks * 0.04f* bonusRate, (int)(sgaplayer.activestacks*2* bonusRate));
-					player.minionDamage += sgaplayer.activestacks * 0.02f* bonusRate;
+					player.GetDamage(DamageClass.Summon) += sgaplayer.activestacks * 0.02f* bonusRate;
 					player.lifeRegen += (int)(sgaplayer.activestacks*2* bonusRate);
 
 					sgaplayer.actionCooldownRate -= 0.20f;
@@ -111,20 +112,20 @@ namespace SGAmod.Items.Armors.Illuminant
 
 		public Color ArmorGlow(Player player, int index)
 		{
-			float mathy = (float)((Main.GlobalTime*4f) + (index / 1f));
+			float mathy = (float)((Main.GlobalTimeWrappedHourly*4f) + (index / 1f));
 			return Color.White*((0.4f)+((float)System.Math.Sin(mathy)*0.3f));
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.illuminantSet.Item2 += 1;
 			sgaplayer.armorglowmasks[0] = "SGAmod/Items/Armors/Illuminant/" + Name+ "_Head";
 			sgaplayer.armorglowcolor[0] = ArmorGlow;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.illuminantSet.Item1 += 1;
 			sgaplayer.MaxCooldownStacks += 1;
 		}
@@ -140,17 +141,17 @@ namespace SGAmod.Items.Armors.Illuminant
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 60, 0, 0);
-			item.rare = ItemRarityID.Purple;
-			item.defense = 35;
-			item.lifeRegen = 3;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 60, 0, 0);
+			Item.rare = ItemRarityID.Purple;
+			Item.defense = 35;
+			Item.lifeRegen = 3;
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.illuminantSet.Item2 += 1;
 			sgaplayer.armorglowmasks[1] = "SGAmod/Items/Armors/Illuminant/" + Name + "_Body";
 				sgaplayer.armorglowmasks[2] = "SGAmod/Items/Armors/Illuminant/" + Name + "_Arms";
@@ -169,17 +170,17 @@ namespace SGAmod.Items.Armors.Illuminant
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 50, 0, 0);
-			item.rare = ItemRarityID.Purple;
-			item.defense = 16;
-			item.lifeRegen = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 50, 0, 0);
+			Item.rare = ItemRarityID.Purple;
+			Item.defense = 16;
+			Item.lifeRegen = 2;
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.illuminantSet.Item2 += 1;
 			sgaplayer.armorglowmasks[3] = "SGAmod/Items/Armors/Illuminant/" + Name + "_Legs";
 			sgaplayer.armorglowcolor[3] = ArmorGlow;
@@ -193,7 +194,7 @@ namespace SGAmod.Items.Armors.Illuminant
 			texture = "SGAmod/Buffs/BuffTemplate";
 			return true;
 		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Illumination");
 			Description.SetDefault("Cooldown Stacks do not Decay, Illuminant set bonus is stronger");

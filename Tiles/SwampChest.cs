@@ -7,12 +7,13 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.Audio;
 
 namespace SGAmod.Tiles
 {
 	public class SwampChest : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSpelunker[Type] = true;
 			Main.tileContainer[Type] = true;
@@ -45,11 +46,11 @@ namespace SGAmod.Tiles
 			chestDrop = ModContent.ItemType<Items.Placeable.SwampChest>();
 		}
 
-		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameX / 36);
+		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
 
 		public override bool HasSmartInteract() => true;
 
-		public override bool IsLockedChest(int i, int j) => Main.tile[i, j].frameX / 36 == 1;
+		public override bool IsLockedChest(int i, int j) => Main.tile[i, j].TileFrameX / 36 == 1;
 
 		public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
 		{
@@ -63,10 +64,10 @@ namespace SGAmod.Tiles
 			int left = i;
 			int top = j;
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX % 36 != 0) {
+			if (tile.TileFrameX % 36 != 0) {
 				left--;
 			}
-			if (tile.frameY != 0) {
+			if (tile.TileFrameY != 0) {
 				top--;
 			}
 			int chest = Chest.FindChest(left, top);
@@ -87,29 +88,29 @@ namespace SGAmod.Tiles
 			Chest.DestroyChest(i, j);
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
 			Main.mouseRightRelease = false;
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
 			if (player.sign >= 0) {
-				Main.PlaySound(SoundID.MenuClose);
+				SoundEngine.PlaySound(SoundID.MenuClose);
 				player.sign = -1;
 				Main.editSign = false;
 				Main.npcChatText = "";
 			}
 			if (Main.editChest) {
-				Main.PlaySound(SoundID.MenuTick);
+				SoundEngine.PlaySound(SoundID.MenuTick);
 				Main.editChest = false;
 				Main.npcChatText = "";
 			}
@@ -122,7 +123,7 @@ namespace SGAmod.Tiles
 				if (left == player.chestX && top == player.chestY && player.chest >= 0) {
 					player.chest = -1;
 					Recipe.FindRecipes();
-					Main.PlaySound(SoundID.MenuClose);
+					SoundEngine.PlaySound(SoundID.MenuClose);
 				}
 				else
 				{
@@ -154,11 +155,11 @@ namespace SGAmod.Tiles
 						if (chest == player.chest) 
 						{
 							player.chest = -1;
-							Main.PlaySound(SoundID.MenuClose);
+							SoundEngine.PlaySound(SoundID.MenuClose);
 						}
 						else
 						{
-							Main.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick); //lol Example Mod bug. The PlaySound needs to happen before the player.chest is assigned. Otherwise player.chest won't be -1
+							SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick); //lol Example Mod bug. The PlaySound needs to happen before the player.chest is assigned. Otherwise player.chest won't be -1
 							player.chest = chest;
 							Main.playerInventory = true;
 							Main.recBigList = false;
@@ -178,11 +179,11 @@ namespace SGAmod.Tiles
 			Tile tile = Main.tile[i, j];
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
@@ -196,7 +197,7 @@ namespace SGAmod.Tiles
 				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Swamp Chest";
 				if (player.showItemIconText == "Swamp Chest") {
 					player.showItemIcon2 = ModContent.ItemType<Items.Placeable.SwampChest>();
-					if (Main.tile[left, top].frameX / 36 == 1)
+					if (Main.tile[left, top].TileFrameX / 36 == 1)
 						player.showItemIcon2 = ModContent.ItemType<Items.SwampKey>();
 					player.showItemIconText = "";
 				}

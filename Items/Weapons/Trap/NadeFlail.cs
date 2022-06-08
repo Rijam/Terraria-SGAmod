@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons.Trap
 {
@@ -19,37 +20,28 @@ namespace SGAmod.Items.Weapons.Trap
         }
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 10;
-            item.damage = 50;
-            item.rare = 6;
-            item.noMelee = true;
-            item.useStyle = 5;
-            item.useAnimation = 10;
-            item.useTime = 24;
-            item.knockBack = 5f;
-            item.scale = 2f;
-            item.noUseGraphic = true;
-            item.shoot = ModContent.ProjectileType<NadeFlailBall>();
-            item.shootSpeed = 25.1f;
-            item.UseSound = SoundID.Item1;
-            item.melee = true;
-            item.channel = true;
-            item.value = Item.sellPrice(0, 3, 0, 0);
+            Item.width = 30;
+            Item.height = 10;
+            Item.damage = 50;
+            Item.rare = 6;
+            Item.noMelee = true;
+            Item.useStyle = 5;
+            Item.useAnimation = 10;
+            Item.useTime = 24;
+            Item.knockBack = 5f;
+            Item.scale = 2f;
+            Item.noUseGraphic = true;
+            Item.shoot = ModContent.ProjectileType<NadeFlailBall>();
+            Item.shootSpeed = 25.1f;
+            Item.UseSound = SoundID.Item1;
+            Item.DamageType = DamageClass.Melee;
+            Item.channel = true;
+            Item.value = Item.sellPrice(0, 3, 0, 0);
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("SpikeballFlail"), 1);
-            recipe.AddIngredient(ItemID.ProximityMineLauncher, 1);
-            recipe.AddIngredient(ItemID.StickyGrenade, 100);
-            recipe.AddIngredient(ItemID.LandMine, 10);
-            recipe.AddIngredient(ItemID.HallowedBar, 8);
-            recipe.AddIngredient(ItemID.IllegalGunParts, 1);
-            recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(mod.ItemType("SpikeballFlail"), 1).AddIngredient(ItemID.ProximityMineLauncher, 1).AddIngredient(ItemID.StickyGrenade, 100).AddIngredient(ItemID.LandMine, 10).AddIngredient(ItemID.HallowedBar, 8).AddIngredient(ItemID.IllegalGunParts, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
         }
 
     }
@@ -61,15 +53,15 @@ namespace SGAmod.Items.Weapons.Trap
         bool doinit = false;
         public override void SetDefaults()
         {
-            projectile.width = 40;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.melee = true;
-            projectile.trap = true;
-            projectile.aiStyle = 15;
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 25;
+            Projectile.width = 40;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.trap = true;
+            Projectile.aiStyle = 15;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 25;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -79,15 +71,15 @@ namespace SGAmod.Items.Weapons.Trap
             {
                 for (int num315 = 1; num315 < 0.5f + (oldVelocity.Length() / 6); num315 = num315 + 1)
                 {
-                    if (Main.player[projectile.owner].ownedProjectileCounts[ProjectileID.ProximityMineI] < 30)
+                    if (Main.player[Projectile.owner].ownedProjectileCounts[ProjectileID.ProximityMineI] < 30)
                     {
                         Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
                         float velincrease = ((float)(num315 + 8) / 2f);
-                        int thisone = Projectile.NewProjectile(projectile.Center.X - projectile.velocity.X, projectile.Center.Y - projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ProjectileID.ProximityMineI, (int)(projectile.damage * 2.50), 0f, projectile.owner, 0.0f, 0f);
-                        Main.projectile[thisone].melee = true;
-                        Main.projectile[thisone].thrown = false;
+                        int thisone = Projectile.NewProjectile(Projectile.Center.X - Projectile.velocity.X, Projectile.Center.Y - Projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ProjectileID.ProximityMineI, (int)(Projectile.damage * 2.50), 0f, Projectile.owner, 0.0f, 0f);
+                        Main.projectile[thisone].DamageType = DamageClass.Melee;
+                        // Main.projectile[thisone].thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                         Main.projectile[thisone].trap = true;
-                        Main.projectile[thisone].ranged = false;
+                        // Main.projectile[thisone].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                         Main.projectile[thisone].localNPCHitCooldown = -1;
                         Main.projectile[thisone].usesLocalNPCImmunity = true;
                         Main.projectile[thisone].timeLeft = 60 * 20;
@@ -102,15 +94,15 @@ namespace SGAmod.Items.Weapons.Trap
             {
                 for (int num315 = 15; num315 < 16; num315 = num315 + 1)
                 {
-                    if (Main.player[projectile.owner].ownedProjectileCounts[ProjectileID.ProximityMineIII] < 3)
+                    if (Main.player[Projectile.owner].ownedProjectileCounts[ProjectileID.ProximityMineIII] < 3)
                     {
                         Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
                         float velincrease = ((float)(num315 + 8) / 3f)*2f;
-                        int thisone = Projectile.NewProjectile(projectile.Center.X - projectile.velocity.X, projectile.Center.Y - projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ProjectileID.ProximityMineIII, (int)(projectile.damage * 5.00), 0f, projectile.owner, 0.0f, 0f);
-                        Main.projectile[thisone].melee = true;
-                        Main.projectile[thisone].thrown = false;
+                        int thisone = Projectile.NewProjectile(Projectile.Center.X - Projectile.velocity.X, Projectile.Center.Y - Projectile.velocity.Y, randomcircle.X * velincrease, randomcircle.Y * velincrease, ProjectileID.ProximityMineIII, (int)(Projectile.damage * 5.00), 0f, Projectile.owner, 0.0f, 0f);
+                        Main.projectile[thisone].DamageType = DamageClass.Melee;
+                        // Main.projectile[thisone].thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                         Main.projectile[thisone].trap = true;
-                        Main.projectile[thisone].ranged = false;
+                        // Main.projectile[thisone].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                         Main.projectile[thisone].localNPCHitCooldown = -1;
                         Main.projectile[thisone].usesLocalNPCImmunity = true;
                         Main.projectile[thisone].netUpdate = true;
@@ -135,19 +127,19 @@ namespace SGAmod.Items.Weapons.Trap
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            int projer = Projectile.NewProjectile(projectile.Center, Main.rand.NextVector2Circular(3f, 3f), ModContent.ProjectileType<NadeFlailStickyNade>(), projectile.damage, projectile.knockBack+5f,projectile.owner);
+            int projer = Projectile.NewProjectile(Projectile.Center, Main.rand.NextVector2Circular(3f, 3f), ModContent.ProjectileType<NadeFlailStickyNade>(), Projectile.damage, Projectile.knockBack+5f,Projectile.owner);
 
             if (projer >= 0)
             {
                 Projectile proj = Main.projectile[projer];
 
-                proj.melee = true;
-                proj.thrown = false;
+                proj.DamageType = DamageClass.Melee;
+                // proj.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                 proj.trap = true;
-                proj.ranged = false;
+                // proj.ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                 proj.netUpdate = true;
 
-                NadeFlailStickyNade flaier = proj.modProjectile as NadeFlailStickyNade;
+                NadeFlailStickyNade flaier = proj.ModProjectile as NadeFlailStickyNade;
                 flaier.StickTo(target);
             }
 
@@ -172,8 +164,8 @@ namespace SGAmod.Items.Weapons.Trap
 
                 Texture2D texture = Main.chain2Texture;
 
-            Vector2 position = projectile.Center;
-            Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter;
+            Vector2 position = Projectile.Center;
+            Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter;
             Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?();
             Vector2 origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
             float num1 = (float)texture.Height;
@@ -197,14 +189,14 @@ namespace SGAmod.Items.Weapons.Trap
                     position += vector2_1 * num1;
                     vector2_4 = mountedCenter - position;
                     Microsoft.Xna.Framework.Color color2 = Lighting.GetColor((int)position.X / 16, (int)((double)position.Y / 16.0));
-                    color2 = projectile.GetAlpha(color2);
+                    color2 = Projectile.GetAlpha(color2);
                     Main.spriteBatch.Draw(texture, position - Main.screenPosition, sourceRectangle, color2, rotation, origin, 1.35f, SpriteEffects.None, 0.0f);
                 }
             }
 
-            Matrix dothematrx = Matrix.CreateRotationZ(projectile.rotation - MathHelper.ToRadians(90)) *
+            Matrix dothematrx = Matrix.CreateRotationZ(Projectile.rotation - MathHelper.ToRadians(90)) *
                 Matrix.CreateScale(1f, 1f, 1f) *
-            Matrix.CreateTranslation((new Vector3(projectile.Center.X, projectile.Center.Y, 0) - new Vector3(Main.screenPosition.X, Main.screenPosition.Y, 0)))
+            Matrix.CreateTranslation((new Vector3(Projectile.Center.X, Projectile.Center.Y, 0) - new Vector3(Main.screenPosition.X, Main.screenPosition.Y, 0)))
             * Main.GameViewMatrix.ZoomMatrix;
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, dothematrx);
@@ -236,17 +228,17 @@ namespace SGAmod.Items.Weapons.Trap
         public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.penetrate = 200;
-			projectile.magic = true;
-			projectile.timeLeft = 3 * 60;
-			projectile.scale = 0.75f;
-			aiType = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.penetrate = 200;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 3 * 60;
+			Projectile.scale = 0.75f;
+			AIType = 0;
 		}
 
         public override bool CanDamage()
@@ -256,26 +248,26 @@ namespace SGAmod.Items.Weapons.Trap
 
         public override bool PreKill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 
             if (timeLeft < 2 && stickin >= 0)
             {
-                var snd = Main.PlaySound(SoundID.Item14, projectile.Center);
+                var snd = SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
                 if (snd != null)
                 {
                     snd.Pitch = 0.75f;
                     if (SGAmod.ScreenShake < 16)
-                        SGAmod.AddScreenShake(10, 1200, projectile.Center);
+                        SGAmod.AddScreenShake(10, 1200, Projectile.Center);
                 }
 
             }
 
-				int proj = Projectile.NewProjectile(projectile.Center, Vector2.Normalize(projectile.velocity) * 2f, ProjectileID.StickyGrenade, projectile.damage*2, projectile.knockBack * 3f, projectile.owner);
+				int proj = Projectile.NewProjectile(Projectile.Center, Vector2.Normalize(Projectile.velocity) * 2f, ProjectileID.StickyGrenade, Projectile.damage*2, Projectile.knockBack * 3f, Projectile.owner);
             if (proj >= 0)
             {
-                Main.projectile[proj].melee = true;
-                Main.projectile[proj].thrown = false;
-                Main.projectile[proj].ranged = false;
+                Main.projectile[proj].DamageType = DamageClass.Melee;
+                // Main.projectile[proj].thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+                // Main.projectile[proj].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                 Main.projectile[proj].trap = true;
                 Main.projectile[proj].timeLeft = 1;
                 Main.projectile[proj].netUpdate = true;
@@ -286,10 +278,10 @@ namespace SGAmod.Items.Weapons.Trap
 
         public void StickTo(NPC npc)
         {
-            projectile.penetrate = 50;
-            offset = (npc.Center - projectile.Center);
+            Projectile.penetrate = 50;
+            offset = (npc.Center - Projectile.Center);
             stickin = npc.whoAmI;
-            projectile.netUpdate = true;
+            Projectile.netUpdate = true;
         }
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

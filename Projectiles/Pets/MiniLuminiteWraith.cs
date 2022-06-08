@@ -9,33 +9,33 @@ namespace SGAmod.Projectiles.Pets
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Luminite Wraith");
-			Main.projFrames[projectile.type] = 5;
-			Main.projPet[projectile.type] = true;
+			Main.projFrames[Projectile.type] = 5;
+			Main.projPet[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Parrot);//Vanilla Projectile_208
-			projectile.width = 18;
-			projectile.height = 36;
-			aiType = ProjectileID.Parrot;
+			Projectile.CloneDefaults(ProjectileID.Parrot);//Vanilla Projectile_208
+			Projectile.width = 18;
+			Projectile.height = 36;
+			AIType = ProjectileID.Parrot;
 			drawOffsetX = -12;
 			drawOriginOffsetY -= 2;
 		}
 
 		public override bool PreAI()
 		{
-			Player player = Main.player[projectile.owner];
-			player.parrot = false; // Relic from aiType
+			Player player = Main.player[Projectile.owner];
+			player.parrot = false; // Relic from AIType
 			return true;
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			if (player.HasBuff(ModContent.BuffType<Buffs.Pets.MiniLuminiteWraithBuff>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace SGAmod.Buffs
 {
 	public class MatrixBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Matrix");
 			Description.SetDefault("Time is slowed for all around you");

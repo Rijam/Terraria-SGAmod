@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.Acid
 {
@@ -19,25 +20,25 @@ namespace SGAmod.Items.Armors.Acid
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0,0,75,0);
-			item.rare = ItemRarityID.Green;
-			item.defense = 6;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0,0,75,0);
+			Item.rare = ItemRarityID.Green;
+			Item.defense = 6;
 		}
 
 		public static void ActivateHungerOfFames(SGAPlayer sgaply)
         {
 			if (sgaply.AddCooldownStack(60 * 60))
             {
-				sgaply.player.AddBuff(ModContent.BuffType<FamesHungerBuff>(),300);
-				SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_FlameburstTowerShot, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y);
+				sgaply.Player.AddBuff(ModContent.BuffType<FamesHungerBuff>(),300);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_FlameburstTowerShot, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y);
 				if (sound != null)
 				{
 					sound.Pitch = 0.5f;
 				}
 
-				SoundEffectInstance sound2 = Main.PlaySound(SoundID.Zombie, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y, 35);
+				SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.Zombie, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y, 35);
 				if (sound2 != null)
 				{
 					sound2.Pitch = -0.5f;
@@ -45,10 +46,10 @@ namespace SGAmod.Items.Armors.Acid
 
 				for(int i = 0; i < 50; i += 1)
                 {
-					int dust = Dust.NewDust(sgaply.player.Hitbox.TopLeft() + new Vector2(0, -8), sgaply.player.Hitbox.Width, sgaply.player.Hitbox.Height+8, ModContent.DustType<Dusts.AcidDust>());
+					int dust = Dust.NewDust(sgaply.Player.Hitbox.TopLeft() + new Vector2(0, -8), sgaply.Player.Hitbox.Width, sgaply.Player.Hitbox.Height+8, ModContent.DustType<Dusts.AcidDust>());
 					Main.dust[dust].scale = 2f;
 					Main.dust[dust].noGravity = true;
-					Main.dust[dust].velocity = (sgaply.player.velocity * Main.rand.NextFloat(0.75f, 1f)) + Vector2.UnitX.RotatedBy(-MathHelper.PiOver2 + Main.rand.NextFloat(-1.2f, 1.2f))*Main.rand.NextFloat(1f,3f);
+					Main.dust[dust].velocity = (sgaply.Player.velocity * Main.rand.NextFloat(0.75f, 1f)) + Vector2.UnitX.RotatedBy(-MathHelper.PiOver2 + Main.rand.NextFloat(-1.2f, 1.2f))*Main.rand.NextFloat(1f,3f);
 				}
 			}
 		}
@@ -60,24 +61,19 @@ namespace SGAmod.Items.Armors.Acid
 
         public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			sgaplayer.armorglowmasks[0] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 			player.Throwing().thrownCrit += 6;
 			player.Throwing().thrownVelocity += 0.06f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 16);
-			recipe.AddRecipeGroup("SGAmod:NoviteNovusBars", 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<VialofAcid>(), 16).AddRecipeGroup("SGAmod:NoviteNovusBars", 8).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -95,21 +91,21 @@ namespace SGAmod.Items.Armors.Acid
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.Green;
-			item.defense = 8;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.Green;
+			Item.defense = 8;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			player.Throwing().thrownDamage += 0.06f;
 			player.Throwing().thrownVelocity += 0.10f;
 		}
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			{
 				sgaplayer.armorglowmasks[1] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
@@ -119,12 +115,7 @@ namespace SGAmod.Items.Armors.Acid
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 24);
-			recipe.AddRecipeGroup("SGAmod:NoviteNovusBars", 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<VialofAcid>(), 24).AddRecipeGroup("SGAmod:NoviteNovusBars", 10).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -138,40 +129,35 @@ namespace SGAmod.Items.Armors.Acid
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 0, 60, 0);
-			item.rare = ItemRarityID.Green;
-			item.defense = 6;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 0, 60, 0);
+			Item.rare = ItemRarityID.Green;
+			Item.defense = 6;
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 				sgaplayer.armorglowmasks[3] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			player.Throwing().thrownDamage += 0.06f;
 			player.moveSpeed += 1.15f;
 			player.accRunSpeed += 1.5f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 12);
-			recipe.AddRecipeGroup("SGAmod:NoviteNovusBars", 6);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<VialofAcid>(), 12).AddRecipeGroup("SGAmod:NoviteNovusBars", 6).AddTile(TileID.Anvils).Register();
 		}
 	}
 
 	public class FamesHungerBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Hunger of Fames");
 			Description.SetDefault("Acidically consume everything, even yourself");

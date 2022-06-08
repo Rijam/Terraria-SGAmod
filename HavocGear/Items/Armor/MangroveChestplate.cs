@@ -17,11 +17,11 @@ namespace SGAmod.HavocGear.Items.Armor
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 50000;
-			item.rare = 4;
-			item.defense = 8;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 50000;
+			Item.rare = 4;
+			Item.defense = 8;
 		}
 
 		public override void UpdateEquip(Player player)
@@ -34,12 +34,7 @@ namespace SGAmod.HavocGear.Items.Armor
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 7);
-			recipe.AddIngredient(null, "DankWoodHelm", 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VirulentBar"), 7).AddIngredient(null, "DankWoodHelm", 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -55,11 +50,11 @@ namespace SGAmod.HavocGear.Items.Armor
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 50000;
-			item.rare = 4;
-			item.defense = 12;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 50000;
+			Item.rare = 4;
+			Item.defense = 12;
 		}
 
 		public override void UpdateEquip(Player player)
@@ -71,12 +66,7 @@ namespace SGAmod.HavocGear.Items.Armor
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 11);
-			recipe.AddIngredient(null, "DankWoodChest", 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VirulentBar"), 11).AddIngredient(null, "DankWoodChest", 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -101,21 +91,16 @@ namespace SGAmod.HavocGear.Items.Armor
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 50000;
-			item.rare = 4;
-			item.defense = 6;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 50000;
+			Item.rare = 4;
+			Item.defense = 6;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 9);
-			recipe.AddIngredient(null, "DankLegs", 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VirulentBar"), 9).AddIngredient(null, "DankLegs", 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 

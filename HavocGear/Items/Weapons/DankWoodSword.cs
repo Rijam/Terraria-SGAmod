@@ -11,18 +11,18 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			base.SetDefaults();
 
-            item.damage = 10;
-            item.width = 32;
-			item.height = 32;
-            item.melee = true;
-            item.useTurn = false;
-            item.rare = 1;
-            item.useStyle = 1;
-            item.useAnimation = 20;
-           	item.knockBack = 3;
-            item.useTime = 20;
-            item.consumable = false;
-            item.UseSound = SoundID.Item1;
+            Item.damage = 10;
+            Item.width = 32;
+			Item.height = 32;
+            Item.DamageType = DamageClass.Melee;
+            Item.useTurn = false;
+            Item.rare = 1;
+            Item.useStyle = 1;
+            Item.useAnimation = 20;
+           	Item.knockBack = 3;
+            Item.useTime = 20;
+            Item.consumable = false;
+            Item.UseSound = SoundID.Item1;
         }
 
     public override void SetStaticDefaults()
@@ -40,11 +40,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DankWood", 25);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "DankWood", 25).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 }   

@@ -7,6 +7,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Items.Weapons
 {
@@ -21,40 +22,32 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 75;
-			item.ranged = true;
-			item.width = 32;
-			item.height = 62;
-			item.useTime = 15;
-			item.useAnimation = 20;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 4;
-			item.value = 50000;
-			item.rare = ItemRarityID.Purple;
-			item.UseSound = SoundID.Item17;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<ShadeflareCharging>();
-			item.channel = true;
-			item.shootSpeed = 50f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 75;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 32;
+			Item.height = 62;
+			Item.useTime = 15;
+			Item.useAnimation = 20;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 4;
+			Item.value = 50000;
+			Item.rare = ItemRarityID.Purple;
+			Item.UseSound = SoundID.Item17;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<ShadeflareCharging>();
+			Item.channel = true;
+			Item.shootSpeed = 50f;
+			Item.useAmmo = AmmoID.Arrow;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/Shadeflare_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/Shadeflare_Glow").Value;
 			}
 		}
 
         	public override void AddRecipes()
         	{
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ShadowFlameBow, 1);
-			recipe.AddIngredient(ItemID.DarkShard, 1);
-			recipe.AddIngredient(ItemID.FragmentVortex, 8);
-			recipe.AddIngredient(ModContent.ItemType<StarMetalBar>(), 16);
-			recipe.AddIngredient(ItemID.SoulofNight, 8);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.ShadowFlameBow, 1).AddIngredient(ItemID.DarkShard, 1).AddIngredient(ItemID.FragmentVortex, 8).AddIngredient(ModContent.ItemType<StarMetalBar>(), 16).AddIngredient(ItemID.SoulofNight, 8).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	/*public override bool CanUseItem(Player player)
@@ -143,7 +136,7 @@ return base.CanUseItem(player);
 
 			get
 			{
-				float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+				float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 				float rate = 0.15f - (0.07f * perc);
 
 
@@ -163,14 +156,14 @@ return base.CanUseItem(player);
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.ranged = true;
-			aiType = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			AIType = 0;
 		}
 
 		public override void ChargeUpEffects()
@@ -180,7 +173,7 @@ return base.CanUseItem(player);
 			if (!player.HasAmmo(player.HeldItem, true))
 				return;
 
-			float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+			float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 
 			if (chargeUpTimer % (int)(12- (perc * 10f)) == 0)
 			{
@@ -188,7 +181,7 @@ return base.CanUseItem(player);
 				varityshot += 1;
 				//varityshot %= 5;
 
-				Vector2 shootdirection = Vector2.Normalize(projectile.velocity);
+				Vector2 shootdirection = Vector2.Normalize(Projectile.velocity);
 
 				float speed = 1f;
 				float numberProjectiles = 12;
@@ -217,15 +210,15 @@ return base.CanUseItem(player);
 
 				int type = ProjectileID.ShadowFlameArrow;
 				bool arrowtype = false;
-				int damage = projectile.damage;
-				float kb = projectile.knockBack;
+				int damage = Projectile.damage;
+				float kb = Projectile.knockBack;
 				if (varityshot % 3 == 0)
                 {
 					type = ProjectileID.WoodenArrowFriendly;
 					bool tr = true;
 					player.PickAmmo(player.HeldItem, ref type, ref speed, ref tr, ref damage, ref kb,Main.rand.Next(4)!=0);
 					arrowtype = true;
-					var snd = Main.PlaySound(SoundID.Item5, projectile.Center);
+					var snd = SoundEngine.PlaySound(SoundID.Item5, Projectile.Center);
 					if (snd != null)
 					{
 						snd.Pitch = -0.75f;
@@ -233,7 +226,7 @@ return base.CanUseItem(player);
 				}
 				float f = 4+(perc* perc * 8);
 				Vector2 offset1 = (shootdirection * Main.rand.NextFloat(-f, f)/2f);
-				Projectile shadow = Projectile.NewProjectileDirect(projectile.Center+ offset1 + shootdirection.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(-f, f) * 6f, shootdirection * speed, type, damage, projectile.knockBack, player.whoAmI);
+				Projectile shadow = Projectile.NewProjectileDirect(Projectile.Center+ offset1 + shootdirection.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(-f, f) * 6f, shootdirection * speed, type, damage, Projectile.knockBack, player.whoAmI);
 				if (!arrowtype)
 				{
 					shadow.usesLocalNPCImmunity = true;
@@ -256,9 +249,9 @@ return base.CanUseItem(player);
 
 		public override void FireWeapon(Vector2 direction)
 		{
-			float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+			float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 
-			projectile.Kill();
+			Projectile.Kill();
 		}
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -274,7 +267,7 @@ return base.CanUseItem(player);
 
 			};
 
-			float perc = MathHelper.Clamp(projectile.ai[0] / (float)chargeuptime, 0f, 1f);
+			float perc = MathHelper.Clamp(Projectile.ai[0] / (float)chargeuptime, 0f, 1f);
 
 			Texture2D mainTex = SGAmod.ExtraTextures[96];
 
@@ -299,9 +292,9 @@ return base.CanUseItem(player);
 				effect.Parameters["noiseMultiplier"].SetValue(new Vector2(1f, 1f));
 				effect.Parameters["noiseOffset"].SetValue(new Vector2(0f, 0f));
 
-				effect.Parameters["Texture"].SetValue(SGAmod.Instance.GetTexture("SmallLaser"));
-				effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.GetTexture(f == 3 ? "SmallLaser" : "Extra_49c"));
-				effect.Parameters["noiseProgress"].SetValue(Main.GlobalTime+f);
+				effect.Parameters["Texture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("SmallLaser").Value);
+				effect.Parameters["noiseTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>(f == 3 ? "SmallLaser" : "Extra_49c").Value);
+				effect.Parameters["noiseProgress"].SetValue(Main.GlobalTimeWrappedHourly+f);
 				effect.Parameters["textureProgress"].SetValue(0);
 				effect.Parameters["noiseBlendPercent"].SetValue(1f);
 				effect.Parameters["strength"].SetValue(MathHelper.Clamp(alpha2*3f,0f,1f));
@@ -313,7 +306,7 @@ return base.CanUseItem(player);
 
 				effect.CurrentTechnique.Passes["TextureBlend"].Apply();
 
-				Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.White, projectile.velocity.ToRotation(), mainTex.Size() / 2f, (2f-(f/2f))*new Vector2(0.5f+perc*0.50f,0.5f+(perc* perc * 1.5f)), default, 0);
+				Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.velocity.ToRotation(), mainTex.Size() / 2f, (2f-(f/2f))*new Vector2(0.5f+perc*0.50f,0.5f+(perc* perc * 1.5f)), default, 0);
 			}
 
 			spriteBatch.End();
@@ -335,59 +328,59 @@ return base.CanUseItem(player);
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.ShadowFlameArrow);
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.light = 0f;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ranged = true;
-			projectile.timeLeft = 260;
-			projectile.extraUpdates = 2;
-			projectile.tileCollide = false;
-			projectile.penetrate = 4;
-			projectile.arrow = true;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.light = 0f;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.timeLeft = 260;
+			Projectile.extraUpdates = 2;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = 4;
+			Projectile.arrow = true;
 
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
 
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
 		}
 
 		public override string Texture => "Terraria/Projectile_" + ProjectileID.PhantasmArrow;
 
 		public override bool CanDamage()
 		{
-			return projectile.penetrate>1 && projectile.timeLeft>30;
+			return Projectile.penetrate>1 && Projectile.timeLeft>30;
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[0]++;
+			Projectile.localAI[0]++;
 
-			projectile.rotation = projectile.velocity.ToRotation();//MathHelper.Clamp(projectile.localAI[0] / 1.25f, 0f, MathHelper.TwoPi * 5f) + 
+			Projectile.rotation = Projectile.velocity.ToRotation();//MathHelper.Clamp(projectile.localAI[0] / 1.25f, 0f, MathHelper.TwoPi * 5f) + 
 
-			if (projectile.penetrate < 2 || projectile.timeLeft <= 60)
+			if (Projectile.penetrate < 2 || Projectile.timeLeft <= 60)
 			{
-				projectile.velocity *= 0.94f;
+				Projectile.velocity *= 0.94f;
 			}
 			else
 			{
 
 			}
 
-			projectile.Opacity = MathHelper.Clamp(projectile.timeLeft / 60f, 0f, Math.Min(projectile.localAI[0] / 15f, 1f));
+			Projectile.Opacity = MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, Math.Min(Projectile.localAI[0] / 15f, 1f));
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 			Texture2D tex2 = Main.projectileTexture[ModContent.ProjectileType<ShadeflareCharging>()];
 
 
-			spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.Black * projectile.Opacity*0.25f, projectile.rotation - MathHelper.PiOver2, tex.Size() / 2f, new Vector2(1.25f, 1.5f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
-			spriteBatch.Draw(tex2, projectile.Center - Main.screenPosition, null, Color.Magenta * projectile.Opacity*0.5f, projectile.rotation + MathHelper.PiOver2, tex2.Size() / 2f, projectile.scale * 1f, projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
-			spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.Purple * projectile.Opacity * 0.5f, projectile.rotation-MathHelper.PiOver2, tex.Size() / 2f, new Vector2(1f,1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+			spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.Black * Projectile.Opacity*0.25f, Projectile.rotation - MathHelper.PiOver2, tex.Size() / 2f, new Vector2(1.25f, 1.5f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+			spriteBatch.Draw(tex2, Projectile.Center - Main.screenPosition, null, Color.Magenta * Projectile.Opacity*0.5f, Projectile.rotation + MathHelper.PiOver2, tex2.Size() / 2f, Projectile.scale * 1f, Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+			spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.Purple * Projectile.Opacity * 0.5f, Projectile.rotation-MathHelper.PiOver2, tex.Size() / 2f, new Vector2(1f,1f), Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
 
 
 			return false;

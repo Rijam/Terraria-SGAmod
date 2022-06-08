@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using SGAmod.Buffs;
 using SGAmod.Projectiles;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Consumables
 {
@@ -30,20 +31,20 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.shootSpeed = 12f;
-			item.shoot = mod.ProjectileType("GasPasserProj");
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 10;
-			item.consumable = true;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 40;
-			item.useTime = 40;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.value = Item.buyPrice(0, 0, 20, 0);
-			item.rare = 2;
+			Item.useStyle = 1;
+			Item.shootSpeed = 12f;
+			Item.shoot = Mod.Find<ModProjectile>("GasPasserProj").Type;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 10;
+			Item.consumable = true;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 40;
+			Item.useTime = 40;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.value = Item.buyPrice(0, 0, 20, 0);
+			Item.rare = 2;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -58,7 +59,7 @@ namespace SGAmod.Items.Consumables
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/gas_can_throw").WithVolume(.5f).WithPitchVariance(.15f), item.Center);
+			SoundEngine.PlaySound(Mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/gas_can_throw").WithVolume(.5f).WithPitchVariance(.15f), Item.Center);
 			player.SGAPly().AddCooldownStack(45 * 60);
 			return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 
@@ -66,16 +67,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Explosives);
-			recipe.AddIngredient(mod.ItemType("IceFairyDust"), 2);
-			recipe.AddIngredient(mod.ItemType("WraithFragment4"),4);
-			recipe.AddIngredient(mod.ItemType("BottledMud"), 2);
-			recipe.AddIngredient(mod.ItemType("MurkyGel"), 8);
-			recipe.AddIngredient(ItemID.CursedFlame, 2);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this,4);
-			recipe.AddRecipe();
+			CreateRecipe(4).AddIngredient(ItemID.Explosives).AddIngredient(mod.ItemType("IceFairyDust"), 2).AddIngredient(mod.ItemType("WraithFragment4"),4).AddIngredient(mod.ItemType("BottledMud"), 2).AddIngredient(mod.ItemType("MurkyGel"), 8).AddIngredient(ItemID.CursedFlame, 2).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -99,35 +91,35 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ranged = true;
-			projectile.timeLeft = 240;
-			projectile.arrow = true;
-			projectile.damage = 0;
-			aiType = ProjectileID.WoodenArrowFriendly;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.ignoreWater = false;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.timeLeft = 240;
+			Projectile.arrow = true;
+			Projectile.damage = 0;
+			AIType = ProjectileID.WoodenArrowFriendly;
 		}
 
 		public override void AI()
 		{
 			effects(0);
 
-			projectile.ai[0] = projectile.ai[0] + 1;
-			projectile.velocity.Y += 0.15f;
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.ai[0] = Projectile.ai[0] + 1;
+			Projectile.velocity.Y += 0.15f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 
 
-			NPC target = Main.npc[Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), true, true, true, projectile)];
+			NPC target = Main.npc[Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), true, true, true, Projectile)];
 			if (target != null)
 			{
-				if (new Rectangle((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height).Intersects
+				if (new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height).Intersects
 					(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, target.height)))
 				{
-					projectile.Kill();
+					Projectile.Kill();
 				}
 			}
 
@@ -139,9 +131,9 @@ namespace SGAmod.Items.Consumables
 			base.effects(type);
 			if (type == 1)
 			{
-				Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/gas_can_explode").WithVolume(.5f).WithPitchVariance(.15f), projectile.Center);
-				projectile.type = 0;
-				int proj = Projectile.NewProjectile(new Vector2(projectile.Center.X, projectile.Center.Y), new Vector2(0, 0), mod.ProjectileType("GasCloud"), 1, projectile.knockBack, Main.player[projectile.owner].whoAmI);
+				SoundEngine.PlaySound(Mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/gas_can_explode").WithVolume(.5f).WithPitchVariance(.15f), Projectile.Center);
+				Projectile.type = 0;
+				int proj = Projectile.NewProjectile(new Vector2(Projectile.Center.X, Projectile.Center.Y), new Vector2(0, 0), Mod.Find<ModProjectile>("GasCloud").Type, 1, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
 			}
 
 		}

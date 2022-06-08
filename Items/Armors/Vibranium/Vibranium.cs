@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Audio;
 using System;
 using SGAmod.Projectiles;
 using System.Runtime.Remoting;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.Vibranium
 {
@@ -26,11 +27,11 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 50;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 50;
 		}
         public override bool DrawHead()
         {
@@ -39,34 +40,16 @@ namespace SGAmod.Items.Armors.Vibranium
         public override void UpdateEquip(Player player)
 		{
 			player.meleeSpeed += 0.25f;
-			player.meleeDamage += 0.32f;
-			player.meleeCrit += 25;
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			player.GetDamage(DamageClass.Melee) += 0.32f;
+			player.GetCritChance(DamageClass.Melee) += 25;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 			float percentCharge = (sgaplayer.electricCharge / 5000f)*1f;
 			sgaplayer.apocalypticalChance[0] += percentCharge;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VibraniumBar"), 8);
-			if (GetType() == typeof(VibraniumHeadgear))
-				recipe.AddIngredient(ModContent.ItemType<ManaBattery>(), 2);
-			if (GetType() == typeof(VibraniumHelmet))
-				recipe.AddIngredient(ItemID.MechanicalLens, 1);
-			if (GetType() == typeof(VibraniumMask))
-			{
-				recipe.AddIngredient(ModContent.ItemType<WraithFragment3>(), 6);
-				recipe.AddIngredient(ModContent.ItemType<WraithFragment4>(), 10);
-			}
-			if (GetType() == typeof(VibraniumHood))
-				recipe.AddIngredient(ModContent.ItemType<StygianCore>(), 1);
-			if (GetType() == typeof(VibraniumHat))
-				recipe.AddIngredient(ModContent.ItemType<PlasmaCell>(), 2);
-
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VibraniumBar"), 8).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -80,22 +63,22 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 25;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 25;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			player.rangedDamage += 0.30f;
-			player.rangedCrit += 10;
+			player.GetDamage(DamageClass.Ranged) += 0.30f;
+			player.GetCritChance(DamageClass.Ranged) += 10;
 
 			//player.bulletDamage -= 0.20f;
 			//player.rocketDamage -= 0.20f;
 			//player.arrowDamage -= 0.20f;
 
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.apocalypticalChance[1] += 2f;
 		}
 	}
@@ -140,18 +123,18 @@ namespace SGAmod.Items.Armors.Vibranium
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 20;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 20;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			player.magicDamage += 0.30f;
-			player.magicCrit += 12;
+			player.GetDamage(DamageClass.Magic) += 0.30f;
+			player.GetCritChance(DamageClass.Magic) += 12;
 
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.apocalypticalChance[2] += 2f;
 
 			if (sgaplayer.ShieldType < 1)
@@ -178,7 +161,7 @@ namespace SGAmod.Items.Armors.Vibranium
 		{
 			if (GetType() == typeof(VibraniumHood))
 			{
-				Player player = sgaply.player;
+				Player player = sgaply.Player;
 				if (!player.dead && player.armor[0].type == ModContent.ItemType<VibraniumHood>() && player.ownedProjectileCounts[ModContent.ProjectileType<VibraniumWispMinion>()] < 1)
 				{
 					Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<VibraniumWispMinion>(), 100, 2f, player.whoAmI);
@@ -189,11 +172,11 @@ namespace SGAmod.Items.Armors.Vibranium
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 10;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 10;
 		}
 		public override bool DrawHead()
 		{
@@ -201,9 +184,9 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 
-			player.minionDamage += 0.50f;
+			player.GetDamage(DamageClass.Summon) += 0.50f;
 			player.maxMinions += 6;
 			player.maxTurrets += 2;
 			sgaplayer.summonweaponspeed += 0.75f;
@@ -222,15 +205,15 @@ namespace SGAmod.Items.Armors.Vibranium
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 30;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 30;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 
 			player.Throwing().thrownDamage += 0.40f;
 			player.Throwing().thrownCrit += 15;
@@ -255,21 +238,21 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 30;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 30;
 		}
 		const float DamageMul = 1000f * 100f;
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.UseTimeMul += 0.10f;
 
 			float percentCharge = sgaplayer.electricCharge / DamageMul;
 			player.BoostAllDamage(percentCharge, (int)(percentCharge*50));
-			player.minionDamage += percentCharge * 0.5f;
+			player.GetDamage(DamageClass.Summon) += percentCharge * 0.5f;
 
 			player.SGAPly().electricChargeMax += 5000;
 			player.SGAPly().electricrechargerate += 5;
@@ -280,12 +263,12 @@ namespace SGAmod.Items.Armors.Vibranium
 		{
 			Player player = Main.LocalPlayer;
 			float percentCharge = player.SGAPly().electricCharge / DamageMul;
-			tooltips.Add(new TooltipLine(mod, "VibraniumChestplateDamageBoost", "Bonus Damage: "+ (percentCharge*100f).ToString("0.00")+"%"));
-			tooltips.Add(new TooltipLine(mod, "VibraniumChestplateDamageBoost", "Bonus Crit: " + (int)(percentCharge * 50f) + "%"));
+			tooltips.Add(new TooltipLine(Mod, "VibraniumChestplateDamageBoost", "Bonus Damage: "+ (percentCharge*100f).ToString("0.00")+"%"));
+			tooltips.Add(new TooltipLine(Mod, "VibraniumChestplateDamageBoost", "Bonus Crit: " + (int)(percentCharge * 50f) + "%"));
 		}
 		public static void VibraniumHoverInPlace(SGAPlayer sgaplayer)
 		{
-			Player player = sgaplayer.player;
+			Player player = sgaplayer.Player;
 			List<Projectile> platforms = Main.projectile.Where(testby => testby.type == ModContent.ProjectileType<VibraniumPlatform>() && testby.owner == player.whoAmI && testby.ai[0] < 1).ToList();
 			if (platforms.Count > 0)
 			{
@@ -302,7 +285,7 @@ namespace SGAmod.Items.Armors.Vibranium
 
 			public static void VibraniumSetBonus(SGAPlayer sgaplayer)
 		{
-			Player player = sgaplayer.player;
+			Player player = sgaplayer.Player;
 
 			if (sgaplayer.ShieldType == 0)
 				sgaplayer.ShieldType = 100;
@@ -311,7 +294,7 @@ namespace SGAmod.Items.Armors.Vibranium
 			if (sgaplayer.vibraniumSetPlatform && player.velocity.Y>=0 && player.ownedProjectileCounts[ModContent.ProjectileType<VibraniumPlatform>()]< 1 && !sgaplayer.Shieldbreak && !player.controlDown && sgaplayer.ConsumeElectricCharge(500,120,true))
             {
 				Projectile.NewProjectile(player.MountedCenter, Vector2.Zero, ModContent.ProjectileType<VibraniumPlatform>(), 0, 0, player.whoAmI);
-				SoundEffectInstance sound = Main.PlaySound(SoundID.Item78, (int)player.MountedCenter.X, (int)player.MountedCenter.Y);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item78, (int)player.MountedCenter.X, (int)player.MountedCenter.Y);
 				if (sound != null)
 					sound.Pitch = 0.95f;
 			}
@@ -334,7 +317,7 @@ namespace SGAmod.Items.Armors.Vibranium
 						Main.projectile[proj].localAI[1] = Main.rand.NextFloat(-0.5f, 0.5f);
 						Main.projectile[proj].ai[1] = angle;
 						Main.projectile[proj].netUpdate = true;
-						SoundEffectInstance sound = Main.PlaySound(SoundID.Item52, (int)player.MountedCenter.X, (int)player.MountedCenter.Y);
+						SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item52, (int)player.MountedCenter.X, (int)player.MountedCenter.Y);
 						if (sound != null)
 							sound.Pitch = -0.95f;
 					}
@@ -347,11 +330,7 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VibraniumBar"), 10);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("VibraniumBar"), 10).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -365,11 +344,11 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.defense = 20;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.defense = 20;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -383,12 +362,7 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<Accessories.GravityStabilizerBoots>(), 1);
-			recipe.AddIngredient(mod.ItemType("VibraniumBar"), 6);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<Accessories.GravityStabilizerBoots>(), 1).AddIngredient(mod.ItemType("VibraniumBar"), 6).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
     public class VibraniumPlatform : ModProjectile
@@ -398,8 +372,8 @@ namespace SGAmod.Items.Armors.Vibranium
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Vibranium Platform");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 20;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
         public override bool CanDamage()
@@ -409,49 +383,49 @@ namespace SGAmod.Items.Armors.Vibranium
         public override string Texture => "Terraria/Item_"+ItemID.GemLockRuby;
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = 8;
-            projectile.alpha = 40;
-            projectile.timeLeft = 15;
-            projectile.light = 0.75f;
-            projectile.ignoreWater = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = 8;
+            Projectile.alpha = 40;
+            Projectile.timeLeft = 15;
+            Projectile.light = 0.75f;
+            Projectile.ignoreWater = true;
         }
         public override void AI()
 		{
 			if (noise == default)
             {
-				noise = new NoiseGenerator(projectile.Center.GetHashCode());
+				noise = new NoiseGenerator(Projectile.Center.GetHashCode());
 			}
-			Player owner = Main.player[projectile.owner];
-			projectile.localAI[0] += 1;
-			if (Math.Abs(owner.velocity.Y) > 1f || projectile.ai[0] > 0 || owner.justJumped || !owner.SGAPly().vibraniumSetPlatform || owner.controlDown || owner.SGAPly().Shieldbreak || (!owner.SGAPly().ConsumeElectricCharge(3, 16, true) && projectile.ai[0] < 0))
+			Player owner = Main.player[Projectile.owner];
+			Projectile.localAI[0] += 1;
+			if (Math.Abs(owner.velocity.Y) > 1f || Projectile.ai[0] > 0 || owner.justJumped || !owner.SGAPly().vibraniumSetPlatform || owner.controlDown || owner.SGAPly().Shieldbreak || (!owner.SGAPly().ConsumeElectricCharge(3, 16, true) && Projectile.ai[0] < 0))
 			{
-				projectile.ai[0] += 1;
+				Projectile.ai[0] += 1;
 			}
 			else
 			{
-				projectile.Center = new Vector2(owner.Center.X, owner.Center.Y);
-				projectile.timeLeft = 15;
+				Projectile.Center = new Vector2(owner.Center.X, owner.Center.Y);
+				Projectile.timeLeft = 15;
 			}
 		}
 
-		float ScaleProperty => MathHelper.Clamp(projectile.localAI[0] / 10f, 0f, (projectile.timeLeft+1) / 15f);
-		float ScalePropertyColor2 => MathHelper.Clamp(1.5f-(projectile.localAI[0] / 30f), 0f, 1f);
+		float ScaleProperty => MathHelper.Clamp(Projectile.localAI[0] / 10f, 0f, (Projectile.timeLeft+1) / 15f);
+		float ScalePropertyColor2 => MathHelper.Clamp(1.5f-(Projectile.localAI[0] / 30f), 0f, 1f);
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 			List<Vector2> vects = new List<Vector2>();
 
             for (int i = -96; i <= 96; i += 8)
             {
 				float scalar = 1f + Math.Max(Math.Abs(i / 300f) - 0.05f, 0f);
-				double scaleoffset = (noise.Noise((int)projectile.Center.X + i,0)*48.00)*(scalar-ScaleProperty);
-				vects.Add(new Vector2(projectile.Center.X + i, projectile.Center.Y+(float)scaleoffset));
+				double scaleoffset = (noise.Noise((int)Projectile.Center.X + i,0)*48.00)*(scalar-ScaleProperty);
+				vects.Add(new Vector2(Projectile.Center.X + i, Projectile.Center.Y+(float)scaleoffset));
             }
 
 			for (int j = 0; j < (ScalePropertyColor2>0 ? 2 : 1); j += 1)
@@ -476,13 +450,13 @@ namespace SGAmod.Items.Armors.Vibranium
 					};
 				}
 				trail.coordMultiplier = new Vector2(1f, (96 * 2) / 16f);
-				trail.coordOffset = new Vector2(0, projectile.Center.X / 16);
+				trail.coordOffset = new Vector2(0, Projectile.Center.X / 16);
 				trail.strength = ScaleProperty;
 				trail.trailThicknessIncrease = 0;
-				trail.DrawTrail(vects, projectile.Center);
+				trail.DrawTrail(vects, Projectile.Center);
 			}
 
-			Texture2D texture = Main.projectileTexture[mod.ProjectileType(this.GetType().Name)];
+			Texture2D texture = Main.projectileTexture[Mod.Find<ModProjectile>(this.GetType().Name).Type];
             Vector2 origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
 
             //spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, origin, new Vector2(1f, 1f), projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
@@ -498,11 +472,11 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Starfury);
-			aiType = -1;
-			projectile.aiStyle = -1;
-			projectile.tileCollide = false;
-			projectile.melee = false;
+			Projectile.CloneDefaults(ProjectileID.Starfury);
+			AIType = -1;
+			Projectile.aiStyle = -1;
+			Projectile.tileCollide = false;
+			// projectile.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 			//projectile.minion = true;
 			//projectile.minionSlots = 0;
 		}
@@ -519,24 +493,24 @@ namespace SGAmod.Items.Armors.Vibranium
 
         public override bool PreKill(int timeLeft)
 		{
-			projectile.type = ProjectileID.Starfury;
+			Projectile.type = ProjectileID.Starfury;
 			return true;
 		}
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			SGAPlayer sgaply = player.SGAPly();
 
-			projectile.localAI[0] += 1f;
+			Projectile.localAI[0] += 1f;
 
 			if (!player.dead && player.armor[0].type == ModContent.ItemType<VibraniumHood>())
             {
 				bool playerheldsummon = !player.HeldItem.IsAir && player.HeldItem.summon;
 
-				projectile.timeLeft = 3;
-				projectile.damage = (int)((25f*player.minionDamage) * (1f+(player.maxMinions/2f)));
+				Projectile.timeLeft = 3;
+				Projectile.damage = (int)((25f*player.GetDamage(DamageClass.Summon)) * (1f+(player.maxMinions/2f)));
 
-				projectile.ai[0] += 1;
+				Projectile.ai[0] += 1;
 
 				Vector2 gothere = player.MountedCenter + new Vector2(0, -player.gravDir * 64f);
 				if (player.MinionAttackTargetNPC >= 0)
@@ -544,22 +518,22 @@ namespace SGAmod.Items.Armors.Vibranium
 					NPC target = Main.npc[player.MinionAttackTargetNPC];
 					gothere = target.Center - Vector2.Normalize(target.Center - player.Center) * 256f;
 
-					if (projectile.ai[0] % (playerheldsummon ? 6 : 10) == 0)
+					if (Projectile.ai[0] % (playerheldsummon ? 6 : 10) == 0)
 					{
 						int index = 0;
 						int dist = 400 * 400;
 
-						foreach (NPC npctarget in Main.npc.Where(testby => testby.active && !testby.dontTakeDamage && testby.chaseable && !testby.friendly && (testby.Center - projectile.Center).LengthSquared() < dist).OrderBy(testby => testby.type == player.MinionAttackTargetNPC ? -100 : (testby.Center - player.Center).LengthSquared()))
+						foreach (NPC npctarget in Main.npc.Where(testby => testby.active && !testby.dontTakeDamage && testby.chaseable && !testby.friendly && (testby.Center - Projectile.Center).LengthSquared() < dist).OrderBy(testby => testby.type == player.MinionAttackTargetNPC ? -100 : (testby.Center - player.Center).LengthSquared()))
 						{
 							if (index > player.maxTurrets)
 								continue;
 
-							Vector2 there = npctarget.Center - projectile.Center;
+							Vector2 there = npctarget.Center - Projectile.Center;
 
-							Projectile.NewProjectile(projectile.Center, ((npctarget.position+new Vector2(Main.rand.Next(0,npctarget.width), Main.rand.Next(0, npctarget.height))) - projectile.Center), ModContent.ProjectileType<VibraniumZapEffect>(), 0, 0);
-							SoundEffectInstance snd = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 91);
+							Projectile.NewProjectile(Projectile.Center, ((npctarget.position+new Vector2(Main.rand.Next(0,npctarget.width), Main.rand.Next(0, npctarget.height))) - Projectile.Center), ModContent.ProjectileType<VibraniumZapEffect>(), 0, 0);
+							SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 91);
 
-							int damazz = (Main.DamageVar((float)projectile.damage));
+							int damazz = (Main.DamageVar((float)Projectile.damage));
 							npctarget.StrikeNPC(damazz, 0f,player.direction);
 							player.addDPS(damazz);
 
@@ -584,7 +558,7 @@ namespace SGAmod.Items.Armors.Vibranium
 					int index = 0;
 					int dist = 400 * 400;
 
-					if (projectile.ai[0] % (playerheldsummon ? 5 : 20) == 0)
+					if (Projectile.ai[0] % (playerheldsummon ? 5 : 20) == 0)
 					{
 						foreach (Projectile proj in Main.projectile.Where(testby => testby.active && !testby.friendly && testby.hostile && (testby.Center - player.Center).LengthSquared() < dist && testby.GetGlobalProjectile<SGAprojectile>().damageReduceTime <= 0).OrderBy(testby => (testby.Center - player.Center).LengthSquared()))
 						{
@@ -596,10 +570,10 @@ namespace SGAmod.Items.Armors.Vibranium
 							sgaproj.damageReduce = 3f;
 							sgaproj.damageReduceTime = 180;
 
-							Vector2 there = proj.Center - projectile.Center;
+							Vector2 there = proj.Center - Projectile.Center;
 
-							Projectile.NewProjectile(projectile.Center, proj.Center - projectile.Center, ModContent.ProjectileType<VibraniumZapEffect>(), 0, 0);
-							SoundEffectInstance snd = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 91);
+							Projectile.NewProjectile(Projectile.Center, proj.Center - Projectile.Center, ModContent.ProjectileType<VibraniumZapEffect>(), 0, 0);
+							SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 91);
 
 							if (snd != null)
 							{
@@ -613,13 +587,13 @@ namespace SGAmod.Items.Armors.Vibranium
 
 				}
 
-				Vector2 finalvectormovement = gothere - projectile.Center;
+				Vector2 finalvectormovement = gothere - Projectile.Center;
 				if (finalvectormovement.Length() > 24f)
 				{
 
-					projectile.velocity += (finalvectormovement / 400f) + Vector2.Normalize(finalvectormovement) *0.075f;
+					Projectile.velocity += (finalvectormovement / 400f) + Vector2.Normalize(finalvectormovement) *0.075f;
 				}
-				projectile.velocity *= 0.95f;
+				Projectile.velocity *= 0.95f;
 
 				return;
             }
@@ -632,7 +606,7 @@ namespace SGAmod.Items.Armors.Vibranium
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-			NPCs.ResonantWisp.DrawResonantWisp(projectile,projectile.Center,projectile.localAI[0],spriteBatch,lightColor);
+			NPCs.ResonantWisp.DrawResonantWisp(Projectile,Projectile.Center,Projectile.localAI[0],spriteBatch,lightColor);
 			return false;
         }
     }
@@ -645,12 +619,12 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Starfury);
-			aiType = -1;
-			projectile.aiStyle = -1;
-			projectile.timeLeft = 8;
-			projectile.tileCollide = false;
-			projectile.melee = false;
+			Projectile.CloneDefaults(ProjectileID.Starfury);
+			AIType = -1;
+			Projectile.aiStyle = -1;
+			Projectile.timeLeft = 8;
+			Projectile.tileCollide = false;
+			// projectile.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 		}
 
 		public override string Texture
@@ -664,14 +638,14 @@ namespace SGAmod.Items.Armors.Vibranium
 		}
 		public override void AI()
 		{
-			projectile.position -= projectile.velocity;
+			Projectile.position -= Projectile.velocity;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 
-			spriteBatch.Draw(tex, projectile.Center-Main.screenPosition, null, Color.White*MathHelper.Clamp(projectile.timeLeft/8f,0f,1f), projectile.velocity.ToRotation()+MathHelper.PiOver2, new Vector2(tex.Width / 2f, tex.Height), new Vector2(1f, projectile.velocity.Length()/tex.Height), SpriteEffects.None, 0);
+			spriteBatch.Draw(tex, Projectile.Center-Main.screenPosition, null, Color.White*MathHelper.Clamp(Projectile.timeLeft/8f,0f,1f), Projectile.velocity.ToRotation()+MathHelper.PiOver2, new Vector2(tex.Width / 2f, tex.Height), new Vector2(1f, Projectile.velocity.Length()/tex.Height), SpriteEffects.None, 0);
 
 			return false;
 		}
@@ -692,54 +666,54 @@ namespace SGAmod.Items.Armors.Vibranium
 		public override string Texture => "SGAmod/Projectiles/VibraniumWall";
 		public override void SetDefaults()
 		{
-			projectile.width = 32;
-			projectile.height = 32;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = 8;
-			projectile.alpha = 40;
-			projectile.timeLeft = 45;
-			projectile.light = 0.75f;
-			projectile.ignoreWater = true;
+			Projectile.width = 32;
+			Projectile.height = 32;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = 8;
+			Projectile.alpha = 40;
+			Projectile.timeLeft = 45;
+			Projectile.light = 0.75f;
+			Projectile.ignoreWater = true;
 		}
 		public virtual void Orbit()
         {
-			float dist = 80 + (float)Math.Sin((projectile.localAI[0]+(projectile.whoAmI*67f))/20f)*projectile.damage;
-			Vector2 pos = Owner.MountedCenter + (projectile.ai[1].ToRotationVector2()* dist);
-			projectile.Center += Owner.velocity+(pos - projectile.Center)/8f;
+			float dist = 80 + (float)Math.Sin((Projectile.localAI[0]+(Projectile.whoAmI*67f))/20f)*Projectile.damage;
+			Vector2 pos = Owner.MountedCenter + (Projectile.ai[1].ToRotationVector2()* dist);
+			Projectile.Center += Owner.velocity+(pos - Projectile.Center)/8f;
 			SGAmod.vibraniumCounter = 3;
 
 		}
 		public virtual bool DoCheck()
         {
-			Owner = Main.player[projectile.owner];
+			Owner = Main.player[Projectile.owner];
 			return Owner.SGAPly().vibraniumSet && Owner.SGAPly().vibraniumSetWall;
 		}
 		public override void AI()
 		{
-			projectile.rotation += projectile.localAI[1];
+			Projectile.rotation += Projectile.localAI[1];
 
-			Player owner = Main.player[projectile.owner];
-			projectile.localAI[0] += 1;
-			if (projectile.ai[0] > 0 || !DoCheck())
+			Player owner = Main.player[Projectile.owner];
+			Projectile.localAI[0] += 1;
+			if (Projectile.ai[0] > 0 || !DoCheck())
 			{
-				projectile.ai[0] += 1;
+				Projectile.ai[0] += 1;
 			}
 			else
 			{
 				Orbit();
-				projectile.timeLeft = 45;
+				Projectile.timeLeft = 45;
 			}
 		}
-		float ScaleProperty => MathHelper.Clamp(projectile.localAI[0] / 10f, 0f, (projectile.timeLeft + 1) / 45f);
+		float ScaleProperty => MathHelper.Clamp(Projectile.localAI[0] / 10f, 0f, (Projectile.timeLeft + 1) / 45f);
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 
-			Texture2D texture = Main.projectileTexture[mod.ProjectileType(this.GetType().Name)];
+			Texture2D texture = Main.projectileTexture[Mod.Find<ModProjectile>(this.GetType().Name).Type];
 			Vector2 origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
 
-			spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, Color.White* ScaleProperty, projectile.rotation, origin, new Vector2(1f, 1f), SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White* ScaleProperty, Projectile.rotation, origin, new Vector2(1f, 1f), SpriteEffects.None, 0f);
 			return false;
 		}
 	}
@@ -753,17 +727,17 @@ namespace SGAmod.Items.Armors.Vibranium
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 30;
-			projectile.Throwing().thrown = true;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 30;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
 		}
         public override bool CanDamage()
         {
@@ -772,21 +746,21 @@ namespace SGAmod.Items.Armors.Vibranium
 
         public override void AI()
         {
-			projectile.ai[0] += 1;
+			Projectile.ai[0] += 1;
 
-			if (projectile.ai[0] == 3)
+			if (Projectile.ai[0] == 3)
             {
-				Player owner = Main.player[projectile.owner];
+				Player owner = Main.player[Projectile.owner];
 				NPC enemy = null;
-				List<NPC> npcx = SGAUtils.ClosestEnemies(projectile.Center, 320*owner.Throwing().thrownVelocity, projectile.Center);
+				List<NPC> npcx = SGAUtils.ClosestEnemies(Projectile.Center, 320*owner.Throwing().thrownVelocity, Projectile.Center);
 				if (npcx != null && npcx.Count>0)
 				enemy = npcx[0];
 
 				if (enemy != null)
 				{
-					Vector2 aimvelo = Vector2.Normalize(enemy.Center - projectile.Center)*32f;
-					int proj = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, aimvelo.X, aimvelo.Y, ProjectileID.MagnetSphereBolt, projectile.damage, 0, projectile.owner, 0f, 0f);
-					Main.projectile[proj].magic = false;
+					Vector2 aimvelo = Vector2.Normalize(enemy.Center - Projectile.Center)*32f;
+					int proj = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, aimvelo.X, aimvelo.Y, ProjectileID.MagnetSphereBolt, Projectile.damage, 0, Projectile.owner, 0f, 0f);
+					// Main.projectile[proj].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 					Main.projectile[proj].netUpdate = true;
 				}
 			}
@@ -795,10 +769,10 @@ namespace SGAmod.Items.Armors.Vibranium
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
 			Texture2D star = Main.itemTexture[ModContent.ItemType<StygianCore>()];
-			float colorfade = MathHelper.Clamp(projectile.ai[0] / 5f, 0f, Math.Min(projectile.timeLeft / 10f, 1f));
-			spriteBatch.Draw(star, projectile.Center-Main.screenPosition, null, Color.Red* colorfade, 0, star.Size()/2f, projectile.timeLeft / 80f, SpriteEffects.None, 0f);
-			colorfade = MathHelper.Clamp(projectile.ai[0] / 20f, 0f, Math.Min(projectile.timeLeft / 30f, 1f));
-			spriteBatch.Draw(star, projectile.Center - Main.screenPosition, null, Color.Blue * colorfade, 0, star.Size() / 2f, 0.25f+(projectile.timeLeft / 160f), SpriteEffects.None, 0f);
+			float colorfade = MathHelper.Clamp(Projectile.ai[0] / 5f, 0f, Math.Min(Projectile.timeLeft / 10f, 1f));
+			spriteBatch.Draw(star, Projectile.Center-Main.screenPosition, null, Color.Red* colorfade, 0, star.Size()/2f, Projectile.timeLeft / 80f, SpriteEffects.None, 0f);
+			colorfade = MathHelper.Clamp(Projectile.ai[0] / 20f, 0f, Math.Min(Projectile.timeLeft / 30f, 1f));
+			spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, Color.Blue * colorfade, 0, star.Size() / 2f, 0.25f+(Projectile.timeLeft / 160f), SpriteEffects.None, 0f);
 
 			return false;
         }

@@ -24,23 +24,23 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 112;
-			item.summon = true;
-			item.sentry = true;
-			item.width = 24;
-			item.height = 30;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.noMelee = true;
-			item.knockBack = 2f;
-			item.value = Item.buyPrice(0, 1, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.mana = 10;
-			item.autoReuse = false;
-			item.shootSpeed = 0f;
-			item.UseSound = SoundID.Item78;
-			item.shoot = ModContent.ProjectileType<StickySituationSludge>();
+			Item.damage = 112;
+			Item.DamageType = DamageClass.Summon;
+			Item.sentry = true;
+			Item.width = 24;
+			Item.height = 30;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.noMelee = true;
+			Item.knockBack = 2f;
+			Item.value = Item.buyPrice(0, 1, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.mana = 10;
+			Item.autoReuse = false;
+			Item.shootSpeed = 0f;
+			Item.UseSound = SoundID.Item78;
+			Item.shoot = ModContent.ProjectileType<StickySituationSludge>();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -67,20 +67,20 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 24;
-			projectile.height = 52;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.timeLeft = Projectile.SentryLifeTime;
-			projectile.penetrate = 3;
+			Projectile.width = 24;
+			Projectile.height = 52;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.timeLeft = Projectile.SentryLifeTime;
+			Projectile.penetrate = 3;
 		}
         public override void AI()
         {
 			base.AI();
-			Projectile owner = Main.projectile[(int)projectile.ai[1]];
+			Projectile owner = Main.projectile[(int)Projectile.ai[1]];
             if (!owner.active || (owner.type != ModContent.ProjectileType<StickySituationSludge>() && owner.type != ModContent.ProjectileType<StickySituationSludge2>()))
             {
-				projectile.Kill();
+				Projectile.Kill();
             }
         }
     }
@@ -97,30 +97,30 @@ namespace SGAmod.Items.Weapons
 
         public override void SetDefaults()
 		{
-			projectile.width = 24;
-			projectile.height = 52;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.sentry = true;
-			projectile.timeLeft = Projectile.SentryLifeTime;
-			projectile.penetrate = 3;
+			Projectile.width = 24;
+			Projectile.height = 52;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.sentry = true;
+			Projectile.timeLeft = Projectile.SentryLifeTime;
+			Projectile.penetrate = 3;
 		}
 
 		public override void AI()
 		{
 
-			if (projectile.ai[0] == 0)
+			if (Projectile.ai[0] == 0)
 			{
 				for (int i = 0; i < 4000; i += 1)
 				{
 
-					Point16 tilepos = new Point16((int)projectile.Center.X / 16, (int)projectile.Center.Y / 16);
+					Point16 tilepos = new Point16((int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16);
 					if (!WorldGen.InWorld(tilepos.X, tilepos.Y))
 						break;
 
 					Tile tile = Main.tile[tilepos.X, tilepos.Y];
 
-					if (tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
+					if (tile.HasTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]))
 					{
 						break;
 						//if (!Collision.CanHitLine(new Vector2(projectile.Center.X, projectile.position.Y + projectile.height), 1, 1, new Vector2(projectile.Center.X, projectile.position.Y + projectile.height + 2), 1, 1))
@@ -128,50 +128,50 @@ namespace SGAmod.Items.Weapons
 						//	break;
 						//}
 					}
-					projectile.position.Y += 1;
+					Projectile.position.Y += 1;
 				}
-				projectile.position.Y -= 32;
+				Projectile.position.Y -= 32;
 
 				for (int num654 = 0; num654 < 64; num654++)
 				{
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize(); Vector2 ogcircle = randomcircle; randomcircle *= (float)(num654 / 10.00);
-					int num655 = Dust.NewDust(projectile.position+new Vector2(0,16) + (Vector2.UnitX * -8f), projectile.width + 16, projectile.height + 16, 184, projectile.velocity.X + randomcircle.X * 2f, (projectile.velocity.Y-2f) + randomcircle.Y * 1f, 200, new Color(30, 30, 30, 20), 1f);
+					int num655 = Dust.NewDust(Projectile.position+new Vector2(0,16) + (Vector2.UnitX * -8f), Projectile.width + 16, Projectile.height + 16, 184, Projectile.velocity.X + randomcircle.X * 2f, (Projectile.velocity.Y-2f) + randomcircle.Y * 1f, 200, new Color(30, 30, 30, 20), 1f);
 					Main.dust[num655].noGravity = true;
 				}
 
 			}
 
-			Player player = Main.player[base.projectile.owner];
-			projectile.ai[0] += 1;
-			if (projectile.ai[0] > 5)
+			Player player = Main.player[base.Projectile.owner];
+			Projectile.ai[0] += 1;
+			if (Projectile.ai[0] > 5)
 			{
-				if (projectile.ai[0] == 6 && projectile.penetrate < 5)
+				if (Projectile.ai[0] == 6 && Projectile.penetrate < 5)
 				{
 					for (int i = -1; i < 3; i += 2)
 					{
-						if ((int)projectile.velocity.X == i || (int)projectile.velocity.X == 0)
+						if ((int)Projectile.velocity.X == i || (int)Projectile.velocity.X == 0)
 						{
-							Projectile proj = Projectile.NewProjectileDirect(projectile.position + new Vector2(i * 48, 0), new Vector2(i, 0), ModContent.ProjectileType<StickySituationSludge2>(), projectile.damage, 0f, projectile.owner, ai1: projectile.whoAmI);
-							proj.penetrate = projectile.penetrate + 1;
-							proj.ai[1] = projectile.whoAmI;
+							Projectile proj = Projectile.NewProjectileDirect(Projectile.position + new Vector2(i * 48, 0), new Vector2(i, 0), ModContent.ProjectileType<StickySituationSludge2>(), Projectile.damage, 0f, Projectile.owner, ai1: Projectile.whoAmI);
+							proj.penetrate = Projectile.penetrate + 1;
+							proj.ai[1] = Projectile.whoAmI;
 							proj.netUpdate = true;
 						}
 					}
 				}
 
 }
-				if (projectile.ai[0] % 1 == 0)
+				if (Projectile.ai[0] % 1 == 0)
 				{
 					foreach (NPC npc in Main.npc)
 					{
 						if (npc.active && !npc.dontTakeDamage && !npc.friendly && !npc.townNPC)
 						{
-							Rectangle rec1 = new Rectangle((int)projectile.position.X - 24, (int)projectile.Center.Y - 48, projectile.width + 48, (int)projectile.height + 64);
+							Rectangle rec1 = new Rectangle((int)Projectile.position.X - 24, (int)Projectile.Center.Y - 48, Projectile.width + 48, (int)Projectile.height + 64);
 							Rectangle rec2 = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
 							if (rec1.Intersects(rec2))
 							{
 								npc.SGANPCs().TimeSlow += 1f;
-							npc.SGANPCs().nonStackingImpaled = npc.realLife>0 ? projectile.damage*10 : projectile.damage;//(int)(projectile.damage*3.75f);
+							npc.SGANPCs().nonStackingImpaled = npc.realLife>0 ? Projectile.damage*10 : Projectile.damage;//(int)(projectile.damage*3.75f);
 							}
 
 						}
@@ -179,20 +179,20 @@ namespace SGAmod.Items.Weapons
 
 				}
 
-				projectile.position -= projectile.velocity;
+				Projectile.position -= Projectile.velocity;
 		}
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D texa = Main.projectileTexture[projectile.type];
+			Texture2D texa = Main.projectileTexture[Projectile.type];
 			int texsize = texa.Height / 4;
-			Rectangle rect = new Rectangle(0, texsize * (int)((projectile.ai[0] / 10f) % 4), texa.Width, texsize);
-			spriteBatch.Draw(texa, projectile.Center+new Vector2(0, texsize*2) - Main.screenPosition, rect, lightColor * MathHelper.Clamp(projectile.ai[0] / 6f, 0f, 1f), 0f, new Vector2(texa.Width, texsize) / 2f, new Vector2(1, 1), SpriteEffects.None, 0f);
+			Rectangle rect = new Rectangle(0, texsize * (int)((Projectile.ai[0] / 10f) % 4), texa.Width, texsize);
+			spriteBatch.Draw(texa, Projectile.Center+new Vector2(0, texsize*2) - Main.screenPosition, rect, lightColor * MathHelper.Clamp(Projectile.ai[0] / 6f, 0f, 1f), 0f, new Vector2(texa.Width, texsize) / 2f, new Vector2(1, 1), SpriteEffects.None, 0f);
 			return false;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity = Vector2.Zero;
+			Projectile.velocity = Vector2.Zero;
 			return false;
 		}
 
@@ -209,32 +209,32 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Gnat Staff");
 			Tooltip.SetDefault("Summons a Gnat-attracting dung pile to hover above you\nEach summon adds another fly which seeks out different enemies\nThe pile hovers above the enemy targeted when right-clicked");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 16;
-			item.knockBack = 0;
-			item.mana = 10;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 24;
-			item.useAnimation = 24;
-			item.autoReuse = true;
-			item.useStyle = 1;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.rare = 4;
-			item.noMelee = true;
-			item.UseSound = SoundID.Item44;
+			Item.damage = 16;
+			Item.knockBack = 0;
+			Item.mana = 10;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 24;
+			Item.useAnimation = 24;
+			Item.autoReuse = true;
+			Item.useStyle = 1;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.rare = 4;
+			Item.noMelee = true;
+			Item.UseSound = SoundID.Item44;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = ModContent.BuffType<FlyMinionBuff>();
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = ModContent.BuffType<FlyMinionBuff>();
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = ModContent.ProjectileType<FlySwarmMinion>();
+			Item.shoot = ModContent.ProjectileType<FlySwarmMinion>();
 		}
 		public override bool CanUseItem(Player player)
 		{
@@ -244,11 +244,11 @@ namespace SGAmod.Items.Weapons
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			// This is needed so the buff that keeps your minion alive and allows you to despawn it properly applies
-			player.AddBuff(item.buffType, 2);
+			player.AddBuff(Item.buffType, 2);
 
-			if (player.ownedProjectileCounts[item.shoot] > 0)
+			if (player.ownedProjectileCounts[Item.shoot] > 0)
             {
-				Projectile flies = Main.projectile.FirstOrDefault(projtype => projtype.type == item.shoot && projtype.owner == player.whoAmI);
+				Projectile flies = Main.projectile.FirstOrDefault(projtype => projtype.type == Item.shoot && projtype.owner == player.whoAmI);
 				SGAPlayer sgaply = player.SGAPly();
 				if (((float)player.maxMinions - sgaply.GetMinionSlots) > minionSlot)
                 {
@@ -258,7 +258,7 @@ namespace SGAmod.Items.Weapons
 
 			}
 
-			return player.ownedProjectileCounts[item.shoot]<1;
+			return player.ownedProjectileCounts[Item.shoot]<1;
 		}
 
 	}
@@ -315,11 +315,11 @@ namespace SGAmod.Items.Weapons
 		}
 		public void Update(FlySwarmMinion owner,NPC enemy,float percent)
         {
-			if (owner == null || !owner.projectile.active)
+			if (owner == null || !owner.Projectile.active)
             {
 				return;
             }
-			Projectile projectile2 = owner.projectile;
+			Projectile projectile2 = owner.Projectile;
 
 			timer += 1;
 
@@ -367,7 +367,7 @@ namespace SGAmod.Items.Weapons
 	public class FlySwarmMinion : ModProjectile
 	{
 		protected List<FakeFlyProjectile> flies = new List<FakeFlyProjectile>();
-		protected int maxMinions => 2+(int)(projectile.minionSlots*2);
+		protected int maxMinions => 2+(int)(Projectile.minionSlots*2);
 		public virtual float flySpeed => 0.35f;
 		public virtual float flyFriction => 0.96f;
 
@@ -376,31 +376,31 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Fly Swarm");
 			// Sets the amount of frames this minion has on its spritesheet
-			Main.projFrames[projectile.type] = 1;
+			Main.projFrames[Projectile.type] = 1;
 			// This is necessary for right-click targeting
-			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 
 			// These below are needed for a minion
 			// Denotes that this projectile is a pet or minion
-			Main.projPet[projectile.type] = true;
+			Main.projPet[Projectile.type] = true;
 			// This is needed so your minion can properly spawn when summoned and replaced when other minions are summoned
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
 			// Don't mistake this with "if this is true, then it will automatically home". It is just for damage reduction for certain NPCs
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.tileCollide = false;
-			projectile.friendly = true;
-			projectile.minion = true;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.minion = true;
 			// Amount of slots this minion occupies from the total minion slots available to the player (more on that later)
-			projectile.minionSlots = 0.5f;
+			Projectile.minionSlots = 0.5f;
 			// Needed so the minion doesn't despawn on collision with enemies or tiles
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
 		}
 
 
@@ -433,8 +433,8 @@ namespace SGAmod.Items.Weapons
 			{
 				if (flies.Count < i)
 				{
-					flies.Add(new FakeFlyProjectile(projectile.Center, projectile.whoAmI * (i + 1), new Rectangle(0, 0, 12, 12)));
-					projectile.localAI[0] = 0;
+					flies.Add(new FakeFlyProjectile(Projectile.Center, Projectile.whoAmI * (i + 1), new Rectangle(0, 0, 12, 12)));
+					Projectile.localAI[0] = 0;
 				}
 			}
 		}
@@ -447,7 +447,7 @@ namespace SGAmod.Items.Weapons
 			}
 			if (player.HasBuff(ModContent.BuffType<FlyMinionBuff>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 
 		}
@@ -463,7 +463,7 @@ namespace SGAmod.Items.Weapons
 			int j = 0;
 
 			
-			List<NPC> enemiesNearby = SGAUtils.ClosestEnemies(projectile.Center, maxChaseDist);
+			List<NPC> enemiesNearby = SGAUtils.ClosestEnemies(Projectile.Center, maxChaseDist);
 			foreach (FakeFlyProjectile fly in flies)
 			{
 				NPC enemy = enemiesNearby !=null ? (enemiesNearby.Count > 0 ? enemiesNearby[j% enemiesNearby.Count] : null) : null;
@@ -477,7 +477,7 @@ namespace SGAmod.Items.Weapons
 			
 			
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			DoPlayerChecks(player);
 
 			Vector2 gothere = player.Center+new Vector2(player.direction*0,-48);
@@ -485,11 +485,11 @@ namespace SGAmod.Items.Weapons
 			if (player.HasMinionAttackTargetNPC)
 				gothere = Main.npc[player.MinionAttackTargetNPC].Center + new Vector2(0, -48);
 
-			projectile.velocity += (gothere- projectile.Center) /50f;
+			Projectile.velocity += (gothere- Projectile.Center) /50f;
 
-			projectile.velocity /= 1.15f;
+			Projectile.velocity /= 1.15f;
 
-			projectile.localAI[0] += 1;
+			Projectile.localAI[0] += 1;
 
 			//if (player.HasMinionAttackTargetNPC)
 		}
@@ -501,16 +501,16 @@ namespace SGAmod.Items.Weapons
 			Texture2D tex = SGAmod.ExtraTextures[95];
 
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 4) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-			Color color = Color.Lerp((projectile.GetAlpha(lightColor) * 0.5f), Color.Brown, 0.5f); //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-			int timing = (int)(projectile.localAI[0] / 8f);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+			Color color = Color.Lerp((Projectile.GetAlpha(lightColor) * 0.5f), Color.Brown, 0.5f); //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+			int timing = (int)(Projectile.localAI[0] / 8f);
 			timing %= 4;
 			timing *= ((tex.Height) / 4);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), color*MathHelper.Clamp(1f-projectile.localAI[0]/30f,0.25f,1f), projectile.velocity.X * 0.04f, drawOrigin, (projectile.scale+projectile.minionSlots/10f), SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 4), color*MathHelper.Clamp(1f-Projectile.localAI[0]/30f,0.25f,1f), Projectile.velocity.X * 0.04f, drawOrigin, (Projectile.scale+Projectile.minionSlots/10f), SpriteEffects.None, 0f);
 
 			foreach (FakeFlyProjectile fly in flies)
 			{
-				fly.Draw(Main.projectileTexture[projectile.type], spriteBatch, lightColor);
+				fly.Draw(Main.projectileTexture[Projectile.type], spriteBatch, lightColor);
 			}
 
 			return false;
@@ -519,7 +519,7 @@ namespace SGAmod.Items.Weapons
 	}
 	public class FlyMinionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Gnat Minions");
 			Description.SetDefault("Buzz Swarm Dung Pile Buzz!");
@@ -535,7 +535,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			if (player.ownedProjectileCounts[mod.ProjectileType("FlySwarmMinion")] > 0)
+			if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("FlySwarmMinion").Type] > 0)
 			{
 				player.buffTime[buffIndex] = 18000;
 			}
@@ -559,43 +559,37 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Horsefly Staff");
 			Tooltip.SetDefault("Summons a Horsefly-attracting dung pile to hover above you\nEach summon adds another fly which seeks out different enemies\nThe pile hovers above the enemy targeted when right-clicked");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 27;
-			item.knockBack = 2f;
-			item.mana = 12;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 24;
-			item.useAnimation = 24;
-			item.autoReuse = true;
-			item.useStyle = 1;
-			item.value = Item.buyPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.LightPurple;
-			item.UseSound = SoundID.Item44;
-			item.noMelee = true;
+			Item.damage = 27;
+			Item.knockBack = 2f;
+			Item.mana = 12;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 24;
+			Item.useAnimation = 24;
+			Item.autoReuse = true;
+			Item.useStyle = 1;
+			Item.value = Item.buyPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.LightPurple;
+			Item.UseSound = SoundID.Item44;
+			Item.noMelee = true;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = ModContent.BuffType<FlyMinionBuff2>();
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = ModContent.BuffType<FlyMinionBuff2>();
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = ModContent.ProjectileType<HorseFlySwarmMinion>();
+			Item.shoot = ModContent.ProjectileType<HorseFlySwarmMinion>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<GnatStaff>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<HavocGear.Items.VirulentBar>(), 12);
-			recipe.AddIngredient(ModContent.ItemType<OmniSoul>(), 4);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<GnatStaff>(), 1).AddIngredient(ModContent.ItemType<HavocGear.Items.VirulentBar>(), 12).AddIngredient(ModContent.ItemType<OmniSoul>(), 4).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -641,7 +635,7 @@ namespace SGAmod.Items.Weapons
 		{
 
 			oldPos[0] = position;
-			TrailHelper trail = new TrailHelper("DefaultPass", SGAmod.Instance.GetTexture("Perlin"));
+			TrailHelper trail = new TrailHelper("DefaultPass", SGAmod.Instance.Assets.Request<Texture2D>("Perlin").Value);
 			trail.color = delegate (float percent)
 			{
 				return Color.DarkOliveGreen;
@@ -673,8 +667,8 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.idStaticNPCHitCooldown = 10;
-			projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 10;
+			Projectile.usesIDStaticNPCImmunity = true;
 		}
 		public override void MakeFlies()
 		{
@@ -682,8 +676,8 @@ namespace SGAmod.Items.Weapons
 			{
 				if (flies.Count < i)
 				{
-					flies.Add(new FakeHorseFlyProjectile(projectile.Center, projectile.whoAmI * (i + 1), new Rectangle(0, 0, 18, 18)));
-					projectile.localAI[0] = 0;
+					flies.Add(new FakeHorseFlyProjectile(Projectile.Center, Projectile.whoAmI * (i + 1), new Rectangle(0, 0, 18, 18)));
+					Projectile.localAI[0] = 0;
 				}
 			}
 		}
@@ -696,7 +690,7 @@ namespace SGAmod.Items.Weapons
 			}
 			if (player.HasBuff(ModContent.BuffType<FlyMinionBuff2>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 
 		}
@@ -722,7 +716,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			if (player.ownedProjectileCounts[mod.ProjectileType("HorseFlySwarmMinion")] > 0)
+			if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("HorseFlySwarmMinion").Type] > 0)
 			{
 				player.buffTime[buffIndex] = 18000;
 			}
@@ -742,22 +736,22 @@ namespace SGAmod.HavocGear.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			item.damage = 58;
-			item.ranged = true;
-			item.width = 22;
-			item.height = 56;
-			item.useTime = 26;
-			item.useAnimation = 26;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 4;
-			item.value = 100000;
-			item.rare = 4;
-			item.UseSound = SoundID.Item5;
-			item.autoReuse = true;
-			item.shoot = 10;
-			item.shootSpeed = 10f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 58;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 22;
+			Item.height = 56;
+			Item.useTime = 26;
+			Item.useAnimation = 26;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 4;
+			Item.value = 100000;
+			Item.rare = 4;
+			Item.UseSound = SoundID.Item5;
+			Item.autoReuse = true;
+			Item.shoot = 10;
+			Item.shootSpeed = 10f;
+			Item.useAmmo = AmmoID.Arrow;
 		}
 
 		public override void SetStaticDefaults()
@@ -784,7 +778,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 			Main.projectile[proj].hostile = false;
 			Main.projectile[proj].timeLeft = 600;
 			Main.projectile[proj].extraUpdates += 1;
-			Main.projectile[proj].knockBack = item.knockBack;
+			Main.projectile[proj].knockBack = Item.knockBack;
 
 			IdgProjectile.AddOnHitBuff(proj, BuffID.DryadsWardDebuff, 60 * 7);
 

@@ -14,21 +14,21 @@ namespace SGAmod.Items.Quests
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.consumable = false;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.rare = 1;
-			item.UseSound = SoundID.Item1;
-			item.value = Item.buyPrice(0, 2, 0, 0);
+			Item.maxStack = 1;
+			Item.consumable = false;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.rare = 1;
+			Item.UseSound = SoundID.Item1;
+			Item.value = Item.buyPrice(0, 2, 0, 0);
 		}
 		//player.CountItem(mod.ItemType("ModItem"))
 
-		public override bool UseItem(Player ply)
+		public override bool? UseItem(Player ply)
 		{
 			SGAWorld.QuestCheck(0,ply);
 			return true;

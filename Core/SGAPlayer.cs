@@ -24,13 +24,14 @@ using SGAmod.NPCs.Sharkvern;
 using SGAmod.NPCs.SpiderQueen;
 using SGAmod.NPCs.Hellion;
 using SGAmod.Items.Consumables;
-using CalamityMod;
+//using CalamityMod;
 using Terraria.Utilities;
 using SGAmod.SkillTree;
 using SGAmod.Dimensions;
 using SGAmod.Items.Accessories;
 using SGAmod.Buffs;
 using SGAmod.Items.Weapons.Technical;
+using Terraria.Audio;
 
 namespace SGAmod
 {
@@ -382,7 +383,7 @@ namespace SGAmod
 			watcherDebuff = 0;
 			MVMBoost = false;
 			gunslingerLegend = false;
-			if (!player.HasBuff(mod.BuffType("ConsumeHellBuff")))
+			if (!Player.HasBuff(Mod.Find<ModBuff>("ConsumeHellBuff").Type))
 				FireBreath = 0;
 			beserk[0] -= 1;
 			if (beserk[0] < 1)
@@ -432,7 +433,7 @@ namespace SGAmod
 			centerOverrideTimer = Math.Max(centerOverrideTimer - 1, -300);
 			if (centerOverrideTimer < 1)
 			{
-				centerOverridePosition = player.MountedCenter;
+				centerOverridePosition = Player.MountedCenter;
 			}
 			avariceRing = 0;
 			manaUnchained = false;
@@ -513,7 +514,7 @@ namespace SGAmod
 			concussionDevice = false;
 			if (bustlingFungus.Item1)
 			{
-				bustlingFungus = (false, player.velocity.Length()>0.05f ? 0 : bustlingFungus.Item2+1);
+				bustlingFungus = (false, Player.velocity.Length()>0.05f ? 0 : bustlingFungus.Item2+1);
 			}
 			else
 			{
@@ -567,7 +568,7 @@ namespace SGAmod
 			{
 				if (NoHitCharmTimer > 999999)
 				{
-					player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " attempted to break free of Cataclysm"), 666666, 0);
+					Player.KillMe(PlayerDeathReason.ByCustomReason(Player.name + " attempted to break free of Cataclysm"), 666666, 0);
 				}
 
 				NoHitCharmTimer = Math.Min(NoHitCharmTimer + 1, 181);
@@ -611,7 +612,7 @@ namespace SGAmod
 			noModTeleport = false;
 			PrimordialSkull = false;
 			NoFireBurn = Math.Max(NoFireBurn - 1, 0);
-			if (player.itemTime < 1)
+			if (Player.itemTime < 1)
 				recoil = Math.Max(recoil - 0.5f, 0f);
 			greandethrowcooldown = Math.Max(greandethrowcooldown - 1, 0);
 			techdamage = 1f;
@@ -676,39 +677,40 @@ namespace SGAmod
 			}
 
 			digiStacksMax = 0;
-			player.breathMax = 200;
+			Player.breathMax = 200;
 			MaxCooldownStacks = 1;
 			noactionstackringofrespite = false;
 			actionCooldownRate = 1f;
 			Noviteset = 0;
-			if (player.breath >= player.breathMax || (!SGAConfig.Instance.DrowningChange && !SGAmod.DRMMode))
+			if (Player.breath >= Player.breathMax || (!SGAConfig.Instance.DrowningChange && !SGAmod.DRMMode))
 				drowningIncrementer.X = 0;
-			else if (player.breath < 1)
+			else if (Player.breath < 1)
 				drowningIncrementer.X += 1;
 
 			drowningIncrementer.Y = Math.Max(0, (drowningIncrementer.X - 300) / 60);
 		}
 
-		public override void UpdateBiomes()
+		//replaced by ModBiome.IsActive() maybe?
+		/*public override void UpdateBiomes()
 		{
 			ShadowSectorZone = (byte)Math.Max(ShadowSectorZone - 1, 0);
 			foreach (DarkSector sector in DimDingeonsWorld.darkSectors)
 			{
-				if (sector.PlayerInside(player))
+				if (sector.PlayerInside(Player))
 				{
 					ShadowSectorZone = 5;
 					ShadowSector = sector;
-					SGADimPlayer dimplayer = player.GetModPlayer<SGADimPlayer>();
+					SGADimPlayer dimplayer = Player.GetModPlayer<SGADimPlayer>();
 					dimplayer.noLightGrow = 180;
 					dimplayer.lightSize += (int)((400f - (float)dimplayer.lightSize) / 600f);
 					if (dimplayer.lightSize < 600)
-						player.AddBuff(BuffID.Blackout, 120);
+						Player.AddBuff(BuffID.Blackout, 120);
 					break;
 				}
 			}
 
-			DankShrineZone = (SGAWorld.MoistStonecount > 15 && Main.tile[(int)(player.Center.X / 16), (int)(player.Center.Y / 16)].wall == mod.WallType("SwampWall"));
-		}
+			DankShrineZone = (SGAWorld.MoistStonecount > 15 && Main.tile[(int)(Player.Center.X / 16), (int)(Player.Center.Y / 16)].WallType == Mod.Find<ModWall>("SwampWall").Type);
+		}*/
 
 		public override void PlayerDisconnect(Player player)
 		{
@@ -722,26 +724,26 @@ namespace SGAmod
 				return true;
 			}
 
-			if (damageSource.SourceCustomReason == (player.name + " went Kamikaze, but failed to blow up enemies"))
+			if (damageSource.SourceCustomReason == (Player.name + " went Kamikaze, but failed to blow up enemies"))
 				return true;
 
 			if (creeperexplosion > 9795)
 				return false;
 
-			if (LifeFlower && !player.HasBuff(BuffID.PotionSickness))
+			if (LifeFlower && !Player.HasBuff(BuffID.PotionSickness))
 			{
-				bool potionsickness = player.HasBuff(BuffID.PotionSickness);
-				if (player.QuickHeal_GetItemToUse() == null)
+				bool potionsickness = Player.HasBuff(BuffID.PotionSickness);
+				if (Player.QuickHeal_GetItemToUse() == null)
 					potionsickness = true;
 				else
-					player.QuickHeal();
+					Player.QuickHeal();
 				return potionsickness;
 			}
 
 			if (MisterCreeperset && AddCooldownStack(180 * 60))
 			{
 				creeperexplosion = 10000;
-				player.statLife = 1;
+				Player.statLife = 1;
 				//player.AddBuff(mod.BuffType("ActionCooldown"), 60 * 60);
 				return false;
 			}
@@ -814,7 +816,7 @@ namespace SGAmod
 			{
 				ModPacket packet = SGAmod.Instance.GetPacket();
 				packet.Write(500);
-				packet.Write(player.whoAmI);
+				packet.Write(Player.whoAmI);
 				packet.Write((byte)ammoLeftInClip);
 				packet.Write((byte)ammoLeftInClipMax);
 				packet.Write((byte)ammoLeftInClipMaxLastHeld);
@@ -853,47 +855,47 @@ namespace SGAmod
 
 			if (NoFireBurn > 0)
 			{
-				if (player.HasBuff(BuffID.OnFire))
+				if (Player.HasBuff(BuffID.OnFire))
 				{
-					player.lifeRegen += 15;
+					Player.lifeRegen += 15;
 				}
 			}
 
 			if (MassiveBleeding)
 			{
-				if (player.lifeRegen > 0)
-					player.lifeRegen = 0;
-				player.lifeRegenTime = 0;
-				player.lifeRegen -= 10;
+				if (Player.lifeRegen > 0)
+					Player.lifeRegen = 0;
+				Player.lifeRegenTime = 0;
+				Player.lifeRegen -= 10;
 			}
 			if (thermalblaze)
 			{
 				int boost = 0;
-				if (player.HasBuff(BuffID.Oiled))
+				if (Player.HasBuff(BuffID.Oiled))
 					boost = 50;
-				player.lifeRegen -= 30 + boost;
+				Player.lifeRegen -= 30 + boost;
 			}
 			if (acidburn)
 			{
-				player.lifeRegen -= 15 + (int)(player.statDefense*0.90f);
-				player.statDefense -= 5;
+				Player.lifeRegen -= 15 + (int)(Player.statDefense*0.90f);
+				Player.statDefense -= 5;
 			}
 
 			if ((ShieldType < 1 && Shieldbreak) || (Pressured && !SpaceDiverset))
 			{
-				player.lifeRegen -= 250;
+				Player.lifeRegen -= 250;
 			}
 
-			if (NoHitCharm && realIFrames < 1 && (player.immune || player.immuneTime > 0))
+			if (NoHitCharm && realIFrames < 1 && (Player.immune || Player.immuneTime > 0))
 			{
-				player.lifeRegenTime = 0;
-				player.lifeRegen = -500;
+				Player.lifeRegenTime = 0;
+				Player.lifeRegen = -500;
 
-				if (player.statLife < 1)
-					player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " couldn't dodge fate"), 10000, player.direction);
+				if (Player.statLife < 1)
+					Player.KillMe(PlayerDeathReason.ByCustomReason(Player.name + " couldn't dodge fate"), 10000, Player.direction);
 				return;
 			}
-			player.lifeRegen -= badLifeRegen;
+			Player.lifeRegen -= badLifeRegen;
 
 			float dot = 0f;
 
@@ -907,20 +909,21 @@ namespace SGAmod
 				}
 				dot *= 1f + ((count-1) / 5f);
 				float scalepercemn = (Math.Min(0.60f+(DoTResist*0.40f), 1f));
-				player.lifeRegen -= (int)(dot/scalepercemn);
+				Player.lifeRegen -= (int)(dot/scalepercemn);
 				DoTStack = DoTStack.Select(testby => (testby.Item1 - 1, testby.Item2)).Where(testby => testby.Item1 > 0).ToList();
 			}
 		}
 
-		public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
+		//Changed or something
+		/*public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
 		{
 			Item item = new Item();
 
-			item.SetDefaults(ModLoader.GetMod("SGAmod").ItemType("IDGStartBag"), false);
+			item.SetDefaults(ModLoader.GetMod("SGAmod").Find<ModItem>("IDGStartBag").Type, false);
 
 			items.Add(item);
 
-		}
+		}*/
 
 		public override void NaturalLifeRegen(ref float regen)
 		{
@@ -962,8 +965,8 @@ namespace SGAmod
 				{
 					if (!Walkmode)
 					{
-						player.maxRunSpeed += (float)electricCharge / 5000f;
-						player.runAcceleration += (float)electricCharge / 150000f;
+						Player.maxRunSpeed += (float)electricCharge / 5000f;
+						Player.runAcceleration += (float)electricCharge / 150000f;
 					}
 				}
 			}
@@ -971,27 +974,27 @@ namespace SGAmod
 			if (SlowDownDefense > 0f)
 			{
 				SlowDownDefense /= SlowDownResist;
-				player.moveSpeed /= 1f + SlowDownDefense;
-				player.accRunSpeed /= 1f + SlowDownDefense;
-				player.maxRunSpeed /= 1f + SlowDownDefense;
+				Player.moveSpeed /= 1f + SlowDownDefense;
+				Player.accRunSpeed /= 1f + SlowDownDefense;
+				Player.maxRunSpeed /= 1f + SlowDownDefense;
 
 			}
 			SlowDownDefense = 0f;
 			SlowDownResist = 1f;
 
-			if (player.HeldItem.type == ModContent.ItemType<Items.Tools.Powerjack>())
+			if (Player.HeldItem.type == ModContent.ItemType<Items.Tools.Powerjack>())
 			{
-				player.moveSpeed *= 1.15f;
-				player.accRunSpeed *= 1.15f;
-				player.maxRunSpeed *= 1.15f;
+				Player.moveSpeed *= 1.15f;
+				Player.accRunSpeed *= 1.15f;
+				Player.maxRunSpeed *= 1.15f;
 			}
 
-			if (player.HeldItem.type == ModContent.ItemType<NoviteKnife>())
+			if (Player.HeldItem.type == ModContent.ItemType<NoviteKnife>())
 			{
-				player.moveSpeed *= 1.20f;
-				player.accRunSpeed *= 1.20f;
-				player.maxRunSpeed *= 1.20f;
-				player.jumpSpeedBoost += 1f;
+				Player.moveSpeed *= 1.20f;
+				Player.accRunSpeed *= 1.20f;
+				Player.maxRunSpeed *= 1.20f;
+				Player.jumpSpeedBoost += 1f;
 			}
 
 			if ((Main.netMode < 1 || SGAmod.SkillRun > 1) && SGAmod.SkillRun > 0)
@@ -1001,24 +1004,24 @@ namespace SGAmod
 
 		public override void PreUpdate()
 		{
-			if (player.immuneTime > 0 && !bustedSpawningGear && Main.myPlayer == player.whoAmI)
+			if (Player.immuneTime > 0 && !bustedSpawningGear && Main.myPlayer == Player.whoAmI)
 			{
 				if (Main.ActivePlayerFileData.GetPlayTime().TotalSeconds < 2)
 				{
-					foreach (Item item in player.inventory)
+					foreach (Item item in Player.inventory)
 					{
 
 						//item.Prefix(TrapPrefix.GetBustedPrefix != null ? (byte)TrapPrefix.GetBustedPrefix : (byte)PrefixID.Legendary);
 
-						if (item.prefix == (byte)TrapPrefix.GetBustedPrefix)
+						/*if (item.prefix == (byte)TrapPrefix.GetBustedPrefix)
 						{
 							bustedSpawningGear = true;
 							break;
-						}
+						}*/
 					}
 					if (bustedSpawningGear == true)
 					{
-						Item.NewItem(player.Center, ModContent.ItemType<AntiBustedPickaxe>(), prefixGiven: PrefixID.Legendary);
+						Item.NewItem(null, Player.Center, ModContent.ItemType<AntiBustedPickaxe>(), prefixGiven: PrefixID.Legendary); //again, check every IEntitySource to see if it should actually be null or not
 					}
 				}
 			}
@@ -1038,18 +1041,18 @@ namespace SGAmod
 
 				Filter manshad = Filters.Scene["SGAmod:ScreenWave"];
 				int perception = ModContent.BuffType<CleansedPerception>();
-				if (player == Main.LocalPlayer && (player.HeldItem.type == ModContent.ItemType<Debug1>() || player.HasBuff(perception)))
+				if (Player == Main.LocalPlayer && (Player.HeldItem.type == ModContent.ItemType<Debug1>() || Player.HasBuff(perception)))
 				{
 					float alpha = 1;
-					if (player.HasBuff(perception))
-						alpha = MathHelper.Clamp(player.buffTime[player.FindBuffIndex(perception)] / 1200f, 0f, 1f);
+					if (Player.HasBuff(perception))
+						alpha = MathHelper.Clamp(Player.buffTime[Player.FindBuffIndex(perception)] / 1200f, 0f, 1f);
 
 					//if (timer%60==0)
 					//Main.NewText("Test!");
 
 					if (!manshad.IsActive())
 					{
-						Filters.Scene.Activate("SGAmod:ScreenWave", player.Center, new object[0]);
+						Filters.Scene.Activate("SGAmod:ScreenWave", Player.Center, new object[0]);
 						Overlays.Scene.Activate("SGAmod:SGAHUD");
 						//Main.NewText("Turn on! Test!");
 
@@ -1057,8 +1060,8 @@ namespace SGAmod
 					else
 					{
 						ScreenShaderData shader = manshad.GetShader();
-						shader.UseIntensity(26f).UseProgress((Main.GlobalTime * 0.1f) % 1f).UseOpacity(alpha).UseColor(0.02f, 0.02f, 0f).UseTargetPosition(player.Center).UseDirection(new Vector2(1f, Main.GlobalTime * 0.1f))
-							.UseImageScale(new Vector2(Main.GlobalTime * -0.4f, Main.GlobalTime * 0.7f), 0);
+						shader.UseIntensity(26f).UseProgress((Main.GlobalTimeWrappedHourly * 0.1f) % 1f).UseOpacity(alpha).UseColor(0.02f, 0.02f, 0f).UseTargetPosition(Player.Center).UseDirection(new Vector2(1f, Main.GlobalTimeWrappedHourly * 0.1f))
+							.UseImageScale(new Vector2(Main.GlobalTimeWrappedHourly * -0.4f, Main.GlobalTimeWrappedHourly * 0.7f), 0);
 					}
 
 				}
@@ -1076,13 +1079,13 @@ namespace SGAmod
 			if (CooldownStacks == null)
 				CooldownStacks = new List<ActionCooldownStack>();
 			if (skillMananger == null)
-				skillMananger = new SkillManager(player);
+				skillMananger = new SkillManager(Player);
 
 			downedHellion = SGAWorld.downedHellion;
 			for (int i = 54; i < 58; i++)
 			{
 
-				ammoinboxes[i - 54] = player.inventory[i].type;
+				ammoinboxes[i - 54] = Player.inventory[i].type;
 			}
 
 		}
@@ -1091,17 +1094,17 @@ namespace SGAmod
 		{
 			if (postLifeRegenBoost > 0)
             {
-				player.lifeRegen += postLifeRegenBoost;
+				Player.lifeRegen += postLifeRegenBoost;
 				postLifeRegenBoost = 0;
 			}
 
-			if (player.HasBuff(ModContent.BuffType<Buffs.StarStormCooldown>()))
+			if (Player.HasBuff(ModContent.BuffType<Buffs.StarStormCooldown>()))
 			{
 				if (!Main.dayTime)
-					player.buffTime[player.FindBuffIndex(ModContent.BuffType<Buffs.StarStormCooldown>())] += 1;
+					Player.buffTime[Player.FindBuffIndex(ModContent.BuffType<Buffs.StarStormCooldown>())] += 1;
 			}
 
-			player.statManaMax2 += 20 * Redmanastar;
+			Player.statManaMax2 += 20 * Redmanastar;
 
 		}
 
@@ -1160,9 +1163,9 @@ namespace SGAmod
 
 			//player.powerrun = true;
 
-			if (!player.HeldItem.IsAir)
+			if (!Player.HeldItem.IsAir)
 			{
-				TrapDamageItems stuff = player.HeldItem.GetGlobalItem<TrapDamageItems>();
+				TrapDamageItems stuff = Player.HeldItem.GetGlobalItem<TrapDamageItems>();
 				if (stuff.misc == 3)
 				{
 					shieldDamageReduce += 0.05f;
@@ -1171,13 +1174,13 @@ namespace SGAmod
 
 			PostUpdateEquipsEvent?.Invoke(this);
 
-			if (player.SGAPly().manifestedWeaponType > 0)
+			if (Player.SGAPly().manifestedWeaponType > 0)
 			{
-				if (player.inventory[player.selectedItem].IsAir && player.selectedItem < 58)
+				if (Player.inventory[Player.selectedItem].IsAir && Player.selectedItem < 58)
 				{
 					Item newItem = new Item();
-					newItem.SetDefaults(player.SGAPly().manifestedWeaponType);
-					player.inventory[player.selectedItem] = newItem;
+					newItem.SetDefaults(Player.SGAPly().manifestedWeaponType);
+					Player.inventory[Player.selectedItem] = newItem;
 					//Main.NewText(player.inventory[player.selectedItem].type);
 				}
 			}
@@ -1185,20 +1188,20 @@ namespace SGAmod
 			if (ninjaSash > 0)
 				ninjaStashLimit = Math.Max(ninjaStashLimit - 1, 0);
 
-			if (player.HasBuff(BuffID.Lovestruck))
+			if (Player.HasBuff(BuffID.Lovestruck))
 			{
 				if (intimacy > 0)
-					player.aggro += 250 * intimacy;
+					Player.aggro += 250 * intimacy;
 				int maxdamage = 0;
-				foreach (Player player2 in Main.player.Where(player2 => player2.active && player.whoAmI != player2.whoAmI && player.SGAPly().intimacy > 0 && player.Distance(player.MountedCenter) < 600))
+				foreach (Player player2 in Main.player.Where(player2 => player2.active && Player.whoAmI != player2.whoAmI && Player.SGAPly().intimacy > 0 && Player.Distance(Player.MountedCenter) < 600))
 				{
 					maxdamage = Math.Max(maxdamage, (int)(player2.lifeRegen / 5));
 				}
-				player.lifeRegen += maxdamage;
+				Player.lifeRegen += maxdamage;
 			}
 
-			if (toxicity > 0 && player.HasBuff(BuffID.Stinky))
-				player.aggro -= 400 * toxicity;
+			if (toxicity > 0 && Player.HasBuff(BuffID.Stinky))
+				Player.aggro -= 400 * toxicity;
 
 			if (gunslingerLegendtarget > -1)
 			{
@@ -1207,18 +1210,18 @@ namespace SGAmod
 					gunslingerLegendtarget = -1;
 			}
 
-			Item minecart = player.miscEquips[2];
+			Item minecart = Player.miscEquips[2];
 			if (!minecart.IsAir)
 			{
-				if (minecart.modItem != null)
+				if (minecart.ModItem != null)
 				{
-					var myType = (minecart.modItem).GetType();
+					var myType = (minecart.ModItem).GetType();
 					var n = myType.Namespace;
 					string asastring = (string)n;
 					int ischarm = asastring.Length - asastring.Replace(".Charms", "").Length;
 					if (ischarm > 0)
 					{
-						minecart.modItem.UpdateAccessory(player, true);
+						minecart.ModItem.UpdateAccessory(Player, true);
 					}
 				}
 			}
@@ -1227,38 +1230,38 @@ namespace SGAmod
 
 			if (HasGucciGauntlet())
 			{
-				if (player.ownedLargeGems[1])
+				if (Player.ownedLargeGems[1])
 					UseTimeMulPickaxe += 0.25f;
-				if (player.ownedLargeGems[2])
+				if (Player.ownedLargeGems[2])
 				{
-					player.accFlipper = true;
-					player.ignoreWater = true;
+					Player.accFlipper = true;
+					Player.ignoreWater = true;
 				}
-				if (player.ownedLargeGems[3])
+				if (Player.ownedLargeGems[3])
 				{
-					player.AddBuff(BuffID.DryadsWard, 2);
-					player.maxMinions += 1;
+					Player.AddBuff(BuffID.DryadsWard, 2);
+					Player.maxMinions += 1;
 				}
-				if (player.ownedLargeGems[5])
+				if (Player.ownedLargeGems[5])
 				{
-					player.BoostAllDamage(0.05f, 5);
-					player.lifeRegen += 2;
-					player.maxRunSpeed += 0.5f;
+					Player.BoostAllDamage(0.05f, 5);
+					Player.lifeRegen += 2;
+					Player.maxRunSpeed += 0.5f;
 				}
 			}
 
-			if (player.HeldItem.type == ModContent.ItemType<CrateBossWeaponMeleeOld>())
-				player.goldRing = true;
+			if (Player.HeldItem.type == ModContent.ItemType<CrateBossWeaponMeleeOld>())
+				Player.goldRing = true;
 
 			string[] buffTier = { "", "RadiationOne", "RadiationTwo", "RadiationThree" };
 
-			if (player.HeldItem.modItem != null && player.HeldItem.modItem is IRadioactiveItem)
+			if (Player.HeldItem.ModItem != null && Player.HeldItem.ModItem is IRadioactiveItem)
 			{
-				int buffID = (player.HeldItem.modItem as IRadioactiveItem).RadioactiveHeld() - (grippinggloves > 1 ? 1 : 0);
+				int buffID = (Player.HeldItem.ModItem as IRadioactiveItem).RadioactiveHeld() - (grippinggloves > 1 ? 1 : 0);
 				int indexer = (int)MathHelper.Clamp(buffID, 0, buffTier.Length - 1);
 
-				if (indexer > 0)
-					player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff(buffTier[indexer]).Type, 2);
+				//if (indexer > 0)
+					//Player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff(buffTier[indexer]).Type, 2);
 			}
 
 			ShuffleYourFeetElectricCharge();
@@ -1267,27 +1270,27 @@ namespace SGAmod
 
 			if (!granteditems)
 			{
-				if (nightmareplayer && !player.HasItem(mod.ItemType("Nightmare")))
+				if (nightmareplayer && !Player.HasItem(Mod.Find<ModItem>("Nightmare").Type))
 				{
-					player.QuickSpawnItem(mod.ItemType("Nightmare"));
+					Player.QuickSpawnItem(null, Mod.Find<ModItem>("Nightmare").Type);
 				}
 				granteditems = true;
 			}
 
 			if (IDGset)
 			{
-				if (player.HasMinionAttackTargetNPC)
+				if (Player.HasMinionAttackTargetNPC)
 				{
-					IdgNPC.AddBuffBypass(player.MinionAttackTargetNPC, mod.BuffType("DigiCurse"), 3);
+					IdgNPC.AddBuffBypass(Player.MinionAttackTargetNPC, Mod.Find<ModBuff>("DigiCurse").Type, 3);
 				}
 			}
 
 
 			if (Dankset > 0)
 			{
-				bool underground = (int)((double)((player.position.Y + (float)player.height) * 2f / 16f) - Main.worldSurface * 2.0) > 0;
+				bool underground = (int)((double)((Player.position.Y + (float)Player.height) * 2f / 16f) - Main.worldSurface * 2.0) > 0;
 				if (!underground && Main.dayTime)
-					player.lifeRegen += 3;
+					Player.lifeRegen += 3;
 			}
 			if (Main.netMode != 1)
 			{
@@ -1296,21 +1299,21 @@ namespace SGAmod
 
 			CharmingAmuletCode();
 
-			if (player.manaRegenBuff && (SGAConfig.Instance.ManaPotionChange || SGAmod.DRMMode))
-				player.statManaMax2 = Math.Max(player.statManaMax2 - 50, 0);
+			if (Player.manaRegenBuff && (SGAConfig.Instance.ManaPotionChange || SGAmod.DRMMode))
+				Player.statManaMax2 = Math.Max(Player.statManaMax2 - 50, 0);
 
 			if (creeperexplosion > 9700)
 			{
 				creeperexplosion -= 1;
 
 				if (creeperexplosion == 9998)
-					Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Creeper_fuse").WithVolume(.7f).WithPitchVariance(.25f), player.Center);
+					SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Custom/Creeper_fuse").WithVolume(.7f).WithPitchVariance(.25f), Player.Center);
 
-				int dustIndexsmoke = Dust.NewDust(new Vector2(player.Center.X - 4, player.position.Y - 6), 8, 12, 31, 0f, 0f, 100, default(Color), 1f);
+				int dustIndexsmoke = Dust.NewDust(new Vector2(Player.Center.X - 4, Player.position.Y - 6), 8, 12, 31, 0f, 0f, 100, default(Color), 1f);
 				Main.dust[dustIndexsmoke].scale = 0.1f + (float)Main.rand.Next(5) * 0.1f;
 				Main.dust[dustIndexsmoke].fadeIn = 1.5f + (float)Main.rand.Next(5) * 0.1f;
 				Main.dust[dustIndexsmoke].noGravity = true;
-				dustIndexsmoke = Dust.NewDust(new Vector2(player.Center.X, player.position.Y - 6), 8, 12, 6, 0f, 0f, 100, default(Color), 1f);
+				dustIndexsmoke = Dust.NewDust(new Vector2(Player.Center.X, Player.position.Y - 6), 8, 12, 6, 0f, 0f, 100, default(Color), 1f);
 				Main.dust[dustIndexsmoke].scale = 1f + (float)Main.rand.Next(5) * 0.1f;
 				Main.dust[dustIndexsmoke].noGravity = true;
 
@@ -1326,7 +1329,7 @@ namespace SGAmod
 							float randomx = xx;//Main.rand.NextFloat(54f, 96f);
 							Vector2 here = new Vector2((float)Math.Cos(angles), (float)Math.Sin(angles));
 
-							int thisone = Projectile.NewProjectile(player.Center.X + (here.X * randomx) - 100, player.Center.Y + (here.Y * randomx) - 100, here.X, here.Y, mod.ProjectileType("CreepersThrowBoom2"), player.statDefense * 8, 0f, player.whoAmI, 0.0f, 0f);
+							int thisone = Projectile.NewProjectile(null, Player.Center.X + (here.X * randomx) - 100, Player.Center.Y + (here.Y * randomx) - 100, here.X, here.Y, Mod.Find<ModProjectile>("CreepersThrowBoom2").Type, Player.statDefense * 8, 0f, Player.whoAmI, 0.0f, 0f);
 						}
 
 					}
@@ -1340,10 +1343,10 @@ namespace SGAmod
 			{
 				creeperexplosion = 0;
 				Noselfdamage = false;
-				PlayerDeathReason reason = PlayerDeathReason.ByCustomReason(player.name + " went Kamikaze, but failed to blow up enemies");
+				PlayerDeathReason reason = PlayerDeathReason.ByCustomReason(Player.name + " went Kamikaze, but failed to blow up enemies");
 				reason.SourcePlayerIndex = -111;
 				reason.SourceNPCIndex = 0;
-				player.KillMe(reason, 1337000, player.direction);
+				Player.KillMe(reason, 1337000, Player.direction);
 			}
 
 
@@ -1360,25 +1363,25 @@ namespace SGAmod
 			if (sufficate < 0)
 			{
 				if (breathingdelay % 5 == 0)
-					sufficate = (int)MathHelper.Clamp(sufficate + 1, -200, player.breathMax - 1);
+					sufficate = (int)MathHelper.Clamp(sufficate + 1, -200, Player.breathMax - 1);
 			}
 			else
 			{
 				if (breathingdelay % 29 == 0)
-					sufficate = (int)MathHelper.Clamp(sufficate + 1, -200, player.breathMax - 1);
+					sufficate = (int)MathHelper.Clamp(sufficate + 1, -200, Player.breathMax - 1);
 			}
 			if (beserk[0] > 0 || permaDrown)
-				sufficate = player.breath;
+				sufficate = Player.breath;
 
 			if (FireBreath > 0)
 			{
 				if (timer % 6 == 0)
 				{
 					float scalevalue = 1f + (float)FireBreath / 2f;
-					int thisone = Projectile.NewProjectile(player.Center.X, player.Center.Y - 16, (Main.rand.NextFloat(5f, 6f) + (scalevalue - 1f) * 2f) * (float)player.direction, Main.rand.NextFloat(-0.5f, 0.5f), ProjectileID.Flames, (int)((float)player.statDefense * scalevalue), 0f, player.whoAmI, 8f, 0f);
+					int thisone = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y - 16, (Main.rand.NextFloat(5f, 6f) + (scalevalue - 1f) * 2f) * (float)Player.direction, Main.rand.NextFloat(-0.5f, 0.5f), ProjectileID.Flames, (int)((float)Player.statDefense * scalevalue), 0f, Player.whoAmI, 8f, 0f);
 					Main.projectile[thisone].usesLocalNPCImmunity = true;
 					Main.projectile[thisone].localNPCHitCooldown = 20;
-					Main.projectile[thisone].ranged = false;
+					// Main.projectile[thisone].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 					Main.projectile[thisone].penetrate += ((int)scalevalue - 1);
 
 				}
@@ -1390,64 +1393,64 @@ namespace SGAmod
 			if (SpaceDiverWings > 0 && boosterPowerLeft > 50)
 			{
 				float spacediverwingstemp = Math.Max(SpaceDiverWings, 1f);
-				if (player.controlJump && player.velocity.Y != 0f)
+				if (Player.controlJump && Player.velocity.Y != 0f)
 				{
-					bool pressdownonly = (!player.controlLeft && !player.controlRight);
+					bool pressdownonly = (!Player.controlLeft && !Player.controlRight);
 
 
 
 					if (SpaceDiverset)
 					{
-						int dust = Dust.NewDust(new Vector2(player.Center.X - 12, player.Center.Y + 18), 24, 8, 27);
+						int dust = Dust.NewDust(new Vector2(Player.Center.X - 12, Player.Center.Y + 18), 24, 8, 27);
 						Main.dust[dust].scale = 1.5f;
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-						Main.dust[dust].velocity = (randomcircle / 2f) + new Vector2(0, player.wingTime > 0 ? 12 : 3);
+						Main.dust[dust].velocity = (randomcircle / 2f) + new Vector2(0, Player.wingTime > 0 ? 12 : 3);
 						Main.dust[dust].noGravity = true;
-						Main.dust[dust].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);
+						Main.dust[dust].shader = GameShaders.Armor.GetSecondaryShader(Player.cWings, Player);
 
 					}
 
-					if (player.controlDown)
+					if (Player.controlDown)
 					{
 						boosterPowerLeft -= 50;
 						boosterdelay = 90f;
-						if (player.controlLeft && player.wingTime > 0)
-							player.velocity.X -= ((float)spacediverwingstemp / 2f);
-						if (player.controlRight && player.wingTime > 0)
-							player.velocity.X += ((float)spacediverwingstemp / 2f);
-						if (pressdownonly || player.wingTime < 1)
+						if (Player.controlLeft && Player.wingTime > 0)
+							Player.velocity.X -= ((float)spacediverwingstemp / 2f);
+						if (Player.controlRight && Player.wingTime > 0)
+							Player.velocity.X += ((float)spacediverwingstemp / 2f);
+						if (pressdownonly || Player.wingTime < 1)
 						{
-							player.velocity.Y += 0.025f;
-							int minTilePosX = (int)(player.Center.X / 16.0) - 1;
-							int minTilePosY = (int)((player.Center.Y + 32f) / 16.0) - 1;
+							Player.velocity.Y += 0.025f;
+							int minTilePosX = (int)(Player.Center.X / 16.0) - 1;
+							int minTilePosY = (int)((Player.Center.Y + 32f) / 16.0) - 1;
 							int whereisity;
 							//whereisity = Idglib.RaycastDown(minTilePosX + 1, (int)MathHelper.Clamp(minTilePosY, 0,Main.maxTilesY));
 							//if ((whereisity - minTilePosY > 4 + (player.velocity.Y * 1)) || player.velocity.Y < 0)
-							if (Collision.CanHitLine(player.Center, 32, 32, player.Center + new Vector2(0, (Vector2.Normalize(player.velocity).Y * 64f) + (player.velocity.Y * 2f)), 32, 32))
-								player.position.Y += 8 + (player.velocity.Y * 2);
+							if (Collision.CanHitLine(Player.Center, 32, 32, Player.Center + new Vector2(0, (Vector2.Normalize(Player.velocity).Y * 64f) + (Player.velocity.Y * 2f)), 32, 32))
+								Player.position.Y += 8 + (Player.velocity.Y * 2);
 						}
 						else
 						{
-							if (player.wingTime > 0)
-								player.velocity.Y /= 2f;
+							if (Player.wingTime > 0)
+								Player.velocity.Y /= 2f;
 						}
 
-						player.velocity.X /= 1.02f;
+						Player.velocity.X /= 1.02f;
 
-						int dust = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 27);
+						int dust = Dust.NewDust(new Vector2(Player.position.X, Player.position.Y), Player.width, Player.height, 27);
 						Main.dust[dust].scale = 1.25f;
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-						Main.dust[dust].velocity = (randomcircle / 3f) - player.velocity;
+						Main.dust[dust].velocity = (randomcircle / 3f) - Player.velocity;
 						Main.dust[dust].velocity.Normalize();
 						Main.dust[dust].velocity *= 2f;
 						Main.dust[dust].noGravity = true;
-						Main.dust[dust].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);
+						Main.dust[dust].shader = GameShaders.Armor.GetSecondaryShader(Player.cWings, Player);
 
 						if (breathingdelay % 3 == 0)
 						{
-							float pitcher = -0.99f + ((float)player.wingTime / (float)player.wingTimeMax);
+							float pitcher = -0.99f + ((float)Player.wingTime / (float)Player.wingTimeMax);
 							pitcher = MathHelper.Clamp(pitcher, -0.9f, 1f);
-							Main.PlaySound(SoundID.Item, (int)player.position.X, (int)player.position.Y, 75, 0.25f, pitcher);
+							SoundEngine.PlaySound(SoundID.Item, (int)Player.position.X, (int)Player.position.Y, 75, 0.25f, pitcher);
 						}
 
 					}
@@ -1458,9 +1461,9 @@ namespace SGAmod
 
 			if (SpaceDiverset)
 			{
-				player.AddBuff(mod.BuffType("Pressured"), 180);
+				Player.AddBuff(Mod.Find<ModBuff>("Pressured").Type, 180);
 
-				player.gills = false;
+				Player.gills = false;
 
 				bool isbreathing = beserk[1] <= 0 && !permaDrown;
 
@@ -1468,15 +1471,15 @@ namespace SGAmod
 				//}
 
 				if (isbreathing)
-					player.breath = (int)MathHelper.Clamp(sufficate, -5, player.breathMax - 1);
+					Player.breath = (int)MathHelper.Clamp(sufficate, -5, Player.breathMax - 1);
 				if (sufficate < 1)
 				{
-					player.suffocating = true;
+					Player.suffocating = true;
 				}
 				else
 				{
-					player.endurance += ((float)player.breath / (float)player.breathMax) * 0.4f;
-					player.statDefense += (int)(((float)player.breath / (float)player.breathMax) * 100f);
+					Player.endurance += ((float)Player.breath / (float)Player.breathMax) * 0.4f;
+					Player.statDefense += (int)(((float)Player.breath / (float)Player.breathMax) * 100f);
 				}
 
 			}
@@ -1484,18 +1487,18 @@ namespace SGAmod
 			if (Havoc > 0)
 			{
 
-				for (int x = 3; x < 8 + player.extraAccessorySlots; x++)
+				for (int x = 3; x < 8 + Player.extraAccessorySlots; x++)
 				{
-					if (player.armor[x].modItem != null)
+					if (Player.armor[x].ModItem != null)
 					{
-						var myType = (player.armor[x].modItem).GetType();
+						var myType = (Player.armor[x].ModItem).GetType();
 						var n = myType.Namespace;
 						string asastring = (string)n;
 						//int ishavocitem = (asastring.Split('.').Length - 1);
 						int ishavocitem = asastring.Length - asastring.Replace("HavocGear.", "").Length;
 						if (ishavocitem > 0)
 						{
-							player.statDefense += (Main.hardMode ? 8 : 3);
+							Player.statDefense += (Main.hardMode ? 8 : 3);
 
 						}
 					}
@@ -1503,36 +1506,36 @@ namespace SGAmod
 
 			}
 
-			if (Main.raining && player.ZoneSnow && SGAmod.TotalCheating)
+			if (Main.raining && Player.ZoneSnow && SGAmod.TotalCheating)
 			{
-				player.AddBuff(mod.BuffType("NoFly"), 1, true);
+				Player.AddBuff(Mod.Find<ModBuff>("NoFly").Type, 1, true);
 			}
 			else
 			{
-				if (NPC.CountNPCS(mod.NPCType("Cirno")) > 0 || (SGAWorld.downedCirno == false && Main.hardMode && (SGAConfig.Instance.NegativeWorldEffects || SGAmod.DRMMode)))
-					player.AddBuff(mod.BuffType("NoFly"), (int)(SGAmod.PlayingPercent*1800), true);
+				if (NPC.CountNPCS(Mod.Find<ModNPC>("Cirno").Type) > 0 || (SGAWorld.downedCirno == false && Main.hardMode && (SGAConfig.Instance.NegativeWorldEffects || SGAmod.DRMMode)))
+					Player.AddBuff(Mod.Find<ModBuff>("NoFly").Type, (int)(SGAmod.PlayingPercent*1800), true);
 			}
 
 
 			/*if (pmlcrato>0 || NPC.CountNPCS(mod.NPCType("SPinky"))>9990){player.AddBuff(mod.BuffType("Locked"), 2, true);}*/
 
-			int pmlcrato = NPC.CountNPCS(mod.NPCType("Cratrogeddon"));
-			int npctype = NPC.CountNPCS(mod.NPCType("Cratrosity")) + pmlcrato;
+			int pmlcrato = NPC.CountNPCS(Mod.Find<ModNPC>("Cratrogeddon").Type);
+			int npctype = NPC.CountNPCS(Mod.Find<ModNPC>("Cratrosity").Type) + pmlcrato;
 
 			if (npctype > 0)
 			{
-				int counter = (player.CountItem(ItemID.WoodenCrate));
-				counter += (player.CountItem(ItemID.IronCrate));
-				counter += (player.CountItem(ItemID.GoldenCrate));
-				counter += (player.CountItem(ItemID.DungeonFishingCrate));
-				counter += (player.CountItem(ItemID.JungleFishingCrate));
-				counter += (player.CountItem(ItemID.CorruptFishingCrate));
-				counter += (player.CountItem(ItemID.HallowedFishingCrate));
-				counter += (player.CountItem(ItemID.FloatingIslandFishingCrate));
-				counter += (player.CountItem(ModContent.ItemType<HavocGear.Items.DankCrate>()));
+				int counter = (Player.CountItem(ItemID.WoodenCrate));
+				counter += (Player.CountItem(ItemID.IronCrate));
+				counter += (Player.CountItem(ItemID.GoldenCrate));
+				counter += (Player.CountItem(ItemID.DungeonFishingCrate));
+				counter += (Player.CountItem(ItemID.JungleFishingCrate));
+				counter += (Player.CountItem(ItemID.CorruptFishingCrate));
+				counter += (Player.CountItem(ItemID.HallowedFishingCrate));
+				counter += (Player.CountItem(ItemID.FloatingIslandFishingCrate));
+				counter += (Player.CountItem(ModContent.ItemType<HavocGear.Items.DankCrate>()));
 				if (counter > 0)
 				{
-					player.AddBuff(mod.BuffType("HeavyCrates"), 2, true);
+					Player.AddBuff(Mod.Find<ModBuff>("HeavyCrates").Type, 2, true);
 				}
 			}
 
@@ -1541,22 +1544,22 @@ namespace SGAmod
 				bool allfilled = true;
 				for(int i = 0; i < 50; i += 1)
                 {
-					if (player.inventory[i].IsAir)
+					if (Player.inventory[i].IsAir)
                     {
 						allfilled = false;
                     }
                 }
 
 				if (allfilled)
-				player.AddBuff(ModContent.BuffType<HeavyInventory>(), 2, true);
+				Player.AddBuff(ModContent.BuffType<HeavyInventory>(), 2, true);
 			}
 
 			if (CirnoWings == true)
 			{
-				player.buffImmune[BuffID.Chilled] = true;
-				player.buffImmune[BuffID.Frozen] = true;
-				player.buffImmune[BuffID.Frostburn] = true;
-				player.buffImmune[ModContent.BuffType<NoFly>()] = true;
+				Player.buffImmune[BuffID.Chilled] = true;
+				Player.buffImmune[BuffID.Frozen] = true;
+				Player.buffImmune[BuffID.Frostburn] = true;
+				Player.buffImmune[ModContent.BuffType<NoFly>()] = true;
 			}
 
 
@@ -1568,18 +1571,18 @@ namespace SGAmod
 				{
 					int taketype = 3;
 					int[] types = { ItemID.CopperCoin, ItemID.SilverCoin, ItemID.GoldCoin, ItemID.PlatinumCoin };
-					int copper = player.CountItem(ItemID.CopperCoin);
-					int silver = player.CountItem(ItemID.SilverCoin);
-					int gold = player.CountItem(ItemID.GoldCoin);
-					int plat = player.CountItem(ItemID.PlatinumCoin);
+					int copper = Player.CountItem(ItemID.CopperCoin);
+					int silver = Player.CountItem(ItemID.SilverCoin);
+					int gold = Player.CountItem(ItemID.GoldCoin);
+					int plat = Player.CountItem(ItemID.PlatinumCoin);
 					taketype = plat > 0 ? 3 : (gold > 0 ? 2 : (silver > 0 ? 1 : 0));
-					player.ConsumeItem(types[taketype]);
+					Player.ConsumeItem(types[taketype]);
 					if (losingmoney > 1)
 					{
 						//player.Hurt(PlayerDeathReason damageSource, int Damage, int hitDirection, bool pvp = false, bool quiet = false, bool Crit = false, int cooldownCounter = -1)
-						player.statLife -= taketype * 5;
+						Player.statLife -= taketype * 5;
 
-						if (player.statLife < 1) { player.KillMe(PlayerDeathReason.ByCustomReason(player.name + (Main.rand.Next(0, 100) > 66 ? " Disgraced Gaben..." : (Main.rand.Next(0, 100) > 50 ? " couldn't stop spending money" : " couldn't resist the sale"))), 111111, 0, false); }
+						if (Player.statLife < 1) { Player.KillMe(PlayerDeathReason.ByCustomReason(Player.name + (Main.rand.Next(0, 100) > 66 ? " Disgraced Gaben..." : (Main.rand.Next(0, 100) > 50 ? " couldn't stop spending money" : " couldn't resist the sale"))), 111111, 0, false); }
 
 					}
 				}
@@ -1589,14 +1592,14 @@ namespace SGAmod
 			if (beefield > 3)
 			{
 				beefieldcounter = beefieldcounter + 1;
-				if (player.ownedProjectileCounts[181] < 5 && beefieldcounter > 60)
+				if (Player.ownedProjectileCounts[181] < 5 && beefieldcounter > 60)
 				{
 					beefieldcounter = 0;
 					bool beeflag = false;
 					int x = 3;
-					for (x = 3; x < 8 + player.extraAccessorySlots; x++)
+					for (x = 3; x < 8 + Player.extraAccessorySlots; x++)
 					{
-						if (player.armor[x].type == mod.ItemType("PortableHive") || player.armor[x].type == mod.ItemType("DevPower"))
+						if (Player.armor[x].type == Mod.Find<ModItem>("PortableHive") .Type|| Player.armor[x].type == Mod.Find<ModItem>("DevPower").Type)
 						{
 							beeflag = true;
 							//if (1f + (player.armor[x].damage * 0.05f)>beedamagemul)
@@ -1606,7 +1609,7 @@ namespace SGAmod
 					}
 					if (beeflag == true)
 					{
-						int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ProjectileID.Bee, (int)(player.GetWeaponDamage(player.armor[x])), (float)player.GetWeaponKnockback(player.armor[x], player.armor[x].knockBack) * 0.01f, player.whoAmI);
+						int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, ProjectileID.Bee, (int)(Player.GetWeaponDamage(Player.armor[x])), (float)Player.GetWeaponKnockback(Player.armor[x], Player.armor[x].knockBack) * 0.01f, Player.whoAmI);
 						SGAprojectile modeproj = Main.projectile[prog].GetGlobalProjectile<SGAprojectile>();
 						Main.projectile[prog].penetrate = -1;
 						modeproj.enhancedbees = true;
@@ -1616,13 +1619,13 @@ namespace SGAmod
 			}
 			if (twinesoffate)
 			{
-				if (player.ownedProjectileCounts[mod.ProjectileType("TwineOfFate")] < 1)
+				if (Player.ownedProjectileCounts[Mod.Find<ModProjectile>("TwineOfFate").Type] < 1)
 				{
-					int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("TwineOfFate"), 0, 0, player.whoAmI);
+					int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("TwineOfFate").Type, 0, 0, Player.whoAmI);
 				}
-				if (player.ownedProjectileCounts[mod.ProjectileType("TwineOfFateClothier")] < 1)
+				if (Player.ownedProjectileCounts[Mod.Find<ModProjectile>("TwineOfFateClothier").Type] < 1)
 				{
-					int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("TwineOfFateClothier"), 0, 0, player.whoAmI);
+					int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("TwineOfFateClothier").Type, 0, 0, Player.whoAmI);
 				}
 			}
 
@@ -1633,22 +1636,23 @@ namespace SGAmod
 				for (int z = 0; z < Player.MaxBuffs; z++)
 				{
 
-					if (player.buffType[z] > 0)
-						Buffscounter += Main.debuff[player.buffType[z]] ? 4 : 1;
+					if (Player.buffType[z] > 0)
+						Buffscounter += Main.debuff[Player.buffType[z]] ? 4 : 1;
 
 				}
-				player.statDefense += Buffscounter * 1;
+				Player.statDefense += Buffscounter * 1;
 
-				lunarSlimeHeartdamage = (int)((float)(player.statDefense * (player.minionDamage + player.rangedDamage + player.meleeDamage + player.Throwing().thrownDamage + player.magicDamage)));
+				//Not sure why the damage types can't be added
+				//lunarSlimeHeartdamage = (int)((float)(Player.statDefense * (Player.GetDamage(DamageClass.Summon) + Player.GetDamage(DamageClass.Ranged) + Player.GetDamage(DamageClass.Melee) + Player.GetDamage(DamageClass.Throwing) + Player.GetDamage(DamageClass.Magic))));
 
 				lunarSlimeCounter = lunarSlimeCounter + 1;
-				if (player.ownedProjectileCounts[mod.ProjectileType("LunarSlimeProjectile")] < 8)
+				if (Player.ownedProjectileCounts[Mod.Find<ModProjectile>("LunarSlimeProjectile").Type] < 8)
 				{
 					bool beeflag = false;
 					int x = 3;
-					for (x = 3; x < 8 + player.extraAccessorySlots; x++)
+					for (x = 3; x < 8 + Player.extraAccessorySlots; x++)
 					{
-						if (player.armor[x].type == mod.ItemType("LunarSlimeHeart"))
+						if (Player.armor[x].type == Mod.Find<ModItem>("LunarSlimeHeart").Type)
 						{
 							beeflag = true;
 							break;
@@ -1660,7 +1664,7 @@ namespace SGAmod
 						{
 							if (projectileslunarslime[i] == null || !projectileslunarslime[i].active)
 							{
-								int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("LunarSlimeProjectile"), (int)player.GetWeaponDamage(player.armor[x]), (float)player.GetWeaponKnockback(player.armor[x], player.armor[x].knockBack) * 0.01f, player.whoAmI, (float)i);
+								int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("LunarSlimeProjectile").Type, (int)Player.GetWeaponDamage(Player.armor[x]), (float)Player.GetWeaponKnockback(Player.armor[x], Player.armor[x].knockBack) * 0.01f, Player.whoAmI, (float)i);
 								SGAprojectile modeproj = Main.projectile[prog].GetGlobalProjectile<SGAprojectile>();
 								//Main.projectile[prog].netUpdate = true;
 								projectileslunarslime[i] = Main.projectile[prog];
@@ -1671,76 +1675,76 @@ namespace SGAmod
 
 			}
 
-			if (player.ownedProjectileCounts[mod.ProjectileType("TimeEffect")] < 1 && MatrixBuffp)
+			if (Player.ownedProjectileCounts[Mod.Find<ModProjectile>("TimeEffect").Type] < 1 && MatrixBuffp)
 			{
-				int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("TimeEffect"), 1, 0, player.whoAmI);
+				int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("TimeEffect").Type, 1, 0, Player.whoAmI);
 			}
 
-			if (player.ownedProjectileCounts[ModContent.ProjectileType<DrakenSummonProj>()] < 1 && player.HeldItem.type == ModContent.ItemType<DragonCommanderStaff>())
+			if (Player.ownedProjectileCounts[ModContent.ProjectileType<DrakenSummonProj>()] < 1 && Player.HeldItem.type == ModContent.ItemType<DragonCommanderStaff>())
 			{
-				int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<DrakenSummonProj>(), 1, 0, player.whoAmI);
+				int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, ModContent.ProjectileType<DrakenSummonProj>(), 1, 0, Player.whoAmI);
 			}
 
-			if (player.ownedProjectileCounts[ModContent.ProjectileType<FistOfMoonlordProjectile>()] < 1 && player.HeldItem.type == ModContent.ItemType<FistOfMoonlord>())
+			if (Player.ownedProjectileCounts[ModContent.ProjectileType<FistOfMoonlordProjectile>()] < 1 && Player.HeldItem.type == ModContent.ItemType<FistOfMoonlord>())
 			{
-				int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<FistOfMoonlordProjectile>(), 1, 0, player.whoAmI);
+				int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, ModContent.ProjectileType<FistOfMoonlordProjectile>(), 1, 0, Player.whoAmI);
 			}
 
-			if (player.statLife > player.statLifeMax2 - 1)
+			if (Player.statLife > Player.statLifeMax2 - 1)
 			{
 
 				if (OmegaSigil)
 				{
-					for (int i = 0; i < player.GetModPlayer<SGAPlayer>().apocalypticalChance.Length; i += 1)
-						player.GetModPlayer<SGAPlayer>().apocalypticalChance[i] += 3.0;
+					for (int i = 0; i < Player.GetModPlayer<SGAPlayer>().apocalypticalChance.Length; i += 1)
+						Player.GetModPlayer<SGAPlayer>().apocalypticalChance[i] += 3.0;
 				}
 
 				if (SybariteGem)
 				{
-					player.AddBuff(BuffID.Midas, 60 * 5);
+					Player.AddBuff(BuffID.Midas, 60 * 5);
 				}
 
 			}
 
-			if (player.HeldItem != null)
+			if (Player.HeldItem != null)
 			{
-				if (SGAmod.NonStationDefenses.ContainsKey(player.HeldItem.type))
+				if (SGAmod.NonStationDefenses.ContainsKey(Player.HeldItem.type))
 				{
 					int projtype;
-					SGAmod.NonStationDefenses.TryGetValue(player.HeldItem.type, out projtype);
-					if (player.ownedProjectileCounts[projtype] < 1)
-						Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, projtype, player.HeldItem.damage, player.HeldItem.knockBack, player.whoAmI);
+					SGAmod.NonStationDefenses.TryGetValue(Player.HeldItem.type, out projtype);
+					if (Player.ownedProjectileCounts[projtype] < 1)
+						Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 0f, 0f, projtype, Player.HeldItem.damage, (int)Player.HeldItem.knockBack, Player.whoAmI);
 				}
 
-				int index = player.SGAPly().heldShield;
+				int index = Player.SGAPly().heldShield;
 				if (index >= 0)
 				{
 					if (Main.projectile[index].active)
 					{
-						Items.Weapons.Shields.CorrodedShieldProj myShield = (Main.projectile[player.SGAPly().heldShield].modProjectile as Items.Weapons.Shields.CorrodedShieldProj);
+						Items.Weapons.Shields.CorrodedShieldProj myShield = (Main.projectile[Player.SGAPly().heldShield].ModProjectile as Items.Weapons.Shields.CorrodedShieldProj);
 						if (myShield != null)
-							myShield.WhileHeld(player);
+							myShield.WhileHeld(Player);
 					}
 				}
 				else
 				{
 
-					if (player.ownedProjectileCounts[mod.ProjectileType("CapShieldToss")] < 1 && player.HeldItem.modItem != null)
+					if (Player.ownedProjectileCounts[Mod.Find<ModProjectile>("CapShieldToss").Type] < 1 && Player.HeldItem.ModItem != null)
 					{
 						int projtype = -1;
-						if (SGAPlayer.ShieldTypes.ContainsKey(player.HeldItem.type))
+						if (SGAPlayer.ShieldTypes.ContainsKey(Player.HeldItem.type))
 						{
-							SGAPlayer.ShieldTypes.TryGetValue(player.HeldItem.type, out projtype);
+							SGAPlayer.ShieldTypes.TryGetValue(Player.HeldItem.type, out projtype);
 							if (projtype > 0)
 							{
-								if (player.ownedProjectileCounts[projtype] < 1)
+								if (Player.ownedProjectileCounts[projtype] < 1)
 								{
-									Projectile proj = Projectile.NewProjectileDirect(player.Center, Vector2.Zero, projtype, player.HeldItem.damage, player.HeldItem.knockBack, player.whoAmI);
-									if (proj != null && proj.modProjectile != null && player.HeldItem != null && player.HeldItem.modItem is LaserMarker heldmarker)
+									Projectile proj = Projectile.NewProjectileDirect(null, Player.Center, Vector2.Zero, projtype, Player.HeldItem.damage, Player.HeldItem.knockBack, Player.whoAmI);
+									if (proj != null && proj.ModProjectile != null && Player.HeldItem != null && Player.HeldItem.ModItem is LaserMarker heldmarker)
 									{
-										LaserMarkerProj marker = ((LaserMarkerProj)proj.modProjectile);
+										LaserMarkerProj marker = ((LaserMarkerProj)proj.ModProjectile);
 										SGAmod.GemColors.TryGetValue(heldmarker.gemType, out Color color);
-										((LaserMarkerProj)proj.modProjectile).gemColor = color;
+										((LaserMarkerProj)proj.ModProjectile).gemColor = color;
 									}
 								}
 							}
@@ -1755,8 +1759,8 @@ namespace SGAmod
 			if ((Main.netMode < 1 || SGAmod.SkillRun > 1) && SGAmod.SkillRun > 0)
 				skillMananger.PostUpdateEquips();
 
-			mspeed = player.meleeSpeed;
-			player.manaRegenBonus += manaBoost;
+			mspeed = Player.GetAttackSpeed(DamageClass.Melee);
+			Player.manaRegenBonus += manaBoost;
 			manaBoost = 0;
 			modcheckdelay = true;
 		}
@@ -1769,11 +1773,11 @@ namespace SGAmod
 			PreUpdateMovementEvent?.Invoke(this);
 			if (GeyserInABottleActive && GeyserInABottle)
 			{
-				if (player.controlJump && !player.jumpAgainCloud)
+				if (Player.controlJump && !Player.canJumpAgain_Cloud)
 				{
-					List<Projectile> itz = Idglib.Shattershots(player.Center + new Vector2(Main.rand.Next(-15, 15), player.height), player.Center + new Vector2(0, player.height + 32), new Vector2(0, 0), ProjectileID.GeyserTrap, 30, 5f, 30, 1, true, 0, false, 400);
+					List<Projectile> itz = Idglib.Shattershots(Player.Center + new Vector2(Main.rand.Next(-15, 15), Player.height), Player.Center + new Vector2(0, Player.height + 32), new Vector2(0, 0), ProjectileID.GeyserTrap, 30, 5f, 30, 1, true, 0, false, 400);
 					//itz[0].damage = 30;
-					itz[0].owner = player.whoAmI;
+					itz[0].owner = Player.whoAmI;
 					itz[0].friendly = true;
 					itz[0].hostile = true;
 					Main.projectile[itz[0].whoAmI].netUpdate = true;
@@ -1782,9 +1786,9 @@ namespace SGAmod
 						NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, itz[0].whoAmI, 0f, 0f, 0f, 0, 0, 0);
 					}
 
-					itz = Idglib.Shattershots(player.Center + new Vector2(Main.rand.Next(-15, 15), player.height), player.Center + new Vector2(0, player.height - 180), new Vector2(0, 0), ProjectileID.GeyserTrap, 30, 10f, 30, 1, true, 0, false, 400);
+					itz = Idglib.Shattershots(Player.Center + new Vector2(Main.rand.Next(-15, 15), Player.height), Player.Center + new Vector2(0, Player.height - 180), new Vector2(0, 0), ProjectileID.GeyserTrap, 30, 10f, 30, 1, true, 0, false, 400);
 					//itz[0].damage = 30;
-					itz[0].owner = player.whoAmI;
+					itz[0].owner = Player.whoAmI;
 					itz[0].friendly = true;
 					itz[0].hostile = true;
 					Main.projectile[itz[0].whoAmI].netUpdate = true;
@@ -1794,7 +1798,7 @@ namespace SGAmod
 					}
 
 					GeyserInABottle = false;
-					player.velocity.Y = -15;
+					Player.velocity.Y = -15;
 				}
 
 
@@ -1824,18 +1828,18 @@ namespace SGAmod
 			if (NoHitCharm && !IdgNPC.bossAlive)
 			{
 				NoHitCharmTimer = 0;
-				player.respawnTimer = Math.Min(90, player.respawnTimer);
+				Player.respawnTimer = Math.Min(90, Player.respawnTimer);
 			}
 		}
 		public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
 		{
 			if (NoHitCharm)
 			{
-				CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), Color.Red, "Finished...", true, false);
+				CombatText.NewText(new Rectangle((int)Player.position.X, (int)Player.position.Y, Player.width, Player.height), Color.Red, "Finished...", true, false);
 				if (SGAConfigClient.Instance.EpicApocalypticals)
 				{
-					RippleBoom.MakeShockwave(player.Center, 8f, 1f, 10f, 60, 1f);
-					Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode, player.Center);
+					RippleBoom.MakeShockwave(Player.Center, 8f, 1f, 10f, 60, 1f);
+					SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode, Player.Center);
 				}
 			}
 		}
@@ -1848,7 +1852,7 @@ namespace SGAmod
 			if (invincible)
 				return false;
 
-			if (damageSource.SourceCustomReason == (player.name + " went Kamikaze, but failed to blow up enemies"))
+			if (damageSource.SourceCustomReason == (Player.name + " went Kamikaze, but failed to blow up enemies"))
 				return true;
 
 			if (realIFrames > 0)
@@ -1856,7 +1860,7 @@ namespace SGAmod
 
 			if (highStakesSet)
 			{
-				if (damageSource.SourcePlayerIndex == player.whoAmI)
+				if (damageSource.SourcePlayerIndex == Player.whoAmI)
 				{
 					damage /= 4;
 				}
@@ -1868,7 +1872,7 @@ namespace SGAmod
 
 			if (SGAmod.TotalCheating)
             {
-				player.GetModPlayer<IdgPlayer>().radationAmmount += Math.Min((float)player.GetModPlayer<IdgPlayer>().radationAmmount+(damage * SGAmod.PlayingPercent)/player.GetModPlayer<IdgPlayer>().radresist,player.statLifeMax2 - 10);
+				Player.GetModPlayer<IdgPlayer>().radationAmmount += Math.Min((float)Player.GetModPlayer<IdgPlayer>().radationAmmount+(damage * SGAmod.PlayingPercent)/Player.GetModPlayer<IdgPlayer>().radresist,Player.statLifeMax2 - 10);
 			}
 
 			if (damageSource.SourceNPCIndex > -1)
@@ -1879,7 +1883,7 @@ namespace SGAmod
 
 				if (!NoHitCharm && npc.GetGlobalNPC<SGAnpcs>().NinjaSmoked && Main.rand.Next(0, 100) < 75)
 				{
-					player.NinjaDodge();
+					Player.NinjaDodge();
 					return false;
 				}
 			}
@@ -1891,7 +1895,7 @@ namespace SGAmod
 
 				if (!NoHitCharm && Main.projectile[damageSource.SourceProjectileIndex].trap && aversionCharm && AddCooldownStack(60 * 30))
 				{
-					player.NinjaDodge();
+					Player.NinjaDodge();
 					return false;
 				}
 			}
@@ -1903,26 +1907,26 @@ namespace SGAmod
 
 			if (NoHitCharm)
 			{
-				damage = player.statLifeMax2 * 3;
+				damage = Player.statLifeMax2 * 3;
 				return true;
 			}
 
-			if (phaethonEye > 6 && player.statLife - damage < 1 && AddCooldownStack(180 + (damage * 5)))
+			if (phaethonEye > 6 && Player.statLife - damage < 1 && AddCooldownStack(180 + (damage * 5)))
 			{
-				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<Items.Accessories.PhaethonEyeProcEffect>(), 0, 0, player.whoAmI);
-				player.NinjaDodge();
+				Projectile.NewProjectile(null, Player.Center, Vector2.Zero, ModContent.ProjectileType<Items.Accessories.PhaethonEyeProcEffect>(), 0, 0, Player.whoAmI);
+				Player.NinjaDodge();
 				return false;
 			}
 
-			if (OmegaSigil && player.statLife - damage < 1 && Main.rand.Next(100) <= 10)
+			if (OmegaSigil && Player.statLife - damage < 1 && Main.rand.Next(100) <= 10)
 			{
 				damage = 0;
-				player.NinjaDodge();
+				Player.NinjaDodge();
 				return false;
 			}
 			damage = (int)(damage * damagetaken);
 
-			if (player.HasBuff(ModContent.BuffType<DrakenDefenseBuff>()))
+			if (Player.HasBuff(ModContent.BuffType<DrakenDefenseBuff>()))
 			{
 				damage = (int)Math.Pow(damage, 0.90);
 
@@ -1941,7 +1945,7 @@ namespace SGAmod
 			if (Noselfdamage)
 			{
 				if (creeperexplosion < 9800)
-					if (damageSource.SourcePlayerIndex == player.whoAmI && AddCooldownStack(60 * 60))
+					if (damageSource.SourcePlayerIndex == Player.whoAmI && AddCooldownStack(60 * 60))
 						return false;
 			}
 
@@ -1953,13 +1957,13 @@ namespace SGAmod
 
 			if (SpaceDiverset)
 			{
-				if (player.breath > player.breathMax - 2)
+				if (Player.breath > Player.breathMax - 2)
 				{
-					player.immune = true;
-					player.immuneTime = 45;
+					Player.immune = true;
+					Player.immuneTime = 45;
 					damage *= 3;
 
-					int lifelost = (int)(((float)damage / (float)player.statLifeMax) * 100f);
+					int lifelost = (int)(((float)damage / (float)Player.statLifeMax) * 100f);
 					sufficate -= (lifelost + 5);
 					if (sufficate < 0)
 						sufficate = (int)MathHelper.Clamp(-(lifelost), sufficate, 0);
@@ -1972,20 +1976,20 @@ namespace SGAmod
 			{
 				if (Main.rand.Next(0, 10) < 5)
 				{
-					player.honeyWet = true;
-					player.wet = true;
-					foreach (Player player2 in Main.player.Where(playertest => playertest.active && !playertest.dead && player.IsAlliedPlayer(playertest) && playertest.Distance(player.Center) < 160))
+					Player.honeyWet = true;
+					Player.wet = true;
+					foreach (Player player2 in Main.player.Where(playertest => playertest.active && !playertest.dead && Player.IsAlliedPlayer(playertest) && playertest.Distance(Player.Center) < 160))
 						player2.AddBuff(BuffID.Honey, 60 * 5);
 				}
 			}
 
 			if (BIP)
-				player.AddBuff(mod.BuffType("BIPBuff"), 60 * 10);
+				Player.AddBuff(Mod.Find<ModBuff>("BIPBuff").Type, 60 * 10);
 
 			if (TakeShieldHit(ref damage))
 				return false;
 
-			player.GetModPlayer<Items.Weapons.Almighty.CataNukePlayer>().Charge /= 2;
+			Player.GetModPlayer<Items.Weapons.Almighty.CataNukePlayer>().Charge /= 2;
 
 			return true;
 		}
@@ -2005,37 +2009,37 @@ namespace SGAmod
 				Hellion hell = Hellion.GetHellion();
 				if (hell.army.Count > 0)
 				{
-					player.AddBuff(Idglib.Instance.BuffType("LimboFading"), 60 * 4);
+					Player.AddBuff(Idglib.Instance.Find<ModBuff>("LimboFading").Type, 60 * 4);
 
 					if (hell.phase < 3)
-						player.AddBuff(BuffID.BrokenArmor, 60 * 3);
+						Player.AddBuff(BuffID.BrokenArmor, 60 * 3);
 					if (hell.phase < 5)
 					{
-						player.AddBuff(BuffID.WitheredArmor, 60 * 5);
-						player.AddBuff(BuffID.WitheredWeapon, 60 * 3);
+						Player.AddBuff(BuffID.WitheredArmor, 60 * 5);
+						Player.AddBuff(BuffID.WitheredWeapon, 60 * 3);
 					}
 
 				}
 
 				if (npc != null)
 				{
-					if (npc.type == NPCID.SkeletronHand)
-						player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("HotBarCurse").Type, 60 * 20);
-					if (npc.type == NPCID.SkeletronHand)
-						player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("ItemCurse").Type, 60 * 25);
+					//if (npc.type == NPCID.SkeletronHand)
+						//Player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("HotBarCurse").Type, 60 * 20);
+					//if (npc.type == NPCID.SkeletronHand)
+						//Player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("ItemCurse").Type, 60 * 25);
 				}
 			}
-			if (NPC.CountNPCS(mod.NPCType("Murk")) > 0 && Main.hardMode && Main.expertMode)
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("Murk").Type) > 0 && Main.hardMode && Main.expertMode)
 			{
 				//player.AddBuff(mod.BuffType("MurkyDepths"), damage * 5);
 			}
-			if (NPC.CountNPCS(mod.NPCType("TPD")) > 0 && Main.rand.Next(0, 10) < (Main.expertMode ? 6 : 3))
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("TPD").Type) > 0 && Main.rand.Next(0, 10) < (Main.expertMode ? 6 : 3))
 			{
-				player.AddBuff(BuffID.Electrified, 20 + (damage * 2));
+				Player.AddBuff(BuffID.Electrified, 20 + (damage * 2));
 			}
 			if (NPC.CountNPCS(ModContent.NPCType<SPinkyTrue>()) > 0 && npc != null && npc.type <= NPCID.BlueSlime && Main.expertMode)
 			{
-				player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("RadiationTwo").Type, 60 * 10);
+				//Player.AddBuff(ModLoader.GetMod("IDGLibrary").GetBuff("RadiationTwo").Type, 60 * 10);
 			}
 			if (Noviteset > 2)
 				ChainBolt();
@@ -2075,13 +2079,13 @@ namespace SGAmod
 
 			if (SpaceDiverset)
 			{
-				int lifelost = (int)(((float)damage / (float)player.statLifeMax) * 150f);
+				int lifelost = (int)(((float)damage / (float)Player.statLifeMax) * 150f);
 				sufficate -= lifelost;
 				if (sufficate < 0)
 					sufficate = (int)MathHelper.Clamp(-(lifelost + 5), sufficate, 0);
 			}
 
-			if (player.HeldItem.type == ModContent.ItemType<Items.Tools.Powerjack>())
+			if (Player.HeldItem.type == ModContent.ItemType<Items.Tools.Powerjack>())
 			{
 				damage = (int)(damage * 1.20);
 			}
@@ -2126,7 +2130,7 @@ namespace SGAmod
 			}
 			string[] aBunchOfSwearWords = { "Shit", "Fuck", "Bitch", "Cunt", "Asshole" };//no, I'm not using the N-word here, I have stadards unlike the low IQ people this item mimics
 			CombatText.NewText(new Rectangle((int)location.X, (int)location.Y, 0, 0), Color.Red, aBunchOfSwearWords[Main.rand.Next(aBunchOfSwearWords.Length)], true, true);
-			Microsoft.Xna.Framework.Audio.SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_BetsyScream, location);
+			Microsoft.Xna.Framework.Audio.SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_BetsyScream, location);
 			if (sound != null)
 				sound.Pitch -= 0.75f;
 
@@ -2146,26 +2150,26 @@ namespace SGAmod
 				Vector2 myspeed = new Vector2(0, 0);
 				if (npc != null)
 				{
-					myspeed = npc.Center - player.Center;
+					myspeed = npc.Center - Player.Center;
 					myspeed.Normalize();
 				}
 				if (projectile != null)
 				{
-					myspeed = projectile.Center - player.Center;
+					myspeed = projectile.Center - Player.Center;
 					myspeed.Normalize();
 				}
 				myspeed *= 20f;
-				int prog = Projectile.NewProjectile(player.Center.X, player.Center.Y, myspeed.X, myspeed.Y, ProjectileID.Grenade, 1000, 10f, player.whoAmI);
-				Main.projectile[prog].Throwing().thrown = true; Main.projectile[prog].ranged = false; Main.projectile[prog].netUpdate = true;
+				int prog = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, myspeed.X, myspeed.Y, ProjectileID.Grenade, 1000, 10f, Player.whoAmI);
+				Main.projectile[prog].DamageType = DamageClass.Throwing; // Main.projectile[prog].ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ; Main.projectile[prog].netUpdate = true;
 				IdgProjectile.Sync(prog);
 
 			}
 
 			if (toxicity > 0)
 			{
-				if (player.HasBuff(BuffID.Stinky))
+				if (Player.HasBuff(BuffID.Stinky))
 				{
-					SwearExplosion(player.MountedCenter, player, damage);
+					SwearExplosion(Player.MountedCenter, Player, damage);
 				}
 
 			}
@@ -2214,7 +2218,7 @@ namespace SGAmod
 
 				if (vibraniumSet)
 				{
-					if (player.controlTorch)
+					if (Player.controlTorch)
 					{
 						if (vibraniumSetWall)
 							vibraniumSetWall = false;
@@ -2228,10 +2232,10 @@ namespace SGAmod
 						else
 							vibraniumSetPlatform = true;
 
-						Main.PlaySound(SoundID.Zombie, (int)player.Center.X, (int)player.Center.Y, 68, 1f, vibraniumSetPlatform ? -0.25f : 0.35f);
+						SoundEngine.PlaySound(SoundID.Zombie, (int)Player.Center.X, (int)Player.Center.Y, 68, 1f, vibraniumSetPlatform ? -0.25f : 0.35f);
 					}
 				}
-				Items.Armors.Engineer.EngineerArmorPlayer EAP = player.GetModPlayer<Items.Armors.Engineer.EngineerArmorPlayer>();
+				Items.Armors.Engineer.EngineerArmorPlayer EAP = Player.GetModPlayer<Items.Armors.Engineer.EngineerArmorPlayer>();
 				if (EAP.EngieArmor())
 				{
 					EAP.ToggleEngieArmor();
@@ -2248,7 +2252,7 @@ namespace SGAmod
 				if (Main.LocalPlayer.SGAPly().gamePadAutoAim > 0)
 				{
 					LockOnHelper.CycleUseModes();
-					Main.PlaySound(22, -1, -1, 0, 1f, 1.5f);
+					SoundEngine.PlaySound(22, -1, -1, 0, 1f, 1.5f);
 				}
 			}
 
@@ -2256,19 +2260,19 @@ namespace SGAmod
 			{
 				if (EALogo)
 				{
-					if (player.taxMoney > Item.buyPrice(0, 1, 0, 0))
+					if (Player.taxMoney > Item.buyPrice(0, 1, 0, 0))
 					{
-						player.taxMoney -= Item.buyPrice(0, 1, 0, 0);
-						player.QuickSpawnItem(ItemID.GoldCoin);
+						Player.taxMoney -= Item.buyPrice(0, 1, 0, 0);
+						Player.QuickSpawnItem(null, ItemID.GoldCoin);
 					}
 				}
 			}
 			if (SGAmod.WalkHotKey.JustPressed)
 			{
 				Walkmode = Walkmode ? false : true;
-				if (Main.LocalPlayer == player)
+				if (Main.LocalPlayer == Player)
 				{
-					Main.PlaySound(17, -1, -1, 0, 1f, Walkmode ? -0.25f : 0.35f);
+					SoundEngine.PlaySound(17, -1, -1, 0, 1f, Walkmode ? -0.25f : 0.35f);
 
 				}
 			}
@@ -2282,7 +2286,7 @@ namespace SGAmod
 					for (int num172 = 0; num172 < Main.maxNPCs; num172 += 1)
 					{
 						NPC target = Main.npc[num172];
-						if (target.active && !target.townNPC && !target.dontTakeDamage && target.CanBeChasedBy())// && ((target.modNPC!=null && target.modNPC.CanBeHitByProjectile(projectile)==true) || target.modNPC==null))
+						if (target.active && !target.townNPC && !target.dontTakeDamage && target.CanBeChasedBy())// && ((target.ModNPC!=null && target.ModNPC.CanBeHitByProjectile(projectile)==true) || target.ModNPC==null))
 						{
 							float dit = target.Distance(Main.MouseWorld);
 							if (dit < dist)
@@ -2299,7 +2303,7 @@ namespace SGAmod
 					{
 						if (AddCooldownStack(60 * 30))
 						{
-							Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/P5Targeted").WithVolume(1f).WithPitchVariance(.10f), player.Center);
+							SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Custom/P5Targeted").WithVolume(1f).WithPitchVariance(.10f), Player.Center);
 							gunslingerLegendtarget = theone;
 							gunslingerLegendtargettype = theonetype;
 							lockoneffect = 0;
@@ -2312,11 +2316,11 @@ namespace SGAmod
 			{
 				if (ninjaSash > 1 && AddCooldownStack(60 * 60))
 				{
-					Main.PlaySound(SoundID.Item39, player.Center);
-					Vector2 tomouse = Main.MouseWorld - player.Center;
+					SoundEngine.PlaySound(SoundID.Item39, Player.Center);
+					Vector2 tomouse = Main.MouseWorld - Player.Center;
 					tomouse = tomouse.SafeNormalize(Vector2.Zero);
 					tomouse *= 16f;
-					int thisoned = Projectile.NewProjectile(player.Center.X, player.Center.Y, tomouse.X, tomouse.Y, ModContent.ProjectileType<NinjaBombProj>(), 0, 0f, Main.myPlayer);
+					int thisoned = Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, tomouse.X, tomouse.Y, ModContent.ProjectileType<NinjaBombProj>(), 0, 0f, Main.myPlayer);
 					Main.projectile[thisoned].netUpdate = true;
 				}
 			}
@@ -2336,19 +2340,19 @@ namespace SGAmod
 			//stuff
 			*/
 		}
-        public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
 
 			if (tidalCharm > 0)
 			{
-				Vector2 position2 = player.position;
+				Vector2 position2 = Player.position;
 
 				if (true)
 				{
 
 					if (Main.rand.Next(3) == 0)
 					{
-						int num52 = Dust.NewDust(position2 - new Vector2(2, 1), player.width + 4, player.height + 2, 211, 0f, 0f, 210, Color.Blue, 1.7f);
+						int num52 = Dust.NewDust(position2 - new Vector2(2, 1), Player.width + 4, Player.height + 2, 211, 0f, 0f, 210, Color.Blue, 1.7f);
 						Dust dust;
 						if (Main.rand.Next(2) == 0)
 						{
@@ -2367,12 +2371,12 @@ namespace SGAmod
 						Dust dust9 = Main.dust[num52];
 						dust9.velocity.Y = dust9.velocity.Y + 0.2f;
 						dust = Main.dust[num52];
-						dust.velocity += player.velocity / 3f;
-						Main.playerDrawDust.Add(num52);
+						dust.velocity += Player.velocity / 3f;
+						drawInfo.DustCache.Add(num52); //maybe?
 					}
 					else
 					{
-						int num53 = Dust.NewDust(position2 - new Vector2(4, 4), player.width + 8, player.height + 8, 211, 0f, 0f, 100, Color.DeepSkyBlue, 0.8f);
+						int num53 = Dust.NewDust(position2 - new Vector2(4, 4), Player.width + 8, Player.height + 8, 211, 0f, 0f, 100, Color.DeepSkyBlue, 0.8f);
 						Dust dust;
 						if (Main.rand.Next(2) == 0)
 						{
@@ -2391,8 +2395,8 @@ namespace SGAmod
 						Dust dust10 = Main.dust[num53];
 						dust10.velocity.Y = dust10.velocity.Y + 1f;
 						dust = Main.dust[num53];
-						dust.velocity += player.velocity / 3f;
-						Main.playerDrawDust.Add(num53);
+						dust.velocity += Player.velocity / 3f;
+						drawInfo.DustCache.Add(num53);
 					}
 				}
 			}
@@ -2403,12 +2407,12 @@ namespace SGAmod
 				for (q = 0; q < 2; q++)
 				{
 
-					int dust = Dust.NewDust(new Vector2(Main.rand.Next(0, 100) < 50 ? Locked.X : Locked.X + Locked.Y, drawInfo.position.Y), player.width + 4, player.height + 4, DustID.AncientLight, 0f, player.velocity.Y * 0.4f, 100, default(Color), 3f);
+					int dust = Dust.NewDust(new Vector2(Main.rand.Next(0, 100) < 50 ? Locked.X : Locked.X + Locked.Y, drawInfo.Position.Y), Player.width + 4, Player.height + 4, DustID.AncientLight, 0f, Player.velocity.Y * 0.4f, 100, default(Color), 3f);
 					Main.dust[dust].noGravity = true;
-					Main.dust[dust].color = Main.hslToRgb((float)(Main.GlobalTime / 50) % 1, 0.9f, 0.65f);
+					Main.dust[dust].color = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 50) % 1, 0.9f, 0.65f);
 					//Main.dust[dust].velocity *= 1.8f;
 					//Main.dust[dust].velocity.Y -= 0.5f;
-					Main.playerDrawDust.Add(dust);
+					drawInfo.DustCache.Add(dust);
 				}
 				//r *= 0.1f;
 				//g *= 0.2f;
@@ -2418,32 +2422,32 @@ namespace SGAmod
 			if (MassiveBleeding)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-				int dust = Dust.NewDust(new Vector2(drawInfo.position.X, drawInfo.position.Y) + randomcircle * 8f, player.width + 4, player.height + 4, 5, player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 30, default(Color), 1.5f);
+				int dust = Dust.NewDust(new Vector2(drawInfo.Position.X, drawInfo.Position.Y) + randomcircle * 8f, Player.width + 4, Player.height + 4, 5, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 30, default(Color), 1.5f);
 				Main.dust[dust].noGravity = true;
 				Main.dust[dust].color = Main.hslToRgb(0f, 0.5f, 0.35f);
 				//Main.dust[dust].velocity *= 1.8f;
 				//Main.dust[dust].velocity.Y -= 0.5f;
-				Main.playerDrawDust.Add(dust);
+				drawInfo.DustCache.Add(dust);
 			}
 
 			if (SunderedDefense)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-				int dust = Dust.NewDust(new Vector2(player.position.X, player.position.Y) + randomcircle * (1.2f * (float)player.width), player.width + 4, player.height + 4, mod.DustType("TornadoDust"), player.velocity.X * 0.4f, (player.velocity.Y - 7f) * 0.4f, 30, default(Color) * 1f, 0.5f);
+				int dust = Dust.NewDust(new Vector2(Player.position.X, Player.position.Y) + randomcircle * (1.2f * (float)Player.width), Player.width + 4, Player.height + 4, Mod.Find<ModDust>("TornadoDust").Type, Player.velocity.X * 0.4f, (Player.velocity.Y - 7f) * 0.4f, 30, default(Color) * 1f, 0.5f);
 				Main.dust[dust].noGravity = true;
 				Main.dust[dust].color = Main.hslToRgb(0f, 0.5f, 0.35f);
-				Main.playerDrawDust.Add(dust);
+				drawInfo.DustCache.Add(dust);
 			}
 
 			if (thermalblaze)
 			{
 				if (Main.rand.Next(4) == 0 && drawInfo.shadow == 0f)
 				{
-					int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4, player.height + 4, ModContent.DustType<Dusts.HotDust>(), player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 100, default(Color), 1f);
+					int dust = Dust.NewDust(drawInfo.Position - new Vector2(2f, 2f), Player.width + 4, Player.height + 4, ModContent.DustType<Dusts.HotDust>(), Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100, default(Color), 1f);
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].velocity *= 1.8f;
 					Main.dust[dust].velocity.Y -= 0.5f;
-					Main.playerDrawDust.Add(dust);
+					drawInfo.DustCache.Add(dust);
 				}
 				r *= 0.1f;
 				g *= 0.2f;
@@ -2455,10 +2459,10 @@ namespace SGAmod
 			{
 				if (Main.rand.Next(4) == 0 && drawInfo.shadow == 0f)
 				{
-					int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4, player.height + 4, ModContent.DustType<Dusts.AcidDust>(), player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 100, default(Color), 1f);
+					int dust = Dust.NewDust(drawInfo.Position - new Vector2(2f, 2f), Player.width + 4, Player.height + 4, ModContent.DustType<Dusts.AcidDust>(), Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100, default(Color), 1f);
 					Main.dust[dust].velocity *= 1.8f;
 					Main.dust[dust].velocity.Y -= 0.5f;
-					Main.playerDrawDust.Add(dust);
+					drawInfo.DustCache.Add(dust);
 				}
 				r *= 0.1f;
 				g *= 0.7f;
@@ -2471,16 +2475,17 @@ namespace SGAmod
 			{
 				if (Main.rand.Next(8) == 0 && drawInfo.shadow == 0f)
 				{
-					int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4, player.height + 4, ModContent.DustType<Dusts.HotDust>(), player.velocity.X * 0.8f, player.velocity.Y * 0.8f, 200, default(Color), 0.5f);
+					int dust = Dust.NewDust(drawInfo.Position - new Vector2(2f, 2f), Player.width + 4, Player.height + 4, ModContent.DustType<Dusts.HotDust>(), Player.velocity.X * 0.8f, Player.velocity.Y * 0.8f, 200, default(Color), 0.5f);
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].velocity *= 1.8f;
 					Main.dust[dust].velocity.Y -= 0.5f;
-					Main.playerDrawDust.Add(dust);
+					drawInfo.DustCache.Add(dust);
 				}
 			}
 
 		}
 
+		/*
 		public override void SendCustomBiomes(BinaryWriter writer)
 		{
 			BitsByte newbim = new BitsByte();
@@ -2495,26 +2500,28 @@ namespace SGAmod
 			DankShrineZone = flags[0];
 			ShadowSectorZone = flags[1] ? (byte)5 : (byte)0;
 		}
-
+		*/
 
 		public override Texture2D GetMapBackgroundImage()
 		{
 			if (DankShrineZone)
 			{
-				return mod.GetTexture("swamp_map_background");
+				return Mod.Assets.Request<Texture2D>("swamp_map_background").Value;
 			}
 			return null;
 		}
 
+		//Moved to ModBiome.UpdateBiomeVisuals()
+		/*
 		public override void UpdateBiomeVisuals()
 		{
 			//TheProgrammer
-			player.ManageSpecialBiomeVisuals("SGAmod:ProgramSky", (SGAmod.ProgramSkyAlpha > 0f || NPC.CountNPCS(mod.NPCType("SPinkyTrue")) > 0) ? true : false, player.Center);
-			player.ManageSpecialBiomeVisuals("SGAmod:HellionSky", (SGAmod.HellionSkyalpha > 0f || NPC.CountNPCS(mod.NPCType("Hellion")) + NPC.CountNPCS(mod.NPCType("HellionFinal")) > 0) ? true : false, player.Center);
-			player.ManageSpecialBiomeVisuals("SGAmod:SwirlingVortex", SPinkyTrue.VortexEffect, SPinkyTrue.PinkyBossLoc);
+			Player.ManageSpecialBiomeVisuals("SGAmod:ProgramSky", (SGAmod.ProgramSkyAlpha > 0f || NPC.CountNPCS(Mod.Find<ModNPC>("SPinkyTrue").Type) > 0) ? true : false, Player.Center);
+			Player.ManageSpecialBiomeVisuals("SGAmod:HellionSky", (SGAmod.HellionSkyalpha > 0f || NPC.CountNPCS(Mod.Find<ModNPC>("Hellion").Type) + NPC.CountNPCS(Mod.Find<ModNPC>("HellionFinal").Type) > 0) ? true : false, Player.Center);
+			Player.ManageSpecialBiomeVisuals("SGAmod:SwirlingVortex", SPinkyTrue.VortexEffect, SPinkyTrue.PinkyBossLoc);
 
 
-			player.ManageSpecialBiomeVisuals("SGAmod:CirnoBlizzard", (SGAWorld.CirnoBlizzard > 0) ? true : false, player.Center);
+			Player.ManageSpecialBiomeVisuals("SGAmod:CirnoBlizzard", (SGAWorld.CirnoBlizzard > 0) ? true : false, Player.Center);
 
 
 			ScreenShaderData shad = Filters.Scene["SGAmod:CirnoBlizzard"].GetShader();
@@ -2522,11 +2529,11 @@ namespace SGAmod
 				shad.UseOpacity((float)(SGAWorld.CirnoBlizzard / 1000f));
 			else
 				shad.UseOpacity(0f);
-		}
+		}*/
 
-		public override TagCompound Save()
+		public override void SaveData(TagCompound tag)
 		{
-			TagCompound tag = new TagCompound();
+			//TagCompound tag = new TagCompound();
 
 			if (playercreated == false)
 			{
@@ -2534,7 +2541,7 @@ namespace SGAmod
 				{
 					if (SGAmod.NightmareUnlocked)
 					{
-						Main.PlaySound(29, -1, -1, 105, 1f, -0.6f);
+						SoundEngine.PlaySound(29, -1, -1, 105, 1f, -0.6f);
 						nightmareplayer = true;
 					}
 				}
@@ -2568,13 +2575,13 @@ namespace SGAmod
 
 			//ExpertisePointsFromBosses = null;
 			//ExpertisePointsFromBossesPoints = null;
-			return tag;
+			//return tag;
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadData(TagCompound tag)
 		{
 			CooldownStacks = new List<ActionCooldownStack>();
-			skillMananger = new SkillManager(player);
+			skillMananger = new SkillManager(Player);
 
 			playercreated = true;
 
@@ -2625,9 +2632,11 @@ namespace SGAmod
 
 		}
 
-		public override void CatchFish(Item fishingRod, Item bait, int power, int liquidType, int poolSize, int worldLayer, int questFish, ref int caughtType, ref bool junk)
+		//Old CatchFish(Item fishingRod, Item bait, int power, int liquidType, int poolSize, int worldLayer, int questFish, ref int caughtType, ref bool junk)
+		//New CatchFish(FishingAttempt attempt, ref int itemDrop, ref int npcSpawn, ref AdvancedPopupRequest sonar, ref Vector2 sonarPosition)
+		public override void CatchFish(FishingAttempt attempt, ref int itemDrop, ref int npcSpawn, ref AdvancedPopupRequest sonar, ref Vector2 sonarPosition)
 		{
-			if (bait.type == ModContent.ItemType<Items.Tools.UniversalBait>())
+			/*if (bait.type == ModContent.ItemType<Items.Tools.UniversalBait>())
 			{
 				int fish = Items.Tools.UniversalBait.GetFish();
 				if (fish > -1)
@@ -2640,27 +2649,27 @@ namespace SGAmod
 			{
 				return;
 			}
-			if (bait.type == mod.ItemType("SharkBait"))
+			if (bait.type == Mod.Find<ModItem>("SharkBait").Type)
 			{
 				//hmmmm
 			}
 			if (DankShrineZone)
 			{
 
-				if (questFish == mod.ItemType("Vinefish") && Main.rand.Next(2) == 0)
+				if (questFish == Mod.Find<ModItem>("Vinefish") .Type&& Main.rand.Next(2) == 0)
 				{
-					caughtType = mod.ItemType("Vinefish");
+					caughtType = Mod.Find<ModItem>("Vinefish").Type;
 				}
-				if (questFish == mod.ItemType("Rootfish") && Main.rand.Next(2) == 0)
+				if (questFish == Mod.Find<ModItem>("Rootfish") .Type&& Main.rand.Next(2) == 0)
 				{
-					caughtType = mod.ItemType("Rootfish");
+					caughtType = Mod.Find<ModItem>("Rootfish").Type;
 				}
 
-				int chance = 10 + (player.cratePotion ? 15 : 0) + (int)Math.Min(50, power);
+				int chance = 10 + (Player.cratePotion ? 15 : 0) + (int)Math.Min(50, power);
 				if (Main.rand.Next(0, 100) < chance)
-					caughtType = mod.ItemType("DankCrate");
+					caughtType = Mod.Find<ModItem>("DankCrate").Type;
 
-			}
+			}*/
 			/*if (player.ZoneSkyHeight)
 			{
 				int chance = 2 + (int)Math.Min(20, power/5);
@@ -2668,8 +2677,8 @@ namespace SGAmod
 					caughtType = mod.ItemType("StarCollector");
 			}*/
 
+			}
 		}
-	}
 
 	public class IDGStartBag : StartBag
 	{
@@ -2691,9 +2700,9 @@ namespace SGAmod
 
 		public override void SetDefaults()
 		{
-			base.item.width = 20;
-			base.item.height = 20;
-			base.item.rare = 2;
+			base.Item.width = 20;
+			base.Item.height = 20;
+			base.Item.rare = 2;
 
 		}
 
@@ -2719,24 +2728,24 @@ namespace SGAmod
 
 			Item item3 = new Item();
 			item3.SetDefaults(ItemID.LifeCrystal, false);
-			((IDGStartBag)item.modItem).AddItem(item3);
+			((IDGStartBag)Item.ModItem).AddItem(item3);
 
 			Item item4 = new Item();
 			item4.SetDefaults(ModContent.ItemType<BossHints>(), false);
-			((IDGStartBag)item.modItem).AddItem(item4);
+			((IDGStartBag)Item.ModItem).AddItem(item4);
 
 			if (SGAmod.NightmareUnlocked)
 			{
 				Item item5 = new Item();
 				item5.SetDefaults(ModContent.ItemType<ThereIsNoMercyThereIsNoInnocenceOnlyDegreesOfGuilt>(), false);
-				((IDGStartBag)item.modItem).AddItem(item5);
+				((IDGStartBag)Item.ModItem).AddItem(item5);
 			}
 
 			for (int k = 0; k < itemsbonus.Count; k++)
 			{
 				Item item2 = new Item();
 				item2.SetDefaults(itemsbonus[k], false);
-				((IDGStartBag)item.modItem).AddItem(item2);
+				((IDGStartBag)Item.ModItem).AddItem(item2);
 			}
 			itemsbonus.Clear();
 
@@ -2753,7 +2762,7 @@ namespace SGAmod
 						Item item2 = new Item();
 						item2.SetDefaults(itemsbonus[k], false);
 						item2.stack = Main.rand.Next(1, 2);
-						((IDGStartBag)item.modItem).AddItem(item2);
+						((IDGStartBag)Item.ModItem).AddItem(item2);
 					}
 				}
 			}
@@ -2761,7 +2770,7 @@ namespace SGAmod
 
 			foreach (Item current in this.items)
 			{
-				int number = Item.NewItem((int)player.position.X, (int)player.position.Y, player.width, player.height, current.type, current.stack, false, (int)current.prefix, false, false);
+				int number = Item.NewItem(null, (int)player.position.X, (int)player.position.Y, player.width, player.height, current.type, current.stack, false, (int)current.prefix, false, false);
 				if (Main.netMode == 1)
 				{
 					NetMessage.SendData(21, -1, -1, null, number, 1f, 0f, 0f, 0, 0, 0);
@@ -2793,12 +2802,12 @@ namespace SGAmod
         public override void SetDefaults()
 		{
 			int axepower = 0;
-			item.CloneDefaults(ItemID.PlatinumAxe);
-			axepower = item.axe;
-			item.CloneDefaults(ItemID.PlatinumPickaxe);
-			item.axe = axepower;
-			item.useAnimation = (int)(item.useAnimation/1.50f);
-			item.useTime = (int)(item.useTime / 1.50f);
+			Item.CloneDefaults(ItemID.PlatinumAxe);
+			axepower = Item.axe;
+			Item.CloneDefaults(ItemID.PlatinumPickaxe);
+			Item.axe = axepower;
+			Item.useAnimation = (int)(Item.useAnimation/1.50f);
+			Item.useTime = (int)(Item.useTime / 1.50f);
 		}
 
 	}

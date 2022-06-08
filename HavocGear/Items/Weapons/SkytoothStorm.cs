@@ -19,23 +19,23 @@ namespace SGAmod.HavocGear.Items.Weapons
 		
 		public override void SetDefaults()
 		{
-			item.damage = 55;
-			item.magic = true;
-			item.width = 34;    
-			item.mana = 7;
-            item.height = 24;
-			item.useTime = 10;
-			item.useAnimation = 30;
-			item.useStyle = 5;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 5;
-	        item.shootSpeed = 8f;
-            item.noMelee = true; 
-			item.shoot = mod.ProjectileType("SkyToothProj");
-			item.UseSound = SoundID.Item1;		
-			item.autoReuse = true;
-		    item.useTurn = true;
+			Item.damage = 55;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 34;    
+			Item.mana = 7;
+            Item.height = 24;
+			Item.useTime = 10;
+			Item.useAnimation = 30;
+			Item.useStyle = 5;
+			Item.knockBack = 6;
+			Item.value = 10000;
+			Item.rare = 5;
+	        Item.shootSpeed = 8f;
+            Item.noMelee = true; 
+			Item.shoot = Mod.Find<ModProjectile>("SkyToothProj").Type;
+			Item.UseSound = SoundID.Item1;		
+			Item.autoReuse = true;
+		    Item.useTurn = true;
 		}
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -51,7 +51,7 @@ namespace SGAmod.HavocGear.Items.Weapons
                 if ((double)num13 < 0.0) num13 *= -1f;
                 if ((double)num13 < 20.0) num13 = 20f;
                 float num14 = (float)Math.Sqrt((double)num12 * (double)num12 + (double)num13 * (double)num13);
-                float num15 = item.shootSpeed / num14;
+                float num15 = Item.shootSpeed / num14;
                 float num16 = num12 * num15;
                 float num17 = num13 * num15;
                 float SpeedX = num16 + (float)Main.rand.Next(-40, 41) * 0.02f;  
@@ -65,7 +65,7 @@ namespace SGAmod.HavocGear.Items.Weapons
         {
             if (Main.rand.Next(1) == 0)
             {
-                int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("TornadoDust"));
+                int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, Mod.Find<ModDust>("TornadoDust").Type);
             }
         }
 	

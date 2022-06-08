@@ -24,32 +24,32 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 120;
-			item.noMelee = true;
-			item.magic = true;
-			item.mana = 20;
-			item.crit = 25;
-			item.width = 22;
-			item.height = 22;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = 5;
-			item.knockBack = 10;
-			item.value = 2000000;
-			item.rare = 12;
-			item.UseSound = SoundID.Item72;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("CGraspSpear");
-			item.shootSpeed = 10;
-			Item.staff[item.type] = true;
+			Item.damage = 120;
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 20;
+			Item.crit = 25;
+			Item.width = 22;
+			Item.height = 22;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = 5;
+			Item.knockBack = 10;
+			Item.value = 2000000;
+			Item.rare = 12;
+			Item.UseSound = SoundID.Item72;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("CGraspSpear").Type;
+			Item.shootSpeed = 10;
+			Item.staff[Item.type] = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/CosmicGrasp_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/CosmicGrasp_Glow").Value;
 			}
 		}
 		public override bool Shoot (Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			type = mod.ProjectileType("CGraspSpear");
+			type = Mod.Find<ModProjectile>("CGraspSpear").Type;
 			float numberProjectiles = 1; // 3, 4, or 5 shots
 			float rotation = MathHelper.ToRadians(Main.rand.Next(33));
 			position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
@@ -66,16 +66,7 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Cosmillash"), 1);
-			recipe.AddIngredient(ItemID.ShadowbeamStaff, 1);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("EldritchTentacle"), 15);
-			recipe.AddIngredient(mod.ItemType("LunarRoyalGel"), 12);
-			recipe.AddIngredient(ItemID.Amethyst, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);			
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Cosmillash"), 1).AddIngredient(ItemID.ShadowbeamStaff, 1).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("EldritchTentacle"), 15).AddIngredient(mod.ItemType("LunarRoyalGel"), 12).AddIngredient(ItemID.Amethyst, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -91,20 +82,20 @@ namespace SGAmod.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 6;
-			projectile.magic = true;
-			projectile.timeLeft = 300;
-			projectile.light = 0.1f;
-			projectile.extraUpdates = 300;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
-			aiType = -1;
-			Main.projFrames[projectile.type] = 1;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 6;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 300;
+			Projectile.light = 0.1f;
+			Projectile.extraUpdates = 300;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
+			AIType = -1;
+			Main.projFrames[Projectile.type] = 1;
 		}
 
 		public override string Texture
@@ -119,8 +110,8 @@ namespace SGAmod.Items.Weapons
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			explode(projectile.Center, projectile.damage, projectile.knockBack, false);
-			projectile.Kill();
+			explode(Projectile.Center, Projectile.damage, Projectile.knockBack, false);
+			Projectile.Kill();
 			return false;
 		}
 
@@ -128,7 +119,7 @@ namespace SGAmod.Items.Weapons
 		{
 			for (int i = 0; i < 1; i++)
 			{
-				int proj = Projectile.NewProjectile(target.X, target.Y, Vector2.Zero.X, Vector2.Zero.Y, mod.ProjectileType("QuasarOrbLessParticles"), projectile.damage, projectile.knockBack, projectile.owner);
+				int proj = Projectile.NewProjectile(target.X, target.Y, Vector2.Zero.X, Vector2.Zero.Y, Mod.Find<ModProjectile>("QuasarOrbLessParticles").Type, Projectile.damage, Projectile.knockBack, Projectile.owner);
 				Main.projectile[proj].timeLeft = 2;
 				Main.projectile[proj].netUpdate = true;
 				IdgProjectile.Sync(proj);
@@ -157,26 +148,26 @@ namespace SGAmod.Items.Weapons
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			explode(target.Center, projectile.damage, knockback, crit);
+			explode(target.Center, Projectile.damage, knockback, crit);
 
-			if (projectile.ai[0] == 0)
+			if (Projectile.ai[0] == 0)
 			{
-				projectile.ai[0] = 1;
-				projectile.damage /= 3;
+				Projectile.ai[0] = 1;
+				Projectile.damage /= 3;
 
 			}
 
 			if (crit)
-				CGraspSpear.BeamBurst(target.Center, projectile.damage, projectile.owner, 1);
+				CGraspSpear.BeamBurst(target.Center, Projectile.damage, Projectile.owner, 1);
 			if (target.life - damage < 1)
-				CGraspSpear.BeamBurst(target.Center, projectile.damage, projectile.owner, 8);
+				CGraspSpear.BeamBurst(target.Center, Projectile.damage, Projectile.owner, 8);
 		}
 
 		public override void AI()
 		{
-			int num126 = Dust.NewDust(projectile.Center, 0, 0, 173, projectile.velocity.X, projectile.velocity.Y, 0, default(Color), 3.0f);
+			int num126 = Dust.NewDust(Projectile.Center, 0, 0, 173, Projectile.velocity.X, Projectile.velocity.Y, 0, default(Color), 3.0f);
 			Main.dust[num126].noGravity = true;
-			Main.dust[num126].velocity = projectile.velocity * 0.5f;
+			Main.dust[num126].velocity = Projectile.velocity * 0.5f;
 		}
 	}
 

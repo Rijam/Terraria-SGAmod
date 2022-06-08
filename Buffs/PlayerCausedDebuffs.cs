@@ -7,19 +7,20 @@ using System.Text;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Buffs
 {
 	public class ThermalBlaze : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Thermal Blaze");
 			Description.SetDefault("Incinerated by the burning air...");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -34,14 +35,14 @@ namespace SGAmod.Buffs
 	}
 	public class AcidBurn : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Acid Burn");
 			Description.SetDefault("Reduced Defense and your defense works again your life");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -60,12 +61,8 @@ namespace SGAmod.Buffs
 
 		public static string RadioactiveDebuffText => Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ? "Irradiated enemies explode on death, doing damage around them based the irradiated ammounts\nGains more strength and deals extra damage if exposed to radiation sources for longer\nRate gained and max capped is based on a per-weapon basis" : "(Hold LEFT CONTROL for more info on Irradiated)";
 
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/BuffTemplate";
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "SGAmod/Buffs/BuffTemplate";
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Irradiated");
 			Description.SetDefault("Not for players to see!");
@@ -86,12 +83,8 @@ namespace SGAmod.Buffs
 
 	public class Targeted : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/TargetedDebuff";
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "SGAmod/Buffs/TargetedDebuff";
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Doused In Gas");
 			Description.SetDefault("You are coated in a highly flammable substance");
@@ -103,12 +96,8 @@ namespace SGAmod.Buffs
 
 	public class Petrified : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/PetrifiedDebuff";
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "SGAmod/Buffs/PetrifiedDebuff";
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Petrified");
 			Description.SetDefault("You are coated in a highly flammable substance");
@@ -124,12 +113,8 @@ namespace SGAmod.Buffs
 
 	public class Marked : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/MarkedDebuff";
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "SGAmod/Buffs/MarkedDebuff";
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Marked");
 			Description.SetDefault("You are coated in a highly flammable substance");
@@ -148,7 +133,7 @@ namespace SGAmod.Buffs
 
 	public class InfinityWarStormbreaker : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("IWS");
 			Description.SetDefault("Players arn't meant to have this debuff!");
@@ -169,13 +154,7 @@ namespace SGAmod.Buffs
 	}
 	public class NinjaSmokedDebuff : ModBuff
 	{
-
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/BuffTemplate";
-			return true;
-		}
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ninja Smoked");
 			Description.SetDefault("Enemies more likely to dodge your attacks");
@@ -191,7 +170,7 @@ namespace SGAmod.Buffs
 	}
 	public class Gourged : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Gouged");
 			Description.SetDefault("Halved defense");
@@ -218,7 +197,7 @@ namespace SGAmod.Buffs
 
 	public class SunderedDefense : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sundered Defense");
 			Description.SetDefault("Your immunity frames are wrecked");
@@ -243,12 +222,8 @@ namespace SGAmod.Buffs
 	{
 
 		public static string DankText => Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ? "Attacks may slow enemies\nConsecutive attacks will stack the debuff, making the slowing effect stronger, but this soft caps after a point\nDoes not affect Bosses or enemies who are immune to poisoned are also immune to Dank Slow" : "(Hold LEFT CONTROL for more info on Dank Slow)";
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/DankSlowDebuff";
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "SGAmod/Buffs/DankSlowDebuff";
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Dank Slow");
 			Description.SetDefault("Players arn't meant to have this debuff!");
@@ -277,7 +252,7 @@ namespace SGAmod.Buffs
 
 	public class GildingAuraBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Aureation Aura");
 			Description.SetDefault("Nearby NPCs are gilded with Midas");
@@ -285,12 +260,7 @@ namespace SGAmod.Buffs
 			Main.pvpBuff[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
-		}
-
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			return true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
         public override void Update(Player player, ref int buffIndex)
@@ -306,21 +276,17 @@ namespace SGAmod.Buffs
 		public class RustBurn : ModBuff
 	{
 		public static string RustText => Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ? "Rustburn lowers defense by 25 and is effective against inorganic enemies\nInorganic enemies with Rustburn take even more damage from Acid Burn\nOrganic enemies only take a bit of damage over time" : "(Hold LEFT CONTROL for more info on Rust Burn)";
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Rust Burn");
 			Description.SetDefault("Slowness is happening");
 			Main.debuff[Type] = true; 
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/RustBurnDebuff";
-			return true;
-		}
+		public override string Texture => "SGAmod/Buffs/RustBurnDebuff";
 
 		public static bool ApplyRust(NPC npc,int time)
         {
@@ -329,7 +295,7 @@ namespace SGAmod.Buffs
 				return false;
 
 				npc.AddBuff(ModContent.BuffType<RustBurn>(), time);
-			Main.PlaySound(SoundID.Splash,(int)npc.Center.X, (int)npc.Center.Y, 1, 1f,0.75f);
+			SoundEngine.PlaySound(SoundID.Splash,(int)npc.Center.X, (int)npc.Center.Y, 1, 1f,0.75f);
 			for (float f = 0; f < 16; f += 1)
 			{
 				Vector2 randomcircle = Main.rand.NextVector2CircularEdge(Main.rand.NextFloat(2f, 4f), Main.rand.NextFloat(2f, 4f)).RotatedBy(Main.rand.NextFloat());
@@ -358,20 +324,16 @@ namespace SGAmod.Buffs
 	}
 	public class LavaBurn : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Severe Lava Burn");
 			Description.SetDefault("Magma scorches your body\nObsidian Skin is disabled");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/LavaBurnDebuff";
-			return true;
-		}
+		public override string Texture => "SGAmod/Buffs/LavaBurnDebuff";
 		public override void Update(Player player, ref int buffIndex)
 		{
 			if (GetType() == typeof(LavaBurn))
@@ -386,31 +348,26 @@ namespace SGAmod.Buffs
 	}
 	public class LavaBurnLight : LavaBurn
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Lava Burn");
 			Description.SetDefault("Magma burns your skin");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 	}
 	public class MoonLightCurse : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Moon Light Curse");
 			Description.SetDefault("Defense and life are shattered");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
-		}
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/MoonLightCurse";
-			return true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(NPC npc, ref int buffIndex)
@@ -421,14 +378,14 @@ namespace SGAmod.Buffs
 	}
 	public class MassiveBleeding : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Massive Bleeding");
 			Description.SetDefault("You are bleeding out");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -453,14 +410,14 @@ namespace SGAmod.Buffs
 	}
 	public class PiercedVulnerable : MoonLightCurse
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Pierced N Vulnerable");
 			Description.SetDefault("Defense is reduced");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 		public override void Update(Player player, ref int buffIndex)
 		{
@@ -473,44 +430,34 @@ namespace SGAmod.Buffs
 	}
 	public class SnapFade : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("SnapFade");
 			Description.SetDefault("");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(NPC npc, ref int buffIndex)
 		{
 			npc.GetGlobalNPC<SGAnpcs>().Snapfading = true;
 		}
-
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/SnapFade";
-			return true;
-		}
 	}
 	public class EverlastingSuffering : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Everlasting Suffering");
 			Description.SetDefault("50% increased Damage-over-time");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "SGAmod/Buffs/MoonLightCurse";
-			return true;
-		}
+		public override string Texture => "SGAmod/Buffs/MoonLightCurse";
 
 		public override void Update(Player player, ref int buffIndex)
 		{

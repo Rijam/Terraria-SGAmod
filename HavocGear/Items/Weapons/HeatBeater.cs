@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Idglibrary;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SGAmod.HavocGear.Items.Weapons
 {
@@ -15,25 +16,25 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void SetDefaults()
         {
-            item.damage = 24;
-            item.ranged = true;
-            item.width = 56;
-            item.height = 28;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.useStyle = 5;
-            item.noMelee = true;
-            item.knockBack = 5;
-            item.value = 10000;
-            item.rare = 5;
-            item.UseSound = SoundID.Item38;
-            item.autoReuse = true;
-            item.shoot = 10;
-            item.shootSpeed = 16f;
-            item.useAmmo = AmmoID.Bullet;
+            Item.damage = 24;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 56;
+            Item.height = 28;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.useStyle = 5;
+            Item.noMelee = true;
+            Item.knockBack = 5;
+            Item.value = 10000;
+            Item.rare = 5;
+            Item.UseSound = SoundID.Item38;
+            Item.autoReuse = true;
+            Item.shoot = 10;
+            Item.shootSpeed = 16f;
+            Item.useAmmo = AmmoID.Bullet;
             if (!Main.dedServ)
             {
-                item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/HeatBeater_Glow");
+                Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/HeatBeater_Glow").Value;
             }
         }
 
@@ -44,13 +45,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Shotgun, 1);
-            recipe.AddIngredient(null, "FieryShard", 10);
-		    recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-      		recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.Shotgun, 1).AddIngredient(null, "FieryShard", 10).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.MythrilAnvil).Register();
         }
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

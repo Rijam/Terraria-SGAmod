@@ -21,12 +21,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 26;
-			item.height = 24;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 26;
+			Item.height = 24;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -42,12 +42,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 26;
-			item.height = 28;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 26;
+			Item.height = 28;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -63,12 +63,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 20;
-			item.height = 24;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 20;
+			Item.height = 24;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -84,12 +84,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 26;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 24;
+			Item.height = 26;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -105,12 +105,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 26;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 28;
+			Item.height = 26;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -126,12 +126,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 22;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 30;
+			Item.height = 22;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -147,12 +147,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 26;
-			item.height = 26;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 26;
+			Item.height = 26;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -170,12 +170,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -191,12 +191,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 22;
-			item.height = 28;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 22;
+			Item.height = 28;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -212,12 +212,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 26;
-			item.height = 24;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 26;
+			Item.height = 24;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -234,12 +234,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 28;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 32;
+			Item.height = 28;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -255,12 +255,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -276,12 +276,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion
@@ -297,12 +297,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 22;
-			item.value = Item.sellPrice(silver: 75);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 24;
+			Item.height = 22;
+			Item.value = Item.sellPrice(silver: 75);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 	#endregion

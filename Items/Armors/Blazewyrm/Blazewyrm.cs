@@ -16,39 +16,33 @@ namespace SGAmod.Items.Armors.Blazewyrm
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Pink;
-			item.defense = 10;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Pink;
+			Item.defense = 10;
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			sgaplayer.armorglowmasks[0] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 		}
 		public override void UpdateEquip(Player player)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 			player.meleeSpeed += 0.20f;
-			player.meleeDamage += 0.16f;
+			player.GetDamage(DamageClass.Melee) += 0.16f;
 			sgaplayer.apocalypticalChance[0] += 1.0;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.MoltenHelmet, 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 6);
-			recipe.AddIngredient(mod.ItemType("FieryShard"), 8);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.MoltenHelmet, 1).AddIngredient(mod.ItemType("UnmanedBar"), 6).AddIngredient(mod.ItemType("FieryShard"), 8).AddTile(TileID.MythrilAnvil).Register();
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
+			tooltips.Add(new TooltipLine(Mod, "accapocalypticaltext", SGAGlobalItem.apocalypticaltext));
 		}
 	}
 
@@ -62,21 +56,21 @@ namespace SGAmod.Items.Armors.Blazewyrm
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Pink;
-			item.defense = 14;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Pink;
+			Item.defense = 14;
 		}
 		public override void UpdateEquip(Player player)
 		{
-			player.meleeCrit += 12;
+			player.GetCritChance(DamageClass.Melee) += 12;
 			player.SGAPly().apocalypticalChance[0] += 1.0;
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 			{
 				sgaplayer.armorglowmasks[1] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
@@ -85,13 +79,7 @@ namespace SGAmod.Items.Armors.Blazewyrm
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.MoltenBreastplate, 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 8);
-			recipe.AddIngredient(mod.ItemType("FieryShard"), 12);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.MoltenBreastplate, 1).AddIngredient(mod.ItemType("UnmanedBar"), 8).AddIngredient(mod.ItemType("FieryShard"), 12).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 
@@ -105,16 +93,16 @@ namespace SGAmod.Items.Armors.Blazewyrm
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Pink;
-			item.defense = 8;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Pink;
+			Item.defense = 8;
 		}
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (!Main.dedServ)
 				sgaplayer.armorglowmasks[3] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 		}
@@ -131,13 +119,7 @@ namespace SGAmod.Items.Armors.Blazewyrm
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.MoltenGreaves, 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 6);
-			recipe.AddIngredient(mod.ItemType("FieryShard"), 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.MoltenGreaves, 1).AddIngredient(mod.ItemType("UnmanedBar"), 6).AddIngredient(mod.ItemType("FieryShard"), 10).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 

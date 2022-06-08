@@ -21,8 +21,8 @@ namespace SGAmod.Items.Weapons.Auras
 		{
 			DisplayName.SetDefault("Aura Borealis Staff");
 			Tooltip.SetDefault("Summons a Hallowed Celestial Aura around the player");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
         public override string Texture => "SGAmod/Items/Weapons/Aurora/AuraBorealisStaff";
@@ -31,11 +31,11 @@ namespace SGAmod.Items.Weapons.Auras
 		{
 			base.ModifyTooltips(tooltips);
 			int thetarget = -1;
-			if (Main.LocalPlayer.ownedProjectileCounts[item.shoot] > 0)
+			if (Main.LocalPlayer.ownedProjectileCounts[Item.shoot] > 0)
 			{
 				for (int i = 0; i < Main.maxProjectiles; i += 1)
 				{
-					if (Main.projectile[i].active && Main.projectile[i].type == item.shoot && Main.projectile[i].owner == Main.LocalPlayer.whoAmI)
+					if (Main.projectile[i].active && Main.projectile[i].type == Item.shoot && Main.projectile[i].owner == Main.LocalPlayer.whoAmI)
 					{
 						thetarget = i;
 						break;
@@ -44,65 +44,50 @@ namespace SGAmod.Items.Weapons.Auras
 			}
 
 
-			if (thetarget > -1 && Main.projectile[thetarget].active && Main.projectile[thetarget].type==item.shoot)
+			if (thetarget > -1 && Main.projectile[thetarget].active && Main.projectile[thetarget].type==Item.shoot)
 			{
-				AuraMinionBorealis shoot = Main.projectile[thetarget].modProjectile as AuraMinionBorealis;
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Power Level: "+ shoot.thepower));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Passive: Grants life and Mana Regen per Power Level"));
-				tooltips.Add(new TooltipLine(mod, "Bonuses", "Erases debuffs on allies if you are immune to them"));
+				AuraMinionBorealis shoot = Main.projectile[thetarget].ModProjectile as AuraMinionBorealis;
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Power Level: "+ shoot.thepower));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Passive: Grants life and Mana Regen per Power Level"));
+				tooltips.Add(new TooltipLine(Mod, "Bonuses", "Erases debuffs on allies if you are immune to them"));
 
 				if (shoot.thepower >= 1.0)
-					tooltips.Add(new TooltipLine(mod, "Bonuses", "Lv1: Applies Betsy's Curse to enemies"));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", "Lv1: Applies Betsy's Curse to enemies"));
 				if (shoot.thepower >= 2.0)
 				{
-					tooltips.Add(new TooltipLine(mod, "Bonuses", "Lv2: Applies Rust Burn to enemies"));
-					tooltips.Add(new TooltipLine(mod, "Bonuses", Buffs.RustBurn.RustText));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", "Lv2: Applies Rust Burn to enemies"));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", Buffs.RustBurn.RustText));
 				}
 				if (shoot.thepower >= 3.0)
-					tooltips.Add(new TooltipLine(mod, "Bonuses", "Lv3: Applies Moonlight Curse to enemies)"));
+					tooltips.Add(new TooltipLine(Mod, "Bonuses", "Lv3: Applies Moonlight Curse to enemies)"));
 
 			}
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 0;
-			item.knockBack = 3f;
-			item.mana = 20;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 36;
-			item.useAnimation = 36;
-			item.useStyle = 1;
-			item.value = Item.buyPrice(0, 0, 50, 0);
-			item.rare = 1;
-			item.UseSound = SoundID.Item44;
+			Item.damage = 0;
+			Item.knockBack = 3f;
+			Item.mana = 20;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 36;
+			Item.useAnimation = 36;
+			Item.useStyle = 1;
+			Item.value = Item.buyPrice(0, 0, 50, 0);
+			Item.rare = 1;
+			Item.UseSound = SoundID.Item44;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = ModContent.BuffType<AuraBorealisBuff>();
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = ModContent.BuffType<AuraBorealisBuff>();
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = ModContent.ProjectileType<AuraMinionBorealis>();
+			Item.shoot = ModContent.ProjectileType<AuraMinionBorealis>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			/*recipe.AddIngredient(ModContent.ItemType<StoneBarrierStaff>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<AuroraTearAwoken>(), 1);
-			recipe.AddIngredient(ItemID.CrystalShard, 10);
-			recipe.AddTile(ModContent.TileType<LuminousAlter>());
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);*/
-			recipe.AddIngredient(ModContent.ItemType<AuroraTearAwoken>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<IlluminantEssence>(), 10);
-			recipe.AddIngredient(ItemID.CrystalShard, 10);
-			recipe.AddIngredient(ItemID.LunarBar, 12);
-			recipe.AddTile(ModContent.TileType<LuminousAlter>());
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<AuroraTearAwoken>(), 1).AddIngredient(ModContent.ItemType<IlluminantEssence>(), 10).AddIngredient(ItemID.CrystalShard, 10).AddIngredient(ItemID.LunarBar, 12).AddTile(ModContent.TileType<LuminousAlter>()).Register();
 		}
 
 	}
@@ -117,30 +102,30 @@ namespace SGAmod.Items.Weapons.Auras
         public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Borealis");
-			Main.projFrames[projectile.type] = 1;
+			Main.projFrames[Projectile.type] = 1;
 
 			// These below are needed for a minion
 			// Denotes that this projectile is a pet or minion
-			Main.projPet[projectile.type] = true;
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			Main.projPet[Projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.tileCollide = false;
-			projectile.friendly = false;
-			projectile.minion = true;
-			projectile.minionSlots = 1f;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.tileCollide = false;
+			Projectile.friendly = false;
+			Projectile.minion = true;
+			Projectile.minionSlots = 1f;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
 		}
 
 		public override void AuraAI(Player player)
 		{
-			Lighting.AddLight(projectile.Center, Color.Pink.ToVector3() * 0.78f);
+			Lighting.AddLight(Projectile.Center, Color.Pink.ToVector3() * 0.78f);
 		}
 
 		public override void InsideAura<T>(T type, Player player)
@@ -191,14 +176,14 @@ namespace SGAmod.Items.Weapons.Auras
 				//player.SGAPly().manaBoost += (int)(thepower * 15000f);
 			}
 
-			UnifiedRandom rando = new UnifiedRandom(projectile.whoAmI);
+			UnifiedRandom rando = new UnifiedRandom(Projectile.whoAmI);
 
-			Texture2D mainTex = mod.GetTexture("Extra_57b");
+			Texture2D mainTex = Mod.Assets.Request<Texture2D>("Extra_57b").Value;
 			Vector2 halfsize = mainTex.Size() / 2f;
 
-			for (float i = 0; i < 360; i += 360f / projectile.minionSlots)
+			for (float i = 0; i < 360; i += 360f / Projectile.minionSlots)
 			{
-				float angle = MathHelper.ToRadians(i + projectile.localAI[0] * 2f);
+				float angle = MathHelper.ToRadians(i + Projectile.localAI[0] * 2f);
 				Vector2 loc2 = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 				Vector2 loc = loc2 * 32f;
 				//loc -= Vector2.UnitY * 54f * player.gravDir;
@@ -217,8 +202,8 @@ namespace SGAmod.Items.Weapons.Auras
 				if (type == 1)
 				{
 					float colorhue = rando.NextFloat();
-					Main.spriteBatch.Draw(mainTex, (projectile.Center + loc) - Main.screenPosition,null, Main.hslToRgb(colorhue, 0.75f,0.75f), angle*2f + MathHelper.ToRadians(90), halfsize, projectile.scale, SpriteEffects.None, 0f);
-					Main.spriteBatch.Draw(mainTex, (projectile.Center + loc) - Main.screenPosition, null, Main.hslToRgb(colorhue, 0.5f, 0.75f), -angle*2f - MathHelper.ToRadians(90), halfsize, projectile.scale*0.75f, SpriteEffects.None, 0f);
+					Main.spriteBatch.Draw(mainTex, (Projectile.Center + loc) - Main.screenPosition,null, Main.hslToRgb(colorhue, 0.75f,0.75f), angle*2f + MathHelper.ToRadians(90), halfsize, Projectile.scale, SpriteEffects.None, 0f);
+					Main.spriteBatch.Draw(mainTex, (Projectile.Center + loc) - Main.screenPosition, null, Main.hslToRgb(colorhue, 0.5f, 0.75f), -angle*2f - MathHelper.ToRadians(90), halfsize, Projectile.scale*0.75f, SpriteEffects.None, 0f);
 				}
 			}
 
@@ -231,7 +216,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 				RadialEffect.Parameters["overlayTexture"].SetValue(SGAmod.PearlIceBackground);//SGAmod.PearlIceBackground
 				RadialEffect.Parameters["alpha"].SetValue(0.75f);
-				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * 0.125f, Main.GlobalTime * 0.075f));
+				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * 0.125f, Main.GlobalTimeWrappedHourly * 0.075f));
 				RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 2f));
 				RadialEffect.Parameters["ringScale"].SetValue(0.075f);
 				RadialEffect.Parameters["ringOffset"].SetValue(0.50f);
@@ -241,14 +226,14 @@ namespace SGAmod.Items.Weapons.Auras
 
 				RadialEffect.CurrentTechnique.Passes["Radial"].Apply();
 
-				Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.White, 0, halfsize, (new Vector2(thesize, thesize) /(halfsize*1.5f)) * MathHelper.Pi, default, 0);
+				Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.White, 0, halfsize, (new Vector2(thesize, thesize) /(halfsize*1.5f)) * MathHelper.Pi, default, 0);
 
-				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime * -0.125f, Main.GlobalTime * 0.075f));
+				RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly * -0.125f, Main.GlobalTimeWrappedHourly * 0.075f));
 				RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f, 2f));
 				RadialEffect.Parameters["ringScale"].SetValue(0.05f);
 				RadialEffect.CurrentTechnique.Passes["Radial"].Apply();
 
-				Main.spriteBatch.Draw(mainTex, projectile.Center - Main.screenPosition, null, Color.LightGray, 0, halfsize, ((new Vector2(thesize, thesize)+new Vector2(8f,8f)) / (halfsize * 1.5f)) * MathHelper.Pi, default, 0);
+				Main.spriteBatch.Draw(mainTex, Projectile.Center - Main.screenPosition, null, Color.LightGray, 0, halfsize, ((new Vector2(thesize, thesize)+new Vector2(8f,8f)) / (halfsize * 1.5f)) * MathHelper.Pi, default, 0);
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -275,7 +260,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			AuraEffects(Main.player[projectile.owner], 1);
+			AuraEffects(Main.player[Projectile.owner], 1);
 			//Texture2D tex = ModContent.GetTexture("SGAmod/Items/Weapons/Auras/StoneGolem");
 			//spriteBatch.Draw(tex, projectile.Center+new Vector2(0,-32+(float)Math.Sin(projectile.localAI[0]/30f)*4f)-Main.screenPosition, null, lightColor, 0, new Vector2(tex.Width, tex.Height)/2f, projectile.scale, Main.player[projectile.owner].direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 			return false;
@@ -285,7 +270,7 @@ namespace SGAmod.Items.Weapons.Auras
 
 	public class AuraBorealisBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Hallow Lights Aura");
 			Description.SetDefault("An aura of Hallow Lights projects around you");

@@ -73,7 +73,7 @@ namespace SGAmod
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].fadeIn = 0.6f;
 					Main.dust[dust].velocity = randomcircle * i;
-					Main.dust[dust].color = Main.hslToRgb(((float)(Main.GlobalTime / 3) + (float)projectile2.whoAmI * 7.16237f) % 1f, 0.9f, 0.65f);
+					Main.dust[dust].color = Main.hslToRgb(((float)(Main.GlobalTimeWrappedHourly / 3) + (float)projectile2.whoAmI * 7.16237f) % 1f, 0.9f, 0.65f);
 				}
 
 				embued = true;
@@ -88,7 +88,7 @@ namespace SGAmod
 
 		public static bool IsTrueMelee(Projectile projectile, Player player)
         {
-			return ((projectile.melee && player.heldProj == projectile.whoAmI) || (projectile.modProjectile != null && (projectile.modProjectile is IShieldBashProjectile || projectile.modProjectile is ITrueMeleeProjectile)));
+			return ((projectile.DamageType == DamageClass.Melee && player.heldProj == projectile.whoAmI) || (projectile.ModProjectile != null && (projectile.ModProjectile is IShieldBashProjectile || projectile.ModProjectile is ITrueMeleeProjectile)));
 		}
 
 		public override void ModifyHitNPC(Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -166,7 +166,7 @@ namespace SGAmod
 						int itemid;
 						if (SGAmod.CoinsAndProjectiles.TryGetValue(projectile.type, out itemid))
 						{
-							Item.NewItem(projectile.Center, Vector2.Zero, itemid);
+							Item.NewItem(null, projectile.Center, Vector2.Zero, itemid);
 						}
 					}
 				}
@@ -202,7 +202,7 @@ namespace SGAmod
 					fungalAura += 1;
 					if (fungalAura == 180)
                     {
-						int proj = Projectile.NewProjectile(projectile.Center,Vector2.Zero,ModContent.ProjectileType<Items.Accessories.BungalHealingAura>(),0,0,projectile.owner,0,projectile.whoAmI+1);
+						int proj = Projectile.NewProjectile(null, projectile.Center,Vector2.Zero,ModContent.ProjectileType<Items.Accessories.BungalHealingAura>(),0,0,projectile.owner,0,projectile.whoAmI+1);
 						//Main.projectile[proj].ai[1] = projectile.whoAmI + 1;
 					}
 					if (projectile.velocity.Length() > 0.25)
@@ -210,14 +210,14 @@ namespace SGAmod
 						fungalAura = 0;
 					}
 
-                }
+                } 
                 else
                 {
 					fungalAura = 0;
 				}
 
 
-				if (projectile.melee)
+				if (projectile.DamageType == DamageClass.Melee)
 				{
 
 
@@ -227,7 +227,7 @@ namespace SGAmod
 					{
 						if (!owner.frostBurn && projectile.friendly && !projectile.hostile && !projectile.noEnchantments && Main.rand.Next(2 * (1 + projectile.extraUpdates)) == 0)
 						{
-							int num = Dust.NewDust(projectile.position, projectile.width, projectile.height, 135, projectile.velocity.X * 0.2f + (float)(projectile.direction * 3), projectile.velocity.Y * 0.2f, 100, default(Color), 2f);
+							int num = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.IceTorch, projectile.velocity.X * 0.2f + (float)(projectile.direction * 3), projectile.velocity.Y * 0.2f, 100, default, 2f);
 							Main.dust[num].noGravity = true;
 							Main.dust[num].velocity *= 0.7f;
 							Main.dust[num].velocity.Y -= 0.5f;
@@ -246,7 +246,7 @@ namespace SGAmod
 				Main.dust[dust].noGravity = true;
 				Main.dust[dust].fadeIn = 0.6f;
 				Main.dust[dust].velocity = projectile.velocity*Main.rand.NextFloat(0.25f,0.80f);
-				Main.dust[dust].color = Main.hslToRgb(((float)(Main.GlobalTime / 3)+(float)projectile.whoAmI*7.16237f) % 1f, 0.9f, 0.65f);
+				Main.dust[dust].color = Main.hslToRgb(((float)(Main.GlobalTimeWrappedHourly / 3)+(float)projectile.whoAmI*7.16237f) % 1f, 0.9f, 0.65f);
 			}
 
 			if (acid)
@@ -280,12 +280,12 @@ namespace SGAmod
 				}
 
 			}
-			if (projectile.modProjectile != null)
+			if (projectile.ModProjectile != null)
 			{
 				Player projowner = Main.player[projectile.owner];
-				if (projectile.modProjectile.mod == SGAmod.Instance && projowner.active && projowner.heldProj == projectile.whoAmI)
+				if (projectile.ModProjectile.Mod == SGAmod.Instance && projowner.active && projowner.heldProj == projectile.whoAmI)
 				{
-					projectile.Opacity = MathHelper.Clamp(projowner.stealth, 0.1f, 1f)*Math.Min(projectile.modProjectile is ClipWeaponReloading sub ? (float)projectile.timeLeft/20f : 1f,1f);
+					projectile.Opacity = MathHelper.Clamp(projowner.stealth, 0.1f, 1f)*Math.Min(projectile.ModProjectile is ClipWeaponReloading sub ? (float)projectile.timeLeft/20f : 1f,1f);
 				}
 			}
 		}
@@ -301,15 +301,15 @@ namespace SGAmod
 					if (owner != null)
 					{
 						SGAPlayer sgaply = owner.SGAPly();
-						if (sgaply.acidSet.Item2 && (projectile.Throwing().thrown || projectile.thrown))
+						if (sgaply.acidSet.Item2 && projectile.DamageType == DamageClass.Throwing)
 						{
 							acid = true;
 						}
 						if (sgaply.enchantedShieldPolish)
 						{
-							if (projectile.modProjectile != null && projectile.modProjectile is IShieldBashProjectile)
+							if (projectile.ModProjectile != null && projectile.ModProjectile is IShieldBashProjectile)
 							{
-								projectile.magic = true;
+								projectile.DamageType = DamageClass.Magic;
 							}
 						}
 					}
@@ -318,9 +318,9 @@ namespace SGAmod
 
 
 
-			if (projectile.modProjectile!=null){
+			if (projectile.ModProjectile!=null){
 
-		/*if ((projectile.modProjectile).GetType().Name=="JackpotRocket"){
+		/*if ((projectile.ModProjectile).GetType().Name=="JackpotRocket"){
 		projectile.velocity.Y+=0.1f;
 		projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f; 
 		}*/

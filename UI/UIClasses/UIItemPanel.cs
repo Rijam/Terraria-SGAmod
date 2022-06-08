@@ -71,7 +71,7 @@ namespace SGAmod.UI
 					Main.HoverItem = this.item.Clone();
 					Item arg_135_0 = Main.HoverItem;
 					string arg_130_0 = Main.HoverItem.Name;
-					ModItem expr_D3 = Main.HoverItem.modItem;
+					ModItem expr_D3 = Main.HoverItem.ModItem;
 					string arg_130_1;
 					if (expr_D3 == null)
 					{
@@ -79,9 +79,9 @@ namespace SGAmod.UI
 					}
 					else
 					{
-						string arg_120_0 = expr_D3.mod.Name;
-						ModItem expr_EE = Main.HoverItem.modItem;
-						arg_130_1 = arg_120_0.Insert(((expr_EE != null) ? new int?(expr_EE.mod.Name.Length) : null).Value, "]").Insert(0, " [");
+						string arg_120_0 = expr_D3.Mod.Name;
+						ModItem expr_EE = Main.HoverItem.ModItem;
+						arg_130_1 = arg_120_0.Insert(((expr_EE != null) ? new int?(expr_EE.Mod.Name.Length) : null).Value, "]").Insert(0, " [");
 					}
 					arg_135_0.SetNameOverride(arg_130_0 + arg_130_1);
 				}
@@ -105,7 +105,7 @@ namespace SGAmod.UI
 			Vector2 position = new Vector2(innerDimensions.X, innerDimensions.Y);
 			position.X += innerDimensions.Width * 1f / 2f - (float)rectangle.Width * num / 2f;
 			position.Y += innerDimensions.Height * 1f / 2f - (float)rectangle.Height * num / 2f;
-			if (this.item.modItem == null || this.item.modItem.PreDrawInInventory(spriteBatch, position, rectangle, color, color, Vector2.Zero, num))
+			if (this.item.ModItem == null || this.item.ModItem.PreDrawInInventory(spriteBatch, position, rectangle, color, color, Vector2.Zero, num))
 			{
 				spriteBatch.Draw(texture2D, position, new Rectangle?(rectangle), color, 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
 				Item expr_2B9 = this.item;
@@ -114,7 +114,7 @@ namespace SGAmod.UI
 					spriteBatch.Draw(texture2D, position, new Rectangle?(rectangle), color, 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
 				}
 			}
-			ModItem expr_303 = this.item.modItem;
+			ModItem expr_303 = this.item.ModItem;
 			if (expr_303 != null)
 			{
 				expr_303.PostDrawInInventory(spriteBatch, position, rectangle, color, color, Vector2.Zero, num);

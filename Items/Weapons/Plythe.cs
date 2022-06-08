@@ -25,31 +25,31 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.Throwing().thrown=true;
-			item.damage = 110;
-			item.crit = 10;
-			item.shootSpeed = 45f;
-			item.shoot = ModContent.ProjectileType<Scythe>();
-			item.useTurn = true;
-			item.width = 54;
-			item.height = 32;
-			item.maxStack = 5;
-			item.knockBack = 0;
-			item.consumable = false;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 8;
-			item.useTime = 8;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
-			item.value = Item.buyPrice(1, 0, 0, 0);
-			item.rare = ItemRarityID.Cyan;
+			Item.useStyle = 1;
+			Item.Throwing().DamageType=DamageClass.Throwing;
+			Item.damage = 110;
+			Item.crit = 10;
+			Item.shootSpeed = 45f;
+			Item.shoot = ModContent.ProjectileType<Scythe>();
+			Item.useTurn = true;
+			Item.width = 54;
+			Item.height = 32;
+			Item.maxStack = 5;
+			Item.knockBack = 0;
+			Item.consumable = false;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 8;
+			Item.useTime = 8;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.autoReuse = true;
+			Item.value = Item.buyPrice(1, 0, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.ownedProjectileCounts[item.shoot] < item.stack;
+			return player.ownedProjectileCounts[Item.shoot] < Item.stack;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -61,14 +61,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LightDisc, 1);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 6);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 4);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 2);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this,2);
-            recipe.AddRecipe();
+            CreateRecipe(2).AddIngredient(ItemID.LightDisc, 1).AddIngredient(mod.ItemType("StarMetalBar"), 6).AddIngredient(mod.ItemType("CryostalBar"), 4).AddIngredient(mod.ItemType("PrismalBar"), 2).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -79,22 +72,22 @@ namespace SGAmod.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Scythe");
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 64;
-			projectile.height = 64;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 120;
-			projectile.penetrate = 12;
-			aiType = 0;
+			Projectile.width = 64;
+			Projectile.height = 64;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 120;
+			Projectile.penetrate = 12;
+			AIType = 0;
 			drawOriginOffsetX = 8;
 			drawOriginOffsetY = -8;
 		}
@@ -106,12 +99,12 @@ namespace SGAmod.Items.Weapons
 
 		public Scythe()
 		{
-			projectile.localAI[0] = 0.5f;
+			Projectile.localAI[0] = 0.5f;
 		}
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.penetrate < 10)
+			if (Projectile.penetrate < 10)
 				return false;
 			else
 				return base.CanHitNPC(target);
@@ -119,15 +112,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			projectile.velocity *= -1f;
-			target.immune[projectile.owner] = 5;
+			Projectile.velocity *= -1f;
+			target.immune[Projectile.owner] = 5;
 			hittime = 150f;
 		}
 
 		public override void AI()
 		{
 
-			Lighting.AddLight(projectile.Center, Color.Aquamarine.ToVector3() * 0.5f);
+			Lighting.AddLight(Projectile.Center, Color.Aquamarine.ToVector3() * 0.5f);
 
 			hittime = Math.Max(1f, hittime / 1.5f);
 			;
@@ -136,56 +129,56 @@ namespace SGAmod.Items.Weapons
 			//Vector2 positiondust = Vector2.Normalize(new Vector2(projectile.velocity.X, projectile.velocity.Y)) * 8f;
 			for (float num315 = 0; num315 < MathHelper.Pi + 0.04; num315 = num315 + MathHelper.Pi)
 			{
-				float angle = (projectile.rotation + MathHelper.Pi / 5f) + num315;
+				float angle = (Projectile.rotation + MathHelper.Pi / 5f) + num315;
 				Vector2 thisloc = new Vector2((float)(Math.Cos(angle) * dist2), (float)(Math.Sin(angle) * dist2));
-				Vector2 offset = (thisloc * projectile.localAI[0])+projectile.velocity;
-				int num316 = Dust.NewDust(new Vector2(projectile.Center.X - 1, projectile.Center.Y) + offset, 0, 0, mod.DustType("NovusSparkleBlue"), 0f, 0f, 50, Color.White, 1.5f);
+				Vector2 offset = (thisloc * Projectile.localAI[0])+Projectile.velocity;
+				int num316 = Dust.NewDust(new Vector2(Projectile.Center.X - 1, Projectile.Center.Y) + offset, 0, 0, Mod.Find<ModDust>("NovusSparkleBlue").Type, 0f, 0f, 50, Color.White, 1.5f);
 				Main.dust[num316].noGravity = true;
 				Main.dust[num316].velocity = thisloc / 30f;
 			}
 
-			projectile.ai[0] = projectile.ai[0] + 1;
-			projectile.velocity.Y += 0.1f;
-			if (projectile.ai[0] > 14f && !Main.player[projectile.owner].dead)
+			Projectile.ai[0] = Projectile.ai[0] + 1;
+			Projectile.velocity.Y += 0.1f;
+			if (Projectile.ai[0] > 14f && !Main.player[Projectile.owner].dead)
 			{
-				Vector2 dist = (Main.player[projectile.owner].Center - projectile.Center);
+				Vector2 dist = (Main.player[Projectile.owner].Center - Projectile.Center);
 				Vector2 distnorm = dist; distnorm.Normalize();
-				projectile.velocity += distnorm * 5f;
-				projectile.velocity /= 1.05f;
+				Projectile.velocity += distnorm * 5f;
+				Projectile.velocity /= 1.05f;
 				//projectile.Center+=(dist*((float)(projectile.timeLeft-12)/28));
 				if (dist.Length() < 80)
-					projectile.Kill();
+					Projectile.Kill();
 			}
 
-			NPC target = Main.npc[Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), true, true, true, projectile)];
-			if (target != null && projectile.penetrate > 9)
+			NPC target = Main.npc[Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), true, true, true, Projectile)];
+			if (target != null && Projectile.penetrate > 9)
 			{
-				if ((target.Center - projectile.Center).Length() < 500f)
+				if ((target.Center - Projectile.Center).Length() < 500f)
 				{
 
-					projectile.Center += (projectile.DirectionTo(target.Center) * (projectile.ai[0] > 14f ? (50f * Main.player[projectile.owner].thrownVelocity) / hittime : 12f));
+					Projectile.Center += (Projectile.DirectionTo(target.Center) * (Projectile.ai[0] > 14f ? (50f * Main.player[Projectile.owner].thrownVelocity) / hittime : 12f));
 
 				}
 			}
 
-			projectile.localAI[0] += ((hittime > 10 ? 3.0f : 0.25f) - projectile.localAI[0])/ 10f;
-			projectile.localAI[0] = MathHelper.Clamp(projectile.localAI[0], 0.5f, 1f);
-			projectile.rotation += 0.38f + (hittime/50f);
+			Projectile.localAI[0] += ((hittime > 10 ? 3.0f : 0.25f) - Projectile.localAI[0])/ 10f;
+			Projectile.localAI[0] = MathHelper.Clamp(Projectile.localAI[0], 0.5f, 1f);
+			Projectile.rotation += 0.38f + (hittime/50f);
 		}
 
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D texture = mod.GetTexture("Projectiles/ScytheGlow");
-			Texture2D texture2 = mod.GetTexture("Items/Weapons/Plythe");
-			float scale = projectile.localAI[0];
+			Texture2D texture = Mod.Assets.Request<Texture2D>("Projectiles/ScytheGlow").Value;
+			Texture2D texture2 = Mod.Assets.Request<Texture2D>("Items/Weapons/Plythe").Value;
+			float scale = Projectile.localAI[0];
 
-			spriteBatch.Draw(texture2, projectile.Center - Main.screenPosition, null, lightColor, projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture2, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, 0f);
 
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 
-			spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, null, Color.Aqua* scale, projectile.rotation + MathHelper.Pi / 4f, tex.Size() / 2f, new Vector2(0.5f, 1.75f*scale), default, 0);
+			spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, null, Color.Aqua* scale, Projectile.rotation + MathHelper.Pi / 4f, tex.Size() / 2f, new Vector2(0.5f, 1.75f*scale), default, 0);
 
 			return false;
 		}

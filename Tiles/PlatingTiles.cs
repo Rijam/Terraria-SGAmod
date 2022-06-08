@@ -7,7 +7,7 @@ namespace SGAmod.Tiles
 {
 	public class AdvancedPlatingTile : ModTile
 	{
-		public override void SetDefaults() {
+		public override void SetStaticDefaults() {
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
@@ -25,7 +25,7 @@ namespace SGAmod.Tiles
 	}
 	public class VibraniumPlatingTile : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;

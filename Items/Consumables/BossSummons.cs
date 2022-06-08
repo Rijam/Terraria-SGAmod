@@ -16,6 +16,7 @@ using SGAmod.NPCs;
 using Terraria.Localization;
 using Microsoft.Xna.Framework.Audio;
 using SGAmod.HavocGear.Items;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Consumables
 {
@@ -58,21 +59,21 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			item.rare = 8;
+			Item.rare = 8;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			if (SGAWorld.downedWraiths == 3 && !NPC.downedMoonlord)
 			{
-				item.consumable = false;
+				Item.consumable = false;
 			} else {
-				item.consumable = true;
+				Item.consumable = true;
 			}
 			return base.CanUseItem(player);
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (item.consumable == false) {
 				if (player == Main.LocalPlayer)
@@ -87,12 +88,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("Fragment", 4);
-			recipe.AddIngredient(null, "WraithCoreFragment2", 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddRecipeGroup("Fragment", 4).AddIngredient(null, "WraithCoreFragment2", 1).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -113,10 +109,10 @@ namespace SGAmod.Items.Consumables
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			item.rare = 5;
+			Item.rare = 5;
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("CobaltWraith"));
 			Main.PlaySound(15, (int)player.position.X, (int)player.position.Y, 0);
@@ -125,13 +121,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "WraithCoreFragment", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier1HardmodeOre", 10);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 5);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "WraithCoreFragment", 1).AddRecipeGroup("SGAmod:Tier1HardmodeOre", 10).AddIngredient(mod.ItemType("WraithFragment3"), 5).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}
@@ -150,17 +140,17 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 2;
-			item.useAnimation = 2;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = 1;
-			item.UseSound = SoundID.Item1;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 2;
+			Item.useAnimation = 2;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = 1;
+			Item.UseSound = SoundID.Item1;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -169,14 +159,14 @@ namespace SGAmod.Items.Consumables
 			SGAmod.Instance.Logger.Warn("DEBUG SERVER: item canuse");
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 				SGAmod.Instance.Logger.Warn("DEBUG CLIENT: item canuse");
-			if (!NPC.AnyNPCs(mod.NPCType("CopperWraith")) && !NPC.AnyNPCs(mod.NPCType("CobaltWraith")) && !NPC.AnyNPCs(mod.NPCType("LuminiteWraith")))
+			if (!NPC.AnyNPCs(Mod.Find<ModNPC>("CopperWraith").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("CobaltWraith").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("LuminiteWraith").Type))
 			{
 				return base.CanUseItem(player);
 			} else {
 				return false;
 			}
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (Main.netMode == NetmodeID.Server)
 				SGAmod.Instance.Logger.Warn("DEBUG SERVER: item used");
@@ -189,12 +179,7 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:Tier1Ore", 15);
-			recipe.AddIngredient(ItemID.FallenStar, 2);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddRecipeGroup("SGAmod:Tier1Ore", 15).AddIngredient(ItemID.FallenStar, 2).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 
@@ -207,20 +192,20 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 12;
-			item.maxStack = 99;
-			item.rare = 3;
-			item.useAnimation = 45;
-			item.useTime = 45;
-			item.useStyle = 4;
-			item.UseSound = SoundID.Item44;
-			item.consumable = true;
+			Item.width = 12;
+			Item.height = 12;
+			Item.maxStack = 99;
+			Item.rare = 3;
+			Item.useAnimation = 45;
+			Item.useTime = 45;
+			Item.useStyle = 4;
+			Item.UseSound = SoundID.Item44;
+			Item.consumable = true;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (player.ZoneBeach && !NPC.AnyNPCs(mod.NPCType("SharkvernHead"))) {
+			if (player.ZoneBeach && !NPC.AnyNPCs(Mod.Find<ModNPC>("SharkvernHead").Type)) {
 				return base.CanUseItem(player);
 			} else {
 				if (player == Main.LocalPlayer)
@@ -230,7 +215,7 @@ namespace SGAmod.Items.Consumables
 			}
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 				NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("SharkvernHead"));
 				Main.PlaySound(SoundID.Roar, player.position, 0);
@@ -239,13 +224,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Seashell, 1);
-			recipe.AddIngredient(ItemID.SharkFin, 1);
-			recipe.AddIngredient(ItemID.ChlorophyteBar, 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Seashell, 1).AddIngredient(ItemID.SharkFin, 1).AddIngredient(ItemID.ChlorophyteBar, 5).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 
@@ -258,25 +237,19 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.RottenEgg, 1);
-			recipe.AddIngredient(ItemID.Cobweb, 25);
-			recipe.AddRecipeGroup("SGAmod:EvilBossMaterials", 5);
-			recipe.AddTile(TileID.DemonAltar);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.RottenEgg, 1).AddIngredient(ItemID.Cobweb, 25).AddRecipeGroup("SGAmod:EvilBossMaterials", 5).AddTile(TileID.DemonAltar).Register();
 		}
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 12;
-			item.maxStack = 99;
-			item.rare = 2;
-			item.useAnimation = 45;
-			item.useTime = 45;
-			item.useStyle = 4;
-			item.UseSound = SoundID.Item44;
-			item.consumable = true;
+			Item.width = 12;
+			Item.height = 12;
+			Item.maxStack = 99;
+			Item.rare = 2;
+			Item.useAnimation = 45;
+			Item.useTime = 45;
+			Item.useStyle = 4;
+			Item.UseSound = SoundID.Item44;
+			Item.consumable = true;
 		}
 
 		public static bool Underground(Entity player) => (int)((double)((player.position.Y + (float)player.height) * 2f / 16f) - Main.worldSurface * 2.0) > 0;
@@ -286,7 +259,7 @@ namespace SGAmod.Items.Consumables
 		{
 			//bool underground = (int)((double)((player.position.Y + (float)player.height) * 2f / 16f) - Main.worldSurface * 2.0) > 0;
 
-			if (Underground(player) && !NPC.AnyNPCs(mod.NPCType("SpiderQueen")))
+			if (Underground(player) && !NPC.AnyNPCs(Mod.Find<ModNPC>("SpiderQueen").Type))
 			{
 				return true;
 			}
@@ -298,7 +271,7 @@ namespace SGAmod.Items.Consumables
 
 			}
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("SpiderQueen"));
 			Main.PlaySound(SoundID.Roar, player.position, 0);
@@ -315,48 +288,48 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Lerp(Color.BlueViolet, Color.HotPink, (float)Math.Sin((Main.essScale - 0.70f) / 0.30f)).ToVector3() * 0.85f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.Lerp(Color.BlueViolet, Color.HotPink, (float)Math.Sin((Main.essScale - 0.70f) / 0.30f)).ToVector3() * 0.85f * Main.essScale);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 30;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.consumable = true;
-			item.useTime = 32;
-			item.useAnimation = 32;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = 9;
-			item.UseSound = SoundID.Item35;
+			Item.maxStack = 30;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.consumable = true;
+			Item.useTime = 32;
+			Item.useAnimation = 32;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = 9;
+			Item.UseSound = SoundID.Item35;
 		}
         public override void Update(ref float gravity, ref float maxFallSpeed)
         {
-			if (item.velocity.Y == 0 && item.stack<2)
+			if (Item.velocity.Y == 0 && Item.stack<2)
 			{
 				//Main.NewText("Debug Message!");
-				Point tilePosition = new Point((int)(item.Center.X / 16), ((int)(item.Center.Y) / 16) + 2);
+				Point tilePosition = new Point((int)(Item.Center.X / 16), ((int)(Item.Center.Y) / 16) + 2);
 				Tile tile = Framing.GetTileSafely(tilePosition.X, tilePosition.Y);
 				//Main.NewText(tile.type + " this type "+item.position);
-				if (tile.type == TileID.Pearlstone && AcidicEgg.Underground(item))
+				if (tile.TileType == TileID.Pearlstone && AcidicEgg.Underground(Item))
 				{
-					item.ownTime += 2;
+					Item.ownTime += 2;
 
-					if (item.ownTime % 50 == 0)
+					if (Item.ownTime % 50 == 0)
 					{
-						SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_DarkMageCastHeal, item.Center);
+						SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_DarkMageCastHeal, Item.Center);
 						if (sound != null)
 						{
-							sound.Pitch = -0.65f + (item.ownTime / 1000f);
+							sound.Pitch = -0.65f + (Item.ownTime / 1000f);
 						}
 					}
 
-					if (item.ownTime > 600 && item.stack<2)
+					if (Item.ownTime > 600 && Item.stack<2)
                     {
-						NPC.NewNPC((int)item.Center.X, (int)item.Center.Y, ModContent.NPCType<PrismBanshee>());
-						item.active = false;
+						NPC.NewNPC((int)Item.Center.X, (int)Item.Center.Y, ModContent.NPCType<PrismBanshee>());
+						Item.active = false;
                     }
 				}
 
@@ -364,14 +337,14 @@ namespace SGAmod.Items.Consumables
 		}
         public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
-			PrismBanshee.DrawPrismCore(spriteBatch, lightColor, item.Center, item.ownTime*0.8f, item.scale, 96f * (item.ownTime/600f));
+			PrismBanshee.DrawPrismCore(spriteBatch, lightColor, Item.Center, Item.ownTime*0.8f, Item.scale, 96f * (Item.ownTime/600f));
 			return true;
         }
         public override bool CanUseItem(Player player)
 		{
 			bool underground = (int)((double)((player.position.Y + (float)player.height) * 2f / 16f) - Main.worldSurface * 2.0) > 0;
 			;
-			if (underground && player.ZoneHoly && !NPC.AnyNPCs(mod.NPCType("PrismBanshee")))
+			if (underground && player.ZoneHoly && !NPC.AnyNPCs(Mod.Find<ModNPC>("PrismBanshee").Type))
 			{
 				if (player == Main.LocalPlayer)
 					Main.NewText("Here is good, rest it on some pearlstone!", 200, 100, 150);
@@ -385,7 +358,7 @@ namespace SGAmod.Items.Consumables
 
 			}
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("PrismBanshee"));
 			Main.PlaySound(SoundID.Roar, player.position, 1);
@@ -402,32 +375,24 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<WraithFragment3>(), 5);
-			recipe.AddIngredient(ModContent.ItemType<MoistSand>(), 10);
-			recipe.AddIngredient(ItemID.MudBlock, 10);
-			recipe.AddIngredient(ItemID.Gel, 20);
-			recipe.AddIngredient(ItemID.Bone, 5);
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<WraithFragment3>(), 5).AddIngredient(ModContent.ItemType<MoistSand>(), 10).AddIngredient(ItemID.MudBlock, 10).AddIngredient(ItemID.Gel, 20).AddIngredient(ItemID.Bone, 5).AddTile(TileID.Furnaces).Register();
 		}
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 12;
-			item.maxStack = 99;
-			item.rare = 2;
-			item.useAnimation = 45;
-			item.useTime = 45;
-			item.useStyle = 4;
-			item.UseSound = SoundID.Item44;
-			item.consumable = true;
+			Item.width = 12;
+			Item.height = 12;
+			Item.maxStack = 99;
+			Item.rare = 2;
+			Item.useAnimation = 45;
+			Item.useTime = 45;
+			Item.useStyle = 4;
+			Item.UseSound = SoundID.Item44;
+			Item.consumable = true;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (player.ZoneJungle && !NPC.AnyNPCs(mod.NPCType("Murk")) && !NPC.AnyNPCs(mod.NPCType("BossFlyMiniboss1"))) {
+			if (player.ZoneJungle && !NPC.AnyNPCs(Mod.Find<ModNPC>("Murk").Type) && !NPC.AnyNPCs(Mod.Find<ModNPC>("BossFlyMiniboss1").Type)) {
 				return base.CanUseItem(player);
 			} else {
 				if (player == Main.LocalPlayer)
@@ -437,7 +402,7 @@ namespace SGAmod.Items.Consumables
 			}
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 				NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType(SGAWorld.downedMurk == 0 || TheWholeExperience.Check() ? "BossFlyMiniboss1" : "Murk"));
 				Main.PlaySound(SoundID.Roar, player.position, 0);
@@ -454,28 +419,28 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 2;
-			item.useAnimation = 2;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = ItemRarityID.Cyan;
-			item.UseSound = SoundID.Item1;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 2;
+			Item.useAnimation = 2;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = ItemRarityID.Cyan;
+			Item.UseSound = SoundID.Item1;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			if (SGAmod.Calamity.Item1)
-				tooltips.Add(new TooltipLine(mod, "NoU", "Summoning this boss with automatically disable Revengence and Death Modes"));
+				tooltips.Add(new TooltipLine(Mod, "NoU", "Summoning this boss with automatically disable Revengence and Death Modes"));
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (!NPC.AnyNPCs(mod.NPCType("SPinky")) && !NPC.AnyNPCs(50) && !Main.dayTime)
+			if (!NPC.AnyNPCs(Mod.Find<ModNPC>("SPinky").Type) && !NPC.AnyNPCs(50) && !Main.dayTime)
 			{
 				return base.CanUseItem(player);
 			} else {
@@ -485,7 +450,7 @@ namespace SGAmod.Items.Consumables
 			}
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (item.consumable == true) {
 				SGAmod.CalamityNoRevengenceNoDeathNoU();
@@ -525,26 +490,26 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.noUseGraphic = true;
-			item.rare = 9;
-			item.ammo = AmmoID.Snowball;
-			item.UseSound = SoundID.Item1;
-			item.shoot = ProjectileID.SnowBallFriendly;
-			item.shootSpeed = 10f;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.noUseGraphic = true;
+			Item.rare = 9;
+			Item.ammo = AmmoID.Snowball;
+			Item.UseSound = SoundID.Item1;
+			Item.shoot = ProjectileID.SnowBallFriendly;
+			Item.shootSpeed = 10f;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (!NPC.AnyNPCs(mod.NPCType("Cirno")) && Main.projectile.FirstOrDefault(proj => proj.type == ModContent.ProjectileType<CirnoBall>() && proj.active) == default)
+			if (!NPC.AnyNPCs(Mod.Find<ModNPC>("Cirno").Type) && Main.projectile.FirstOrDefault(proj => proj.type == ModContent.ProjectileType<CirnoBall>() && proj.active) == default)
 			{
 				if (!Main.dayTime || !player.ZoneSnow)
 				{
@@ -564,7 +529,7 @@ namespace SGAmod.Items.Consumables
             type = ModContent.ProjectileType<CirnoBall>();
 			return true;
 		}
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
 		{
 			if (item.consumable == false)
 			{
@@ -580,15 +545,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Snowball, 1);
-			recipe.AddIngredient(ItemID.SoulofNight, 2);
-			recipe.AddIngredient(ItemID.SoulofLight, 2);
-			recipe.AddIngredient(mod.ItemType("FrigidShard"), 9);
-			recipe.AddIngredient(mod.ItemType("IceFairyDust"), 9);
-			recipe.AddTile(TileID.IceMachine); //IceMachine
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Snowball, 1).AddIngredient(ItemID.SoulofNight, 2).AddIngredient(ItemID.SoulofLight, 2).AddIngredient(mod.ItemType("FrigidShard"), 9).AddIngredient(mod.ItemType("IceFairyDust"), 9).AddTile(TileID.IceMachine).Register();
 		}
 	}
 
@@ -610,60 +567,60 @@ namespace SGAmod.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.SnowBallFriendly);
-			projectile.ranged = false;
-			projectile.tileCollide = true;
-			projectile.friendly = false;
-			projectile.hostile = false;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			Projectile.CloneDefaults(ProjectileID.SnowBallFriendly);
+			// projectile.ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Projectile.tileCollide = true;
+			Projectile.friendly = false;
+			Projectile.hostile = false;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 3;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[1] += 1;
-			if (projectile.localAI[1] > 60)
+			Projectile.localAI[1] += 1;
+			if (Projectile.localAI[1] > 60)
             {
-				projectile.aiStyle = -1;
-				projectile.velocity *= 0.90f;
+				Projectile.aiStyle = -1;
+				Projectile.velocity *= 0.90f;
 
-				if ((int)projectile.localAI[1] % 30 == 0)
+				if ((int)Projectile.localAI[1] % 30 == 0)
 				{
-					SoundEffectInstance sound = Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 25);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 25);
 					if (sound!=null)
-						sound.Pitch += (projectile.localAI[1] - 60) / 420f;
+						sound.Pitch += (Projectile.localAI[1] - 60) / 420f;
 				}
 
-				for (int num654 = 0; num654 < 1 + projectile.localAI[1]/9f; num654++)
+				for (int num654 = 0; num654 < 1 + Projectile.localAI[1]/9f; num654++)
 				{
 					Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize(); Vector2 ogcircle = randomcircle; randomcircle *= (float)(num654 / 9.00);
-					Dust num655 = Dust.NewDustPerfect(projectile.Center+new Vector2(2,2) + ogcircle * 10f, 59, -projectile.velocity + randomcircle * 2f, 150, Color.Aqua, 1.5f);
+					Dust num655 = Dust.NewDustPerfect(Projectile.Center+new Vector2(2,2) + ogcircle * 10f, 59, -Projectile.velocity + randomcircle * 2f, 150, Color.Aqua, 1.5f);
 					num655.noGravity = true;
 					num655.noLight = true;
 				}
 
-				if (projectile.localAI[1] > 360)
+				if (Projectile.localAI[1] > 360)
                 {
 					NPC FakeNPC = new NPC();
 						FakeNPC.SetDefaults(ModContent.NPCType<Cirno>());
 					if (Main.netMode == NetmodeID.SinglePlayer)
 					{
-						int npc = NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y + 24, ModContent.NPCType<Cirno>());
+						int npc = NPC.NewNPC((int)Projectile.Center.X, (int)Projectile.Center.Y + 24, ModContent.NPCType<Cirno>());
 					}
 					else
 					{
-						if (Main.netMode != NetmodeID.Server && Main.myPlayer == projectile.owner)
+						if (Main.netMode != NetmodeID.Server && Main.myPlayer == Projectile.owner)
 						{
-							ModPacket packet = mod.GetPacket();
+							ModPacket packet = Mod.GetPacket();
 							packet.Write((ushort)999);
-							packet.Write((int)projectile.Center.X);
-							packet.Write((int)projectile.Center.Y);
+							packet.Write((int)Projectile.Center.X);
+							packet.Write((int)Projectile.Center.Y);
 							packet.Write(ModContent.NPCType<NPCs.Cirno>());
 							packet.Write(0);
 							packet.Write(0);
 							packet.Write(0);
 							packet.Write(0);
-							packet.Write(projectile.owner);
+							packet.Write(Projectile.owner);
 							packet.Send();
 						}
 					}
@@ -678,15 +635,15 @@ namespace SGAmod.Items.Consumables
 						NetMessage.BroadcastChatMessage(NetworkText.FromKey("Announcement.HasAwoken", FakeNPC.GetTypeNetName()), new Color(175, 75, 255));
 					}
 
-					Main.PlaySound(SoundID.Roar, (int)projectile.position.X, (int)projectile.position.Y, 0);
-					for (float num654 = 0; num654 < 25 + projectile.localAI[1] / 10f; num654+=0.25f)
+					SoundEngine.PlaySound(SoundID.Roar, (int)Projectile.position.X, (int)Projectile.position.Y, 0);
+					for (float num654 = 0; num654 < 25 + Projectile.localAI[1] / 10f; num654+=0.25f)
 					{
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize(); Vector2 ogcircle = randomcircle; randomcircle *= (float)(num654 / 10.00);
-						int num655 = Dust.NewDust(projectile.Center + new Vector2(2, 2) + ogcircle * 16f, 0, 0, 88, -projectile.velocity.X + randomcircle.X * 6f, -projectile.velocity.Y + randomcircle.Y * 6f, 150, Color.Aqua, 1.6f);
+						int num655 = Dust.NewDust(Projectile.Center + new Vector2(2, 2) + ogcircle * 16f, 0, 0, 88, -Projectile.velocity.X + randomcircle.X * 6f, -Projectile.velocity.Y + randomcircle.Y * 6f, 150, Color.Aqua, 1.6f);
 						Main.dust[num655].noGravity = true;
 						Main.dust[num655].noLight = true;
 					}
-					projectile.Kill();
+					Projectile.Kill();
 
 				}
 
@@ -706,17 +663,17 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = 2;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 4;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = 2;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 4;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (!NPC.AnyNPCs(mod.NPCType("CaliburnGuardianHardmode")) && player.GetModPlayer<SGAPlayer>().DankShrineZone && Main.hardMode)
+			if (!NPC.AnyNPCs(Mod.Find<ModNPC>("CaliburnGuardianHardmode").Type) && player.GetModPlayer<SGAPlayer>().DankShrineZone && Main.hardMode)
 			{
 				return base.CanUseItem(player);
 			}
@@ -728,7 +685,7 @@ namespace SGAmod.Items.Consumables
 			}
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (Main.hardMode && player.GetModPlayer<SGAPlayer>().DankShrineZone)
 			{
@@ -742,8 +699,8 @@ namespace SGAmod.Items.Consumables
 		{
 			if (SGAWorld.darknessVision)
 			{
-				tooltips.Add(new TooltipLine(mod, "CaliburnCompessUpgrade", Idglib.ColorText(Color.MediumPurple, "Upgraded to also point to Dark Sectors in the world")));
-				tooltips.Add(new TooltipLine(mod, "CaliburnCompessUpgrade", Idglib.ColorText(Color.MediumPurple, "Darkness from Dark Sectors is reduced while in your inventory")));
+				tooltips.Add(new TooltipLine(Mod, "CaliburnCompessUpgrade", Idglib.ColorText(Color.MediumPurple, "Upgraded to also point to Dark Sectors in the world")));
+				tooltips.Add(new TooltipLine(Mod, "CaliburnCompessUpgrade", Idglib.ColorText(Color.MediumPurple, "Darkness from Dark Sectors is reduced while in your inventory")));
 			}
 		}
 
@@ -757,30 +714,30 @@ namespace SGAmod.Items.Consumables
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 2;
-			item.useAnimation = 2;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = 9;
-			item.UseSound = SoundID.Item1;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 2;
+			Item.useAnimation = 2;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = 9;
+			Item.UseSound = SoundID.Item1;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (!NPC.AnyNPCs(mod.NPCType("TPD")) && !NPC.AnyNPCs(50))
+			if (!NPC.AnyNPCs(Mod.Find<ModNPC>("TPD").Type) && !NPC.AnyNPCs(50))
 			{
 				if (Main.dayTime)
 				{
-					item.consumable = false;
+					Item.consumable = false;
 				}
 				else
 				{
-					item.consumable = true;
+					Item.consumable = true;
 				}
 				return base.CanUseItem(player);
 			}
@@ -789,7 +746,7 @@ namespace SGAmod.Items.Consumables
 				return false;
 			}
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (item.consumable == false || Main.dayTime)
 			{
@@ -806,17 +763,7 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			//recipe.AddIngredient(ItemID.LunarBar, 10);
-			recipe.AddIngredient(544, 1);
-			recipe.AddIngredient(556, 1);
-			recipe.AddIngredient(557, 1);
-			recipe.AddIngredient(547, 3);
-			recipe.AddIngredient(548, 3);
-			recipe.AddIngredient(549, 3);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(544, 1).AddIngredient(556, 1).AddIngredient(557, 1).AddIngredient(547, 3).AddIngredient(548, 3).AddIngredient(549, 3).AddTile(TileID.MythrilAnvil).Register();
 		}
 	}
 	public class TruelySusEye : BaseBossSummon
@@ -831,13 +778,13 @@ namespace SGAmod.Items.Consumables
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			if (SGAmod.Calamity.Item1)
-				tooltips.Add(new TooltipLine(mod, "NoU", "Summoning this boss with automatically disable Revengence and Death Modes"));
+				tooltips.Add(new TooltipLine(Mod, "NoU", "Summoning this boss with automatically disable Revengence and Death Modes"));
 		}
 		public override bool CanUseItem(Player player)
 	{
 			if ((DD2Event.DownedInvasionT3 && NPC.downedMartians) && !Main.dayTime && Main.netMode<1)
 			{
-				if (NPC.CountNPCS(mod.NPCType("Harbinger"))<1 && NPC.CountNPCS(NPCID.MoonLordFreeEye) < 1)
+				if (NPC.CountNPCS(Mod.Find<ModNPC>("Harbinger").Type)<1 && NPC.CountNPCS(NPCID.MoonLordFreeEye) < 1)
 				{
 					return base.CanUseItem(player);
 				}
@@ -852,7 +799,7 @@ namespace SGAmod.Items.Consumables
 				return false;
 			}
 	}
-	public override bool UseItem(Player player)
+	public override bool? UseItem(Player player)
 	{
 			SGAmod.CalamityNoRevengenceNoDeathNoU();
 			NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Harbinger"));
@@ -862,28 +809,22 @@ namespace SGAmod.Items.Consumables
 
 	public override void AddRecipes()
 	{
-		ModRecipe recipe = new ModRecipe(mod);
-		//recipe.AddIngredient(ItemID.LunarBar, 10);
-		recipe.AddIngredient(ItemID.Ectoplasm, 5);
-		recipe.AddIngredient(ItemID.SuspiciousLookingEye, 1);
-		recipe.AddTile(TileID.CrystalBall);
-		recipe.SetResult(this);
-		recipe.AddRecipe();
+		CreateRecipe(1).AddIngredient(ItemID.Ectoplasm, 5).AddIngredient(ItemID.SuspiciousLookingEye, 1).AddTile(TileID.CrystalBall).Register();
 	}
 
 	public override void SetDefaults()
 	{
-		item.rare = 9;
-		item.maxStack = 999;
-		item.consumable = true;
-		item.width = 40;
-		item.height = 40;
-		item.useTime = 30;
-		item.useAnimation = 30;
-		item.useStyle = 4;
-		item.noMelee = true; //so the item's animation doesn't do damage
-		item.value = 0;
-		item.UseSound = SoundID.Item8;
+		Item.rare = 9;
+		Item.maxStack = 999;
+		Item.consumable = true;
+		Item.width = 40;
+		Item.height = 40;
+		Item.useTime = 30;
+		Item.useAnimation = 30;
+		Item.useStyle = 4;
+		Item.noMelee = true; //so the item's animation doesn't do damage
+		Item.value = 0;
+		Item.UseSound = SoundID.Item8;
 	}
 
 
@@ -913,7 +854,7 @@ namespace SGAmod.Items.Consumables
 		{
 			if (SGAWorld.downedHellion < 2)
 			{
-				TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Material" && x.mod == "Terraria");
+				TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Material" && x.Mod == "Terraria");
 				if (tt != null)
 				{
 					int index = tooltips.FindIndex(here => here == tt);
@@ -922,51 +863,51 @@ namespace SGAmod.Items.Consumables
 			}
 			else
 			{
-				tooltips.Add(new TooltipLine(mod, "Nmxx", "Useable in crafting"));
+				tooltips.Add(new TooltipLine(Mod, "Nmxx", "Useable in crafting"));
 			}
 
 			if (SGAWorld.downedSPinky && SGAWorld.downedCratrosityPML && SGAWorld.downedWraiths>3)
 			{
 				if (SGAWorld.downedHellion > 0)
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "Hold 'left control' while you use the item to skip Hellion Core, this costs 25 Souls of Byte"));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "Hold 'left control' while you use the item to skip Hellion Core, this costs 25 Souls of Byte"));
 				if (SGAWorld.downedHellion < 2)
 				{
 					if (SGAWorld.downedHellion == 0)
 					{
-						tooltips.Add(new TooltipLine(mod, "Nmxx", "'Well done " + SGAmod.HellionUserName + ". Yes, I know your real name behind that facade you call " + Main.LocalPlayer.name + ".'"));
-						tooltips.Add(new TooltipLine(mod, "Nmxx", "'And thanks to your Dragon's signal, I have found my way to your world, this one tear which will let me invade your puny little " + Main.worldName + "'"));
-						tooltips.Add(new TooltipLine(mod, "Nmxx", "'Spend what little time you have left meaningful, if you were expecting to save him, I doubt it'"));
-						tooltips.Add(new TooltipLine(mod, "Nmxx", "'But let us not waste anymore time, come, face me'"));
+						tooltips.Add(new TooltipLine(Mod, "Nmxx", "'Well done " + SGAmod.HellionUserName + ". Yes, I know your real name behind that facade you call " + Main.LocalPlayer.name + ".'"));
+						tooltips.Add(new TooltipLine(Mod, "Nmxx", "'And thanks to your Dragon's signal, I have found my way to your world, this one tear which will let me invade your puny little " + Main.worldName + "'"));
+						tooltips.Add(new TooltipLine(Mod, "Nmxx", "'Spend what little time you have left meaningful, if you were expecting to save him, I doubt it'"));
+						tooltips.Add(new TooltipLine(Mod, "Nmxx", "'But let us not waste anymore time, come, face me'"));
 					}
 					else
 					{
-						tooltips.Add(new TooltipLine(mod, "Nmxx", "'Getting closer, I guess now I'll just have to use more power to stop you'"));
-						tooltips.Add(new TooltipLine(mod, "Nmxx", "'But enough talk, lets finish this'"));
+						tooltips.Add(new TooltipLine(Mod, "Nmxx", "'Getting closer, I guess now I'll just have to use more power to stop you'"));
+						tooltips.Add(new TooltipLine(Mod, "Nmxx", "'But enough talk, lets finish this'"));
 					}
 				}
 				else
 				{
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "'Hmp, very Well done " + SGAmod.HellionUserName + ", you've bested me, this time"));
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "But next time you won't be so lucky..."));
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "My tears have stablized..."));
-					tooltips.Add(new TooltipLine(mod, "Nmxx", "Enjoy your fancy reward, you've earned that much..."));
-					tooltips[0].text += " (Stablized)";
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "'Hmp, very Well done " + SGAmod.HellionUserName + ", you've bested me, this time"));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "But next time you won't be so lucky..."));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "My tears have stablized..."));
+					tooltips.Add(new TooltipLine(Mod, "Nmxx", "Enjoy your fancy reward, you've earned that much..."));
+					tooltips[0].Text += " (Stablized)";
 				}
-				tooltips.Add(new TooltipLine(mod, "Nmxx", "Tears a hole in the bastion of reality to bring forth the Paradox General, Helen 'Hellion' Weygold"));
-				tooltips.Add(new TooltipLine(mod, "Nmxx", "Non Consumable"));
+				tooltips.Add(new TooltipLine(Mod, "Nmxx", "Tears a hole in the bastion of reality to bring forth the Paradox General, Helen 'Hellion' Weygold"));
+				tooltips.Add(new TooltipLine(Mod, "Nmxx", "Non Consumable"));
 
 
 					foreach (TooltipLine line in tooltips)
 				{
-					string text = line.text;
+					string text = line.Text;
 					string newline = "";
 					for (int i = 0; i < text.Length; i += 1)
 					{
-						newline += Idglib.ColorText(Color.Lerp(Color.White, Main.hslToRgb((Main.rand.NextFloat(0, 1)) % 1f, 0.75f, Main.rand.NextFloat(0.25f, 0.5f)),MathHelper.Clamp(0.5f+(float)Math.Sin(Main.GlobalTime*2f)/1.5f,0.2f,1f)), text[i].ToString());
+						newline += Idglib.ColorText(Color.Lerp(Color.White, Main.hslToRgb((Main.rand.NextFloat(0, 1)) % 1f, 0.75f, Main.rand.NextFloat(0.25f, 0.5f)),MathHelper.Clamp(0.5f+(float)Math.Sin(Main.GlobalTimeWrappedHourly*2f)/1.5f,0.2f,1f)), text[i].ToString());
 
 
 					}
-					line.text = newline;
+					line.Text = newline;
 				}
 			}
 			else
@@ -988,7 +929,7 @@ namespace SGAmod.Items.Consumables
 				return false;
             }
 
-			if (Hellion.GetHellion()==null && !IdgNPC.bossAlive && SGAWorld.downedSPinky && SGAWorld.downedCratrosityPML && SGAWorld.downedWraiths > 3 && NPC.CountNPCS(mod.NPCType("HellionMonolog"))<1)
+			if (Hellion.GetHellion()==null && !IdgNPC.bossAlive && SGAWorld.downedSPinky && SGAWorld.downedCratrosityPML && SGAWorld.downedWraiths > 3 && NPC.CountNPCS(Mod.Find<ModNPC>("HellionMonolog").Type)<1)
 			{
 				if (!Main.expertMode)
 				{
@@ -1003,7 +944,7 @@ namespace SGAmod.Items.Consumables
 				return false;
 			}
 		}
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && player.CountItem(mod.ItemType("ByteSoul")) > 24 && SGAWorld.downedHellion > 0)
 			{
@@ -1023,40 +964,24 @@ namespace SGAmod.Items.Consumables
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			//recipe.AddIngredient(ItemID.LunarBar, 10);
-			recipe.AddIngredient(mod.ItemType("WraithCoreFragment3"), 1);
-			recipe.AddIngredient(mod.ItemType("RoilingSludge"), 1);
-			recipe.AddIngredient(mod.ItemType("Mechacluskerf"), 1);
-			recipe.AddIngredient(mod.ItemType("Nineball"), 1);
-			recipe.AddIngredient(mod.ItemType("AcidicEgg"), 1);
-			recipe.AddIngredient(mod.ItemType("Prettygel"), 1);
-			recipe.AddIngredient(mod.ItemType("ConchHorn"), 1);
-			recipe.AddIngredient(mod.ItemType("CosmicFragment"), 1);
-			recipe.AddIngredient(mod.ItemType("MoneySign"), 10);
-			recipe.AddIngredient(mod.ItemType("LunarRoyalGel"), 20);
-
-
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("WraithCoreFragment3"), 1).AddIngredient(mod.ItemType("RoilingSludge"), 1).AddIngredient(mod.ItemType("Mechacluskerf"), 1).AddIngredient(mod.ItemType("Nineball"), 1).AddIngredient(mod.ItemType("AcidicEgg"), 1).AddIngredient(mod.ItemType("Prettygel"), 1).AddIngredient(mod.ItemType("ConchHorn"), 1).AddIngredient(mod.ItemType("CosmicFragment"), 1).AddIngredient(mod.ItemType("MoneySign"), 10).AddIngredient(mod.ItemType("LunarRoyalGel"), 20).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override void SetDefaults()
 		{
-			item.rare = 12;
-			item.maxStack = 1;
-			item.consumable = false;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 4;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = -1;
-			item.expert = true;
-			item.UseSound = SoundID.Item8;
+			Item.rare = 12;
+			Item.maxStack = 1;
+			Item.consumable = false;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 4;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = -1;
+			Item.expert = true;
+			Item.UseSound = SoundID.Item8;
 		}
 
 		public override string Texture
@@ -1082,7 +1007,7 @@ namespace SGAmod.Items.Consumables
 					float dist = (new Vector2(x, y) - new Vector2(width / 2, height / 2)).Length();
 					if (Main.rand.NextFloat(dist, 32)<16f)
 					{
-						float alg = ((-Main.GlobalTime + ((float)(dist) / 4f)) / 2f);
+						float alg = ((-Main.GlobalTimeWrappedHourly + ((float)(dist) / 4f)) / 2f);
 						dataColors[x + y * width] = Main.hslToRgb(alg % 1f, 0.75f, 0.5f);
 					}
 				}
@@ -1104,7 +1029,7 @@ namespace SGAmod.Items.Consumables
 		{
 
 
-			drawit(item.Center - Main.screenPosition, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI, Main.GameViewMatrix.ZoomMatrix);
+			drawit(Item.Center - Main.screenPosition, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI, Main.GameViewMatrix.ZoomMatrix);
 			return false;
 		}
 

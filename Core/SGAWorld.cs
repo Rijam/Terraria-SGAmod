@@ -13,17 +13,19 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Graphics.Effects;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
 using SGAmod.Tiles;
 using SGAmod.NPCs.Hellion;
 using Idglibrary;
 using SGAmod.NPCs.Sharkvern;
 using SGAmod.NPCs;
+using Terraria.Audio;
+using Terraria.IO;
 
 namespace SGAmod
 {
-    public class SGAWorld : ModWorld
+    public class SGAWorld : ModSystem
     {
         //Setting up variables for invasion
         public static bool customInvasionUp = false;
@@ -90,13 +92,13 @@ namespace SGAmod
             }
 
         }
-        public static ModWorld Instance;
+        public static ModSystem Instance;
 
 
         public static int NightmareHardcore = 0;
 
         //Initialize all variables to their default values
-        public override void Initialize()
+        public override void OnWorldLoad()
         {
             modtimer = 0;
             Instance = this;
@@ -149,7 +151,7 @@ namespace SGAmod
                     CaliburnAlterCoordsX[f] = 0;
                     CaliburnAlterCoordsY[f] = 0;
                 }
-                WorldIsTin = WorldGen.oreTier1 != TileID.Copper;
+                //WorldIsTin = WorldGen.oreTier1 != TileID.Copper;
                 int x = 0;
                 for (x = 0; x < questvars.Length; x++)
                 {
@@ -159,10 +161,10 @@ namespace SGAmod
                 if (!Main.dedServ)
                 {
                     Item c0decrown = new Item();
-                    c0decrown.SetDefaults(mod.ItemType("CelestialCrown"));
+                    c0decrown.SetDefaults(Mod.Find<ModItem>("CelestialCrown").Type);
 
-                    Main.armorHeadLoaded[c0decrown.headSlot] = true;
-                    Main.armorHeadTexture[c0decrown.headSlot] = SGAmod.RadSuitHeadTex;
+                    //Main.armorHeadLoaded[c0decrown.headSlot] = true;
+                    //Main.armorHeadTexture[c0decrown.headSlot] = SGAmod.RadSuitHeadTex;
                 }
 
             }
@@ -226,7 +228,7 @@ namespace SGAmod
                 SGAWorld.craftwarning += 1;
                 if (SGAWorld.craftwarning % 31 == 0)
                 {
-                    NPC.SpawnOnPlayer(Main.LocalPlayer.whoAmI, SGAmod.Instance.NPCType("CopperWraith"));
+                    NPC.SpawnOnPlayer(Main.LocalPlayer.whoAmI, SGAmod.Instance.Find<ModNPC>("CopperWraith").Type);
                 }
             }
         }
@@ -238,17 +240,17 @@ namespace SGAmod
 
             if (Main.rand.Next(200000) < Main.maxTilesX/(Main.netMode == NetmodeID.SinglePlayer ? 6 : 3))
             {
-                Projectile.NewProjectile(new Vector2(Main.rand.Next(Main.maxTilesX * 16), 50), Vector2.UnitY.RotatedBy((Main.rand.NextFloat(-1f,1f)*MathHelper.Pi)*0.10f)*Main.rand.NextFloat(3f,6f), ModContent.ProjectileType<Dimensions.FallingSpaceRock>(), 1000, 10);
+                Projectile.NewProjectile(null, new Vector2(Main.rand.Next(Main.maxTilesX * 16), 50), Vector2.UnitY.RotatedBy((Main.rand.NextFloat(-1f,1f)*MathHelper.Pi)*0.10f)*Main.rand.NextFloat(3f,6f), ModContent.ProjectileType<Dimensions.FallingSpaceRock>(), 1000, 10);
             }
         }
 
-        public override void PostUpdate()
+        public override void PostUpdateWorld()
         {
 
             if ((Main.netMode < 1 || Main.myPlayer == 0) && Main.expertMode)
                 NightmareHardcore = Main.LocalPlayer.GetModPlayer<SGAPlayer>().nightmareplayer ? 1 : 0;
 
-            WorldIsTin = (WorldGen.CopperTierOre == 7 ? false : true);
+            //WorldIsTin = (WorldGen.CopperTierOre == 7 ? false : true);
 
             DoFallenSpaceRocks();
 
@@ -259,10 +261,10 @@ namespace SGAmod
             if (NPC.CountNPCS(NPCID.Golem) > 0 && SGAConfig.Instance.GolemImprovement)
             {
                 golemchecker = 1;
-                if (NPC.CountNPCS(mod.NPCType("SGAGolemBoss")) < 1)
+                if (NPC.CountNPCS(Mod.Find<ModNPC>("SGAGolemBoss").Type) < 1)
                 {
                     NPC myowner = Main.npc[NPC.FindFirstNPC(NPCID.Golem)];
-                    NPC.NewNPC((int)myowner.position.X, (int)myowner.position.Y, mod.NPCType("SGAGolemBoss"));
+                    NPC.NewNPC(null, (int)myowner.position.X, (int)myowner.position.Y, Mod.Find<ModNPC>("SGAGolemBoss").Type);
                     //Main.NewText("Test: modded golem npc spawned", 25, 25, 80);
                 }
             }
@@ -331,7 +333,7 @@ namespace SGAmod
                     hellinstance.HellionTaunt("I'm sure your dragon will have something to say about this");
                 if (questvars[10] == 3700)
                 {
-                    Main.PlaySound(29, -1, -1, 105, 1f, -0.6f);
+                    SoundEngine.PlaySound(29, -1, -1, 105, 1f, -0.6f);
                     hellinstance.HellionTaunt("I'll be waiting...");
                 }
             }
@@ -347,13 +349,13 @@ namespace SGAmod
         }
 
         //Save downed data
-        public override TagCompound Save()
+        public override void SaveWorldData(TagCompound tag)
         {
             //var downed = new List<string>();
             // if (downedCustomInvasion) downed.Add("customInvasion");
             //if (downedSPinky) downed.Add("downedSPinky");
             //if (downedTPD) downed.Add("downedTPD");
-            TagCompound tag = new TagCompound();
+            //TagCompound tag = new TagCompound();
             tag["WorldIsNovus"] = WorldIsNovus;
             tag["darknessVision"] = darknessVision;
             tag["tf2cratedrops"] = tf2cratedrops;
@@ -412,16 +414,16 @@ namespace SGAmod
                 string tagname = "oretypeshardmode" + ((string)x.ToString());
                 tag[tagname] = oretypeshardmode[x];
             }
-            return tag;
+            //return tag;
             //return new TagCompound {
             //    {"downed", downed}
             //};
         }
 
         //Load downed data
-        public override void Load(TagCompound tag)
+        public override void LoadWorldData(TagCompound tag)
         {
-            WorldIsTin = WorldGen.oreTier1 == TileID.Tin;
+            //WorldIsTin = WorldGen.SavedOreTiers == TileID.Tin;
             //var downed = tag.GetList<string>("downed");
             if (tag.ContainsKey("WorldIsNovus"))
                 WorldIsNovus = tag.GetBool("WorldIsNovus");
@@ -592,7 +594,7 @@ namespace SGAmod
             }
             for (double k = 0; k < (100); k += 1.0)
             {
-                WorldGen.OreRunner(WorldGen.genRand.Next(100, Main.maxTilesX - 100), WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 150), (double)WorldGen.genRand.Next(3, 3), WorldGen.genRand.Next(3, 6), (ushort)SGAmod.Instance.TileType("AustraliumOre"));
+                WorldGen.OreRunner(WorldGen.genRand.Next(100, Main.maxTilesX - 100), WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 150), (double)WorldGen.genRand.Next(3, 3), WorldGen.genRand.Next(3, 6), (ushort)SGAmod.Instance.Find<ModTile>("AustraliumOre").Type);
             }
             if (Main.netMode == 2)
             {
@@ -616,7 +618,7 @@ namespace SGAmod
                 int geny = WorldGen.genRand.Next((int)Main.rockLayer, (int)Main.maxTilesY - 150);
                 Tile tile = Framing.GetTileSafely(genx, geny);
                 int chance = 0;
-                if (tile.active() && (tile.type == TileID.Mud))
+                if (tile.HasTile && (tile.TileType == TileID.Mud))
                 {
                     chance = 3;
                 }
@@ -650,10 +652,10 @@ namespace SGAmod
                 Tile tile = Framing.GetTileSafely(genx, geny);
                 int chance = 0;
                 int[] size = { 3, 8 };
-                if (tile.active() && (tile.type == TileID.Dirt || tile.type == TileID.Stone || tile.type == TileID.RainCloud || tile.type == TileID.Cloud))
+                if (tile.HasTile && (tile.TileType == TileID.Dirt || tile.TileType == TileID.Stone || tile.TileType == TileID.RainCloud || tile.TileType == TileID.Cloud))
                 {
                     chance = 2;
-                    if (tile.active() && tile.type == TileID.RainCloud || tile.type == TileID.Cloud)
+                    if (tile.HasTile && tile.TileType == TileID.RainCloud || tile.TileType == TileID.Cloud)
                     {
                         chance = 3;
                         tiletype = TileType<Biomass>();
@@ -661,7 +663,7 @@ namespace SGAmod
                         size[1] = 5;
                     }
                     bool randon = (WorldGen.genRand.Next(0, 1000) < 3);
-                    if (tile.active() && (geny < WorldGen.worldSurfaceLow || (randon)))
+                    if (tile.HasTile && (geny < WorldGen.worldSurfaceLow || (randon)))
                     {
                         chance = (randon) ? 100 : 25;
                         tiletype = TileType<Biomass>();
@@ -678,7 +680,7 @@ namespace SGAmod
             x = (int)MathHelper.Clamp(x, 0, Main.maxTilesX);
             y = (int)MathHelper.Clamp(y, 0, Main.maxTilesY);
             int startingy = y;
-            while (Main.tile[x, y].liquid < check && y < Main.maxTilesY - 5)
+            while (Main.tile[x, y].LiquidType < check && y < Main.maxTilesY - 5)
             {
                 y++;
             }
@@ -691,11 +693,11 @@ namespace SGAmod
             MoistStonecount = 0;
         }
 
-        public override void TileCountsAvailable(int[] tileCounts)
+        /*public override void TileCountsAvailable(int[] tileCounts)
         {
             //SGAPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<SGAPlayer>();
-            MoistStonecount = tileCounts[mod.TileType("MoistStone")];
-        }
+            MoistStonecount = tileCounts[Mod.Find<ModTile>("MoistStone").Type];
+        }*/
 
 
         //Unused code, was meant to help someone else and I had to write it down, might use it later, lol
@@ -734,16 +736,16 @@ namespace SGAmod
             else
             {
 
-
+                
                 int Shinies = tasks.FindIndex(genpass => genpass.Name.Equals("Shinies"));
-                tasks.Insert(Shinies + 1, new PassLegacy("Novus Ore", delegate (GenerationProgress progress)
+                tasks.Insert(Shinies + 1, new PassLegacy("Novus Ore", delegate (GenerationProgress progress, GameConfiguration gameConfig)
                 {
                     progress.Message = "Planting Novus Ore";
                     GenNovus();
                 }));
 
                 int SecretChambers = tasks.FindIndex(genpass => genpass.Name.Equals("Jungle Temple"));
-                tasks.Insert(SecretChambers + 1, new PassLegacy("Secret Chambers", delegate (GenerationProgress progress)
+                tasks.Insert(SecretChambers + 1, new PassLegacy("Secret Chambers", delegate (GenerationProgress progress, GameConfiguration gameConfig)
                   {
                       progress.Message = "Hiding Secret Chambers";
                       Generation.NormalWorldGeneration.TempleChambers();
@@ -752,7 +754,7 @@ namespace SGAmod
                 if (SGAConfig.Instance.DankShrines)
                 {
                     int CaliburnShrines = tasks.FindIndex(genpass => genpass.Name.Equals("Pots"));
-                    tasks.Add(new PassLegacy("Caliburn Shrines", delegate (GenerationProgress progress)
+                    tasks.Add(new PassLegacy("Caliburn Shrines", delegate (GenerationProgress progress, GameConfiguration gameConfig)
                       {
                           progress.Message = "Hiding Caliburn's Gifts";
                           Generation.NormalWorldGeneration.GenAllCaliburnShrine();
@@ -762,7 +764,7 @@ namespace SGAmod
                 if (SGAConfig.Instance.DankShrines)
                 {
                     int CaliburnShrines = tasks.FindIndex(genpass => genpass.Name.Equals("Settle Liquids Again"))+1;
-                    tasks.Add(new PassLegacy("Caliburn Shrines Post Liquid Settle", delegate (GenerationProgress progress)
+                    tasks.Add(new PassLegacy("Caliburn Shrines Post Liquid Settle", delegate (GenerationProgress progress, GameConfiguration gameConfig)
                     {
                         progress.Message = "(Un)cleaning Caliburn's Shrines";
                         Generation.NormalWorldGeneration.MuddifyShrines();
@@ -773,9 +775,9 @@ namespace SGAmod
 
         }
 
-        public override void PreUpdate()
+        public override void PreUpdateWorld()
         {
-            if (NPC.CountNPCS(mod.NPCType("Cirno")) < 1)
+            if (NPC.CountNPCS(Mod.Find<ModNPC>("Cirno").Type) < 1)
                 SGAWorld.CirnoBlizzard = Math.Max(SGAWorld.CirnoBlizzard - 3, 0);
             if (ModLoader.GetMod("Idglibrary") != null)
             {
@@ -826,22 +828,23 @@ namespace SGAmod
         }
         public override void PostWorldGen()
         {
-            oretypesprehardmode[0] = WorldGen.CopperTierOre;
+            //WorldGen.SavedOreTiersWorldGen.
+            /*oretypesprehardmode[0] = WorldGen.CopperTierOre;
             oretypesprehardmode[1] = WorldGen.IronTierOre;
             oretypesprehardmode[2] = WorldGen.SilverTierOre;
             oretypesprehardmode[3] = WorldGen.GoldTierOre;
 
             oretypeshardmode[0] = WorldGen.oreTier1;
             oretypeshardmode[1] = WorldGen.oreTier2;
-            oretypeshardmode[2] = WorldGen.oreTier3;
+            oretypeshardmode[2] = WorldGen.oreTier3;*/
 
 
-            int[] itemsToPlaceInOvergrownChestsSecond = new int[] { mod.ItemType(WorldGen.crimson ? "ForagersBlade" : "RustworkBlade"), mod.ItemType(WorldGen.crimson ? "GuerrillaPistol" : "RustyRifle"),mod.ItemType("AversionCharm"), mod.ItemType("RustedBulwark") };
+            int[] itemsToPlaceInOvergrownChestsSecond = new int[] { Mod.Find<ModItem>(WorldGen.crimson ? "ForagersBlade" : "RustworkBlade").Type, Mod.Find<ModItem>(WorldGen.crimson ? "GuerrillaPistol" : "RustyRifle").Type,Mod.Find<ModItem>("AversionCharm").Type, Mod.Find<ModItem>("RustedBulwark") .Type};
             int itemsToPlaceInOvergrownChestsChoiceSecond = 0;
 
                 List<Chest> Chests = Main.chest.Where(checkfor => checkfor != null).ToList();
 
-            Chests = Chests.OrderBy(orderBy => WorldGen.genRand.Next(0, 100)+(Main.tile[orderBy.x, orderBy.y].frameX / 36 == 13 ? 0 : 10000)).ToList();
+            Chests = Chests.OrderBy(orderBy => WorldGen.genRand.Next(0, 100)+(Main.tile[orderBy.x, orderBy.y].TileFrameX / 36 == 13 ? 0 : 10000)).ToList();
             for (int i = 0; i < WorldGen.genRand.Next(2, 4); i += 1)
             {
                 if (Chests.Count > 0)
@@ -850,7 +853,7 @@ namespace SGAmod
                     {
                         if (Chests[0].item[inventoryIndex].IsAir)
                         {
-                            Chests[0].item[inventoryIndex].SetDefaults(mod.ItemType("StarCollector"));
+                            Chests[0].item[inventoryIndex].SetDefaults(Mod.Find<ModItem>("StarCollector").Type);
                             Chests[0].item[inventoryIndex].stack = 1;
                             break;
                         }
@@ -859,16 +862,16 @@ namespace SGAmod
                 }
             }
 
-            Chests = Chests.OrderBy(orderBy => WorldGen.genRand.Next(0, 100)+(Main.tile[orderBy.x, orderBy.y].frameX / 36 == 17 ? 0 : 10000)).ToList();
+            Chests = Chests.OrderBy(orderBy => WorldGen.genRand.Next(0, 100)+(Main.tile[orderBy.x, orderBy.y].TileFrameX / 36 == 17 ? 0 : 10000)).ToList();
             for (int i = 0; i < WorldGen.genRand.Next(3,6); i += 1)
             {
                 if (Chests.Count > 0)
                 {
                     for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
                     {
-                        if (Chests[0].item[inventoryIndex].IsAir && Main.tile[Chests[0].x, Chests[0].y].frameX / 36 == 17)
+                        if (Chests[0].item[inventoryIndex].IsAir && Main.tile[Chests[0].x, Chests[0].y].TileFrameX / 36 == 17)
                         {
-                            Chests[0].item[inventoryIndex].SetDefaults(mod.ItemType("BottledLiquidEssence"));
+                            Chests[0].item[inventoryIndex].SetDefaults(Mod.Find<ModItem>("BottledLiquidEssence").Type);
                             Chests[0].item[inventoryIndex].stack = 1;
                             break;
                         }
@@ -880,7 +883,7 @@ namespace SGAmod
             for (int chestIndexx = 0; chestIndexx < 1000; chestIndexx++)
             {
                 Chest chest = Main.chest[chestIndexx];
-                if (chest != null && (WorldGen.genRand.Next(0, 100) < 25) && ((WorldGen.genRand.Next(0, 100) < 25 && TileLoader.GetTile(Main.tile[chest.x, chest.y].type) == null) || Main.tile[chest.x, chest.y].wall == mod.WallType("SwampWall")))
+                if (chest != null && (WorldGen.genRand.Next(0, 100) < 25) && ((WorldGen.genRand.Next(0, 100) < 25 && TileLoader.GetTile(Main.tile[chest.x, chest.y].TileType) == null) || Main.tile[chest.x, chest.y].WallType == Mod.Find<ModWall>("SwampWall").Type))
                 {
                     for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
                     {
@@ -896,7 +899,7 @@ namespace SGAmod
 
             for (int i = 0; i < 3; i++)
             {
-                itemsToPlaceInOvergrownChestsSecond = new int[] { mod.ItemType("DecayedMoss"), mod.ItemType("DecayedMoss"), mod.ItemType("DecayedMoss"), mod.ItemType("DecayedMoss"), mod.ItemType("Biomass"), mod.ItemType("Biomass") };
+                itemsToPlaceInOvergrownChestsSecond = new int[] { Mod.Find<ModItem>("DecayedMoss").Type, Mod.Find<ModItem>("DecayedMoss").Type, Mod.Find<ModItem>("DecayedMoss").Type, Mod.Find<ModItem>("DecayedMoss").Type, Mod.Find<ModItem>("Biomass").Type, Mod.Find<ModItem>("Biomass") .Type};
                 itemsToPlaceInOvergrownChestsChoiceSecond = 0;
 
                 for (int chestIndex = 0; chestIndex < 1000; chestIndex++)
@@ -904,25 +907,25 @@ namespace SGAmod
                     Chest chest = Main.chest[chestIndex];
                     if (i == 0 && chest != null)
                     {
-                        if (WorldGen.genRand.Next(0, 100) < (Main.tile[chest.x, chest.y].frameX / 36 == 17 ? 50 : (Main.tile[chest.x, chest.y].frameX / 36 == 1 ? 15 : Main.tile[chest.x, chest.y].frameX / 36 == 0 ? 10 : 5)))
+                        if (WorldGen.genRand.Next(0, 100) < (Main.tile[chest.x, chest.y].TileFrameX / 36 == 17 ? 50 : (Main.tile[chest.x, chest.y].TileFrameX / 36 == 1 ? 15 : Main.tile[chest.x, chest.y].TileFrameX / 36 == 0 ? 10 : 5)))
                         {
                             for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
                             {
                                 if (chest.item[inventoryIndex].IsAir)
                                 {
-                                    chest.item[inventoryIndex].SetDefaults(mod.ItemType("PocketRocks"));
+                                    chest.item[inventoryIndex].SetDefaults(Mod.Find<ModItem>("PocketRocks").Type);
                                     chest.item[inventoryIndex].stack = 1;
                                     break;
                                 }
                             }
                         }
-                        if (Main.tile[chest.x, chest.y].frameX / 36 == 50 || Main.tile[chest.x, chest.y].frameX / 36 == 51)
+                        if (Main.tile[chest.x, chest.y].TileFrameX / 36 == 50 || Main.tile[chest.x, chest.y].TileFrameX / 36 == 51)
                         {
                             for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
                             {
                                 if (chest.item[inventoryIndex].IsAir)
                                 {
-                                    chest.item[inventoryIndex].SetDefaults(Main.tile[chest.x, chest.y].frameX / 36 == 51 ? mod.ItemType("CrackedMirror") : mod.ItemType("GraniteMagnet"));
+                                    chest.item[inventoryIndex].SetDefaults(Main.tile[chest.x, chest.y].TileFrameX / 36 == 51 ? Mod.Find<ModItem>("CrackedMirror") .Type: Mod.Find<ModItem>("GraniteMagnet").Type);
                                     chest.item[inventoryIndex].stack = 1;
                                     break;
                                 }
@@ -931,7 +934,7 @@ namespace SGAmod
                     }
 
 
-                    if (chest != null && (WorldGen.genRand.Next(0, 100) < 15 || Main.tile[chest.x, chest.y - 1].wall == mod.TileType("SwampWall")))
+                    if (chest != null && (WorldGen.genRand.Next(0, 100) < 15 || Main.tile[chest.x, chest.y - 1].WallType == Mod.Find<ModTile>("SwampWall").Type))
                     {
                         if (WorldGen.genRand.Next(0, 100) < 5)
                         {
@@ -939,7 +942,7 @@ namespace SGAmod
                             {
                                 if (chest.item[inventoryIndex].IsAir)
                                 {
-                                    chest.item[inventoryIndex].SetDefaults(WorldGen.genRand.Next(0, 2) == 0 ? mod.ItemType("DragonsMightPotion") : mod.ItemType("TimePotion"));
+                                    chest.item[inventoryIndex].SetDefaults(WorldGen.genRand.Next(0, 2) == 0 ? Mod.Find<ModItem>("DragonsMightPotion") .Type: Mod.Find<ModItem>("TimePotion").Type);
                                     chest.item[inventoryIndex].stack = WorldGen.genRand.Next(1, Main.rand.Next(1, 3));
                                     break;
                                 }

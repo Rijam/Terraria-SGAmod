@@ -21,32 +21,26 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 40;
-			item.ranged = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 5;
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.knockBack = 5;
-			item.value = 100000;
-			item.rare = 4;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item5;
-			item.shoot = ModContent.ProjectileType<Projectiles.WindfallArrow>();
-			item.shootSpeed = 9f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 40;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 5;
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 5;
+			Item.value = 100000;
+			Item.rare = 4;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item5;
+			Item.shoot = ModContent.ProjectileType<Projectiles.WindfallArrow>();
+			Item.shootSpeed = 9f;
+			Item.useAmmo = AmmoID.Arrow;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedBow"), 1);
-			recipe.AddIngredient(ItemID.Feather, 10);
-			recipe.AddIngredient(ItemID.SoulofFlight, 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("UnmanedBow"), 1).AddIngredient(ItemID.Feather, 10).AddIngredient(ItemID.SoulofFlight, 10).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

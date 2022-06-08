@@ -30,7 +30,7 @@ namespace SGAmod
 			IL.Terraria.Main.Update += RemoveUpdateCinematic;
 			IL.Terraria.Main.DoDraw += BGPatchOfPain;
 			IL.Terraria.Main.DoDraw += DrawBehindVoidLayers;
-			IL.Terraria.Main.DrawInterface_Resources_Life += HUDLifeBarsOverride;
+			//IL.Terraria.Main.DrawInterface_Resources_Life += HUDLifeBarsOverride; //commented out btw
 			IL.Terraria.Main.DrawInterface_Resources_Breath += BreathMeterHack;
 
 			IL.Terraria.Player.AdjTiles += ForcedAdjTilesHack;
@@ -197,7 +197,7 @@ namespace SGAmod
 					{
 						Vector2 here = (player.position / 16)+new Vector2(x,y);
 
-						if (Main.tile[(int)here.X, (int)here.Y].type == tile)
+						if (Main.tile[(int)here.X, (int)here.Y].TileType == tile)
 						{
 							sticky = here;
 							return sticky;
@@ -326,7 +326,7 @@ namespace SGAmod
 		private delegate bool IgnoreManifestDevArmorsDelegate(Item item);
 		private static bool IgnoreManifestDevArmorsMethod(Item item)
 		{
-			return !(item.modItem != null && (item.modItem is IManifestedItem || item.modItem is IDevArmor));
+			return !(item.ModItem != null && (item.ModItem is IManifestedItem || item.ModItem is IDevArmor));
 		}
 
 		private static void IgnoreManifestDevArmors(ILContext il)
@@ -1073,7 +1073,7 @@ namespace SGAmod
 
 		static private AutoAimOverrideDelegate AutoAimOverride = delegate (Vector2 predictedLocation)
 		{
-			if (Main.LocalPlayer.HeldItem?.modItem is IHitScanItem)
+			if (Main.LocalPlayer.HeldItem?.ModItem is IHitScanItem)
 			{
 				return LockOnHelper.AimedTarget.Center + LockOnHelper.AimedTarget.velocity;
 			}
@@ -1213,7 +1213,7 @@ namespace SGAmod
 			c.EmitDelegate<Func<int, bool>>((int inventorySlot) =>
 			 {
 				 Item item = Main.LocalPlayer.inventory[inventorySlot];
-				 return item.modItem != null && Main.LocalPlayer.inventory[inventorySlot].modItem is IManifestedItem;
+				 return item.ModItem != null && Main.LocalPlayer.inventory[inventorySlot].ModItem is IManifestedItem;
 			 });
 			c.Emit(OpCodes.Brtrue_S, target);//Form "if brackets"
 		}

@@ -25,21 +25,21 @@ namespace SGAmod.Items.Tools
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
 
-            Color c = Main.hslToRgb((float)(Main.GlobalTime/15)%1f, 0.2f, 0.45f);
-            tooltips.Add(new TooltipLine(mod,"Things", Idglib.ColorText(c, "All the functionality of the Grand Design And Cell phone")));
-			tooltips.Add(new TooltipLine(mod, "Things", Idglib.ColorText(c, "Grants surperior world building powers and mining speed while in inventory")));
-			tooltips.Add(new TooltipLine(mod, "Things", Idglib.ColorText(c, "Hold Shift and left click to teleport home")));
+            Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly/15)%1f, 0.2f, 0.45f);
+            tooltips.Add(new TooltipLine(Mod,"Things", Idglib.ColorText(c, "All the functionality of the Grand Design And Cell phone")));
+			tooltips.Add(new TooltipLine(Mod, "Things", Idglib.ColorText(c, "Grants surperior world building powers and mining speed while in inventory")));
+			tooltips.Add(new TooltipLine(Mod, "Things", Idglib.ColorText(c, "Hold Shift and left click to teleport home")));
 		}
 
 		public override void SetDefaults()
 		{
-			myid = item.type;
-			item.CloneDefaults(ItemID.WireKite);
+			myid = Item.type;
+			Item.CloneDefaults(ItemID.WireKite);
 		}
 
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Texture2D tex = mod.GetTexture("Items/Tools/HammerEditor");
+			Texture2D tex = Mod.Assets.Request<Texture2D>("Items/Tools/HammerEditor").Value;
 			Vector2 origin2 = new Vector2(tex.Width/2, tex.Height / 2);
 			spriteBatch.Draw(tex, position, null, drawColor, 0f, origin2,1f, SpriteEffects.None, 0f);
 			return false;
@@ -48,26 +48,26 @@ namespace SGAmod.Items.Tools
 
 		public override void PostUpdate()
 		{
-			item.type = myid;
+			Item.type = myid;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift))
-				item.type = ItemID.CellPhone;
+				Item.type = ItemID.CellPhone;
 			return true;
 		}
 
 		public override void UpdateInventory(Player player)
 		{
-			item.type = myid;
-			if (player.HeldItem == item)
+			Item.type = myid;
+			if (player.HeldItem == Item)
 			{
-				item.type = ItemID.WireKite;
+				Item.type = ItemID.WireKite;
 				//if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift))
 				//item.type = ItemID.CellPhone;
-				item.CloneDefaults(item.type);
-				item.SetNameOverride("Hammer Editor");
+				Item.CloneDefaults(Item.type);
+				Item.SetNameOverride("Hammer Editor");
 				player.InfoAccMechShowWires = true;
 				player.rulerLine = true;
 				player.rulerGrid = true;
@@ -101,7 +101,7 @@ namespace SGAmod.Items.Tools
 			player.accOreFinder = true;
 			player.accDreamCatcher = true;
 
-			item.type = myid;
+			Item.type = myid;
 
 
 
@@ -110,17 +110,7 @@ namespace SGAmod.Items.Tools
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WireKite, 1);
-			recipe.AddIngredient(ItemID.CellPhone, 1);
-			recipe.AddIngredient(ItemID.ActuationAccessory, 1);
-			recipe.AddIngredient(ItemID.ArchitectGizmoPack, 1);
-			recipe.AddIngredient(ItemID.BuilderPotion, 10);
-
-			recipe.AddIngredient(mod.ItemType("CosmicFragment"), 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.WireKite, 1).AddIngredient(ItemID.CellPhone, 1).AddIngredient(ItemID.ActuationAccessory, 1).AddIngredient(ItemID.ArchitectGizmoPack, 1).AddIngredient(ItemID.BuilderPotion, 10).AddIngredient(mod.ItemType("CosmicFragment"), 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 

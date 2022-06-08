@@ -9,15 +9,15 @@ namespace SGAmod.HavocGear.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 22;
-			projectile.height = 56;
-			projectile.aiStyle = 20;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.hide = true;
-			projectile.ownerHitCheck = true;
-			projectile.melee = true;
+			Projectile.width = 22;
+			Projectile.height = 56;
+			Projectile.aiStyle = 20;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.hide = true;
+			Projectile.ownerHitCheck = true;
+			Projectile.DamageType = DamageClass.Melee;
 		}
 	}
 }

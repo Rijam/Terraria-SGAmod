@@ -14,14 +14,14 @@ namespace SGAmod.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
+			Projectile.friendly = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 600;
-			projectile.tileCollide=false;
+			Projectile.timeLeft = 600;
+			Projectile.tileCollide=false;
 		}
 
 				public override string Texture
@@ -42,12 +42,12 @@ namespace SGAmod.Projectiles
 	}
 	public override void AI()
 	{
-		projectile.velocity=new Vector2(projectile.velocity.X,projectile.velocity.Y*0.95f);
+		Projectile.velocity=new Vector2(Projectile.velocity.X,Projectile.velocity.Y*0.95f);
 		int q=0;
 			for (q = 0; q < 1; q++)
 				{
 
-					int dust = Dust.NewDust(projectile.position-new Vector2(50,0), 100, 40, 74, 0f, projectile.velocity.Y * 0.4f, 100, Color.DarkGreen*0.15f, 2.5f);
+					int dust = Dust.NewDust(Projectile.position-new Vector2(50,0), 100, 40, 74, 0f, Projectile.velocity.Y * 0.4f, 100, Color.DarkGreen*0.15f, 2.5f);
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].fadeIn = 2f;
 					//Main.dust[dust].velocity *= 1.8f;
@@ -55,18 +55,18 @@ namespace SGAmod.Projectiles
 					//Main.playerDrawDust.Add(dust);
 				}
 
-            int minTilePosX = (int)(projectile.position.X / 16.0) - 1;
-            int maxTilePosX = (int)((projectile.position.X + 2) / 16.0) + 2;
-            int minTilePosY = (int)(projectile.position.Y / 16.0) - 1;
-            int maxTilePosY = (int)((projectile.position.Y + 2) / 16.0) + 2;
+            int minTilePosX = (int)(Projectile.position.X / 16.0) - 1;
+            int maxTilePosX = (int)((Projectile.position.X + 2) / 16.0) + 2;
+            int minTilePosY = (int)(Projectile.position.Y / 16.0) - 1;
+            int maxTilePosY = (int)((Projectile.position.Y + 2) / 16.0) + 2;
 
             int whereisity;
             whereisity=Idglib.RaycastDown(minTilePosX+1,minTilePosY);
             //Main.NewText(""+(whereisity-minTilePosY),255,255,255);
-            projectile.position.Y+=whereisity-minTilePosY>2 ? 1 : 0;
+            Projectile.position.Y+=whereisity-minTilePosY>2 ? 1 : 0;
 
 
-                Rectangle rectangle1 = new Rectangle((int)projectile.Center.X-40, (int)projectile.Center.Y-60, 100, 40);
+                Rectangle rectangle1 = new Rectangle((int)Projectile.Center.X-40, (int)Projectile.Center.Y-60, 100, 40);
                 int maxDistance = 50;
                 bool playerCollision = false;
                 for (int index = 0; index < Main.maxNPCs; ++index)
@@ -77,7 +77,7 @@ namespace SGAmod.Projectiles
                         if (rectangle1.Intersects(rectangle2))
                         {
 						if (Main.npc[index].GetGlobalNPC<SGAnpcs>().Combusted<1)
-						IdgNPC.AddBuffBypass(index,mod.BuffType("DosedInGas"), 60*8, true);
+						IdgNPC.AddBuffBypass(index,Mod.Find<ModBuff>("DosedInGas").Type, 60*8, true);
                         }
                     }
                 }

@@ -3,6 +3,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using SGAmod;
+using Terraria.Audio;
 
 namespace SGAmod.Items
 {
@@ -17,12 +18,12 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 32;
-			item.height = 32;
-			item.expert = true;
-			item.rare = -12;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 32;
+			Item.height = 32;
+			Item.expert = true;
+			Item.rare = -12;
 		}
 
 		public override bool CanRightClick()
@@ -33,18 +34,18 @@ namespace SGAmod.Items
 			//Main.NewText("Nope.avi... This boss isn't done yet, coming in a future update",250, 250, 250);
 			//return false;
 			Player ply = Main.LocalPlayer;
-			return (!NPC.AnyNPCs(mod.NPCType("SPinkyTrue")));
+			return (!NPC.AnyNPCs(Mod.Find<ModNPC>("SPinkyTrue").Type));
 		}
 
 		public override void RightClick(Player ply)
 		{
-			if (!NPC.AnyNPCs(mod.NPCType("SPinkyTrue")))
+			if (!NPC.AnyNPCs(Mod.Find<ModNPC>("SPinkyTrue").Type))
 			{
 				//Main.PlaySound(15, (int)ply.MountedCenter.X, (int)ply.MountedCenter.Y, 0);
 
 				if (Main.netMode > 0)
 				{
-					ModPacket packet = mod.GetPacket();
+					ModPacket packet = Mod.GetPacket();
 					packet.Write((ushort)MessageType.SummonNPC);
 					packet.Write((int)(ply.MountedCenter.X + (ply.direction*32)));
 					packet.Write((int)(ply.MountedCenter.Y));
@@ -58,19 +59,14 @@ namespace SGAmod.Items
 				}
 				else
 				{
-					NPC.NewNPC((int)(ply.MountedCenter.X+(ply.direction*32)), (int)ply.MountedCenter.Y, mod.NPCType("SPinkyTrue"));
+					NPC.NewNPC((int)(ply.MountedCenter.X+(ply.direction*32)), (int)ply.MountedCenter.Y, Mod.Find<ModNPC>("SPinkyTrue").Type);
 
 				}
 			}
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Prettygel"), 1);
-			recipe.AddIngredient(mod.ItemType("SPinkyBag"), 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(mod.ItemType("Prettygel"), 1).AddIngredient(mod.ItemType("SPinkyBag"), 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -91,20 +87,20 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 34;
-			item.height = 34;
-			item.rare = 0;
-			item.maxStack = 1;
+			Item.width = 34;
+			Item.height = 34;
+			Item.rare = 0;
+			Item.maxStack = 1;
 		}
 
 		public virtual void CrateLoot(Player ply)
 		{
-			ply.ConsumeItem(mod.ItemType("TerrariacoCrateKeyUber"));
+			ply.ConsumeItem(Mod.Find<ModItem>("TerrariacoCrateKeyUber").Type);
 			//int chances=Main.rand.Next(0,1);
 			//string [] dropitems={ "SwordathousandTruths1", "SwordathousandTruths1"};
 			//ply.QuickSpawnItem(mod.ItemType(dropitems[chances]),1);
 			//if (Main.expertMode)
-			ply.QuickSpawnItem(mod.ItemType("EALogo"), 1);
+			ply.QuickSpawnItem(Mod.Find<ModItem>("EALogo").Type, 1);
 		}
 
 		public override bool CanRightClick()
@@ -112,7 +108,7 @@ namespace SGAmod.Items
 			//Main.NewText("Nope.avi... This boss isn't done yet, coming in a future update",250, 250, 250);
 			//return false;
 			Player ply = Main.LocalPlayer;
-			return ((ply.CountItem(ItemID.TempleKey) > 0 && !NPC.AnyNPCs(mod.NPCType("Cratrogeddon"))) || ply.CountItem(mod.ItemType("TerrariacoCrateKeyUber")) > 0);
+			return ((ply.CountItem(ItemID.TempleKey) > 0 && !NPC.AnyNPCs(Mod.Find<ModNPC>("Cratrogeddon").Type)) || ply.CountItem(Mod.Find<ModItem>("TerrariacoCrateKeyUber").Type) > 0);
 		}
 
 		public override void RightClick(Player ply)
@@ -120,7 +116,7 @@ namespace SGAmod.Items
 			bool usedwrongkey = true;
 			bool usedrightkey = false;
 
-			usedrightkey = (ply.CountItem(mod.ItemType("TerrariacoCrateKeyUber")) > 0);
+			usedrightkey = (ply.CountItem(Mod.Find<ModItem>("TerrariacoCrateKeyUber").Type) > 0);
 
 			if (usedrightkey == true)
 			{
@@ -131,17 +127,17 @@ namespace SGAmod.Items
 
 			if (usedwrongkey == true)
 			{
-				ply.QuickSpawnItem(item.type, 1);
-				if (!NPC.AnyNPCs(mod.NPCType("Cratrosity")))
+				ply.QuickSpawnItem(Item.type, 1);
+				if (!NPC.AnyNPCs(Mod.Find<ModNPC>("Cratrosity").Type))
 				{
-					Main.PlaySound(15, (int)ply.position.X, (int)ply.position.Y, 0);
+					SoundEngine.PlaySound(15, (int)ply.position.X, (int)ply.position.Y, 0);
 
 					ply.ConsumeItem(ItemID.TempleKey);
 					if (Main.netMode > 0)
 					{
-						ModPacket packet = mod.GetPacket();
+						ModPacket packet = Mod.GetPacket();
 						packet.Write((ushort)MessageType.SummonCratrosity);
-						packet.Write(mod.NPCType("CratrosityPML"));
+						packet.Write(Mod.Find<ModNPC>("CratrosityPML").Type);
 						packet.Write((int)(ply.Center.X - 1600));
 						packet.Write(3200);
 						packet.Write(ply.whoAmI);
@@ -150,7 +146,7 @@ namespace SGAmod.Items
 					}
 					else
 					{
-						NPC.SpawnOnPlayer(ply.whoAmI, mod.NPCType("CratrosityPML"));
+						NPC.SpawnOnPlayer(ply.whoAmI, Mod.Find<ModNPC>("CratrosityPML").Type);
 						/*for (int num172 = 0; num172 < Main.maxPlayers; num172 = num172+1){
 						Player ply2=Main.player[num172];
 						//if (ply2.dead==false){

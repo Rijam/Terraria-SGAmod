@@ -12,6 +12,7 @@ using SGAmod.Items.Weapons;
 using Microsoft.Xna.Framework.Audio;
 using System.Linq;
 using Terraria.Graphics.Shaders;
+using Terraria.Audio;
 
 namespace SGAmod.NPCs.Cratrosity
 {
@@ -42,11 +43,11 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public void Release(float cratehp)
         {
-			NPC npc = boss.npc;
-			Mod mod = boss.mod;
-			int crateToSpawn = mod.NPCType("CratrosityCrate" + crateType.ToString());
+			NPC npc = boss.NPC;
+			Mod mod = boss.Mod;
+			int crateToSpawn = Mod.Find<ModNPC>("CratrosityCrate" + crateType.ToString()).Type;
 			if (crateType == ModContent.ItemType<HavocGear.Items.DankCrate>())
-				crateToSpawn = mod.NPCType("CratrosityCrateDankCrate");
+				crateToSpawn = Mod.Find<ModNPC>("CratrosityCrateDankCrate").Type;
 
 			int spawnedint = NPC.NewNPC((int)crateVector.X, (int)crateVector.Y, crateToSpawn);
 			NPC spawned = Main.npc[spawnedint];
@@ -128,7 +129,7 @@ namespace SGAmod.NPCs.Cratrosity
 		public string RelicName() => GetType() == typeof(Cratrosity) ? "Cratrosity" : "Cratrogeddon";
 		public void NoHitDrops()
 		{
-			Item.NewItem(npc.position,npc.Hitbox.Size(),ModContent.ItemType<Items.Accessories.AvariceRing>());
+			Item.NewItem(NPC.position,NPC.Hitbox.Size(),ModContent.ItemType<Items.Accessories.AvariceRing>());
 		}
 		public string MasterPet() => null;
 		public bool PetChance() => false;
@@ -152,8 +153,8 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cratrosity");
-			Main.npcFrameCount[npc.type] = 1;
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 
 		public override bool Autoload(ref string name)
@@ -163,23 +164,23 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void SetDefaults()
 		{
-			npc.width = 24;
-			npc.height = 24;
-			npc.damage = 50;
-			npc.defense = 50;
-			npc.lifeMax = 10000;
-			npc.HitSound = SoundID.NPCHit4;
-			npc.DeathSound = SoundID.NPCDeath37;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			npc.boss = true;
+			NPC.width = 24;
+			NPC.height = 24;
+			NPC.damage = 50;
+			NPC.defense = 50;
+			NPC.lifeMax = 10000;
+			NPC.HitSound = SoundID.NPCHit4;
+			NPC.DeathSound = SoundID.NPCDeath37;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			NPC.boss = true;
 			//music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Evoland 2 OST - Track 46 (Ceres Battle)");
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			theclostestcrate = npc.Center;
-			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Cratrosity");
-			npc.value = Item.buyPrice(0, 10, 0, 0);
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			theclostestcrate = NPC.Center;
+			music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Cratrosity");
+			NPC.value = Item.buyPrice(0, 10, 0, 0);
 		}
 
 		public override string Texture
@@ -192,8 +193,8 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = (int)(npc.lifeMax * 0.75f * bossLifeScale);
-			npc.damage = (int)(npc.damage * 0.6f);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.75f * bossLifeScale);
+			NPC.damage = (int)(NPC.damage * 0.6f);
 		}
 
 		public override bool CheckActive()
@@ -219,7 +220,7 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
-			return npc.localAI[0] > 0 && doCharge<1;
+			return NPC.localAI[0] > 0 && doCharge<1;
 		}
 
 		public override void BossLoot(ref string name, ref int potionType)
@@ -229,10 +230,10 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void NPCLoot()
 		{
-			Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TerrariacoCrateKey"));
+			Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("TerrariacoCrateKey").Type);
 			if (Main.rand.Next(7) == 0)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Armors.Vanity.CratrosityMask>());
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<Items.Armors.Vanity.CratrosityMask>());
 			}
 			Achivements.SGAAchivements.UnlockAchivement("Cratrosity", Main.LocalPlayer);
 			if (SGAWorld.downedCratrosity == false)
@@ -245,23 +246,23 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override bool CheckDead()
 		{
-			if (npc.life < 1 && phase > 0)
+			if (NPC.life < 1 && phase > 0)
 			{
-				npc.life = npc.lifeMax;
+				NPC.life = NPC.lifeMax;
 				phase -= 1;
 				if (phase < 4 && GetType() == typeof(Cratrosity))
                 {
-					npc.localAI[3] = 1;
-					npc.frameCounter = 1;
+					NPC.localAI[3] = 1;
+					NPC.frameCounter = 1;
                 }
-				Cratrosity origin = npc.modNPC as Cratrosity;
+				Cratrosity origin = npc.ModNPC as Cratrosity;
 				CrateRelease(phase);
 				FalseDeath(phase);
 				if (origin.postmoonlord > 0)
 				{
 					//do stuff here
 				}
-				npc.active = true;
+				NPC.active = true;
 				return false;
 			}
 			else { return true; }
@@ -283,7 +284,7 @@ namespace SGAmod.NPCs.Cratrosity
 			{
 				foreach (NPC npc2 in Main.npc.Where(testby => testby.active && testby.type == ModContent.NPCType<CratrosityHitBox>()))
 				{
-					if (npc2.realLife == npc.whoAmI && npc2.type == ModContent.NPCType<CratrosityHitBox>())
+					if (npc2.realLife == NPC.whoAmI && npc2.type == ModContent.NPCType<CratrosityHitBox>())
 					{
 						newoneneeded = false;
 						break;
@@ -294,8 +295,8 @@ namespace SGAmod.NPCs.Cratrosity
 			if (newoneneeded)
 			{
 				//npc.dontTakeDamage = true;
-				int npc2 = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<CratrosityHitBox>());
-				Main.npc[npc2].realLife = npc.whoAmI;
+				int npc2 = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<CratrosityHitBox>());
+				Main.npc[npc2].realLife = NPC.whoAmI;
 				Main.npc[npc2].netUpdate = true;
 				//Main.NewText("new one");
 				init = true;
@@ -304,49 +305,49 @@ namespace SGAmod.NPCs.Cratrosity
 			return true;
         }
 
-		public Player Target => Main.player[npc.target];
+		public Player Target => Main.player[NPC.target];
 
         public override void AI()
 		{
 
 			doCharge -= 1;
 			Player P = Target;
-			npc.localAI[0] -= 1;
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			NPC.localAI[0] -= 1;
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead)
 				{
 					float speed = ((-10f));
-					npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + speed);
-					npc.active = false;
+					NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + speed);
+					NPC.active = false;
 				}
 
 			}
 			else
 			{
 
-				if (npc.localAI[3] > 0)
+				if (NPC.localAI[3] > 0)
 				{
-					if (npc.localAI[3] < 100)
+					if (NPC.localAI[3] < 100)
 					{
-						npc.dontTakeDamage = true;
-						npc.velocity *= 0.85f;
-						npc.localAI[3] += 1;
-						if (phase > 2 && npc.localAI[3]>=0)
+						NPC.dontTakeDamage = true;
+						NPC.velocity *= 0.85f;
+						NPC.localAI[3] += 1;
+						if (phase > 2 && NPC.localAI[3]>=0)
 						{
-							npc.frameCounter = 16f * (1f - ((npc.localAI[3]) / 100f));
+							NPC.frameCounter = 16f * (1f - ((NPC.localAI[3]) / 100f));
                         }
                         else
                         {
-							npc.frameCounter = 19 + (npc.localAI[3]/3f) % 3;
+							NPC.frameCounter = 19 + (NPC.localAI[3]/3f) % 3;
 						}
 
-						if (npc.localAI[3] == 50)
+						if (NPC.localAI[3] == 50)
 						{
-							npc.extraValue += Item.buyPrice(0, 1, 0, 0);
-							npc.moneyPing(npc.Center);
+							NPC.extraValue += Item.buyPrice(0, 1, 0, 0);
+							NPC.moneyPing(NPC.Center);
 
 						}
 
@@ -355,118 +356,118 @@ namespace SGAmod.NPCs.Cratrosity
 					else
 					{
 						
-						if (npc.localAI[3] < 200)
+						if (NPC.localAI[3] < 200)
 						{
 							//if (npc.frameCounter < 5)
 							//{
-							npc.frameCounter += 0.25f;
-							npc.frameCounter %= 5;
+							NPC.frameCounter += 0.25f;
+							NPC.frameCounter %= 5;
 							//if (npc.frameCounter >= 5 && npc.frameCounter < 8)
 							//	npc.frameCounter = 5 - npc.frameCounter;
 							//}
 						}
 						
-						if (npc.localAI[3] >= 200 && npc.localAI[3] < 400)
+						if (NPC.localAI[3] >= 200 && NPC.localAI[3] < 400)
 						{
-							npc.localAI[3]++;
+							NPC.localAI[3]++;
 							//if (npc.frameCounter < 5)
 							//{
-							if (npc.frameCounter < 18)
-								npc.frameCounter = 18;
+							if (NPC.frameCounter < 18)
+								NPC.frameCounter = 18;
 
-							if (npc.frameCounter < 21)
-								npc.frameCounter += 0.25f;
+							if (NPC.frameCounter < 21)
+								NPC.frameCounter += 0.25f;
 
-							if (npc.frameCounter > 18 && npc.localAI[3]>215)
-								npc.frameCounter -= 0.25f;
+							if (NPC.frameCounter > 18 && NPC.localAI[3]>215)
+								NPC.frameCounter -= 0.25f;
 
-							if (npc.localAI[3] > 230)
-								npc.localAI[3] = 100;
+							if (NPC.localAI[3] > 230)
+								NPC.localAI[3] = 100;
 							//}
 						}
-						if (npc.localAI[3] >= 400)
+						if (NPC.localAI[3] >= 400)
 						{
-							npc.localAI[3]++;
-							npc.frameCounter = 21f * (((npc.localAI[3]-400) / 100f));
-							if (npc.localAI[3] > 460)
-								npc.localAI[3] = 201;
+							NPC.localAI[3]++;
+							NPC.frameCounter = 21f * (((NPC.localAI[3]-400) / 100f));
+							if (NPC.localAI[3] > 460)
+								NPC.localAI[3] = 201;
 						}
 						
 						
 
 					}
-					npc.dontTakeDamage = false;
+					NPC.dontTakeDamage = false;
 				}
 
 
-				npc.ai[0] += 1f;
+				NPC.ai[0] += 1f;
 				Vector2 gohere = new Vector2(P.Center.X, P.Center.Y - 220) + offsetype;
 				float thespeed = 0.01f;
 				float friction = 0.98f - phase * 0.04f;
 				float friction2 = 0.99f - phase * 0.0075f;
 				themode -= 1;
-				npc.ai[1] += Main.rand.Next(0, 5);
-				if (npc.ai[1] % 2000 > 850)
+				NPC.ai[1] += Main.rand.Next(0, 5);
+				if (NPC.ai[1] % 2000 > 850)
 				{
-					if (System.Math.Abs(npc.ai[2]) < 300)
+					if (System.Math.Abs(NPC.ai[2]) < 300)
 					{
 						compressvargoal = 1;
-						int theammount = (npc.ai[2] > 0 ? 1 : -1) * (offsetype.X > 0 ? 1 : -1);
-						if (npc.ai[1] % 2000 < 1100)
+						int theammount = (NPC.ai[2] > 0 ? 1 : -1) * (offsetype.X > 0 ? 1 : -1);
+						if (NPC.ai[1] % 2000 < 1100)
 						{
 							gohere = new Vector2(P.Center.X + (theammount * 800), P.Center.Y - 220);
-							npc.velocity = (npc.velocity + ((gohere - npc.Center) * thespeed)) * 0.98f;
+							NPC.velocity = (NPC.velocity + ((gohere - NPC.Center) * thespeed)) * 0.98f;
 						}
 						else
 						{
 							if (phase < 1)
 								theclostestcrate = Vector2.Zero;
 
-							npc.velocity = new Vector2(-theammount * ((GetType() == typeof(Cratrogeddon)) ? 15 : 10), 0);
-							if (npc.ai[0] % 15 == 0)
+							NPC.velocity = new Vector2(-theammount * ((GetType() == typeof(Cratrogeddon)) ? 15 : 10), 0);
+							if (NPC.ai[0] % 15 == 0)
 							{
-								List<Projectile> itz = Idglib.Shattershots(npc.Center, P.Center + new Vector2(0, P.Center.Y > npc.Center.Y ? 600 : -600), new Vector2(0, 0), ModContent.ProjectileType<GlowingCopperCoin>(), (int)(npc.damage * (10.00 / defaultdamage)), 10, 0, 1, true, 0, true, 100);
+								List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.Center + new Vector2(0, P.Center.Y > NPC.Center.Y ? 600 : -600), new Vector2(0, 0), ModContent.ProjectileType<GlowingCopperCoin>(), (int)(NPC.damage * (10.00 / defaultdamage)), 10, 0, 1, true, 0, true, 100);
 							}
-							if (npc.ai[0] % 40 == 0)
+							if (NPC.ai[0] % 40 == 0)
 							{
-								List<Projectile> itz = Idglib.Shattershots(theclostestcrate, P.Center, new Vector2(0, 0), ModContent.ProjectileType<GlowingGoldCoin>(), (int)(npc.damage * (30.00 / defaultdamage)), 10, 0, 1, true, 0, true, 200);
+								List<Projectile> itz = Idglib.Shattershots(theclostestcrate, P.Center, new Vector2(0, 0), ModContent.ProjectileType<GlowingGoldCoin>(), (int)(NPC.damage * (30.00 / defaultdamage)), 10, 0, 1, true, 0, true, 200);
 							}
-							if (((npc.ai[0] + 20) % 40 == 0) && Main.expertMode)
+							if (((NPC.ai[0] + 20) % 40 == 0) && Main.expertMode)
 							{
-								List<Projectile> itz = Idglib.Shattershots(theclostestcrate, P.Center + new Vector2(0, P.Center.Y > theclostestcrate.Y ? 600 : -600), new Vector2(0, 0), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(npc.damage * (20.00 / defaultdamage)), 10, 0, 1, true, 0, true, 200);
+								List<Projectile> itz = Idglib.Shattershots(theclostestcrate, P.Center + new Vector2(0, P.Center.Y > theclostestcrate.Y ? 600 : -600), new Vector2(0, 0), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(NPC.damage * (20.00 / defaultdamage)), 10, 0, 1, true, 0, true, 200);
 								SGAprojectile modeproj = itz[0].GetGlobalProjectile<SGAprojectile>();
 								//modeproj.splittingcoins = true;
 								//modeproj.splithere = P.Center;
 							}
 							if (phase < 4)
 							{
-								if (npc.ai[0] % 8 == 0)
+								if (NPC.ai[0] % 8 == 0)
 								{
-									Idglib.Shattershots(npc.Center, npc.Center + new Vector2(-npc.velocity.X, 0), new Vector2(0, 0), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(npc.damage * (20.00 / defaultdamage)), 25, 0, 1, true, 0, false, 40);
+									Idglib.Shattershots(NPC.Center, NPC.Center + new Vector2(-NPC.velocity.X, 0), new Vector2(0, 0), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(NPC.damage * (20.00 / defaultdamage)), 25, 0, 1, true, 0, false, 40);
 								}
 							}
 							themode = 300;
 							if (offsetype.X >= 0)
 							{
-								npc.localAI[0] = 5;
-								if (npc.Center.X < P.Center.X - 700)
+								NPC.localAI[0] = 5;
+								if (NPC.Center.X < P.Center.X - 700)
 								{
-									npc.ai[2] = Math.Abs(npc.ai[2]);
+									NPC.ai[2] = Math.Abs(NPC.ai[2]);
 								}
-								if (npc.Center.X > P.Center.X + 700)
+								if (NPC.Center.X > P.Center.X + 700)
 								{
-									npc.ai[2] = -Math.Abs(npc.ai[2]);
+									NPC.ai[2] = -Math.Abs(NPC.ai[2]);
 								}
 							}
 							else
 							{
-								if (npc.Center.X < P.Center.X - 700)
+								if (NPC.Center.X < P.Center.X - 700)
 								{
-									npc.ai[2] = -Math.Abs(npc.ai[2]);
+									NPC.ai[2] = -Math.Abs(NPC.ai[2]);
 								}
-								if (npc.Center.X > P.Center.X + 700)
+								if (NPC.Center.X > P.Center.X + 700)
 								{
-									npc.ai[2] = Math.Abs(npc.ai[2]);
+									NPC.ai[2] = Math.Abs(NPC.ai[2]);
 								}
 							}
 							//npc.ai[1]=1600+(2000-1600);
@@ -476,59 +477,59 @@ namespace SGAmod.NPCs.Cratrosity
 					}
 					else
 					{
-						Vector2 gogo = P.Center - npc.Center; gogo.Normalize(); gogo = gogo * (8 - phase * 1);
+						Vector2 gogo = P.Center - NPC.Center; gogo.Normalize(); gogo = gogo * (8 - phase * 1);
 						if (GetType() == typeof(Cratrogeddon))
 							gogo *= 1.25f;
-						npc.velocity = gogo;
+						NPC.velocity = gogo;
 						compressvargoal = 2;
-						npc.localAI[0] = 5;
+						NPC.localAI[0] = 5;
 					}
 				}
 				else
 				{
-					npc.ai[2] = Main.rand.Next(-600, 600);
-					if (npc.ai[0] % 600 < 350)
+					NPC.ai[2] = Main.rand.Next(-600, 600);
+					if (NPC.ai[0] % 600 < 350)
 					{
-						npc.velocity = (npc.velocity + (((gohere) - npc.Center) * thespeed)) * friction;
+						NPC.velocity = (NPC.velocity + (((gohere) - NPC.Center) * thespeed)) * friction;
 						compressvargoal = 1;
 
 						switch (phase)
 						{
 							case 5:
 								{
-									if (npc.ai[0] % 30 == 0)
+									if (NPC.ai[0] % 30 == 0)
 									{
-										Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingCopperCoin>(), (int)(npc.damage * (10f / (float)defaultdamage)), 10, 0, 1, true, 0, true, 150);
+										Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingCopperCoin>(), (int)(NPC.damage * (10f / (float)defaultdamage)), 10, 0, 1, true, 0, true, 150);
 									}
 									break;
 								}
 							case 4:
 								{
-									if (npc.ai[0] % 10 == 0)
+									if (NPC.ai[0] % 10 == 0)
 									{
-										Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(npc.damage * (20f / (float)defaultdamage)), 14, 0, 1, true, 0, true, 100);
+										Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(NPC.damage * (20f / (float)defaultdamage)), 14, 0, 1, true, 0, true, 100);
 									}
 									break;
 								}
 							case 3:
 								{
-									if (npc.ai[0] % 3 == 0 && npc.ai[0] % 50 > 38)
+									if (NPC.ai[0] % 3 == 0 && NPC.ai[0] % 50 > 38)
 									{
-										Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingGoldCoin>(), (int)(npc.damage * (30f / (float)defaultdamage)), 16, 0, 1, true, 0, true, 90);
+										Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), ModContent.ProjectileType<GlowingGoldCoin>(), (int)(NPC.damage * (30f / (float)defaultdamage)), 16, 0, 1, true, 0, true, 90);
 									}
-									if (npc.ai[0] % 8 == 0 && Main.expertMode)
+									if (NPC.ai[0] % 8 == 0 && Main.expertMode)
 									{
-										List<Projectile> itz = Idglib.Shattershots(npc.Center, npc.Center + new Vector2(0, -5), new Vector2(0, 0), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(npc.damage * (20f / (float)defaultdamage)), 7, 360, 2, true, npc.ai[0] / 20, true, 300);
+										List<Projectile> itz = Idglib.Shattershots(NPC.Center, NPC.Center + new Vector2(0, -5), new Vector2(0, 0), ModContent.ProjectileType<GlowingSilverCoin>(), (int)(NPC.damage * (20f / (float)defaultdamage)), 7, 360, 2, true, NPC.ai[0] / 20, true, 300);
 									}
 									break;
 								}
 							case 2:
 								{
 
-									if (npc.ai[0] % 5 == 0)
+									if (NPC.ai[0] % 5 == 0)
 									{
 
-										Idglib.Shattershots(npc.Center, npc.Center + new Vector2((P.velocity.X * 4f) + Main.rand.NextFloat(-24f, 24f), -96f), Vector2.Zero, ModContent.ProjectileType<GlowingGoldCoinHoming>(), (int)(npc.damage * (30f / (float)defaultdamage)), Main.rand.NextFloat(6f, 10f), 0, 1, true, 0, true, 600);
+										Idglib.Shattershots(NPC.Center, NPC.Center + new Vector2((P.velocity.X * 4f) + Main.rand.NextFloat(-24f, 24f), -96f), Vector2.Zero, ModContent.ProjectileType<GlowingGoldCoinHoming>(), (int)(NPC.damage * (30f / (float)defaultdamage)), Main.rand.NextFloat(6f, 10f), 0, 1, true, 0, true, 600);
 									}
 								}
 								break;
@@ -539,9 +540,9 @@ namespace SGAmod.NPCs.Cratrosity
 					}
 					else
 					{
-						npc.localAI[0] = 5;
+						NPC.localAI[0] = 5;
 						compressvargoal = 0.4f;
-						Vector2 gogo = P.Center - npc.Center; gogo.Normalize(); gogo = gogo * (30 - phase * 2);
+						Vector2 gogo = P.Center - NPC.Center; gogo.Normalize(); gogo = gogo * (30 - phase * 2);
 
 						if (doCharge < -1000)
 						{
@@ -550,14 +551,14 @@ namespace SGAmod.NPCs.Cratrosity
 
 						if (doCharge > 0)
 						{
-							npc.ai[0] -= 1;
+							NPC.ai[0] -= 1;
 							if (doCharge == 60)
 							{
-								if (npc.localAI[3]>0)
-								npc.localAI[3] = 400;
+								if (NPC.localAI[3]>0)
+								NPC.localAI[3] = 400;
 
 
-								SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_DarkMageAttack, npc.Center);
+								SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack, NPC.Center);
 								if (sound != null)
 								{
 									sound.Pitch = -0.25f;
@@ -566,14 +567,14 @@ namespace SGAmod.NPCs.Cratrosity
 								for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 12f)
 								{
 									Vector2 offset = f.ToRotationVector2();
-									int dust = Dust.NewDust(npc.Center + (offset * 32f), 0, 0, DustID.GoldFlame);
+									int dust = Dust.NewDust(NPC.Center + (offset * 32f), 0, 0, DustID.GoldFlame);
 									Main.dust[dust].scale = 1.5f;
 									Main.dust[dust].noGravity = true;
 									Main.dust[dust].velocity = f.ToRotationVector2() * 4f;
 								}
 							}
 
-							npc.velocity /= 1.5f;
+							NPC.velocity /= 1.5f;
 						}
 						else
 						{
@@ -581,23 +582,23 @@ namespace SGAmod.NPCs.Cratrosity
 							if (GetType() == typeof(Cratrogeddon))
 								gogo *= 0.4f;
 
-							float tiev = (GetType() == typeof(Cratrogeddon)) ? npc.ai[0] % (50 + (phase * 3)) : npc.ai[0] % (25 + (phase * 10));
+							float tiev = (GetType() == typeof(Cratrogeddon)) ? NPC.ai[0] % (50 + (phase * 3)) : NPC.ai[0] % (25 + (phase * 10));
 
 							if (tiev < (GetType() == typeof(Cratrogeddon) ? 10 : 1))
 							{
-								npc.velocity = (npc.velocity + gogo);
+								NPC.velocity = (NPC.velocity + gogo);
 
-								if (npc.localAI[3] > 0)
-									npc.localAI[3] = 201;
+								if (NPC.localAI[3] > 0)
+									NPC.localAI[3] = 201;
 
-								if (npc.velocity.Length() > 30)
+								if (NPC.velocity.Length() > 30)
 								{
-									npc.velocity.Normalize();
-									npc.velocity *= 30f;
+									NPC.velocity.Normalize();
+									NPC.velocity *= 30f;
 								}
 
 							}
-							npc.velocity = npc.velocity * friction2;
+							NPC.velocity = NPC.velocity * friction2;
 						}
 					}
 				}
@@ -605,17 +606,17 @@ namespace SGAmod.NPCs.Cratrosity
 
 			gohere:
 
-			npc.defense = (int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.WoodenCrate.ToString()))) * 5 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.IronCrate.ToString()))) * 6 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.GoldenCrate.ToString()))) * 6 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.DungeonFishingCrate.ToString()))) * 10 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.JungleFishingCrate.ToString()))) * 10 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + EvilCrateType.ToString()))) * 10 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.HallowedFishingCrate.ToString()))) * 10 +
-			NPC.CountNPCS(mod.NPCType("CratrosityCrateDankCrate")) * 10 +
-			(int)(NPC.CountNPCS(mod.NPCType("CratrosityCrate" + ItemID.FloatingIslandFishingCrate.ToString()))) * (30);
-			npc.defense *= Main.expertMode ? 4 : 2;
-			npc.defense += Main.expertMode ? 20 : 0;
+			NPC.defense = (int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.WoodenCrate.ToString()).Type)) * 5 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.IronCrate.ToString()).Type)) * 6 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.GoldenCrate.ToString()).Type)) * 6 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.DungeonFishingCrate.ToString()).Type)) * 10 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.JungleFishingCrate.ToString()).Type)) * 10 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + EvilCrateType.ToString()).Type)) * 10 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.HallowedFishingCrate.ToString()).Type)) * 10 +
+			NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrateDankCrate").Type) * 10 +
+			(int)(NPC.CountNPCS(Mod.Find<ModNPC>("CratrosityCrate" + ItemID.FloatingIslandFishingCrate.ToString()).Type)) * (30);
+			NPC.defense *= Main.expertMode ? 4 : 2;
+			NPC.defense += Main.expertMode ? 20 : 0;
 			OrderOfTheCrates(P);
 
 
@@ -637,17 +638,17 @@ namespace SGAmod.NPCs.Cratrosity
 						if (layer == 3)
 						{
 							crateType = ItemID.IronCrate;
-							if (npc.ai[3] > 300000 && i % 2 == 0)
+							if (NPC.ai[3] > 300000 && i % 2 == 0)
 							{
 								crateType = ModContent.ItemType<HavocGear.Items.DankCrate>();
 							}
-							else if (npc.ai[3] > 100000 && i % 2 == 0)
+							else if (NPC.ai[3] > 100000 && i % 2 == 0)
 							{
 								crateType = ItemID.HallowedFishingCrate;
 							}
 							else
 							{
-								if (npc.ai[3] < -100000 && i % 2 == 0)
+								if (NPC.ai[3] < -100000 && i % 2 == 0)
 								{
 									crateType = EvilCrateType;
 								}
@@ -698,11 +699,11 @@ namespace SGAmod.NPCs.Cratrosity
 						theexpand = (((index / 1f) * (layer + 1f))) * (themode / 30f);
 					}
 
-					crate.crateVector += ((crate.crateDist * (new Vector2((float)Math.Cos(crate.crateAngle), (float)Math.Sin(crate.crateAngle))) + npc.Center) - crate.crateVector) / (theexpand + (Math.Max((((compressvar) - 1) * (2 + (layer * 1))), 1)));
+					crate.crateVector += ((crate.crateDist * (new Vector2((float)Math.Cos(crate.crateAngle), (float)Math.Sin(crate.crateAngle))) + NPC.Center) - crate.crateVector) / (theexpand + (Math.Max((((compressvar) - 1) * (2 + (layer * 1))), 1)));
 					//if (index)
 					//crate.crateVector += Main.rand.NextVector2Circular(32, 32);
 
-					float sinner = npc.ai[0] + ((float)(index * 5) + (layer * 14));
+					float sinner = NPC.ai[0] + ((float)(index * 5) + (layer * 14));
 					float sinner2 = (float)(10f + (Math.Sin(sinner / 30f) * 7f));
 
 					if (compressvar > 1.01)
@@ -712,9 +713,9 @@ namespace SGAmod.NPCs.Cratrosity
 						float[] projspeed = { 1f, 1f, 1f, 9f, 8f, 7f };
 						if (layer == phase - 1)
 						{
-							if (sinner2 < 4 && (npc.ai[0] + (index * 4)) % 30 == 0)
+							if (sinner2 < 4 && (NPC.ai[0] + (index * 4)) % 30 == 0)
 							{
-								List<Projectile> itz = Idglib.Shattershots(crate.crateVector, P.position, new Vector2(P.width, P.height), projtype[layer + 1], (int)((double)npc.damage * ((double)projdamage[layer + 1] / (double)defaultdamage)), projspeed[layer + 1], 0, 1, true, 0, false, 110);
+								List<Projectile> itz = Idglib.Shattershots(crate.crateVector, P.position, new Vector2(P.width, P.height), projtype[layer + 1], (int)((double)NPC.damage * ((double)projdamage[layer + 1] / (double)defaultdamage)), projspeed[layer + 1], 0, 1, true, 0, false, 110);
 								if (projtype[layer + 1] == ModContent.ProjectileType<GlowingPlatinumCoin>()) { itz[0].aiStyle = 18; IdgProjectile.AddOnHitBuff(itz[0].whoAmI, BuffID.ShadowFlame, 60 * 10); }
 							}
 						}
@@ -749,21 +750,21 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public virtual void CrateRelease(int layer)
 		{
-			float cratehp = npc.lifeMax * 0.50f;
+			float cratehp = NPC.lifeMax * 0.50f;
 			List<CratrosityInstancedCrate> cratesInThisLayer = cratesPerRing[layer];
 
 			for (int i = 0; i < cratesInThisLayer.Count; i = i + 1)
 			{
 				cratesInThisLayer[i].Release(cratehp);
 			}
-			npc.lifeMax = (int)(npc.lifeMax * 0.75f);
-			npc.life = npc.lifeMax;
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.75f);
+			NPC.life = NPC.lifeMax;
 			cratesPerRing.RemoveAt(layer);
 		}
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			player.AddBuff(mod.BuffType("MoneyMismanagement"), 250, true);
+			player.AddBuff(Mod.Find<ModBuff>("MoneyMismanagement").Type, 250, true);
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -788,20 +789,20 @@ namespace SGAmod.NPCs.Cratrosity
 				}
 			}
 
-			if (GetType() != typeof(Cratrogeddon) && (npc.localAI[3] > 0 || phase<3))
+			if (GetType() != typeof(Cratrogeddon) && (NPC.localAI[3] > 0 || phase<3))
 			{
-				Texture2D trueFormTexture = mod.GetTexture("NPCs/Cratrosity/Cratosity");
+				Texture2D trueFormTexture = Mod.Assets.Request<Texture2D>("NPCs/Cratrosity/Cratosity").Value;
 				int width = trueFormTexture.Width;
 				int height = trueFormTexture.Height;
 				int frames = 22;
 				int framesHeight = height / frames;
-				int frame = (int)npc.frameCounter;
+				int frame = (int)NPC.frameCounter;
 
-				float direction = Math.Sign(npc.velocity.X);
-				npc.frame = new Rectangle(0, frame * framesHeight, width/2, framesHeight);
+				float direction = Math.Sign(NPC.velocity.X);
+				NPC.frame = new Rectangle(0, frame * framesHeight, width/2, framesHeight);
 				Rectangle frame2 = new Rectangle(width/2, frame * framesHeight, width / 2, framesHeight);
 
-				Main.spriteBatch.Draw(trueFormTexture, npc.Center - Main.screenPosition, npc.frame, lightColor, (float)Math.Pow(Math.Abs(npc.velocity.X/60f),0.75f)* direction, npc.frame.Size()/ 2f, npc.scale, default, 0);
+				Main.spriteBatch.Draw(trueFormTexture, NPC.Center - Main.screenPosition, NPC.frame, lightColor, (float)Math.Pow(Math.Abs(NPC.velocity.X/60f),0.75f)* direction, NPC.frame.Size()/ 2f, NPC.scale, default, 0);
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -814,7 +815,7 @@ namespace SGAmod.NPCs.Cratrosity
 				stardustsshader3.UseSecondaryColor(Color.Aqua);
 				stardustsshader3.Apply(null, new DrawData?(value28));
 
-						Main.spriteBatch.Draw(trueFormTexture, npc.Center - Main.screenPosition, frame2, Color.White, (float)Math.Pow(Math.Abs(npc.velocity.X / 60f), 0.75f) * direction, npc.frame.Size() / 2f, npc.scale, default, 0);
+						Main.spriteBatch.Draw(trueFormTexture, NPC.Center - Main.screenPosition, frame2, Color.White, (float)Math.Pow(Math.Abs(NPC.velocity.X / 60f), 0.75f) * direction, NPC.frame.Size() / 2f, NPC.scale, default, 0);
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -822,8 +823,8 @@ namespace SGAmod.NPCs.Cratrosity
 				return false;
 			}
 
-			Texture2D mainTex = GetType() == typeof(Cratrogeddon) ? mod.GetTexture("NPCs/Cratrosity/TitanCrate") : Main.itemTexture[ItemID.GoldenCrate];
-			Main.spriteBatch.Draw(mainTex, npc.Center - Main.screenPosition, null, lightColor, npc.rotation, mainTex.Size() / 2f, npc.scale, default, 0);
+			Texture2D mainTex = GetType() == typeof(Cratrogeddon) ? Mod.Assets.Request<Texture2D>("NPCs/Cratrosity/TitanCrate") .Value: Main.itemTexture[ItemID.GoldenCrate];
+			Main.spriteBatch.Draw(mainTex, NPC.Center - Main.screenPosition, null, lightColor, NPC.rotation, mainTex.Size() / 2f, NPC.scale, default, 0);
 
 			return false;
 		}
@@ -837,8 +838,8 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cratrosity");
-			Main.npcFrameCount[npc.type] = 1;
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = 1;
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 
 		public override bool Autoload(ref string name)
@@ -848,20 +849,20 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void SetDefaults()
 		{
-			npc.width = 160;
-			npc.height = 160;
-			npc.damage = 0;
-			npc.defense = 50;
-			npc.lifeMax = 5000000;
-			npc.HitSound = SoundID.NPCHit4;
-			npc.DeathSound = SoundID.NPCDeath37;
-			npc.knockBackResist = 0f;
-			npc.aiStyle = -1;
-			npc.hide = true;
+			NPC.width = 160;
+			NPC.height = 160;
+			NPC.damage = 0;
+			NPC.defense = 50;
+			NPC.lifeMax = 5000000;
+			NPC.HitSound = SoundID.NPCHit4;
+			NPC.DeathSound = SoundID.NPCDeath37;
+			NPC.knockBackResist = 0f;
+			NPC.aiStyle = -1;
+			NPC.hide = true;
 			//music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Evoland 2 OST - Track 46 (Ceres Battle)");
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
 		}
 		public override string Texture
 		{
@@ -875,29 +876,29 @@ namespace SGAmod.NPCs.Cratrosity
 
         public override void AI()
         {
-			if (npc.realLife >= 0)
+			if (NPC.realLife >= 0)
 			{
-				if (npc.realLife < 1)
+				if (NPC.realLife < 1)
                 {
 					//npc.StrikeNPCNoInteraction(100000, 0, 0, noEffect: true);
 					return;
 				}
-				npc.dontTakeDamage = Main.npc[npc.realLife].dontTakeDamage;
-				npc.Center = Main.npc[npc.realLife].Center;
-				npc.defense = Main.npc[npc.realLife].defense;
-				ModNPC modnpc = Main.npc[npc.realLife].modNPC;
+				NPC.dontTakeDamage = Main.npc[NPC.realLife].dontTakeDamage;
+				NPC.Center = Main.npc[NPC.realLife].Center;
+				NPC.defense = Main.npc[NPC.realLife].defense;
+				ModNPC modnpc = Main.npc[NPC.realLife].ModNPC;
 				if (modnpc != null)
 				{
-					if (!Main.npc[npc.realLife].modNPC.GetType().IsSubclassOf(typeof(Cratrosity)))
+					if (!Main.npc[NPC.realLife].ModNPC.GetType().IsSubclassOf(typeof(Cratrosity)))
 					{
 						//npc.StrikeNPCNoInteraction(100000, 0, 0, noEffect: true);
 						return;
 					}
 					else
 					{
-						Cratrosity crate = Main.npc[npc.realLife].modNPC as Cratrosity;
-						npc.width = 80 + (crate.phase * 16);
-						npc.height = 80 + (crate.phase * 16);
+						Cratrosity crate = Main.npc[NPC.realLife].ModNPC as Cratrosity;
+						NPC.width = 80 + (crate.phase * 16);
+						NPC.height = 80 + (crate.phase * 16);
 					}
 				}
 			}
@@ -922,47 +923,47 @@ namespace SGAmod.NPCs.Cratrosity
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(FakeID2);
-			projectile.hostile = true;
-			projectile.friendly = false;
-			projectile.aiStyle = -1;
-			projectile.timeLeft = 600;
+			Projectile.CloneDefaults(FakeID2);
+			Projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.aiStyle = -1;
+			Projectile.timeLeft = 600;
 		}
 
         public override bool PreKill(int timeLeft)
 		{
-			projectile.type = FakeID2;
+			Projectile.type = FakeID2;
 			return true;
 		}
 
 		public override void AI()
 		{
-			projectile.localAI[0] += 1;
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.localAI[0] += 1;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 		}
 
 		public void DrawAdditive(SpriteBatch spriteBatch)
 		{
 
-			Texture2D tex = Main.projectileTexture[projectile.type];
-			Vector2 drawPos = projectile.Center - Main.screenPosition;
+			Texture2D tex = Main.projectileTexture[Projectile.type];
+			Vector2 drawPos = Projectile.Center - Main.screenPosition;
 			int texHeight = tex.Height / 8;
 			Vector2 offset = new Vector2(tex.Width, texHeight / 8) / 2f;
-			int index = (int)(projectile.localAI[0] / 6f) % 8;
+			int index = (int)(Projectile.localAI[0] / 6f) % 8;
 
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, texHeight * index, tex.Width, texHeight), Color.Lerp(GlowColor, Color.White, 0.50f)*0.50f, projectile.rotation, offset, projectile.scale+0.25f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, texHeight * index, tex.Width, texHeight), Color.Lerp(GlowColor, Color.White, 0.50f)*0.50f, Projectile.rotation, offset, Projectile.scale+0.25f, SpriteEffects.None, 0f);
 		}
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-			Texture2D tex = Main.projectileTexture[projectile.type];
-			Vector2 drawPos = projectile.Center-Main.screenPosition;
+			Texture2D tex = Main.projectileTexture[Projectile.type];
+			Vector2 drawPos = Projectile.Center-Main.screenPosition;
 			int texHeight = tex.Height / 8;
 			Vector2 offset = new Vector2(tex.Width, texHeight / 8) / 2f;
-			int index = (int)(projectile.localAI[0]/6f)%8;
+			int index = (int)(Projectile.localAI[0]/6f)%8;
 
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, texHeight*index, tex.Width, texHeight), Color.Lerp(lightColor,Color.White,0.50f), projectile.rotation, offset, projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, texHeight*index, tex.Width, texHeight), Color.Lerp(lightColor,Color.White,0.50f), Projectile.rotation, offset, Projectile.scale, SpriteEffects.None, 0f);
 			Texture2D tex2 = Main.projectileTexture[ModContent.ProjectileType<SpecterangProj>()];
-			spriteBatch.Draw(tex2, projectile.Center - Main.screenPosition, null, GlowColor * 0.75f, projectile.rotation+MathHelper.Pi, tex2.Size() / 2f, projectile.scale / 1.5f, default, 0);
+			spriteBatch.Draw(tex2, Projectile.Center - Main.screenPosition, null, GlowColor * 0.75f, Projectile.rotation+MathHelper.Pi, tex2.Size() / 2f, Projectile.scale / 1.5f, default, 0);
 			return false;
         }
     }
@@ -997,26 +998,26 @@ namespace SGAmod.NPCs.Cratrosity
 		public override void AI()
         {
 			base.AI();
-			if (projectile.localAI[0] >= 0f)
-				projectile.localAI[0] += 1;
-			if (projectile.ai[1] < 1000)
+			if (Projectile.localAI[0] >= 0f)
+				Projectile.localAI[0] += 1;
+			if (Projectile.ai[1] < 1000)
             {
-				projectile.ai[0] = Main.rand.Next(60, 200);
-				projectile.ai[1] = 1000+(int)Player.FindClosest(projectile.Center, 0, 0);
-				projectile.netUpdate = true;
+				Projectile.ai[0] = Main.rand.Next(60, 200);
+				Projectile.ai[1] = 1000+(int)Player.FindClosest(Projectile.Center, 0, 0);
+				Projectile.netUpdate = true;
 
 			}
             else
             {
-				Player player = Main.player[(int)projectile.ai[1]-1000];
-				if (projectile.localAI[0] > projectile.ai[0] && projectile.localAI[0] >= 0)
+				Player player = Main.player[(int)Projectile.ai[1]-1000];
+				if (Projectile.localAI[0] > Projectile.ai[0] && Projectile.localAI[0] >= 0)
                 {
-					Vector2 dotter = player.Center - projectile.Center;
-					float speed = projectile.velocity.Length();
-					projectile.velocity = (projectile.velocity.ToRotation().AngleLerp(dotter.ToRotation(), 0.05f)).ToRotationVector2()*speed;
-					if (Vector2.Dot(Vector2.Normalize(dotter), Vector2.Normalize(projectile.velocity)) > 0.650f)
+					Vector2 dotter = player.Center - Projectile.Center;
+					float speed = Projectile.velocity.Length();
+					Projectile.velocity = (Projectile.velocity.ToRotation().AngleLerp(dotter.ToRotation(), 0.05f)).ToRotationVector2()*speed;
+					if (Vector2.Dot(Vector2.Normalize(dotter), Vector2.Normalize(Projectile.velocity)) > 0.650f)
                     {
-						projectile.localAI[0] = -10000;
+						Projectile.localAI[0] = -10000;
 					}
 
                 }

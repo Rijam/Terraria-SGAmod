@@ -9,6 +9,7 @@ using Idglibrary;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using SGAmod.Effects;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Items.Weapons
 {
@@ -24,31 +25,26 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.Amarok);
-			item.damage = 25;
-			item.useTime = 24;
-			item.useAnimation = 22;
-			item.useStyle = 5;
-			item.channel = true;
-			item.noMelee = true;
-			item.melee = true;
-			item.crit = 4;
-			item.knockBack = 4.5f;
-			item.value = 47000 * 5;
-			item.rare = 3;
-			item.noUseGraphic = true;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("MossYoyoProj");
+			Item.damage = 25;
+			Item.useTime = 24;
+			Item.useAnimation = 22;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.crit = 4;
+			Item.knockBack = 4.5f;
+			Item.value = 47000 * 5;
+			Item.rare = 3;
+			Item.noUseGraphic = true;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("MossYoyoProj").Type;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WoodYoyo);
-			recipe.AddIngredient(null, "BiomassBar", 8);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.WoodYoyo).AddIngredient(null, "BiomassBar", 8).AddTile(TileID.WorkBenches).Register();
 		}
 
 		public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -69,20 +65,20 @@ namespace SGAmod.HavocGear.Items.Weapons
         {
             Item refItem = new Item();
             refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-            item.damage = 40;
-            item.useTime = 22;
-            item.useAnimation = 22;
-            item.useStyle = 5;
-            item.channel = true;
-            item.melee = true;
-            item.knockBack = 2.5f;
-            item.value = 10000;
-            item.noMelee = true;
-            item.rare = 6;
-            item.noUseGraphic = true;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<Projectiles.KelvinProj>();
-            item.UseSound = SoundID.Item19;
+            Item.damage = 40;
+            Item.useTime = 22;
+            Item.useAnimation = 22;
+            Item.useStyle = 5;
+            Item.channel = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.knockBack = 2.5f;
+            Item.value = 10000;
+            Item.noMelee = true;
+            Item.rare = 6;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<Projectiles.KelvinProj>();
+            Item.UseSound = SoundID.Item19;
         }
 
         public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -93,12 +89,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "FieryShard", 10);
-            recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(null, "FieryShard", 10).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.MythrilAnvil).Register();
         }
     }
 
@@ -114,21 +105,21 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.Amarok);
-			item.damage = 45;
-			item.useTime = 24;
-			item.useAnimation = 22;
-			item.useStyle = 5;
-			item.channel = true;
-			item.melee = true;
-			item.noMelee = true;
-			item.crit = 4;
-			item.knockBack = 2.2f;
-			item.value = 100000;
-			item.rare = 5;
-			item.noUseGraphic = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item19;
-			item.shoot = mod.ProjectileType("JawsProj");
+			Item.damage = 45;
+			Item.useTime = 24;
+			Item.useAnimation = 22;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true;
+			Item.crit = 4;
+			Item.knockBack = 2.2f;
+			Item.value = 100000;
+			Item.rare = 5;
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item19;
+			Item.shoot = Mod.Find<ModProjectile>("JawsProj").Type;
 		}
 
 		public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -150,20 +141,20 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-			item.damage = 105;
-			item.useTime = 22;
-			item.useAnimation = 22;
-			item.noMelee = true;
-			item.useStyle = 5;
-			item.channel = true;
-			item.melee = true;
-			item.knockBack = 4f;
-			item.value = 500000;
-			item.rare = 9;
-			item.noUseGraphic = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item19;
-			item.shoot = mod.ProjectileType("UpheavalProj");
+			Item.damage = 105;
+			Item.useTime = 22;
+			Item.useAnimation = 22;
+			Item.noMelee = true;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.knockBack = 4f;
+			Item.value = 500000;
+			Item.rare = 9;
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item19;
+			Item.shoot = Mod.Find<ModProjectile>("UpheavalProj").Type;
 		}
 
 		public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -185,20 +176,20 @@ namespace SGAmod.HavocGear.Items.Weapons
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-			item.damage = 125;
-			item.useTime = 22;
-			item.useAnimation = 22;
-			item.useStyle = 5;
-			item.channel = true;
-			item.melee = true;
-			item.noMelee = true;
-			item.knockBack = 2.5f;
-			item.value = 1000000;
-			item.rare = 9;
-			item.noUseGraphic = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item19;
-			item.shoot = mod.ProjectileType("TornadoProj");
+			Item.damage = 125;
+			Item.useTime = 22;
+			Item.useAnimation = 22;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true;
+			Item.knockBack = 2.5f;
+			Item.value = 1000000;
+			Item.rare = 9;
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item19;
+			Item.shoot = Mod.Find<ModProjectile>("TornadoProj").Type;
 		}
 
 		public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -230,9 +221,9 @@ namespace SGAmod.Items.Weapons
         {
             if (Main.LocalPlayer.GetModPlayer<SGAPlayer>().devempowerment[1] > 0)
             {
-                tooltips.Add(new TooltipLine(mod, "DevEmpowerment", "--- Enpowerment bonus ---"));
-                tooltips.Add(new TooltipLine(mod, "DevEmpowerment", "40% increased damage"));
-                tooltips.Add(new TooltipLine(mod, "DevEmpowerment", "Creates smaller explosions leading up to the larger one"));
+                tooltips.Add(new TooltipLine(Mod, "DevEmpowerment", "--- Enpowerment bonus ---"));
+                tooltips.Add(new TooltipLine(Mod, "DevEmpowerment", "40% increased damage"));
+                tooltips.Add(new TooltipLine(Mod, "DevEmpowerment", "Creates smaller explosions leading up to the larger one"));
             }
         }
 
@@ -240,35 +231,26 @@ namespace SGAmod.Items.Weapons
         {
             Item refItem = new Item();
             refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-            item.damage = 250;
-            item.useTime = 16;
-            item.useAnimation = 16;
-            item.useStyle = 5;
-            item.crit = 10;
-            item.channel = true;
-            item.melee = true;
-            item.noMelee = true;
-            item.knockBack = 2.5f;
-            item.value = Item.sellPrice(0, 75, 0, 0);
-            item.rare = 11;
-            item.expert = true;
-            item.noUseGraphic = true;
-            item.autoReuse = true;
-            item.UseSound = SoundID.Item19;
-            item.shoot = mod.ProjectileType("CreepersThrowProj");
+            Item.damage = 250;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
+            Item.useStyle = 5;
+            Item.crit = 10;
+            Item.channel = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.noMelee = true;
+            Item.knockBack = 2.5f;
+            Item.value = Item.sellPrice(0, 75, 0, 0);
+            Item.rare = 11;
+            Item.expert = true;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
+            Item.UseSound = SoundID.Item19;
+            Item.shoot = Mod.Find<ModProjectile>("CreepersThrowProj").Type;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.LunarBar, 10);
-            recipe.AddIngredient(ItemID.FragmentSolar, 10);
-            recipe.AddIngredient(ItemID.ExplosivePowder, 100);
-            recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
-            recipe.AddIngredient(mod.ItemType("CosmicFragment"), 1);
-            recipe.AddIngredient(mod.ItemType("MoneySign"), 10);
-            recipe.AddTile(TileID.LunarCraftingStation);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.LunarBar, 10).AddIngredient(ItemID.FragmentSolar, 10).AddIngredient(ItemID.ExplosivePowder, 100).AddIngredient(ItemID.ChlorophyteBar, 10).AddIngredient(mod.ItemType("CosmicFragment"), 1).AddIngredient(mod.ItemType("MoneySign"), 10).AddTile(TileID.LunarCraftingStation).Register();
         }
 
         public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
@@ -288,9 +270,9 @@ namespace SGAmod.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Creeper's Throw");
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 999f;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 500f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 20f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 999f;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 500f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 20f;
         }
 
         public override string Texture
@@ -302,55 +284,55 @@ namespace SGAmod.Items.Weapons
         {
             Projectile refProjectile = new Projectile();
             refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.melee = true;
-            projectile.scale = 1f;
-            projectile.usesIDStaticNPCImmunity = true;
-            projectile.idStaticNPCHitCooldown = 10;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.scale = 1f;
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 10;
         }
 
         public override void AI()
         {
-            Player owner = Main.player[projectile.owner];
+            Player owner = Main.player[Projectile.owner];
             if (owner != null && !owner.dead)
             {
-                if (projectile.localAI[1] < 0)
-                    projectile.localAI[1] += 1;
+                if (Projectile.localAI[1] < 0)
+                    Projectile.localAI[1] += 1;
 
 
-                if (projectile.localAI[1] < 1)
+                if (Projectile.localAI[1] < 1)
                 {
-                    NPC target = Main.npc[Idglib.FindClosestTarget(0, projectile.Center, new Vector2(0f, 0f), true, true, true, projectile)];
-                    if (target != null && Vector2.Distance(target.Center, projectile.Center) < 72)
+                    NPC target = Main.npc[Idglib.FindClosestTarget(0, Projectile.Center, new Vector2(0f, 0f), true, true, true, Projectile)];
+                    if (target != null && Vector2.Distance(target.Center, Projectile.Center) < 72)
                     {
-                        projectile.localAI[1] = 1;
+                        Projectile.localAI[1] = 1;
 
 
                     }
                 }
                 else
                 {
-                    projectile.localAI[1] += 1;
+                    Projectile.localAI[1] += 1;
 
-                    int dustIndexsmoke = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 31, 0f, 0f, 100, default(Color), 1f);
+                    int dustIndexsmoke = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 31, 0f, 0f, 100, default(Color), 1f);
                     Main.dust[dustIndexsmoke].scale = 0.1f + (float)Main.rand.Next(5) * 0.1f;
                     Main.dust[dustIndexsmoke].fadeIn = 1.5f + (float)Main.rand.Next(5) * 0.1f;
                     Main.dust[dustIndexsmoke].noGravity = true;
-                    Main.dust[dustIndexsmoke].position = projectile.Center + new Vector2(0f, (float)(-(float)projectile.height / 2)).RotatedBy((double)projectile.rotation, default(Vector2)) * 1.1f;
-                    dustIndexsmoke = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 6, 0f, 0f, 100, default(Color), 1f);
+                    Main.dust[dustIndexsmoke].position = Projectile.Center + new Vector2(0f, (float)(-(float)Projectile.height / 2)).RotatedBy((double)Projectile.rotation, default(Vector2)) * 1.1f;
+                    dustIndexsmoke = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 6, 0f, 0f, 100, default(Color), 1f);
                     Main.dust[dustIndexsmoke].scale = 1f + (float)Main.rand.Next(5) * 0.1f;
                     Main.dust[dustIndexsmoke].noGravity = true;
-                    Main.dust[dustIndexsmoke].position = projectile.Center + new Vector2(0f, (float)(-(float)projectile.height / 2 - 6)).RotatedBy((double)projectile.rotation, default(Vector2)) * 1.1f;
+                    Main.dust[dustIndexsmoke].position = Projectile.Center + new Vector2(0f, (float)(-(float)Projectile.height / 2 - 6)).RotatedBy((double)Projectile.rotation, default(Vector2)) * 1.1f;
 
-                    if (projectile.localAI[1] > 40 && projectile.localAI[1] < 120 && projectile.localAI[1] % 25 == 0 && owner.GetModPlayer<SGAPlayer>().devempowerment[1] > 0)
+                    if (Projectile.localAI[1] > 40 && Projectile.localAI[1] < 120 && Projectile.localAI[1] % 25 == 0 && owner.GetModPlayer<SGAPlayer>().devempowerment[1] > 0)
                     {
 
-                        int thisone = Projectile.NewProjectile(projectile.Center.X - 100, projectile.Center.Y - 100, Vector2.Zero.X, Vector2.Zero.Y, ModContent.ProjectileType<CreepersThrowBoom>(), projectile.damage * 2, projectile.knockBack, Main.player[projectile.owner].whoAmI, 0.0f, 0f);
+                        int thisone = Projectile.NewProjectile(Projectile.Center.X - 100, Projectile.Center.Y - 100, Vector2.Zero.X, Vector2.Zero.Y, ModContent.ProjectileType<CreepersThrowBoom>(), Projectile.damage * 2, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, 0.0f, 0f);
                         Main.projectile[thisone].timeLeft = 2;
                         Main.projectile[thisone].width = 200;
                         Main.projectile[thisone].penetrate = 1;
@@ -360,16 +342,16 @@ namespace SGAmod.Items.Weapons
 
                     }
 
-                    if (projectile.localAI[1] == 121)
+                    if (Projectile.localAI[1] == 121)
                     {
-                        projectile.localAI[1] = -60;
+                        Projectile.localAI[1] = -60;
                         for (int i = 0; i < 359; i += 36)
                         {
                             double angles = MathHelper.ToRadians(i);
                             float randomx = 64f;//Main.rand.NextFloat(54f, 96f);
                             Vector2 here = new Vector2((float)Math.Cos(angles), (float)Math.Sin(angles));
 
-                            int thisone = Projectile.NewProjectile(projectile.Center.X + (here.X * randomx) - 100, projectile.Center.Y + (here.Y * randomx) - 100, here.X, here.Y, ModContent.ProjectileType<CreepersThrowBoom>(), projectile.damage * 1, projectile.knockBack, Main.player[projectile.owner].whoAmI, 0.0f, 0f);
+                            int thisone = Projectile.NewProjectile(Projectile.Center.X + (here.X * randomx) - 100, Projectile.Center.Y + (here.Y * randomx) - 100, here.X, here.Y, ModContent.ProjectileType<CreepersThrowBoom>(), Projectile.damage * 1, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, 0.0f, 0f);
                             Main.projectile[thisone].timeLeft = 2;
                             Main.projectile[thisone].width = 200;
                             Main.projectile[thisone].height = 200;
@@ -378,7 +360,7 @@ namespace SGAmod.Items.Weapons
 
                         }
                     }
-                    if (projectile.localAI[1] == 120)
+                    if (Projectile.localAI[1] == 120)
                     {
 
                         for (int i = 0; i < 359; i += 72)
@@ -387,7 +369,7 @@ namespace SGAmod.Items.Weapons
                             float randomx = 48f;//Main.rand.NextFloat(54f, 96f);
                             Vector2 here = new Vector2((float)Math.Cos(angles), (float)Math.Sin(angles));
 
-                            int thisone = Projectile.NewProjectile(projectile.Center.X + (here.X * randomx) - 100, projectile.Center.Y + (here.Y * randomx) - 100, here.X, here.Y, ModContent.ProjectileType<CreepersThrowBoom>(), projectile.damage * 1, projectile.knockBack, Main.player[projectile.owner].whoAmI, 0.0f, 0f);
+                            int thisone = Projectile.NewProjectile(Projectile.Center.X + (here.X * randomx) - 100, Projectile.Center.Y + (here.Y * randomx) - 100, here.X, here.Y, ModContent.ProjectileType<CreepersThrowBoom>(), Projectile.damage * 1, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, 0.0f, 0f);
                             Main.projectile[thisone].timeLeft = 2;
                             Main.projectile[thisone].width = 200;
                             Main.projectile[thisone].penetrate = 1;
@@ -421,28 +403,28 @@ namespace SGAmod.Items.Weapons
 
         public override bool? CanHitNPC(NPC target)
         {
-            if (!target.friendly && !target.dontTakeDamage && target.immune[Main.player[projectile.owner].whoAmI] > 0)
+            if (!target.friendly && !target.dontTakeDamage && target.immune[Main.player[Projectile.owner].whoAmI] > 0)
                 return true;
             return base.CanHitNPC(target);
         }
 
         public override void SetDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.GrenadeIII);
-            projectile.scale = 0.001f;
-            projectile.melee = true;
+            Projectile.CloneDefaults(ProjectileID.GrenadeIII);
+            Projectile.scale = 0.001f;
+            Projectile.DamageType = DamageClass.Melee;
             //projectile.penetrate = 1;
-            aiType = ProjectileID.GrenadeIII;
+            AIType = ProjectileID.GrenadeIII;
         }
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            target.immune[projectile.owner] = 1;
+            target.immune[Projectile.owner] = 1;
         }
 
         public override bool PreKill(int timeLeft)
         {
-            projectile.type = ProjectileID.GrenadeIII;
+            Projectile.type = ProjectileID.GrenadeIII;
             return true;
         }
     }
@@ -457,21 +439,21 @@ namespace SGAmod.Items.Weapons
         public override void SetDefaults()
         {
             base.SetDefaults();
-            projectile.timeLeft = 3;
-            projectile.width = 200;
-            projectile.height = 200;
-            projectile.scale = 0.001f;
-            projectile.timeLeft = 2;
-            projectile.penetrate = 1;
+            Projectile.timeLeft = 3;
+            Projectile.width = 200;
+            Projectile.height = 200;
+            Projectile.scale = 0.001f;
+            Projectile.timeLeft = 2;
+            Projectile.penetrate = 1;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             if (target.life - damage < 0)
             {
-                Main.player[projectile.owner].netLife = true;
-                Main.player[projectile.owner].statLife += 50;
-                Main.player[projectile.owner].GetModPlayer<SGAPlayer>().creeperexplosion = 0;
+                Main.player[Projectile.owner].netLife = true;
+                Main.player[Projectile.owner].statLife += 50;
+                Main.player[Projectile.owner].GetModPlayer<SGAPlayer>().creeperexplosion = 0;
             }
         }
 
@@ -490,20 +472,20 @@ namespace SGAmod.Items.Weapons
         {
             Item refItem = new Item();
             refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-            item.damage = 0;
-            item.useTime = 22;
-            item.useAnimation = 22;
-            item.useStyle = 5;
-            item.channel = true;
-            item.melee = true;
-            item.knockBack = 2.5f;
-            item.value = 50000;
-            item.noMelee = true;
-            item.rare = ItemRarityID.Green;
-            item.noUseGraphic = true;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("ThievesThrowProj");
-            item.UseSound = SoundID.Item19;
+            Item.damage = 0;
+            Item.useTime = 22;
+            Item.useAnimation = 22;
+            Item.useStyle = 5;
+            Item.channel = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.knockBack = 2.5f;
+            Item.value = 50000;
+            Item.noMelee = true;
+            Item.rare = ItemRarityID.Green;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("ThievesThrowProj").Type;
+            Item.UseSound = SoundID.Item19;
         }
 
         public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -518,9 +500,9 @@ namespace SGAmod.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Thieves Throw");
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 300.0f;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 1500f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 25f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 300.0f;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 1500f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 25f;
         }
 
         public override string Texture => "SGAmod/Projectiles/ThievesThrowProj";
@@ -529,14 +511,14 @@ namespace SGAmod.Items.Weapons
         {
             Projectile refProjectile = new Projectile();
             refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.melee = true;
-            projectile.scale = 1f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.scale = 1f;
         }
 
         public override bool CanDamage()
@@ -546,15 +528,15 @@ namespace SGAmod.Items.Weapons
 
         public override void AI()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
             int dist = GetType() == typeof(RiftThrowProj) ? 50000 : 20000;
 
-            foreach (Item item in Main.item.Where(testby => testby.active && (projectile.Center - testby.Center).LengthSquared() < dist))
+            foreach (Item item in Main.item.Where(testby => testby.active && (Projectile.Center - testby.Center).LengthSquared() < dist))
             {
-                item.velocity += Collision.TileCollision(item.position, Vector2.Normalize(projectile.Center - item.Center) * 0.40f, item.width, item.height);
+                item.velocity += Collision.TileCollision(item.position, Vector2.Normalize(Projectile.Center - item.Center) * 0.40f, item.width, item.height);
 
-                if ((item.Center - projectile.Center).LengthSquared() < 600)
+                if ((item.Center - Projectile.Center).LengthSquared() < 600)
                 {
                     item.Center = player.Center;
                 }
@@ -574,19 +556,19 @@ namespace SGAmod.Items.Weapons
         {
             Item refItem = new Item();
             refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-            item.damage = 250;
-            item.useTime = 22;
-            item.useAnimation = 22;
-            item.useStyle = 5;
-            item.channel = true;
-            item.melee = true;
-            item.value = 50000;
-            item.noMelee = true;
-            item.rare = ItemRarityID.Yellow;
-            item.noUseGraphic = true;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<RiftThrowProj>();
-            item.UseSound = SoundID.Item19;
+            Item.damage = 250;
+            Item.useTime = 22;
+            Item.useAnimation = 22;
+            Item.useStyle = 5;
+            Item.channel = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = 50000;
+            Item.noMelee = true;
+            Item.rare = ItemRarityID.Yellow;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<RiftThrowProj>();
+            Item.UseSound = SoundID.Item19;
         }
 
         public override string Texture => "SGAmod/Items/Weapons/RiftYoyo";
@@ -598,13 +580,7 @@ namespace SGAmod.Items.Weapons
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<ThievesThrow>(), 1);
-            recipe.AddIngredient(ModContent.ItemType<StygianCore>(), 1);
-            recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 20);
-            recipe.AddTile(TileID.LunarCraftingStation);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ModContent.ItemType<ThievesThrow>(), 1).AddIngredient(ModContent.ItemType<StygianCore>(), 1).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 20).AddTile(TileID.LunarCraftingStation).Register();
         }
     }
 
@@ -613,24 +589,24 @@ namespace SGAmod.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Desolate Rift");
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 20.0f;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 500f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 15f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 20.0f;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 500f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 15f;
         }
 
         public override void SetDefaults()
         {
             Projectile refProjectile = new Projectile();
             refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.scale = 1f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.scale = 1f;
         }
 
         public override string Texture => "SGAmod/Projectiles/RiftYoyoProj";
@@ -643,20 +619,20 @@ namespace SGAmod.Items.Weapons
         public override void AI()
         {
             base.AI();
-            Player player = Main.player[projectile.owner];
-            foreach (NPC npc in Main.npc.Where(testby => testby.active && !testby.friendly && !testby.dontTakeDamage && testby.chaseable && (projectile.Center - testby.Center).LengthSquared() < 60000))
+            Player player = Main.player[Projectile.owner];
+            foreach (NPC npc in Main.npc.Where(testby => testby.active && !testby.friendly && !testby.dontTakeDamage && testby.chaseable && (Projectile.Center - testby.Center).LengthSquared() < 60000))
             {
-                if (!npc.IsDummy() && (npc.Center - projectile.Center).LengthSquared() < 50000)
+                if (!npc.IsDummy() && (npc.Center - Projectile.Center).LengthSquared() < 50000)
                 {
-                    npc.Center += Collision.TileCollision(npc.position, Vector2.Normalize(projectile.Center - npc.Center) * 4f * (npc.knockBackResist + 0.25f), npc.width, npc.height);
+                    npc.Center += Collision.TileCollision(npc.position, Vector2.Normalize(Projectile.Center - npc.Center) * 4f * (npc.knockBackResist + 0.25f), npc.width, npc.height);
 
-                    npc.SGANPCs().nonStackingImpaled = Math.Max(npc.SGANPCs().nonStackingImpaled, projectile.damage);
+                    npc.SGANPCs().nonStackingImpaled = Math.Max(npc.SGANPCs().nonStackingImpaled, Projectile.damage);
                 }
             }
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Dimensions.NPCs.SpaceBoss.DarknessNebulaEffect(mod.GetTexture("GlowOrb"), 0f, projectile.Center, 0.25f, projectile.whoAmI, 10, -5f);
+            Dimensions.NPCs.SpaceBoss.DarknessNebulaEffect(Mod.Assets.Request<Texture2D>("GlowOrb").Value, 0f, Projectile.Center, 0.25f, Projectile.whoAmI, 10, -5f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -723,7 +699,7 @@ namespace SGAmod.Items.Weapons
                     timer -= 1;
                     if (timer < 0)
                     {
-                        var snd = Main.PlaySound(SoundID.Item, (int)Position.X, (int)Position.Y, 3);
+                        var snd = SoundEngine.PlaySound(SoundID.Item, (int)Position.X, (int)Position.Y, 3);
 
                         if (snd != null)
                         {
@@ -759,19 +735,19 @@ namespace SGAmod.Items.Weapons
         {
             Item refItem = new Item();
             refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-            item.damage = 60;
-            item.useTime = 64;
-            item.useAnimation = 64;
-            item.useStyle = 5;
-            item.channel = true;
-            item.melee = true;
-            item.value = 10000;
-            item.noMelee = true;
-            item.rare = ItemRarityID.Yellow;
-            item.noUseGraphic = true;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<LeechYoyoProj>();
-            item.UseSound = SoundID.Item19;
+            Item.damage = 60;
+            Item.useTime = 64;
+            Item.useAnimation = 64;
+            Item.useStyle = 5;
+            Item.channel = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.value = 10000;
+            Item.noMelee = true;
+            Item.rare = ItemRarityID.Yellow;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<LeechYoyoProj>();
+            Item.UseSound = SoundID.Item19;
         }
 
         public override string Texture => "SGAmod/Items/Weapons/TheTongue";
@@ -807,23 +783,23 @@ namespace SGAmod.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Leech Yoyo");
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 8.0f;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 240f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 8f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 8.0f;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 240f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 8f;
         }
 
         public override void SetDefaults()
         {
             Projectile refProjectile = new Projectile();
             refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.melee = true;
-            projectile.scale = 1f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.scale = 1f;
         }
 
         public override string Texture => "SGAmod/Projectiles/TheTongueProj";
@@ -843,8 +819,8 @@ namespace SGAmod.Items.Weapons
 
         public override bool PreKill(int timeLeft)
         {
-            Player player = Main.player[projectile.owner];
-            if ((projectile.Center - player.Center).LengthSquared() < 3200)
+            Player player = Main.player[Projectile.owner];
+            if ((Projectile.Center - player.Center).LengthSquared() < 3200)
             {
                 Projectile vamp = new Projectile();
                 vamp.owner = player.whoAmI;
@@ -857,7 +833,7 @@ namespace SGAmod.Items.Weapons
                 bool lunar = GetType() == typeof(LunarLeechProj);
 
                 healing = (int)((lunar ? (int)(healing * 0.15f) : (int)healing) *0.60f);
-                vamp.vampireHeal(healing, projectile.Center);
+                vamp.vampireHeal(healing, Projectile.Center);
 
                 if (lunar)
                 {
@@ -870,17 +846,17 @@ namespace SGAmod.Items.Weapons
 
         public override void AI()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             leechcooldown -= 1;
 
-            if (leechcooldown < 1 && projectile.ai[0] >= 0 && leeches.Where(testby => testby.percent <= 0).Count() < MaxLeeches.Item1)
+            if (leechcooldown < 1 && Projectile.ai[0] >= 0 && leeches.Where(testby => testby.percent <= 0).Count() < MaxLeeches.Item1)
             {
-                foreach (NPC npc in Main.npc.Where(testby => testby.active && !testby.friendly && !testby.dontTakeDamage && testby.chaseable && !leeches.Where(testby3 => testby3.percent <= 0).Select(testby2 => testby2.target).Contains(testby) && (projectile.Center - testby.Center).LengthSquared() < maxDist).OrderBy(testby => (projectile.Center - testby.Center).LengthSquared()))
+                foreach (NPC npc in Main.npc.Where(testby => testby.active && !testby.friendly && !testby.dontTakeDamage && testby.chaseable && !leeches.Where(testby3 => testby3.percent <= 0).Select(testby2 => testby2.target).Contains(testby) && (Projectile.Center - testby.Center).LengthSquared() < maxDist).OrderBy(testby => (Projectile.Center - testby.Center).LengthSquared()))
                 {
                     if (!npc.IsDummy())// && (npc.Center - projectile.Center).LengthSquared() < maxDist)
                     {
                         leechcooldown = MaxLeeches.Item2;
-                        LeechHead newLeech = GetType() == typeof(LunarLeechProj) ? new LunarLeechHead(npc, projectile) : new LeechHead(npc, projectile);
+                        LeechHead newLeech = GetType() == typeof(LunarLeechProj) ? new LunarLeechHead(npc, Projectile) : new LeechHead(npc, Projectile);
 
                         leeches.Add(newLeech);
                         break;
@@ -904,11 +880,11 @@ namespace SGAmod.Items.Weapons
 
                 List<Vector2> vectors = new List<Vector2>();
 
-                Vector2 dist = (leech.Position - projectile.Center);
+                Vector2 dist = (leech.Position - Projectile.Center);
 
                 for (float ff = 0; ff <= 1f; ff += 0.01f)
                 {
-                    vectors.Add(Vector2.Lerp(projectile.Center, leech.Position, ff));
+                    vectors.Add(Vector2.Lerp(Projectile.Center, leech.Position, ff));
                 }
 
                 float alphaPercent = (leech.timer / (float)leech.leechTime) * (1f - leech.percent);
@@ -930,12 +906,12 @@ namespace SGAmod.Items.Weapons
                 };
                 trail.color = delegate (float percent)
                 {
-                    Vector2 vex2 = Vector2.Lerp(projectile.Center, leech.Position, percent);
+                    Vector2 vex2 = Vector2.Lerp(Projectile.Center, leech.Position, percent);
                     Point there = new Point((int)(vex2.X / 16), (int)(vex2.Y) / 16);
                     return Lighting.GetColor(there.X, there.Y,Color.White);
                 };
                 trail.trailThicknessIncrease = 0;
-                trail.DrawTrail(vectors, projectile.Center);
+                trail.DrawTrail(vectors, Projectile.Center);
             }
 
             Main.spriteBatch.End();
@@ -948,7 +924,7 @@ namespace SGAmod.Items.Weapons
                 if (leech.percent >= 1)
                     continue;
 
-                float direction = (leech.Position - projectile.Center).ToRotation();
+                float direction = (leech.Position - Projectile.Center).ToRotation();
 
                 float alphaPercent = (leech.timer / (float)leech.leechTime) * (1f - leech.percent);
 
@@ -962,18 +938,18 @@ namespace SGAmod.Items.Weapons
                     Rectangle rect = new Rectangle(0, frame*(HeadTex.Height / 4), HeadTex.Width, HeadTex.Height / 4);
                     spriteBatch.Draw(HeadTex, leech.Position - Main.screenPosition, rect, Lighting.GetColor(point.X, point.Y), direction + DirectionAdd, rect.Size() / 2f, 1, SpriteEffects.None, 0f);
 
-                    spriteBatch.Draw(gurgleTex, Vector2.Lerp(projectile.Center, leech.Position, alphaPercent) - Main.screenPosition, null, Color.Aquamarine * scaleSize * 0.50f, direction, gurgleTex.Size() / 2f, (0.25f + scaleSize)*new Vector2(1.25f,0.60f), SpriteEffects.None, 0f);
+                    spriteBatch.Draw(gurgleTex, Vector2.Lerp(Projectile.Center, leech.Position, alphaPercent) - Main.screenPosition, null, Color.Aquamarine * scaleSize * 0.50f, direction, gurgleTex.Size() / 2f, (0.25f + scaleSize)*new Vector2(1.25f,0.60f), SpriteEffects.None, 0f);
                 }
                 else
                 {
                     Point point = new Point((int)(leech.Position.X / 16), (int)(leech.Position.Y / 16));
                     spriteBatch.Draw(HeadTex, leech.Position - Main.screenPosition, null, Lighting.GetColor(point.X, point.Y), direction + DirectionAdd, HeadTex.Size() / 2f, 1, SpriteEffects.None, 0f);
 
-                    spriteBatch.Draw(gurgleTex, Vector2.Lerp(projectile.Center, leech.Position, alphaPercent) - Main.screenPosition, null, lightColor.MultiplyRGB(Color.Red) * scaleSize * 0.25f, direction, gurgleTex.Size() / 2f, 0.25f + scaleSize, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(gurgleTex, Vector2.Lerp(Projectile.Center, leech.Position, alphaPercent) - Main.screenPosition, null, lightColor.MultiplyRGB(Color.Red) * scaleSize * 0.25f, direction, gurgleTex.Size() / 2f, 0.25f + scaleSize, SpriteEffects.None, 0f);
                 }
             }
 
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.Center - Main.screenPosition, null, lightColor, projectile.rotation, Main.projectileTexture[projectile.type].Size() / 2f, 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Main.projectileTexture[Projectile.type], Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, Main.projectileTexture[Projectile.type].Size() / 2f, 1, SpriteEffects.None, 0f);
 
             return false;// base.PreDraw(spriteBatch, lightColor);
         }
@@ -1003,19 +979,14 @@ namespace SGAmod.Items.Weapons
         public override void SetDefaults()
         {
             base.SetDefaults();
-            item.damage = 150;
-            item.value = 100000;
-            item.shoot = ModContent.ProjectileType<LunarLeechProj>();
+            Item.damage = 150;
+            Item.value = 100000;
+            Item.shoot = ModContent.ProjectileType<LunarLeechProj>();
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<EldritchTentacle>(), 30);
-            recipe.AddIngredient(ModContent.ItemType<LeechYoyo>(), 1);
-            recipe.AddTile(TileID.LunarCraftingStation);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ModContent.ItemType<EldritchTentacle>(), 30).AddIngredient(ModContent.ItemType<LeechYoyo>(), 1).AddTile(TileID.LunarCraftingStation).Register();
         }
     }
 
@@ -1039,9 +1010,9 @@ namespace SGAmod.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Lunar Leech Yoyo");
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 8.0f;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 240f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 12f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 8.0f;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 240f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 12f;
         }
 
         public override void SetDefaults()

@@ -13,42 +13,42 @@ namespace SGAmod.HavocGear.Projectiles
         public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Tornado");
-			ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 5f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 350f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 17f;
+			ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 5f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 350f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 17f;
 		}
         
 		public override void SetDefaults()
         {
         	Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-			projectile.extraUpdates = 0;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = 99;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.scale = 1f;
+			Projectile.extraUpdates = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = 99;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.scale = 1f;
         }
         
        	public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
        	{
 
-       			Texture2D tex = mod.GetTexture("HavocGear/Projectiles/TornadoProj2");
+       			Texture2D tex = Mod.Assets.Request<Texture2D>("HavocGear/Projectiles/TornadoProj2").Value;
        			Vector2 drawOrigin = new Vector2(tex.Width,tex.Height/6)/2f;
-				Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-				Color color = projectile.GetAlpha(lightColor)*0.5f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-				int timing=(int)(projectile.localAI[0]/8f);
+				Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+				Color color = Projectile.GetAlpha(lightColor)*0.5f; //* ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+				int timing=(int)(Projectile.localAI[0]/8f);
 				timing %=6;
 				timing*=((tex.Height)/6);
-				spriteBatch.Draw(tex, drawPos, new Rectangle(0,timing,tex.Width,(tex.Height-1)/6), color, projectile.velocity.X*0.04f, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, drawPos, new Rectangle(0,timing,tex.Width,(tex.Height-1)/6), color, Projectile.velocity.X*0.04f, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
        	}
 
         public override void AI()
         {
 
-		    int DustID2 = Dust.NewDust(new Vector2(projectile.Center.X-16f, projectile.Center.Y - 12f), 32, 24, mod.DustType("TornadoDust"), projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 20, default(Color)*0.5f, 1f);
+		    int DustID2 = Dust.NewDust(new Vector2(Projectile.Center.X-16f, Projectile.Center.Y - 12f), 32, 24, Mod.Find<ModDust>("TornadoDust").Type, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 20, default(Color)*0.5f, 1f);
             Main.dust[DustID2].noGravity = true;
 
             int[] array = new int[20];
@@ -57,12 +57,12 @@ namespace SGAmod.HavocGear.Projectiles
 			bool flag14 = false;
 			for (int num430 = 0; num430 < 200; num430++)
 			{
-				if (Main.npc[num430].CanBeChasedBy(projectile, false))
+				if (Main.npc[num430].CanBeChasedBy(Projectile, false))
 				{
 					float num431 = Main.npc[num430].position.X + (float)(Main.npc[num430].width / 2);
 					float num432 = Main.npc[num430].position.Y + (float)(Main.npc[num430].height / 2);
-					float num433 = Math.Abs(projectile.position.X + (float)(projectile.width / 2) - num431) + Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - num432);
-					if (num433 < num429 && Collision.CanHitLine(projectile.Center, 1, 1, Main.npc[num430].Center, 1, 1))
+					float num433 = Math.Abs(Projectile.position.X + (float)(Projectile.width / 2) - num431) + Math.Abs(Projectile.position.Y + (float)(Projectile.height / 2) - num432);
+					if (num433 < num429 && Collision.CanHitLine(Projectile.Center, 1, 1, Main.npc[num430].Center, 1, 1))
 					{
 						if (num428 < 20)
 						{
@@ -79,20 +79,20 @@ namespace SGAmod.HavocGear.Projectiles
 				num434 = array[num434];
 				float num435 = Main.npc[num434].position.X + (float)(Main.npc[num434].width / 2);
 				float num436 = Main.npc[num434].position.Y + (float)(Main.npc[num434].height / 2);
-				projectile.localAI[0] += 1f;
-				if (projectile.localAI[0] > 32f)
+				Projectile.localAI[0] += 1f;
+				if (Projectile.localAI[0] > 32f)
 				{
-					projectile.localAI[0] = 0f;
+					Projectile.localAI[0] = 0f;
 					float num437 = 6f;
-					Vector2 value10 = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
-					value10 += projectile.velocity * 4f;
+					Vector2 value10 = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
+					value10 += Projectile.velocity * 4f;
 					float num438 = num435 - value10.X;
 					float num439 = num436 - value10.Y;
 					float num440 = (float)Math.Sqrt((double)(num438 * num438 + num439 * num439));
 					num440 = num437 / num440;
 					num438 *= num440;
 					num439 *= num440;
-					Projectile.NewProjectile(value10.X, value10.Y, num438, num439, mod.ProjectileType("TornadoProj2"), (int)((double)projectile.damage * 0.75f), projectile.knockBack, projectile.owner, 0f, 0f);
+					Projectile.NewProjectile(value10.X, value10.Y, num438, num439, Mod.Find<ModProjectile>("TornadoProj2").Type, (int)((double)Projectile.damage * 0.75f), Projectile.knockBack, Projectile.owner, 0f, 0f);
 					return;
 				}
 			}

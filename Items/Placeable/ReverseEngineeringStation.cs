@@ -16,19 +16,19 @@ namespace SGAmod.Items.Placeable
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0,0,75,0);
-			item.rare = ItemRarityID.Blue;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("ReverseEngineeringStation");
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0,0,75,0);
+			Item.rare = ItemRarityID.Blue;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("ReverseEngineeringStation").Type;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -39,36 +39,15 @@ namespace SGAmod.Items.Placeable
 				s = key;
 			}
 
-			tooltips.Add(new TooltipLine(mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "Allows you to uncraft non-favorited held items on right click")));
-			tooltips.Add(new TooltipLine(mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "Press the 'Toggle Recipe' (" + s + ") Hotkey to swap between recipes")));
-			tooltips.Add(new TooltipLine(mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "There is a net loss in materials on uncraft, this can however be reduced")));
+			tooltips.Add(new TooltipLine(Mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "Allows you to uncraft non-favorited held items on right click")));
+			tooltips.Add(new TooltipLine(Mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "Press the 'Toggle Recipe' (" + s + ") Hotkey to swap between recipes")));
+			tooltips.Add(new TooltipLine(Mod, "uncraft", Idglib.ColorText(Color.CornflowerBlue, "There is a net loss in materials on uncraft, this can however be reduced")));
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.TinkerersWorkshop, 1);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 8);
-			recipe.AddIngredient(ModContent.ItemType<Consumables.EnergizerBattery>(), 5);
-			recipe.AddIngredient(ModContent.ItemType<Weapons.Technical.LaserMarker>(), 10);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 25);
-			recipe.AddRecipeGroup("SGAmod:EvilBossMaterials", 15);
-			//recipe.AddIngredient(mod.ItemType("WraithFragment3"), 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.TinkerersWorkshop, 1);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 3);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 8);
-			recipe.AddRecipeGroup("SGAmod:PressurePlates", 2);
-			//recipe.AddIngredient(mod.ItemType("WraithFragment3"), 10);
-			recipe.AddRecipeGroup("SGAmod:EvilBossMaterials", 8);
-			recipe.AddRecipeGroup("SGAmod:TechStuff", 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.TinkerersWorkshop, 1).AddIngredient(ItemID.MeteoriteBar, 8).AddIngredient(ModContent.ItemType<Consumables.EnergizerBattery>(), 5).AddIngredient(ModContent.ItemType<Weapons.Technical.LaserMarker>(), 10).AddIngredient(ModContent.ItemType<VialofAcid>(), 25).AddRecipeGroup("SGAmod:EvilBossMaterials", 15).AddTile(TileID.WorkBenches).Register();
+			CreateRecipe(1).AddIngredient(ItemID.TinkerersWorkshop, 1).AddIngredient(ItemID.MeteoriteBar, 3).AddIngredient(ModContent.ItemType<VialofAcid>(), 8).AddRecipeGroup("SGAmod:PressurePlates", 2).AddRecipeGroup("SGAmod:EvilBossMaterials", 8).AddRecipeGroup("SGAmod:TechStuff", 1).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 }

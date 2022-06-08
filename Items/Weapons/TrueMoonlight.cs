@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -16,27 +17,27 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("True Moonlight");
 			Tooltip.SetDefault("Hold left click to raise your sword to the stars and power up your slash!\nLv2 Slash inflicts Moon Light Curse on enemies\nThis debuff massively reduces their defense and taking damage over time\nLv3 slash does massive damage and homes in nearby enemies\nHold right click to auto swing basic slash waves at less accuracy\nHaving a faster Melee Swing Speed charges the blade faster");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 175;
-			item.crit = 5;
-			item.melee = true;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = 1;
-			item.knockBack = 10;
-			item.value = Item.sellPrice(1, 0, 0, 0);
-			item.rare = 9;
+			Item.damage = 175;
+			Item.crit = 5;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = 1;
+			Item.knockBack = 10;
+			Item.value = Item.sellPrice(1, 0, 0, 0);
+			Item.rare = 9;
 			//item.UseSound = SoundID.Item71;
-			item.shoot = mod.ProjectileType("MoonlightWaveLv1");
-			item.shootSpeed = 30f;
-			item.autoReuse = false;
-			item.useTurn = false;
+			Item.shoot = Mod.Find<ModProjectile>("MoonlightWaveLv1").Type;
+			Item.shootSpeed = 30f;
+			Item.autoReuse = false;
+			Item.useTurn = false;
 
 		}
 
@@ -52,20 +53,20 @@ namespace SGAmod.Items.Weapons
 
 			if (!altfired)
 			{
-				item.autoReuse = true;
-				item.channel = true;
-				item.useStyle = 5;
-				item.useTime = 60;
-				item.useAnimation = 60;
-				item.noMelee = true;
+				Item.autoReuse = true;
+				Item.channel = true;
+				Item.useStyle = 5;
+				Item.useTime = 60;
+				Item.useAnimation = 60;
+				Item.noMelee = true;
 			}
 			else
 			{
-				item.autoReuse = false;
-				item.channel = false;
-				item.useStyle = 1;
-				item.useTime = 20;
-				item.useAnimation = 20;
+				Item.autoReuse = false;
+				Item.channel = false;
+				Item.useStyle = 1;
+				Item.useTime = 20;
+				Item.useAnimation = 20;
 			}
 
 			return true;
@@ -79,7 +80,7 @@ namespace SGAmod.Items.Weapons
 
 			if (!altfired)
 			{
-				int proj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("TrueMoonlightCharging"), damage, knockBack, player.whoAmI);
+				int proj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, Mod.Find<ModProjectile>("TrueMoonlightCharging").Type, damage, knockBack, player.whoAmI);
 				//Main.projectile[proj].localAI[2] = 60f/(float)player.itemAnimation;
 				//Main.projectile[proj].netUpdate = true;
 				return false;
@@ -89,30 +90,30 @@ namespace SGAmod.Items.Weapons
 			float numberProjectiles = 1;
 			float rotation = MathHelper.ToRadians(8);
 			position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
-			Main.PlaySound(SoundID.Item71, player.Center);
+			SoundEngine.PlaySound(SoundID.Item71, player.Center);
 			for (int i = 0; i < numberProjectiles; i++)
 			{
 				Vector2 perturbedSpeed = (new Vector2(speedX, speedY) * speed).RotatedBy(MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) / 100f)) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
-				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("MoonlightWaveLv1"), damage, knockBack, player.whoAmI);
+				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("MoonlightWaveLv1").Type, damage, knockBack, player.whoAmI);
 			}
 			return false;
 		}
 
 		public override bool? CanHitNPC(Player player, NPC target)
 		{
-			return (player.ownedProjectileCounts[mod.ProjectileType("TrueMoonlightCharging")] < 1 && !target.friendly);
+			return (player.ownedProjectileCounts[Mod.Find<ModProjectile>("TrueMoonlightCharging").Type] < 1 && !target.friendly);
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
 
-			if (player.ownedProjectileCounts[mod.ProjectileType("TrueMoonlightCharging")] > 0)
+			if (player.ownedProjectileCounts[Mod.Find<ModProjectile>("TrueMoonlightCharging").Type] > 0)
 				return;
 
 			for (int bbbb = 52; bbbb < 128; bbbb += Main.rand.Next(8, 24))
 			{
 				Vector2 eree = ((player.itemRotation) + MathHelper.ToRadians(player.direction > 0 ? -40 : 220)).ToRotationVector2();
-				int num467 = Dust.NewDust(new Vector2(player.Center.X - 2, player.Center.Y - 2) + (eree * bbbb * (item.scale)), 4, 4, 235, eree.RotatedBy(MathHelper.ToRadians(90)).X, eree.RotatedBy(MathHelper.ToRadians(90)).Y, 100, default(Color), 0.50f);
+				int num467 = Dust.NewDust(new Vector2(player.Center.X - 2, player.Center.Y - 2) + (eree * bbbb * (Item.scale)), 4, 4, 235, eree.RotatedBy(MathHelper.ToRadians(90)).X, eree.RotatedBy(MathHelper.ToRadians(90)).Y, 100, default(Color), 0.50f);
 				Main.dust[num467].noGravity = true;
 			}
 
@@ -194,45 +195,45 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			aiType = 0;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			AIType = 0;
 		}
 
 		public override void AI()
 		{
 			Vector2 mousePos = Main.MouseWorld;
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 
-			if (projectile.ai[0] > 1000f || player.dead)
+			if (Projectile.ai[0] > 1000f || player.dead)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
-			projectile.ai[1] += Math.Max(0.75f, (player.GetModPlayer<SGAPlayer>().mspeed * 1f) - 0.00f);
-			projectile.localAI[1] += 0.2f;
-			if ((!player.channel || projectile.ai[0] > 0))
+			Projectile.ai[1] += Math.Max(0.75f, (player.GetModPlayer<SGAPlayer>().mspeed * 1f) - 0.00f);
+			Projectile.localAI[1] += 0.2f;
+			if ((!player.channel || Projectile.ai[0] > 0))
 			{
-				projectile.ai[0] += 1;
-				projectile.netUpdate = true;
+				Projectile.ai[0] += 1;
+				Projectile.netUpdate = true;
 			}
-			projectile.timeLeft = 2;
+			Projectile.timeLeft = 2;
 			// Multiplayer support here, only run this code if the client running it is the owner of the projectile
-			if (projectile.owner == Main.myPlayer)
+			if (Projectile.owner == Main.myPlayer)
 			{
 				Vector2 diff = mousePos - player.Center;
 				diff.Normalize();
-				projectile.velocity = diff;
-				if (projectile.ai[0] < 50f)
-					projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-				projectile.netUpdate = true;
-				projectile.Center = mousePos;
+				Projectile.velocity = diff;
+				if (Projectile.ai[0] < 50f)
+					Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+				Projectile.netUpdate = true;
+				Projectile.Center = mousePos;
 			}
-			int dir = projectile.direction;
+			int dir = Projectile.direction;
 			player.ChangeDir(dir);
 			if (player.itemTime < 5)
 				player.itemTime = 5;
@@ -240,10 +241,10 @@ namespace SGAmod.Items.Weapons
 				player.itemAnimation = 5;
 			player.itemRotation = (float)Math.Atan2(-32f * dir, 0f * dir);
 
-			if (projectile.ai[1] > 150)
-				projectile.ai[1] = 150;
+			if (Projectile.ai[1] > 150)
+				Projectile.ai[1] = 150;
 
-			for (float num475 = 0; num475 < projectile.ai[1]; num475 += 5)
+			for (float num475 = 0; num475 < Projectile.ai[1]; num475 += 5)
 			{
 				if (Main.rand.Next(0, 100) < 20)
 				{
@@ -258,12 +259,12 @@ namespace SGAmod.Items.Weapons
 			}
 
 			float val = 50;
-			if (projectile.ai[1] < val || (projectile.ai[1] > val && leveleffect < 1))
+			if (Projectile.ai[1] < val || (Projectile.ai[1] > val && leveleffect < 1))
 			{
-				if (projectile.ai[1] > val)
+				if (Projectile.ai[1] > val)
 				{
 					leveleffect = 1;
-					Main.PlaySound(SoundID.Item, (int)player.position.X, (int)player.position.Y, 60, 1f, 0.25f);
+					SoundEngine.PlaySound(SoundID.Item, (int)player.position.X, (int)player.position.Y, 60, 1f, 0.25f);
 				}
 				for (float num476 = 0; num476 < 3 + (leveleffect * 25); num476 += 1)
 				{
@@ -280,14 +281,14 @@ namespace SGAmod.Items.Weapons
 			}
 
 			float val2 = 148;
-			if (projectile.ai[1] < val2 || (projectile.ai[1] > val2 && leveleffect > 0 && leveleffect < 2))
+			if (Projectile.ai[1] < val2 || (Projectile.ai[1] > val2 && leveleffect > 0 && leveleffect < 2))
 			{
 				int trueval = 0;
-				if (projectile.ai[1] > val2)
+				if (Projectile.ai[1] > val2)
 				{
 					leveleffect = 2;
 					trueval = 1;
-					Main.PlaySound(SoundID.Item, (int)player.position.X, (int)player.position.Y, 60, 1f, 0.75f);
+					SoundEngine.PlaySound(SoundID.Item, (int)player.position.X, (int)player.position.Y, 60, 1f, 0.75f);
 				}
 				for (float num476 = 0; num476 < 3 + (trueval * 50); num476 += 1)
 				{
@@ -306,7 +307,7 @@ namespace SGAmod.Items.Weapons
 			}
 
 
-			if (projectile.ai[0] > 1)
+			if (Projectile.ai[0] > 1)
 			{
 				player.itemTime = 30;
 				player.itemAnimation = 20;
@@ -314,32 +315,32 @@ namespace SGAmod.Items.Weapons
 				player.HeldItem.noMelee = false;
 
 				double damagemul = 1.0;
-				int slashwaveprojtype = mod.ProjectileType("MoonlightWaveLv1");
-				if (projectile.ai[1] > 50)
+				int slashwaveprojtype = Mod.Find<ModProjectile>("MoonlightWaveLv1").Type;
+				if (Projectile.ai[1] > 50)
 				{
-					slashwaveprojtype = mod.ProjectileType("MoonlightWaveLv2");
+					slashwaveprojtype = Mod.Find<ModProjectile>("MoonlightWaveLv2").Type;
 					damagemul = 2.50;
 				}
-				if (projectile.ai[1] > 149)
+				if (Projectile.ai[1] > 149)
 				{
-					slashwaveprojtype = mod.ProjectileType("MoonlightWaveLv3");
+					slashwaveprojtype = Mod.Find<ModProjectile>("MoonlightWaveLv3").Type;
 					damagemul = 4.00;
 				}
 
 				float numberProjectiles = 1;
 				float rotation = MathHelper.ToRadians(2);
-				Main.PlaySound(SoundID.Item71, player.Center);
+				SoundEngine.PlaySound(SoundID.Item71, player.Center);
 
-				Vector2 projhere = player.Center + (projectile.velocity * 42f);
-				float velincrease = 26f + (projectile.ai[1] / 6f);
+				Vector2 projhere = player.Center + (Projectile.velocity * 42f);
+				float velincrease = 26f + (Projectile.ai[1] / 6f);
 
 				for (int i = 0; i < numberProjectiles; i++)
 				{
-					Vector2 perturbedSpeed = (projectile.velocity * velincrease).RotatedBy(MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) / 100f)) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
-					int proj = Projectile.NewProjectile(projhere.X, projhere.Y, perturbedSpeed.X, perturbedSpeed.Y, slashwaveprojtype, (int)(projectile.damage * damagemul), projectile.knockBack, player.whoAmI);
+					Vector2 perturbedSpeed = (Projectile.velocity * velincrease).RotatedBy(MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) / 100f)) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
+					int proj = Projectile.NewProjectile(projhere.X, projhere.Y, perturbedSpeed.X, perturbedSpeed.Y, slashwaveprojtype, (int)(Projectile.damage * damagemul), Projectile.knockBack, player.whoAmI);
 				}
 
-				projectile.Kill();
+				Projectile.Kill();
 
 			}
 
@@ -359,19 +360,19 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 160;
-			item.melee = true;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.knockBack = 10;
-			item.value = 250000;
-			item.rare = 9;
-			item.UseSound = SoundID.Item71;
-			item.autoReuse = false;
-			item.useTurn = false;
+			Item.damage = 160;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.knockBack = 10;
+			Item.value = 250000;
+			Item.rare = 9;
+			Item.UseSound = SoundID.Item71;
+			Item.autoReuse = false;
+			Item.useTurn = false;
 
 		}
 

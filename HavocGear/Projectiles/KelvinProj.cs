@@ -12,23 +12,23 @@ namespace SGAmod.HavocGear.Projectiles
     	public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Kelvin");
-			ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 2.5f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 220f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 14f;
+			ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 2.5f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 220f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 14f;
 		}
        
 	public override void SetDefaults()
         {
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-			projectile.extraUpdates = 0;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = 99;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.scale = 1f;
+			Projectile.extraUpdates = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = 99;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.scale = 1f;
 		}
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
@@ -43,20 +43,20 @@ namespace SGAmod.HavocGear.Projectiles
 	{
 		if (Main.rand.Next(3) == 0)
 		{
-			Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("HotDust"));
+			Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("HotDust").Type);
 		}
-        int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 6);
+        int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 6);
         Main.dust[dust].scale = 0.8f;
         Main.dust[dust].noGravity = false;
-        Main.dust[dust].velocity = projectile.velocity*(float)(Main.rand.Next(20,100)*0.005f);
+        Main.dust[dust].velocity = Projectile.velocity*(float)(Main.rand.Next(20,100)*0.005f);
 
-		Lighting.AddLight(projectile.position, 0.6f, 0.5f, 0f);
+		Lighting.AddLight(Projectile.position, 0.6f, 0.5f, 0f);
 	}
 	
 	public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-        	Player player = Main.player[projectile.owner];
-		target.immune[projectile.owner] = 2;
+        	Player player = Main.player[Projectile.owner];
+		target.immune[Projectile.owner] = 2;
 		target.AddBuff(ModContent.BuffType<Buffs.LavaBurn>(), 120);
 		}
     }

@@ -14,6 +14,7 @@ using SGAmod.Items.Weapons.Vibranium;
 using SGAmod.Items.Accessories;
 using Terraria.Utilities;
 using SGAmod.Items.Placeable.DankWoodFurniture;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Items
 {
@@ -21,16 +22,16 @@ namespace SGAmod.HavocGear.Items
 	{
 		public override void SetDefaults()
 		{
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.MoistSand>();
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.MoistSand>();
 		}
 
 		public override void SetStaticDefaults()
@@ -40,17 +41,8 @@ namespace SGAmod.HavocGear.Items
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<MoistSand>());
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(ItemID.SandBlock, 1);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SandBlock);
-			recipe.needWater = true;
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<MoistSand>()).AddTile(TileID.Furnaces).ReplaceResult(ItemID.SandBlock);
+			CreateRecipe(1).AddIngredient(ItemID.SandBlock).Register();
 		}
 
 	}
@@ -64,21 +56,16 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 14;
-			item.maxStack = 99;
-			item.value = 50;
-			item.rare = ItemRarityID.Blue;
+			Item.width = 18;
+			Item.height = 14;
+			Item.maxStack = 99;
+			Item.value = 50;
+			Item.rare = ItemRarityID.Blue;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bottle);
-			recipe.AddRecipeGroup("SGAmod:Mud", 3);
-			recipe.needWater = true;
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Bottle).AddRecipeGroup("SGAmod:Mud", 3).Register();
 		}
 
 	}
@@ -92,29 +79,24 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 14;
-			item.maxStack = 99;
-			item.value = 1000;
-			item.rare = 5;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("VirulentBarTile");
+			Item.width = 18;
+			Item.height = 14;
+			Item.maxStack = 99;
+			Item.value = 1000;
+			Item.rare = 5;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("VirulentBarTile").Type;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<BiomassBar>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<VirulentOre>(), 3);
-			recipe.AddTile(TileID.Hellforge);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<BiomassBar>(), 1).AddIngredient(ModContent.ItemType<VirulentOre>(), 3).AddTile(TileID.Hellforge).Register();
 		}
 
 	}
@@ -127,19 +109,19 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 99;
-			item.value = 100;
-			item.rare = ItemRarityID.Pink;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.createTile = mod.TileType("VirulentOre");
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 99;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Pink;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("VirulentOre").Type;
 		}
 
 	}
@@ -153,18 +135,18 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 14;
-			item.maxStack = 99;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("BiomassBarTile");
+			Item.width = 18;
+			Item.height = 14;
+			Item.maxStack = 99;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("BiomassBarTile").Type;
 		}
 
 		public override string Texture
@@ -174,15 +156,7 @@ namespace SGAmod.HavocGear.Items
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType < Biomass>(), 5);
-			recipe.AddIngredient(ModContent.ItemType < MurkyGel>(),2);
-			recipe.AddIngredient(ModContent.ItemType<DecayedMoss>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Weapons.SwampSeeds>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<MoistSand>(), 1);
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ModContent.ItemType < Biomass>(), 5).AddIngredient(ModContent.ItemType < MurkyGel>(),2).AddIngredient(ModContent.ItemType<DecayedMoss>(), 1).AddIngredient(ModContent.ItemType<Weapons.SwampSeeds>(), 2).AddIngredient(ModContent.ItemType<MoistSand>(), 1).AddTile(TileID.Furnaces).Register();
 		}
 	}
 	public class Biomass : ModItem
@@ -190,17 +164,17 @@ namespace SGAmod.HavocGear.Items
 		public override void SetDefaults()
 		{
 
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.rare = ItemRarityID.Green;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("Biomass");
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.rare = ItemRarityID.Green;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("Biomass").Type;
 		}
 
 		public override string Texture
@@ -219,18 +193,18 @@ namespace SGAmod.HavocGear.Items
 	{
 		public override void SetDefaults()
 		{
-			item.value = 50;
-			item.rare = ItemRarityID.Blue;
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBlock>();
+			Item.value = 50;
+			Item.rare = ItemRarityID.Blue;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankWoodBlock>();
 		}
 
 		public override void SetStaticDefaults()
@@ -241,41 +215,22 @@ namespace SGAmod.HavocGear.Items
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodFence>(), 4);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<BrokenDankWoodFence>(), 4);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodWall>(), 4);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<DankWoodPlatform>(), 2);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<SwampWoodWall>(), 4);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWoodFence>(), 4).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<BrokenDankWoodFence>(), 4).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWoodWall>(), 4).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<DankWoodPlatform>(), 2).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<SwampWoodWall>(), 4).Register();
 		}
 	}
 	public class DankCore : ModItem
 	{
 		public override void SetDefaults()
 		{
-			item.value = 2500;
-			item.rare = 2;
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
+			Item.value = 2500;
+			Item.rare = 2;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
 		}
 
 		public override void SetStaticDefaults()
@@ -300,11 +255,11 @@ namespace SGAmod.HavocGear.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 50;
-			item.rare = 3;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 50;
+			Item.rare = 3;
 		}
 	}
 	public class FieryShard : ModItem
@@ -316,19 +271,19 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 22;
-			item.height = 22;
-			item.maxStack = 99;
-			item.value = 25;
-			item.rare = 3;
-			ItemID.Sets.ItemNoGravity[item.type] = true;
-			ItemID.Sets.ItemIconPulse[item.type] = true;
-			item.alpha = 30;
+			Item.width = 22;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.value = 25;
+			Item.rare = 3;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
+			ItemID.Sets.ItemIconPulse[Item.type] = true;
+			Item.alpha = 30;
 		}
 
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Orange.ToVector3() * 0.55f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.Orange.ToVector3() * 0.55f * Main.essScale);
 		}
 	}
 }
@@ -342,21 +297,21 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Glowrock");
 			Tooltip.SetDefault("These rocks seem to give the Asteriods a glow; Curious.\nExtract it via an Extractinator for some goodies!\nDoesn't have much other use, outside of illegal interests");
-			ItemID.Sets.ExtractinatorMode[item.type] = item.type;
+			ItemID.Sets.ExtractinatorMode[Item.type] = Item.type;
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.consumable = true;
-			item.value = 0;
-			item.rare = ItemRarityID.Blue;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.consumable = true;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Blue;
 		}
 
         public override void ExtractinatorUse(ref int resultType, ref int resultStack)
@@ -387,7 +342,7 @@ namespace SGAmod.Items
 
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Blue.ToVector3() * 0.55f);
+			Lighting.AddLight(Item.Center, Color.Blue.ToVector3() * 0.55f);
 		}
 
         public int RadioactiveHeld()
@@ -410,40 +365,34 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.useTime = 10;
-			item.useAnimation = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.consumable = true;
-			item.value = 0;
-			item.rare = ItemRarityID.Blue;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.useTime = 10;
+			Item.useAnimation = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.consumable = true;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Blue;
 		}
 
 		public override string Texture => "Terraria/Item_" + ItemID.LunarOre;
 
         public override Color? GetAlpha(Color lightColor)
         {
-			return Color.Lerp(Color.DarkGray, Color.Gray, 0.50f + (float)Math.Sin(Main.GlobalTime / 2f) / 2f);
+			return Color.Lerp(Color.DarkGray, Color.Gray, 0.50f + (float)Math.Sin(Main.GlobalTimeWrappedHourly / 2f) / 2f);
         }
 
         public override void AddRecipes()
         {
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LunarOre, 1);
-			recipe.AddIngredient(this, 4);
-			recipe.AddIngredient(ModContent.ItemType<IlluminantEssence>(), 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(ItemID.LunarBar, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ItemID.LunarOre, 1).AddIngredient(this, 4).AddIngredient(ModContent.ItemType<IlluminantEssence>(), 1).AddTile(TileID.LunarCraftingStation).ReplaceResult(ItemID.LunarBar);
 		}
 
         public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.White.ToVector3() * 0.55f);
+			Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.55f);
 		}
 
 		public int RadioactiveHeld()
@@ -466,11 +415,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 1000;
-			item.rare = ItemRarityID.Blue;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 1000;
+			Item.rare = ItemRarityID.Blue;
 		}
 
 		public int RadioactiveHeld()
@@ -486,56 +435,15 @@ namespace SGAmod.Items
 		public override void AddRecipes()
 		{
 
-			int tileType = ModContent.TileType<Tiles.ReverseEngineeringStation>();
+			CreateRecipe(8).AddIngredient(ModContent.ItemType<UnmanedOre>(), 2).AddIngredient(ModContent.ItemType<NoviteOre>(), 2).AddIngredient(this, 4).AddTile(tileType).ReplaceResult(ModContent.GetInstance<PrismalOre>());
 
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<UnmanedOre>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<NoviteOre>(), 2);
-			recipe.AddIngredient(this, 4);
-			recipe.AddTile(tileType);
-			recipe.SetResult(ModContent.GetInstance<PrismalOre>(),8);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ModContent.ItemType<AncientFabricItem>(), 5).AddIngredient(ModContent.ItemType<AdvancedPlating>(), 2).AddIngredient(this, 2).AddTile(tileType).ReplaceResult(ModContent.GetInstance<VibraniumPlating>());
 
-			/*recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<AncientFabricItem>(), 4);
-			recipe.AddIngredient(ItemID.CrystalShard, 1);
-			recipe.AddIngredient(this, 2);
-			recipe.AddTile(tileType);
-			recipe.SetResult(ModContent.GetInstance<VibraniumCrystal>(), 1);
-			recipe.AddRecipe();*/
+			CreateRecipe(2).AddIngredient(ItemID.SoulofLight, 1).AddIngredient(ItemID.SoulofNight, 1).AddIngredient(this, 2).AddTile(tileType).ReplaceResult(ModContent.GetInstance<OmniSoul>());
 
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<AncientFabricItem>(), 5);
-			recipe.AddIngredient(ModContent.ItemType<AdvancedPlating>(), 2);
-			recipe.AddIngredient(this, 2);
-			recipe.AddTile(tileType);
-			recipe.SetResult(ModContent.GetInstance<VibraniumPlating>(), 2);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.FossilOre, 2).AddIngredient(this, 1).AddTile(tileType).ReplaceResult(ItemID.DefenderMedal);
 
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SoulofLight, 1);
-			recipe.AddIngredient(ItemID.SoulofNight, 1);
-			recipe.AddIngredient(this, 2);
-			recipe.AddTile(tileType);
-			recipe.SetResult(ModContent.GetInstance<OmniSoul>(), 2);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.FossilOre, 2);
-			recipe.AddIngredient(this, 1);
-			recipe.AddTile(tileType);
-			recipe.SetResult(ItemID.DefenderMedal, 1);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HallowedBar, 4);
-			recipe.AddIngredient(ItemID.SoulofFright, 1);
-			recipe.AddIngredient(ItemID.SoulofMight, 1);
-			recipe.AddIngredient(ItemID.SoulofSight, 1);
-			recipe.AddIngredient(this, 5);
-			recipe.AddTile(tileType);
-			recipe.SetResult(ModContent.GetInstance<Consumables.DivineShower>(), 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.HallowedBar, 4).AddIngredient(ItemID.SoulofFright, 1).AddIngredient(ItemID.SoulofMight, 1).AddIngredient(ItemID.SoulofSight, 1).AddIngredient(this, 5).AddTile(tileType).ReplaceResult(ModContent.GetInstance<Consumables.DivineShower>());
 
 			/*ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddRecipeGroup("SGAmod:VanillaAccessory", 2);
@@ -592,18 +500,18 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 500;
-			item.rare = ItemRarityID.Red;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("VibraniumCrystalTile");
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 500;
+			Item.rare = ItemRarityID.Red;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("VibraniumCrystalTile").Type;
 		}
         public override bool Autoload(ref string name)
         {
@@ -631,18 +539,18 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 400;
-			item.rare = ItemRarityID.Purple;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.VibraniumPlatingTile>();
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 400;
+			Item.rare = ItemRarityID.Purple;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.VibraniumPlatingTile>();
 		}
 	}
 	public class VibraniumBar : VibraniumText
@@ -655,30 +563,22 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 2500;
-			item.rare = ItemRarityID.Purple;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("VibraniumBarTile");
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 2500;
+			Item.rare = ItemRarityID.Purple;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("VibraniumBarTile").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("VibraniumCrystal"), 3);
-			recipe.AddIngredient(mod.ItemType("VibraniumPlating"), 3);
-			recipe.AddIngredient(ItemID.LunarBar, 2);
-			recipe.AddIngredient(mod.ItemType("LunarRoyalGel"), 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.needLava = true;
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(mod.ItemType("VibraniumCrystal"), 3).AddIngredient(mod.ItemType("VibraniumPlating"), 3).AddIngredient(ItemID.LunarBar, 2).AddIngredient(mod.ItemType("LunarRoyalGel"), 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 		public override bool Autoload(ref string name)
 		{
@@ -696,11 +596,11 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = 75;
-			item.rare = 5;
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = 75;
+			Item.rare = 5;
 		}
 	}
 	public class FrigidShard : ModItem
@@ -713,15 +613,15 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = 0;
-			item.rare = 1;
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = 0;
+			Item.rare = 1;
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Aqua.ToVector3() * 0.25f);
+			Lighting.AddLight(Item.Center, Color.Aqua.ToVector3() * 0.25f);
 		}
 	}	
 	public class Fridgeflame : ModItem
@@ -734,28 +634,21 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 22;
-			item.height = 22;
-			item.maxStack = 99;
-			item.value = 200;
-			item.rare = 6;
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			Item.width = 22;
+			Item.height = 22;
+			Item.maxStack = 99;
+			Item.value = 200;
+			Item.rare = 6;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.White.ToVector3() * 0.65f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.65f * Main.essScale);
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("FrigidShard"), 1);
-			recipe.AddIngredient(mod.ItemType("FieryShard"), 1);
-			recipe.needLava = true;
-			recipe.needWater = true;
-			recipe.AddTile(TileID.CrystalBall);
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(mod.ItemType("FrigidShard"), 1).AddIngredient(mod.ItemType("FieryShard"), 1).AddTile(TileID.CrystalBall).Register();
 		}
 	}
 	public class VialofAcid : ModItem
@@ -768,11 +661,11 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 100;
-			item.rare = 2;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 100;
+			Item.rare = 2;
 		}
 	}
 	public class OmniSoul : ModItem
@@ -782,45 +675,36 @@ namespace SGAmod.Items
 			DisplayName.SetDefault("Omni Soul");
 			Tooltip.SetDefault("'The essence of essences combined'");
 			// ticksperframe, frameCount
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 4));
-			ItemID.Sets.AnimatesAsSoul[item.type] = true;
-			ItemID.Sets.ItemIconPulse[item.type] = true;
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 4));
+			ItemID.Sets.AnimatesAsSoul[Item.type] = true;
+			ItemID.Sets.ItemIconPulse[Item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.SoulofSight);
-			item.width = refItem.width;
-			item.height = refItem.height;
-			item.maxStack = 999;
-			item.value = 1000;
-			item.rare = 6;
+			Item.width = refItem.width;
+			Item.height = refItem.height;
+			Item.maxStack = 999;
+			Item.value = 1000;
+			Item.rare = 6;
 		}
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime/3f)%1f, 0.85f, 0.50f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly/3f)%1f, 0.85f, 0.50f);
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SoulofLight, 1);
-			recipe.AddIngredient(ItemID.SoulofNight, 1);
-			recipe.AddIngredient(ItemID.SoulofFlight, 1);
-			recipe.AddIngredient(ItemID.SoulofFright, 1);
-			recipe.AddIngredient(ItemID.SoulofMight, 1);
-			recipe.AddIngredient(ItemID.SoulofSight, 1);
-			recipe.AddTile(TileID.CrystalBall);
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.SoulofLight, 1).AddIngredient(ItemID.SoulofNight, 1).AddIngredient(ItemID.SoulofFlight, 1).AddIngredient(ItemID.SoulofFright, 1).AddIngredient(ItemID.SoulofMight, 1).AddIngredient(ItemID.SoulofSight, 1).AddTile(TileID.CrystalBall).Register();
 		}
 
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Main.hslToRgb((Main.GlobalTime / 3f)%1f, 0.85f, 0.80f).ToVector3() * 0.55f * Main.essScale);
+			Lighting.AddLight(Item.Center, Main.hslToRgb((Main.GlobalTimeWrappedHourly / 3f)%1f, 0.85f, 0.80f).ToVector3() * 0.55f * Main.essScale);
 		}
 	}
 	public class Entrophite : ModItem
@@ -832,18 +716,18 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.value = 100;
-			item.rare = ItemRarityID.Lime;
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Dimensions.Tiles.EntrophicOre>();
+			Item.value = 100;
+			Item.rare = ItemRarityID.Lime;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Dimensions.Tiles.EntrophicOre>();
 		}
 
 	}
@@ -858,27 +742,22 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.value = 250;
-			item.rare = ItemRarityID.Lime;
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("WovenEntrophiteTile");
+			Item.value = 250;
+			Item.rare = ItemRarityID.Lime;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("WovenEntrophiteTile").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<OmniSoul>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Entrophite>(), 10);
-			recipe.AddTile(TileID.Loom);
-			recipe.SetResult(this, 10);
-			recipe.AddRecipe();
+			CreateRecipe(10).AddIngredient(ModContent.ItemType<OmniSoul>(), 1).AddIngredient(ModContent.ItemType<Entrophite>(), 10).AddTile(TileID.Loom).Register();
 		}
 
 	}
@@ -893,27 +772,22 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = 1000;
-			item.rare = ItemRarityID.Green;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.AdvancedPlatingTile>();
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = 1000;
+			Item.rare = ItemRarityID.Green;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.AdvancedPlatingTile>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteBar"), 2);
-			recipe.AddIngredient(ItemID.Wire, 10);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this,3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(mod.ItemType("NoviteBar"), 2).AddIngredient(ItemID.Wire, 10).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 	}
 	public class ManaBattery : ModItem
@@ -926,21 +800,15 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 26;
-			item.value = 15000;
-			item.rare = 3;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 26;
+			Item.value = 15000;
+			Item.rare = 3;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 3);
-			recipe.AddIngredient(ItemID.ManaCrystal, 1);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 3);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("WraithFragment3"), 3).AddIngredient(ItemID.ManaCrystal, 1).AddIngredient(mod.ItemType("UnmanedBar"), 3).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 	}
 	public class PlasmaCell : ModItem
@@ -953,38 +821,17 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 20;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.rare = ItemRarityID.Yellow;
+			Item.maxStack = 20;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.rare = ItemRarityID.Yellow;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<AdvancedPlating>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<WraithFragment4>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<ManaBattery>(), 1);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 5);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 5);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<EmptyPlasmaCell>(), 1);
-			recipe.AddIngredient(ItemID.MeteoriteBar, 2);
-			recipe.AddIngredient(ModContent.ItemType<VialofAcid>(), 3);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<EmptyPlasmaCell>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 2);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(ModContent.ItemType<AdvancedPlating>(), 2).AddIngredient(ModContent.ItemType<WraithFragment4>(), 2).AddIngredient(ModContent.ItemType<ManaBattery>(), 1).AddIngredient(ItemID.MeteoriteBar, 5).AddIngredient(ModContent.ItemType<VialofAcid>(), 5).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<EmptyPlasmaCell>(), 1).AddIngredient(ItemID.MeteoriteBar, 2).AddIngredient(ModContent.ItemType<VialofAcid>(), 3).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<EmptyPlasmaCell>(), 1).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 2).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 
 		}
 	}
@@ -998,11 +845,11 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 20;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0,0,10,0);
-			item.rare = ItemRarityID.LightRed;
+			Item.maxStack = 20;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0,0,10,0);
+			Item.rare = ItemRarityID.LightRed;
 		}
 	}
 	public class CryostalBar: ModItem
@@ -1015,18 +862,18 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = 1000;
-			item.rare = 5;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("CryostalBarTile");
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = 1000;
+			Item.rare = 5;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("CryostalBarTile").Type;
 		}
 	}
 	public class EldritchTentacle : ModItem
@@ -1039,11 +886,11 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.rare = 9;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.rare = 9;
 		}
 	}	
 	public class IlluminantEssence : ModItem
@@ -1052,20 +899,20 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Illuminant Essence");
 			Tooltip.SetDefault("'Shards of Heaven'");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
         public override string Texture => "SGAmod/Items/IlluminantEssence";
         public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.HotPink.ToVector3() * 0.55f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.HotPink.ToVector3() * 0.55f * Main.essScale);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.rare = 11;
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.rare = 11;
 		}
 	}	
 	public class AuroraTear : ModItem
@@ -1077,15 +924,15 @@ namespace SGAmod.Items
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Lerp(Color.BlueViolet, Color.HotPink, (float)Math.Sin((Main.essScale-0.70f)/0.30f)).ToVector3() * 0.75f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.Lerp(Color.BlueViolet, Color.HotPink, (float)Math.Sin((Main.essScale-0.70f)/0.30f)).ToVector3() * 0.75f * Main.essScale);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.rare = 11;
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.rare = 11;
 		}
 	}
 
@@ -1098,18 +945,18 @@ namespace SGAmod.Items
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Lerp(Color.BlueViolet, Color.HotPink, (float)Math.Sin((Main.essScale - 0.70f) / 0.30f)).ToVector3() * 0.85f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.Lerp(Color.BlueViolet, Color.HotPink, (float)Math.Sin((Main.essScale - 0.70f) / 0.30f)).ToVector3() * 0.85f * Main.essScale);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 30;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.noMelee = true; //so the item's animation doesn't do damage
-			item.value = 0;
-			item.rare = ItemRarityID.Cyan;
-			item.UseSound = SoundID.Item35;
+			Item.maxStack = 30;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.value = 0;
+			Item.rare = ItemRarityID.Cyan;
+			Item.UseSound = SoundID.Item35;
 		}
 	}
 
@@ -1119,15 +966,15 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Lunar Royal Gel");
 			Tooltip.SetDefault("From the moon-infused Pinky");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 6));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 6));
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 16;
-			item.height = 16;
-			item.value = 100000;
-			item.rare = 9;
+			Item.maxStack = 999;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 100000;
+			Item.rare = 9;
 		}
 	}
 	public class AncientFabricItem : ModItem
@@ -1136,19 +983,19 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Ancient Fabric");
 			Tooltip.SetDefault("Strands of Reality, predating back to the Big Bang");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.DarkRed.ToVector3() * 0.15f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.DarkRed.ToVector3() * 0.15f * Main.essScale);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 0, 25, 0);
-			item.rare = 10;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 0, 25, 0);
+			Item.rare = 10;
 		}
 	}
 
@@ -1158,15 +1005,15 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("01001110 01010101 01001100 01001100");
 			Tooltip.SetDefault("'Essence of N0ll Watchers, watching...'");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(7, 13));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(7, 13));
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 32;
-			item.height = 32;
-			item.value = 100000;
-			item.rare = 10;
+			Item.maxStack = 999;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = 100000;
+			Item.rare = 10;
 		}
 	}
 
@@ -1176,17 +1023,17 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Cosmic Fragment");
 			Tooltip.SetDefault("The core of a celestial experiment; it holds unmatched power\nUsed to make Dev items");
-			ItemID.Sets.ItemIconPulse[item.type] = true;
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemIconPulse[Item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 16;
-			item.height = 16;
-			item.value = 0;
-			item.rare = 9;
-			item.expert=true;
+			Item.maxStack = 1;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 0;
+			Item.rare = 9;
+			Item.expert=true;
 		}
 
 		public override void GrabRange(Player player, ref int grabRange)
@@ -1196,16 +1043,16 @@ namespace SGAmod.Items
 
 		public override bool GrabStyle(Player player)
 		{
-			Vector2 vectorItemToPlayer = player.Center - item.Center;
+			Vector2 vectorItemToPlayer = player.Center - Item.Center;
 			Vector2 movement = vectorItemToPlayer.SafeNormalize(default(Vector2)) * 0.1f;
-			item.velocity = item.velocity + movement;
-			item.velocity = Collision.TileCollision(item.position, item.velocity, item.width, item.height);
+			Item.velocity = Item.velocity + movement;
+			Item.velocity = Collision.TileCollision(Item.position, Item.velocity, Item.width, Item.height);
 			return true;
 		}
 
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.WhiteSmoke.ToVector3() * 0.55f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.WhiteSmoke.ToVector3() * 0.55f * Main.essScale);
 		}
 
 	}
@@ -1219,12 +1066,12 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 20;
-			item.height = 20;
-			item.value = 10000;
-			item.rare = 0;
-			item.consumable = false;
+			Item.maxStack = 1;
+			Item.width = 20;
+			Item.height = 20;
+			Item.value = 10000;
+			Item.rare = 0;
+			Item.consumable = false;
 		}
 	}
 
@@ -1237,12 +1084,12 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 20;
-			item.height = 20;
-			item.value = 0;
-			item.rare = 8;
-			item.consumable = false;
+			Item.maxStack = 1;
+			Item.width = 20;
+			Item.height = 20;
+			Item.value = 0;
+			Item.rare = 8;
+			Item.consumable = false;
 		}
 	}
 
@@ -1255,27 +1102,22 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 20;
-			item.height = 20;
-			item.value = Item.sellPrice(0, 0, 25, 0);
-			item.rare = 9;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("StarMetalBarTile");
+			Item.maxStack = 999;
+			Item.width = 20;
+			Item.height = 20;
+			Item.value = Item.sellPrice(0, 0, 25, 0);
+			Item.rare = 9;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("StarMetalBarTile").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new StarMetalRecipes(mod);
-			recipe.AddIngredient(mod.ItemType("StarMetalMold"), 1);
-			recipe.AddIngredient(ItemID.LunarOre, 1);
-			recipe.AddRecipeGroup("Fragment", 4);
-			recipe.SetResult(this,4);
-			recipe.AddRecipe();
+			CreateRecipe(4).AddIngredient(mod.ItemType("StarMetalMold"), 1).AddIngredient(ItemID.LunarOre, 1).AddRecipeGroup("Fragment", 4).Register();
 		}
 
 	}
@@ -1288,27 +1130,27 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 20;
-			item.height = 20;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.rare = 9;
-			item.consumable = false;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("DrakeniteBarTile");
+			Item.maxStack = 999;
+			Item.width = 20;
+			Item.height = 20;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.rare = 9;
+			Item.consumable = false;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("DrakeniteBarTile").Type;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			foreach (TooltipLine line in tooltips)
 			{
-				if (line.mod == "Terraria" && line.Name == "ItemName")
+				if (line.Mod == "Terraria" && line.Name == "ItemName")
 				{
-					line.overrideColor = Color.Lerp(Color.DarkGreen, Color.White, 0.5f + (float)Math.Sin(Main.GlobalTime * 8f));
+					line.OverrideColor = Color.Lerp(Color.DarkGreen, Color.White, 0.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 8f));
 				}
 			}
 		}
@@ -1317,7 +1159,7 @@ namespace SGAmod.Items
 		{
 			if (!Main.dedServ)
 			{
-				Texture2D atex = ModContent.GetTexture("SGAmod/Items/DrakeniteBarHalf");
+				Texture2D atex = ModContent.Request<Texture2D>("SGAmod/Items/DrakeniteBarHalf");
 				int width = atex.Width; int height = atex.Height;
 				for (int index = 0; index < staticeffects.Length; index++)
 				{
@@ -1371,7 +1213,7 @@ namespace SGAmod.Items
 		{
 			if (!Main.gameMenu)
 			{
-				Texture2D texture = DrakeniteBar.staticeffects[(int)(Main.GlobalTime*20f)%DrakeniteBar.staticeffects.Length];
+				Texture2D texture = DrakeniteBar.staticeffects[(int)(Main.GlobalTimeWrappedHourly*20f)%DrakeniteBar.staticeffects.Length];
 				Vector2 slotSize = new Vector2(52f, 52f);
 				position -= slotSize * Main.inventoryScale / 2f - frame.Size() * scale / 2f;
 				Vector2 drawPos = position + slotSize * Main.inventoryScale / 2f;
@@ -1382,15 +1224,7 @@ namespace SGAmod.Items
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LunarBar, 1);
-			recipe.AddIngredient(mod.ItemType("ByteSoul"), 10);
-			recipe.AddIngredient(mod.ItemType("WatchersOfNull"), 1);
-			recipe.AddIngredient(mod.ItemType("AncientFabricItem"), 25);
-			recipe.AddIngredient(mod.ItemType("HopeHeart"), 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.LunarBar, 1).AddIngredient(mod.ItemType("ByteSoul"), 10).AddIngredient(mod.ItemType("WatchersOfNull"), 1).AddIngredient(mod.ItemType("AncientFabricItem"), 25).AddIngredient(mod.ItemType("HopeHeart"), 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -1404,11 +1238,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 20;
-			item.rare = ItemRarityID.White;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 20;
+			Item.rare = ItemRarityID.White;
 		}
 	}
 	public class CobaltWraithNotch: ModItem
@@ -1420,11 +1254,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 200;
-			item.rare = ItemRarityID.Pink;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 200;
+			Item.rare = ItemRarityID.Pink;
 		}
 	}
 	public class LuminiteWraithNotch: ModItem
@@ -1436,11 +1270,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
 		}
 	}
 	public class WraithFragment: ModItem
@@ -1452,11 +1286,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 5;
-			item.rare = ItemRarityID.White;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 5;
+			Item.rare = ItemRarityID.White;
 		}
 	}
 	public class WraithFragment2: WraithFragment
@@ -1477,34 +1311,17 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 25;
-			item.rare = ItemRarityID.Orange;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 25;
+			Item.rare = ItemRarityID.Orange;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("WraithFragment"), 2);
-			recipe.AddIngredient(ItemID.TinOre, 4);
-			recipe.AddTile(TileID.Hellforge);
-			recipe.SetResult(this,2);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("WraithFragment2"), 2);
-			recipe.AddIngredient(ItemID.CopperOre, 4);
-			recipe.AddTile(TileID.Hellforge);
-			recipe.SetResult(this,2);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(this, 1);
-			recipe.AddIngredient(ItemID.LivingFireBlock, 3);
-			recipe.AddTile(TileID.Hellforge);
-			recipe.SetResult(mod.ItemType("FieryShard"));
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(mod.ItemType("WraithFragment"), 2).AddIngredient(ItemID.TinOre, 4).AddTile(TileID.Hellforge).Register();
+			CreateRecipe(2).AddIngredient(mod.ItemType("WraithFragment2"), 2).AddIngredient(ItemID.CopperOre, 4).AddTile(TileID.Hellforge).Register();
+			CreateRecipe(1).AddIngredient(this, 1).AddIngredient(ItemID.LivingFireBlock, 3).AddTile(TileID.Hellforge).ReplaceResult(mod.ItemType("FieryShard"));
 
 		}
 	}
@@ -1518,11 +1335,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 30;
-			item.rare = ItemRarityID.Green;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 30;
+			Item.rare = ItemRarityID.Green;
 		}
 	}
 
@@ -1535,28 +1352,23 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 99;
-			item.width = 16;
-			item.height = 16;
-			item.value = 25;
-			item.rare = ItemRarityID.Blue;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("UnmanedBarTile");
+			Item.maxStack = 99;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 25;
+			Item.rare = ItemRarityID.Blue;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("UnmanedBarTile").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedOre"), 4);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards",3);
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(this,2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(mod.ItemType("UnmanedOre"), 4).AddRecipeGroup("SGAmod:BasicWraithShards",3).AddTile(TileID.Furnaces).Register();
 		}
 	}
 	public class UnmanedOre: ModItem
@@ -1568,19 +1380,19 @@ namespace SGAmod.Items
 		}
 	public override void SetDefaults()
         {
-		item.width = 16;
-		item.height = 16;
-		item.maxStack = 999;
-		item.value = 10;
-		item.rare = ItemRarityID.Blue;
-		item.alpha = 0;
-		item.useTurn = true;
-		item.autoReuse = true;
-		item.useAnimation = 15;
-		item.useTime = 10;
-		item.useStyle = ItemUseStyleID.SwingThrow;
-		item.consumable = true;
-		item.createTile = mod.TileType("UnmanedOreTile");
+		Item.width = 16;
+		Item.height = 16;
+		Item.maxStack = 999;
+		Item.value = 10;
+		Item.rare = ItemRarityID.Blue;
+		Item.alpha = 0;
+		Item.useTurn = true;
+		Item.autoReuse = true;
+		Item.useAnimation = 15;
+		Item.useTime = 10;
+		Item.useStyle = ItemUseStyleID.Swing;
+		Item.consumable = true;
+		Item.createTile = Mod.Find<ModTile>("UnmanedOreTile").Type;
 
 		}
 	}
@@ -1593,19 +1405,19 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.value = 10;
-			item.rare = ItemRarityID.Blue;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("NoviteOreTile");
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.value = 10;
+			Item.rare = ItemRarityID.Blue;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("NoviteOreTile").Type;
 
 		}
 	}
@@ -1618,28 +1430,23 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 99;
-			item.width = 16;
-			item.height = 16;
-			item.value = 25;
-			item.rare = ItemRarityID.Blue;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("NoviteBarTile");
+			Item.maxStack = 99;
+			Item.width = 16;
+			Item.height = 16;
+			Item.value = 25;
+			Item.rare = ItemRarityID.Blue;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("NoviteBarTile").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("NoviteOre"), 4);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 3);
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(this, 2);
-			recipe.AddRecipe();
+			CreateRecipe(2).AddIngredient(mod.ItemType("NoviteOre"), 4).AddRecipeGroup("SGAmod:BasicWraithShards", 3).AddTile(TileID.Furnaces).Register();
 		}
 	}
 	public class MoneySign : ModItem
@@ -1651,11 +1458,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 75000;
-			item.rare = ItemRarityID.Red;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 75000;
+			Item.rare = ItemRarityID.Red;
 		}
 	}
 
@@ -1665,9 +1472,9 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Soul of Byte");
 			Tooltip.SetDefault("'remains of the Hellion Core'");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 4));
-			ItemID.Sets.ItemNoGravity[item.type] = true;
-			ItemID.Sets.ItemIconPulse[item.type] = true;
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 4));
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
+			ItemID.Sets.ItemIconPulse[Item.type] = true;
 		}
 		/*public override string Texture
 		{
@@ -1679,15 +1486,15 @@ namespace SGAmod.Items
 		}*/
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Main.hslToRgb((-Main.GlobalTime+(item.whoAmI*7.4231f))%1f,0.92f,0.85f).ToVector3() * 0.5f);
+			Lighting.AddLight(Item.Center, Main.hslToRgb((-Main.GlobalTimeWrappedHourly+(Item.whoAmI*7.4231f))%1f,0.92f,0.85f).ToVector3() * 0.5f);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
 		}
 	}
 
@@ -1697,7 +1504,7 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Assembly Star");
 			Tooltip.SetDefault("'Raw assembly code forged directly from Draken'\nCan be used to craft previously uncraftable items");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 		public override string Texture
 		{
@@ -1705,15 +1512,15 @@ namespace SGAmod.Items
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Color.Orange*MathHelper.Clamp((float)(Math.Sin(Main.GlobalTime)/2)+1f,0,1);
+			return Color.Orange*MathHelper.Clamp((float)(Math.Sin(Main.GlobalTimeWrappedHourly)/2)+1f,0,1);
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 14;
-			item.height = 14;
-			item.value = 0;
-			item.rare = ItemRarityID.Quest;
+			Item.maxStack = 999;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Quest;
 		}
 	}
 
@@ -1723,15 +1530,15 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("Stygian Star");
 			Tooltip.SetDefault("'Torn from Stygian Veins with a mining tool, this star is burning fabric made manifest...'");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.width = 32;
-			item.height = 32;
-			item.value = 50000;
-			item.maxStack = 10;
-			item.rare = ItemRarityID.Red;
+			Item.width = 32;
+			Item.height = 32;
+			Item.value = 50000;
+			Item.maxStack = 10;
+			Item.rare = ItemRarityID.Red;
 		}
 		public override string Texture
 		{
@@ -1756,7 +1563,7 @@ namespace SGAmod.Items
 
 			for (float i = 0; i < 1f; i += 0.10f)
 			{
-				spriteBatch.Draw(inner, drawPos, null, (Color.DarkMagenta * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.5f)*0.50f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 1.75f * (((Main.GlobalTime / 2f) + i) % 1f)), SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, drawPos, null, (Color.DarkMagenta * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.5f)*0.50f, i * MathHelper.TwoPi, textureOrigin, Main.inventoryScale * (0.5f + 1.75f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f)), SpriteEffects.None, 0f);
 			}
 
 			return true;
@@ -1768,16 +1575,16 @@ namespace SGAmod.Items
 			Texture2D inner = Main.itemTexture[ModContent.ItemType<AssemblyStar>()];
 
 			Vector2 slotSize = new Vector2(52f, 52f);
-			Vector2 position = item.Center-Main.screenPosition;
+			Vector2 position = Item.Center-Main.screenPosition;
 
 			Vector2 textureOrigin = new Vector2(inner.Width / 2, inner.Height / 2);
 
 			for (float i = 0; i < 1f; i += 0.10f)
 			{
-				spriteBatch.Draw(inner, position, null, (Color.DarkMagenta * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.5f) * 0.50f, i * MathHelper.TwoPi, textureOrigin, 1f * (0.5f + 1.75f * (((Main.GlobalTime / 2f) + i) % 1f)), SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, position, null, (Color.DarkMagenta * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.5f) * 0.50f, i * MathHelper.TwoPi, textureOrigin, 1f * (0.5f + 1.75f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f)), SpriteEffects.None, 0f);
 			}
 
-			spriteBatch.Draw(Main.itemTexture[item.type],position,null,alphaColor,rotation, Main.itemTexture[item.type].Size()/2f, 128f/256f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type],position,null,alphaColor,rotation, Main.itemTexture[Item.type].Size()/2f, 128f/256f, SpriteEffects.None, 0f);
 
 			return false;
 		}
@@ -1794,11 +1601,11 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 14;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
+			Item.width = 14;
+			Item.height = 14;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
 		}
 		public override string Texture
 		{
@@ -1819,14 +1626,14 @@ namespace SGAmod.Items
 		}
         public override void Update(ref float gravity, ref float maxFallSpeed)
         {
-			Lighting.AddLight(item.Center / 16f, (Color.PaleGoldenrod * 0.5f).ToVector3());
+			Lighting.AddLight(Item.Center / 16f, (Color.PaleGoldenrod * 0.5f).ToVector3());
         }
         public void UseItem2(Player player)
         {
-			Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 4, 0.75f, -0.65f);
-			player.HealEffect(30*item.stack,true);
-			player.GetModPlayer<IdgPlayer>().radationAmmount = Math.Max(player.GetModPlayer<IdgPlayer>().radationAmmount - (30 * item.stack), 0);
-			item.TurnToAir();
+			SoundEngine.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 4, 0.75f, -0.65f);
+			player.HealEffect(30*Item.stack,true);
+			player.GetModPlayer<IdgPlayer>().radationAmmount = Math.Max(player.GetModPlayer<IdgPlayer>().radationAmmount - (30 * Item.stack), 0);
+			Item.TurnToAir();
         }
 
 	}
@@ -1840,26 +1647,22 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 20;
-			item.height = 20;
-			item.value = Item.sellPrice(0, 0, 40, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = mod.TileType("PrismalBarTile");
+			Item.maxStack = 999;
+			Item.width = 20;
+			Item.height = 20;
+			Item.value = Item.sellPrice(0, 0, 40, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = Mod.Find<ModTile>("PrismalBarTile").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalOre"), 4);
-			recipe.AddTile(TileID.AdamantiteForge);
-			recipe.SetResult(this,1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalOre"), 4).AddTile(TileID.AdamantiteForge).Register();
 		}
 
 	}
@@ -1873,19 +1676,19 @@ namespace SGAmod.Items
 		}
 	public override void SetDefaults()
         {
-		item.width = 16;
-		item.height = 16;
-		item.maxStack = 99;
-		item.value = 7500;
-		item.rare = ItemRarityID.Yellow;
-		item.alpha = 0;
-		item.useTurn = true;
-		item.autoReuse = true;
-		item.useAnimation = 15;
-		item.useTime = 10;
-		item.useStyle = ItemUseStyleID.SwingThrow;
-		item.consumable = true;
-		item.createTile = mod.TileType("PrismalTile");
+		Item.width = 16;
+		Item.height = 16;
+		Item.maxStack = 99;
+		Item.value = 7500;
+		Item.rare = ItemRarityID.Yellow;
+		Item.alpha = 0;
+		Item.useTurn = true;
+		Item.autoReuse = true;
+		Item.useAnimation = 15;
+		Item.useTime = 10;
+		Item.useStyle = ItemUseStyleID.Swing;
+		Item.consumable = true;
+		Item.createTile = Mod.Find<ModTile>("PrismalTile").Type;
 
 	}
 		public override string Texture
@@ -1895,17 +1698,7 @@ namespace SGAmod.Items
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("UnmanedOre"), 8);
-			recipe.AddIngredient(mod.ItemType("NoviteOre"), 8);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 1);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 3);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 2);
-			recipe.AddIngredient(ItemID.CrystalShard, 3);
-			recipe.AddIngredient(ItemID.BeetleHusk, 1);
-			recipe.AddTile(mod.GetTile("PrismalStation"));
-			recipe.SetResult(this, 16);
-			recipe.AddRecipe();
+			CreateRecipe(16).AddIngredient(mod.ItemType("UnmanedOre"), 8).AddIngredient(mod.ItemType("NoviteOre"), 8).AddIngredient(mod.ItemType("WraithFragment3"), 1).AddIngredient(mod.ItemType("Fridgeflame"), 3).AddIngredient(mod.ItemType("OmniSoul"), 2).AddIngredient(ItemID.CrystalShard, 3).AddIngredient(ItemID.BeetleHusk, 1).AddTile(mod.GetTile("PrismalStation")).Register();
 		}
 
 	}
@@ -1921,16 +1714,16 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 40;
-			item.value = Item.sellPrice(0,5,0,0);
-			item.rare = ItemRarityID.Yellow;
-			item.maxStack = 30;
+			Item.width = 40;
+			Item.height = 40;
+			Item.value = Item.sellPrice(0,5,0,0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.maxStack = 30;
 			//item.damage = 1;
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime/4f) % 1f, 1f, 0.75f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly/4f) % 1f, 1f, 0.75f);
 		}
 		public override string Texture
 		{
@@ -1940,8 +1733,8 @@ namespace SGAmod.Items
         {
 			Color glowColor = MainColor == Color.Black ? lightColor : MainColor;
 
-			float vel = item.velocity.X / 6f;
-			Vector2 drawPos = (item.Center+new Vector2(0, Main.itemTexture[item.type].Height-4)) - Main.screenPosition;
+			float vel = Item.velocity.X / 6f;
+			Vector2 drawPos = (Item.Center+new Vector2(0, Main.itemTexture[Item.type].Height-4)) - Main.screenPosition;
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -1949,13 +1742,13 @@ namespace SGAmod.Items
 			for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 6f)
 			{
 				Color glowColor2 = BackColor == Color.Black ? Main.hslToRgb(f / MathHelper.TwoPi, 1f, 0.75f) : BackColor;
-				spriteBatch.Draw(Main.itemTexture[item.type], (drawPos + (Vector2.UnitX.RotatedBy(f + Main.GlobalTime * 2f) * 3f).RotatedBy(vel)), null, glowColor2, vel, Main.itemTexture[item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(Main.itemTexture[Item.type], (drawPos + (Vector2.UnitX.RotatedBy(f + Main.GlobalTimeWrappedHourly * 2f) * 3f).RotatedBy(vel)), null, glowColor2, vel, Main.itemTexture[Item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-			spriteBatch.Draw(Main.itemTexture[item.type], drawPos, null, glowColor, vel, Main.itemTexture[item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], drawPos, null, glowColor, vel, Main.itemTexture[Item.type].Size() / 2f, scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -1964,7 +1757,7 @@ namespace SGAmod.Items
 			SGAmod.FadeInEffect.Parameters["alpha"].SetValue(0.50f);
 			SGAmod.FadeInEffect.CurrentTechnique.Passes["ColorToAlphaPass"].Apply();
 
-			spriteBatch.Draw(Main.itemTexture[item.type], drawPos, null, glowColor, vel, Main.itemTexture[item.type].Size() / 2f, scale / 15f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], drawPos, null, glowColor, vel, Main.itemTexture[Item.type].Size() / 2f, scale / 15f, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -1987,13 +1780,13 @@ namespace SGAmod.Items
 			for (float f = 0; f < MathHelper.TwoPi; f += MathHelper.TwoPi / 6f)
 			{
 				Color glowColor2 = BackColor == Color.Black ? Main.hslToRgb(f / MathHelper.TwoPi, 1f, 0.75f) : BackColor;
-				spriteBatch.Draw(Main.itemTexture[item.type], drawPos+(Vector2.UnitX.RotatedBy(f+Main.GlobalTime*2f)*3f), null, glowColor2, 0, Main.itemTexture[item.type].Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(Main.itemTexture[Item.type], drawPos+(Vector2.UnitX.RotatedBy(f+Main.GlobalTimeWrappedHourly*2f)*3f), null, glowColor2, 0, Main.itemTexture[Item.type].Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 
-			spriteBatch.Draw(Main.itemTexture[item.type], drawPos, null, glowColor, 0, Main.itemTexture[item.type].Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], drawPos, null, glowColor, 0, Main.itemTexture[Item.type].Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
@@ -2002,7 +1795,7 @@ namespace SGAmod.Items
 			SGAmod.FadeInEffect.Parameters["alpha"].SetValue(0.50f);
 			SGAmod.FadeInEffect.CurrentTechnique.Passes["ColorToAlphaPass"].Apply();
 
-			spriteBatch.Draw(Main.itemTexture[item.type], drawPos, null, glowColor, 0, Main.itemTexture[item.type].Size() / 2f, Main.inventoryScale*1/15f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.itemTexture[Item.type], drawPos, null, glowColor, 0, Main.itemTexture[Item.type].Size() / 2f, Main.inventoryScale*1/15f, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
@@ -2020,27 +1813,20 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.value = 0;
-			item.rare = ItemRarityID.Green;
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 1;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Green;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 1;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "Entropy", "Entropy Collected: "+Main.LocalPlayer.GetModPlayer<SGAPlayer>().entropyCollected + "/" + MaxEntropy));
+			tooltips.Add(new TooltipLine(Mod, "Entropy", "Entropy Collected: "+Main.LocalPlayer.GetModPlayer<SGAPlayer>().entropyCollected + "/" + MaxEntropy));
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Entrophite"), 250);
-			recipe.AddIngredient(mod.ItemType("StygianCore"), 1);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 15);
-			recipe.AddIngredient(ItemID.Diamond, 1);
-			recipe.AddTile(TileID.CrystalBall);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Entrophite"), 250).AddIngredient(mod.ItemType("StygianCore"), 1).AddIngredient(mod.ItemType("OmniSoul"), 15).AddIngredient(ItemID.Diamond, 1).AddTile(TileID.CrystalBall).Register();
 		}
 	}
 
@@ -2049,12 +1835,12 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.value = 1000000;
-			item.rare = ItemRarityID.Cyan;
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 1;
-			item.expert = true;
+			Item.value = 1000000;
+			Item.rare = ItemRarityID.Cyan;
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 1;
+			Item.expert = true;
 		}
 
 		public override void UpdateInventory(Player player)
@@ -2081,7 +1867,7 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("'The Whole Experience'");
 			Tooltip.SetDefault("While in your inventory, specific cutscenes and events will replay\nLuminite Wraith will be summoned in his pre-Moonlord stage\nKiller Fly Swarm will be summoned instead of Murk\nHellion will replay her monolog after Hellion Core");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
 		public static bool Check()
         {
@@ -2107,11 +1893,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 14;
-			item.height = 14;
-			item.value = 0;
-			item.rare = ItemRarityID.Quest;
+			Item.maxStack = 1;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Quest;
 		}
 	}
 
@@ -2121,20 +1907,15 @@ namespace SGAmod.Items
 		{
 			DisplayName.SetDefault("'The Whole Experience EX'");
 			Tooltip.SetDefault("Same effects as 'The Whole Experience', but now prevents leaving subworlds on death\nSubworld bosses will reset when you die and you respawn in place");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
 		}
         public override Color? GetAlpha(Color lightColor)
         {
-			return Main.hslToRgb(Main.GlobalTime%1f,1f,0.75f);
+			return Main.hslToRgb(Main.GlobalTimeWrappedHourly%1f,1f,0.75f);
         }
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<TheWholeExperience>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<WatchersOfNull>(), 20);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<TheWholeExperience>(), 1).AddIngredient(ModContent.ItemType<WatchersOfNull>(), 20).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -2148,7 +1929,7 @@ namespace SGAmod.Items
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb((Main.GlobalTime * 0.916f) % 1f, 0.8f, 0.75f);
+			return Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.916f) % 1f, 0.8f, 0.75f);
 		}
 		public override string Texture
 		{
@@ -2156,11 +1937,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 1;
-			item.width = 14;
-			item.height = 14;
-			item.value = 0;
-			item.rare = ItemRarityID.Quest;
+			Item.maxStack = 1;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Quest;
 		}
 	}
 	public class ShadowLockBox : ModItem
@@ -2172,11 +1953,11 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 30;
-			item.width = 14;
-			item.height = 14;
-			item.value = 0;
-			item.rare = ItemRarityID.Quest;
+			Item.maxStack = 30;
+			Item.width = 14;
+			Item.height = 14;
+			Item.value = 0;
+			Item.rare = ItemRarityID.Quest;
 		}
 		public override bool CanRightClick()
 		{
@@ -2206,18 +1987,18 @@ namespace SGAmod.Items
         }
         public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 40;
-			item.value = 0;
-			item.rare = -12;
-			item.expert = true;
-			item.maxStack = 30;
+			Item.width = 40;
+			Item.height = 40;
+			Item.value = 0;
+			Item.rare = -12;
+			Item.expert = true;
+			Item.maxStack = 30;
 			//item.damage = 1;
 		}
 		public override string Texture => "Terraria/Item_"+ItemID.AlphabetStatue1;
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Main.hslToRgb(Main.GlobalTime % 1f, 1f, 0.75f);
+			return Main.hslToRgb(Main.GlobalTimeWrappedHourly % 1f, 1f, 0.75f);
 		}
 		public override void GrabRange(Player player, ref int grabRange)
 		{
@@ -2225,15 +2006,15 @@ namespace SGAmod.Items
 		}
 		public override bool GrabStyle(Player player)
 		{
-			Vector2 vectorItemToPlayer = player.Center - item.Center;
+			Vector2 vectorItemToPlayer = player.Center - Item.Center;
 			Vector2 movement = vectorItemToPlayer.SafeNormalize(default(Vector2)) * 0.25f;
-			item.velocity = item.velocity + movement;
-			item.velocity = Collision.TileCollision(item.position, item.velocity, item.width, item.height);
+			Item.velocity = Item.velocity + movement;
+			Item.velocity = Collision.TileCollision(Item.position, Item.velocity, Item.width, Item.height);
 			return true;
 		}
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Texture2D inner = Main.itemTexture[item.type];
+			Texture2D inner = Main.itemTexture[Item.type];
 
 			Vector2 slotSize = new Vector2(52f, 52f);
 			position -= slotSize * Main.inventoryScale / 2f - frame.Size() * scale / 2f;
@@ -2245,7 +2026,7 @@ namespace SGAmod.Items
 				spriteBatch.Draw(inner, drawPos+new Vector2(Main.rand.NextFloat(-f,f), Main.rand.NextFloat(-f, f)), null, (Color)GetAlpha(drawColor)*0.10f, 0, textureOrigin, Main.inventoryScale * 1, SpriteEffects.None, 0f);
 			}
 
-			spriteBatch.Draw(inner, drawPos+new Vector2((-0.50f+Main.GlobalTime%1)*16f* scale,0), null, color * 1f, 0, textureOrigin, Main.inventoryScale * 0.50f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(inner, drawPos+new Vector2((-0.50f+Main.GlobalTimeWrappedHourly%1)*16f* scale,0), null, color * 1f, 0, textureOrigin, Main.inventoryScale * 0.50f, SpriteEffects.None, 0f);
 
 			return false;
 		}
@@ -2293,17 +2074,17 @@ namespace SGAmod.Items
 		}
 		public override void SetDefaults()
 		{
-			item.width = 40;
-			item.height = 40;
-			item.value = 0;
-			item.rare = -12;
-			item.expert = true;
-			item.maxStack = 1;
+			Item.width = 40;
+			Item.height = 40;
+			Item.value = 0;
+			Item.rare = -12;
+			Item.expert = true;
+			Item.maxStack = 1;
 			//item.damage = 1;
 		}
         public override void UpdateInventory(Player player)
         {
-			if (!item.favorited)
+			if (!Item.favorited)
 			player.SGAPly().finalGem = 3;
         }
 
@@ -2332,19 +2113,19 @@ namespace SGAmod.Items
 			float _Time; // Pass the time in seconds into here
 			*/
 
-			Texture2D tex = ModContent.GetTexture("SGAmod/voronoismol");
+			Texture2D tex = ModContent.Request<Texture2D>("SGAmod/voronoismol");
 
 			SGAmod.VoronoiEffect.Parameters["_CellColor"].SetValue(Color.Black.ToVector4() * 1f);
 			SGAmod.VoronoiEffect.Parameters["_EdgeColor"].SetValue(Color.Lerp(Color.Orange,Color.Yellow,0.50f).ToVector4() * 1f);
 			SGAmod.VoronoiEffect.Parameters["_CellSize"].SetValue(new Vector2(1.5f,2f)*1f);
-			SGAmod.VoronoiEffect.Parameters["_ScrollSpeed"].SetValue(Main.GlobalTime/40000f);
+			SGAmod.VoronoiEffect.Parameters["_ScrollSpeed"].SetValue(Main.GlobalTimeWrappedHourly/40000f);
 			SGAmod.VoronoiEffect.Parameters["_FadeSpeed"].SetValue(3f);
 			SGAmod.VoronoiEffect.Parameters["_ColorScale"].SetValue(1.5652475842498528f);
-			SGAmod.VoronoiEffect.Parameters["_Time"].SetValue(Main.GlobalTime*1f);
+			SGAmod.VoronoiEffect.Parameters["_Time"].SetValue(Main.GlobalTimeWrappedHourly*1f);
 
 			SGAmod.VoronoiEffect.CurrentTechnique.Passes["Star"].Apply();
 
-			spriteBatch.Draw(tex, item.Center - Main.screenPosition, null, Color.White, 0, tex.Size() / 2f, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, Item.Center - Main.screenPosition, null, Color.White, 0, tex.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
 
 			return false;
@@ -2357,20 +2138,20 @@ namespace SGAmod.Items
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			float maxsize = 20;
 			Texture2D[] gems = Main.gemTexture;
-			Texture2D myTex = Main.itemTexture[item.type];
-			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor*0.25f, Main.GlobalTime / 1f, myTex.Size() / 2f, scale * 2.5f * Main.essScale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor * 0.25f, -Main.GlobalTime / 1f, myTex.Size() / 2f, scale * 2.5f * Main.essScale, SpriteEffects.None, 0f);
+			Texture2D myTex = Main.itemTexture[Item.type];
+			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor*0.25f, Main.GlobalTimeWrappedHourly / 1f, myTex.Size() / 2f, scale * 2.5f * Main.essScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor * 0.25f, -Main.GlobalTimeWrappedHourly / 1f, myTex.Size() / 2f, scale * 2.5f * Main.essScale, SpriteEffects.None, 0f);
 
 			for (int i = 0; i < maxsize; i += 1)
 			{
 				Texture2D inner = gems[i % gems.Length];
-				Double Azngle = i+(Main.GlobalTime/8f);
+				Double Azngle = i+(Main.GlobalTimeWrappedHourly/8f);
 				Vector2 here = new Vector2((float)Math.Cos(Azngle), (float)Math.Sin(Azngle)) * (i * 2f);
 				float scaler = (1f - (float)((float)i / maxsize));
-				spriteBatch.Draw(inner, position + (new Vector2(14f, 14f)) + here, null, Color.Lerp(drawColor, Color.MediumPurple, 0.25f) * scaler, Main.GlobalTime *= (i % 2 == 0 ? -1f : 1f), new Vector2(inner.Width / 2, inner.Height / 2), scale * scaler, SpriteEffects.None, 0f);
+				spriteBatch.Draw(inner, position + (new Vector2(14f, 14f)) + here, null, Color.Lerp(drawColor, Color.MediumPurple, 0.25f) * scaler, Main.GlobalTimeWrappedHourly *= (i % 2 == 0 ? -1f : 1f), new Vector2(inner.Width / 2, inner.Height / 2), scale * scaler, SpriteEffects.None, 0f);
 			}
-			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor, Main.GlobalTime/1f, myTex.Size()/2f, scale * 1.5f * Main.essScale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor, -Main.GlobalTime/1f, myTex.Size() / 2f, scale * 1.5f * Main.essScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor, Main.GlobalTimeWrappedHourly/1f, myTex.Size()/2f, scale * 1.5f * Main.essScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(myTex, position + new Vector2(14f, 14f), frame, drawColor, -Main.GlobalTimeWrappedHourly/1f, myTex.Size() / 2f, scale * 1.5f * Main.essScale, SpriteEffects.None, 0f);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 			return false;

@@ -24,22 +24,22 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 0;
-			item.noMelee = true;
-			item.magic = true;
-			item.width = 22;
-			item.height = 22;
-			item.useTime = 100;
-			item.useAnimation = 100;
-			item.useStyle = 5;
-			item.knockBack = 10;
-			item.value = 10000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item72;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<CrackedMirrorProj>();
-			item.shootSpeed = 2;
-			Item.staff[item.type] = true;
+			Item.damage = 0;
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 22;
+			Item.height = 22;
+			Item.useTime = 100;
+			Item.useAnimation = 100;
+			Item.useStyle = 5;
+			Item.knockBack = 10;
+			Item.value = 10000;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item72;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<CrackedMirrorProj>();
+			Item.shootSpeed = 2;
+			Item.staff[Item.type] = true;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -68,25 +68,25 @@ namespace SGAmod.Items.Weapons
 	public class CrackedMirrorProj : ModProjectile
 	{
 
-		float scalePercent => MathHelper.Clamp(projectile.timeLeft / 60f, 0f, Math.Min(projectile.localAI[0] / 25f, 0.75f));
+		float scalePercent => MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, Math.Min(Projectile.localAI[0] / 25f, 0.75f));
 		Vector2 startingloc = default;
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			projectile.timeLeft = 300;
-			projectile.light = 0.1f;
-			projectile.extraUpdates = 1;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
-			aiType = -1;
-			Main.projFrames[projectile.type] = 1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 300;
+			Projectile.light = 0.1f;
+			Projectile.extraUpdates = 1;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
+			AIType = -1;
+			Main.projFrames[Projectile.type] = 1;
 		}
 
 		public override string Texture
@@ -97,8 +97,8 @@ namespace SGAmod.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Say STONE!");
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 20;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		public override bool CanDamage()
@@ -115,44 +115,44 @@ namespace SGAmod.Items.Weapons
 		{
 			if (startingloc == default)
 			{
-				startingloc = projectile.Center;
+				startingloc = Projectile.Center;
 			}
 
 			//projectile.velocity = Collision.TileCollision(projectile.position, projectile.velocity, projectile.width, projectile.height, true);
-			projectile.velocity = projectile.velocity.RotatedBy(projectile.localAI[0] / 10000f, Vector2.Zero);
+			Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.localAI[0] / 10000f, Vector2.Zero);
 
 			foreach (NPC enemy in Main.npc.Where(npctest => AffectNPC(npctest) &&
-			npctest.Hitbox.Intersects(projectile.Hitbox)))
+			npctest.Hitbox.Intersects(Projectile.Hitbox)))
 			{
 				enemy.AddBuff(ModContent.BuffType<Petrified>(), 600);
 			}
 
-			projectile.localAI[0] += 1;
-			int num126 = Dust.NewDust(projectile.position - new Vector2(2, 2), Main.rand.Next(projectile.width + 6), Main.rand.Next(projectile.height + 6), DustID.t_Marble, 0, 0, 240, Color.White, scalePercent);
+			Projectile.localAI[0] += 1;
+			int num126 = Dust.NewDust(Projectile.position - new Vector2(2, 2), Main.rand.Next(Projectile.width + 6), Main.rand.Next(Projectile.height + 6), DustID.t_Marble, 0, 0, 240, Color.White, scalePercent);
 			Main.dust[num126].noGravity = true;
-			Main.dust[num126].velocity = projectile.velocity * 0.5f;
+			Main.dust[num126].velocity = Projectile.velocity * 0.5f;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			for (int i = 0; i < projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
+			for (int i = 0; i < Projectile.oldPos.Length; i += 1)//dumb hack to get the trails to not appear at 0,0
 			{
-				if (projectile.oldPos[i] == default)
-					projectile.oldPos[i] = projectile.position;
+				if (Projectile.oldPos[i] == default)
+					Projectile.oldPos[i] = Projectile.position;
 			}
 
-			TrailHelper trail = new TrailHelper("DefaultPass", mod.GetTexture("noise"));
+			TrailHelper trail = new TrailHelper("DefaultPass", Mod.Assets.Request<Texture2D>("noise").Value);
 			trail.color = delegate (float percent)
 			{
 				return Color.White;
 			};
-			trail.projsize = projectile.Hitbox.Size() / 2f;
-			trail.coordOffset = new Vector2(0, Main.GlobalTime * -1f);
+			trail.projsize = Projectile.Hitbox.Size() / 2f;
+			trail.coordOffset = new Vector2(0, Main.GlobalTimeWrappedHourly * -1f);
 			trail.trailThickness = 4;
 			trail.trailThicknessIncrease = 6;
 			trail.capsize = new Vector2(6f, 0f);
 			trail.strength = scalePercent;
-			trail.DrawTrail(projectile.oldPos.ToList(), projectile.Center);
+			trail.DrawTrail(Projectile.oldPos.ToList(), Projectile.Center);
 
 			return false;
 		}

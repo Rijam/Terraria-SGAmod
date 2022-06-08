@@ -16,38 +16,33 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Fiery Moon");
 			Tooltip.SetDefault("Launches molten rock that can pierce several times before exploding into a thermal nova\nHold left click to keep the ball attached to the end of the staff");
-			Item.staff[item.type] = true; 
+			Item.staff[Item.type] = true; 
 		}
 		
 		public override void SetDefaults()
 		{
-			item.damage = 50;
-			item.magic = true;
-			item.width = 34;    
-			item.mana = 25;
-            item.height = 24;
-			item.useTime = 12;
-			item.useAnimation = 12;
-			item.useStyle = 5;
-			item.knockBack = 2;
-			item.value = 1000000;
-			item.rare = 5;
-	        item.shootSpeed = 8f;
-            item.noMelee = true; 
-			item.shoot = mod.ProjectileType("FieryRock");
-            item.shootSpeed = 7f;
-			item.UseSound = SoundID.Item8;
-			item.channel = true;
+			Item.damage = 50;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 34;    
+			Item.mana = 25;
+            Item.height = 24;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
+			Item.useStyle = 5;
+			Item.knockBack = 2;
+			Item.value = 1000000;
+			Item.rare = 5;
+	        Item.shootSpeed = 8f;
+            Item.noMelee = true; 
+			Item.shoot = Mod.Find<ModProjectile>("FieryRock").Type;
+            Item.shootSpeed = 7f;
+			Item.UseSound = SoundID.Item8;
+			Item.channel = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "FieryShard", 10);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "FieryShard", 10).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}

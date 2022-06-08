@@ -8,7 +8,7 @@ using Terraria.GameContent.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -43,7 +43,7 @@ namespace SGAmod.Dimensions
 
         public override Texture2D GetMapBackgroundImage()
         {
-            return SGAmod.Instance.GetTexture("LimboMapBackground");
+            return SGAmod.Instance.Assets.Request<Texture2D>("LimboMapBackground").Value;
         }
 
 public override int? Music
@@ -95,8 +95,8 @@ public override int? Music
                 for (int y = tileheight; y < Main.maxTilesY; y += 1)
                 {
                     Tile thetile = Framing.GetTileSafely(x, y);
-                    thetile.active(true);
-                    thetile.type = (ushort)SGAmod.Instance.TileType("Fabric");
+                    thetile.HasTile;
+                    thetile.TileType = (ushort)SGAmod.Instance.Find<ModTile>("Fabric").Type;
                 }
                 if (Math.Abs(x - Main.maxTilesX / 2) < 30) {
                     Main.spawnTileY = tileheight;
@@ -121,7 +121,7 @@ public override int? Music
                 {
                 int randomx = UniRand.Next(Main.maxTilesX);
                  int randomy = UniRand.Next(surfacelevel[randomx]+ UniRand.Next(50,100), Main.maxTilesY);
-                IDGWorldGen.TileRunner(randomx, randomy, (double)UniRand.Next(5, 15), UniRand.Next(5, 15), SGAmod.Instance.TileType("EntrophicOre"), false, 0f, 0f, false, true, UniRand);
+                IDGWorldGen.TileRunner(randomx, randomy, (double)UniRand.Next(5, 15), UniRand.Next(5, 15), SGAmod.Instance.Find<ModTile>("EntrophicOre").Type, false, 0f, 0f, false, true, UniRand);
                 }
 
                 for (int i = 0; i < 300; i += 1)
@@ -135,7 +135,7 @@ public override int? Music
                 {
                 int randomx = UniRand.Next(Main.maxTilesX);
                 int randomy = UniRand.Next(surfacelevel[randomx] + UniRand.Next(20, 160), Main.maxTilesY);
-                IDGWorldGen.TileRunner(randomx, randomy, (double)UniRand.Next(3, 6), UniRand.Next(2, 4), SGAmod.Instance.TileType("HopeOre"), false, 0f, 0f, false, true, UniRand);
+                IDGWorldGen.TileRunner(randomx, randomy, (double)UniRand.Next(3, 6), UniRand.Next(2, 4), SGAmod.Instance.Find<ModTile>("HopeOre").Type, false, 0f, 0f, false, true, UniRand);
                 }
 
             //Noisegen.Frequency
@@ -149,13 +149,13 @@ public override int? Music
             for (int x = Main.maxTilesX-1; x > 0; x -= 1)
             {
                 Tile thetile = Framing.GetTileSafely(x, tileheight);
-                IDGWorldGen.TileRunner(x, tileheight, (double)UniRand.Next(5, 10), UniRand.Next(2, 4), SGAmod.Instance.TileType("AncientFabric"), true, 0f, 0f, false, true, UniRand);
-                thetile.active(true);
-                thetile.type = (ushort)SGAmod.Instance.TileType("AncientFabric");
+                IDGWorldGen.TileRunner(x, tileheight, (double)UniRand.Next(5, 10), UniRand.Next(2, 4), SGAmod.Instance.Find<ModTile>("AncientFabric").Type, true, 0f, 0f, false, true, UniRand);
+                thetile.HasTile;
+                thetile.TileType = (ushort)SGAmod.Instance.Find<ModTile>("AncientFabric").Type;
 
                 for (int i = tileheight; i < Main.maxTilesY; i += 1)
                 {
-                    Framing.GetTileSafely(x, i).wall = (ushort)SGAmod.Instance.WallType("NullWall");
+                    Framing.GetTileSafely(x, i).WallType = (ushort)SGAmod.Instance.Find<ModWall>("NullWall").Type;
                 }
 
                     if (UniRand.Next(0, 10) == 1)
@@ -180,12 +180,12 @@ public override int? Music
                 {
                     float tilerate = -0.25f + (1f - (y / (float)Main.maxTilesY)) * 1f;
                     Tile tile = Main.tile[x, y];
-                    if (tile.active() && tile.type == (ushort)SGAmod.Instance.TileType("Fabric"))
+                    if (tile.HasTile && tile.TileType == (ushort)SGAmod.Instance.Find<ModTile>("Fabric").Type)
                     {
                         float nousey = MathHelper.Clamp((float)Noisegen.Noise(x, y), -1.00f, 1.00f);
                         if (nousey > tilerate)
                         {
-                            Main.tile[x, y].type = (ushort)SGAmod.Instance.TileType("HardenedFabric");
+                            Main.tile[x, y].TileType = (ushort)SGAmod.Instance.Find<ModTile>("HardenedFabric").Type;
                             Main.tile[x, y].color((byte)Paints.Shadow);
                         }
                         else
@@ -377,11 +377,11 @@ public override int? Music
             Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             VertexBuffer vertexBuffer;
-            Vector2 parallex = new Vector2(Main.screenPosition.X / 9000f, -Main.GlobalTime * 0.1f);
+            Vector2 parallex = new Vector2(Main.screenPosition.X / 9000f, -Main.GlobalTimeWrappedHourly * 0.1f);
             Color skycolor = Color.Red*0.75f;
 
             effect.Parameters["WorldViewProjection"].SetValue(WVP.View(Main.GameViewMatrix.Zoom) * WVP.Projection());
-            effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.GetTexture("Space"));
+            effect.Parameters["imageTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("Space").Value);
             effect.Parameters["coordOffset"].SetValue(parallex);
             effect.Parameters["coordMultiplier"].SetValue(4f);
             effect.Parameters["strength"].SetValue(1f);
@@ -446,7 +446,7 @@ public override int? Music
 
                 for (float i = 0; i < 1f; i += 0.10f)
                 {
-                    spriteBatch.Draw(inner, position, null, (Color.DarkMagenta * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.5f) * 0.50f, i * MathHelper.TwoPi, textureOrigin, 16f * (0.5f + 1.25f * (((Main.GlobalTime / 2f) + i) % 1f)), SpriteEffects.None, 0f);
+                    spriteBatch.Draw(inner, position, null, (Color.DarkMagenta * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.5f) * 0.50f, i * MathHelper.TwoPi, textureOrigin, 16f * (0.5f + 1.25f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f)), SpriteEffects.None, 0f);
                 }
 
                 spriteBatch.Draw(sun, position, null, Color.DarkRed, 0, sun.Size() / 2f, 3f, SpriteEffects.None, 0f);
@@ -459,7 +459,7 @@ public override int? Music
 
             UnifiedRandom alwaysthesame = new UnifiedRandom(DimDungeonsProxy.DungeonSeeds);
 
-            Texture2D texx = ModContent.GetTexture("SGAmod/Items/WatchersOfNull");
+            Texture2D texx = ModContent.Request<Texture2D>("SGAmod/Items/WatchersOfNull");
 
             for (float i = 0.04f; i < 0.35f; i += 0.005f)
             {

@@ -9,6 +9,7 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Armors.JungleTemplar
 {
@@ -32,11 +33,11 @@ namespace SGAmod.Items.Armors.JungleTemplar
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0,15,0,0);
-			item.rare = ItemRarityID.Yellow;
-			item.defense = 25;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0,15,0,0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.defense = 25;
 		}
         public override bool DrawHead()
         {
@@ -44,11 +45,11 @@ namespace SGAmod.Items.Armors.JungleTemplar
         }
 		public static void ActivatePrecurserPower(SGAPlayer sgaply)
 		{
-			if (sgaply.player.HasBuff(ModContent.BuffType<PrecurserPowerBuff>()))
+			if (sgaply.Player.HasBuff(ModContent.BuffType<PrecurserPowerBuff>()))
 			{
-				sgaply.player.DelBuff(sgaply.player.FindBuffIndex(ModContent.BuffType<PrecurserPowerBuff>()));
+				sgaply.Player.DelBuff(sgaply.Player.FindBuffIndex(ModContent.BuffType<PrecurserPowerBuff>()));
 
-				SoundEffectInstance sound2 = Main.PlaySound(SoundID.Zombie, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y, 35);
+				SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.Zombie, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y, 35);
 				if (sound2 != null)
 				{
 					sound2.Pitch = 0.5f;
@@ -58,14 +59,14 @@ namespace SGAmod.Items.Armors.JungleTemplar
 			{
 				if (sgaply.AddCooldownStack(60 * 80, 2))
 				{
-					sgaply.player.AddBuff(ModContent.BuffType<PrecurserPowerBuff>(), 1200);
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_EtherianPortalOpen, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y);
+					sgaply.Player.AddBuff(ModContent.BuffType<PrecurserPowerBuff>(), 1200);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalOpen, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y);
 					if (sound != null)
 					{
 						sound.Pitch = 0.85f;
 					}
 
-					SoundEffectInstance sound2 = Main.PlaySound(SoundID.Zombie, (int)sgaply.player.Center.X, (int)sgaply.player.Center.Y, 35);
+					SoundEffectInstance sound2 = SoundEngine.PlaySound(SoundID.Zombie, (int)sgaply.Player.Center.X, (int)sgaply.Player.Center.Y, 35);
 					if (sound2 != null)
 					{
 						sound2.Pitch = -0.5f;
@@ -73,10 +74,10 @@ namespace SGAmod.Items.Armors.JungleTemplar
 
 					for (int i = 0; i < 50; i += 1)
 					{
-						int dust = Dust.NewDust(sgaply.player.Hitbox.TopLeft() + new Vector2(0, -8), sgaply.player.Hitbox.Width, sgaply.player.Hitbox.Height + 8, DustID.AncientLight);
+						int dust = Dust.NewDust(sgaply.Player.Hitbox.TopLeft() + new Vector2(0, -8), sgaply.Player.Hitbox.Width, sgaply.Player.Hitbox.Height + 8, DustID.AncientLight);
 						Main.dust[dust].scale = 2f;
 						Main.dust[dust].noGravity = true;
-						Main.dust[dust].velocity = (sgaply.player.velocity * Main.rand.NextFloat(0.75f, 1f)) + Vector2.UnitX.RotatedBy(-MathHelper.PiOver2 + Main.rand.NextFloat(-1.2f, 1.2f)) * Main.rand.NextFloat(1f, 3f);
+						Main.dust[dust].velocity = (sgaply.Player.velocity * Main.rand.NextFloat(0.75f, 1f)) + Vector2.UnitX.RotatedBy(-MathHelper.PiOver2 + Main.rand.NextFloat(-1.2f, 1.2f)) * Main.rand.NextFloat(1f, 3f);
 					}
 				}
 			}
@@ -86,15 +87,15 @@ namespace SGAmod.Items.Armors.JungleTemplar
 		{
 			if (sgaplayer.jungleTemplarSet.Item1)
 			{
-				if (sgaplayer.player.velocity.Y != 0)
+				if (sgaplayer.Player.velocity.Y != 0)
                 {
-					float gravity = sgaplayer.player.velocity.Y > 0.50f ? 0.50f : 0.25f;
-					sgaplayer.player.velocity += Vector2.UnitY * sgaplayer.player.gravDir * Player.defaultGravity * gravity;
+					float gravity = sgaplayer.Player.velocity.Y > 0.50f ? 0.50f : 0.25f;
+					sgaplayer.Player.velocity += Vector2.UnitY * sgaplayer.Player.gravDir * Player.defaultGravity * gravity;
                 }
                 else
                 {
-					sgaplayer.player.thorns += 3f;
-					sgaplayer.player.noKnockback = true;
+					sgaplayer.Player.thorns += 3f;
+					sgaplayer.Player.noKnockback = true;
                 }
 			}
 		}
@@ -102,29 +103,29 @@ namespace SGAmod.Items.Armors.JungleTemplar
 		public static void SetBonus(SGAPlayer sgaplayer)
 		{
 
-			sgaplayer.player.powerrun = true;
+			sgaplayer.Player.powerrun = true;
 
 			if (sgaplayer.ShieldType == 0)
 				sgaplayer.ShieldType = 100;
 
-			if (sgaplayer.player.velocity.Y > 0.50f)
+			if (sgaplayer.Player.velocity.Y > 0.50f)
 			{
-				sgaplayer.player.maxFallSpeed += 5;
+				sgaplayer.Player.maxFallSpeed += 5;
 			}
 
 			if (sgaplayer.jungleTemplarSet.Item2)
 			{
-				sgaplayer.player.Throwing().thrownDamage *= sgaplayer.techdamage;
+				sgaplayer.Player.Throwing().GetDamage(DamageClass.Throwing) *= sgaplayer.techdamage;
 
 				if (sgaplayer.ConsumeElectricCharge(8, 300, true))
 				{
-					sgaplayer.player.shinyStone = true;
+					sgaplayer.Player.shinyStone = true;
 				}
 			}
 
-			if (sgaplayer.timer>300 && sgaplayer.player.lavaTime > 120 && !sgaplayer.ConsumeElectricCharge(1000, 0, false, false))
+			if (sgaplayer.timer>300 && sgaplayer.Player.lavaTime > 120 && !sgaplayer.ConsumeElectricCharge(1000, 0, false, false))
             {
-				sgaplayer.player.AddBuff(ModContent.BuffType<Buffs.LavaBurn>(),30*(Main.expertMode ? 1 : 2));
+				sgaplayer.Player.AddBuff(ModContent.BuffType<Buffs.LavaBurn>(),30*(Main.expertMode ? 1 : 2));
 			}
 
 		}
@@ -154,7 +155,7 @@ namespace SGAmod.Items.Armors.JungleTemplar
 		{
 			if (GetType() == typeof(JungleTemplarHelmet))
 			{
-				SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+				SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 				sgaplayer.armorglowmasks[0] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 				sgaplayer.armorglowcolor[0] = ArmorGlow;
 			}
@@ -162,25 +163,7 @@ namespace SGAmod.Items.Armors.JungleTemplar
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<AdvancedPlating>(), 8);
-			recipe.AddIngredient(ItemID.LihzahrdPowerCell);
-			if (GetType() != typeof(JungleTemplarLeggings))
-			{
-				recipe.AddIngredient(ItemID.Ruby, 1);
-				recipe.AddIngredient(ItemID.Topaz, 1);
-			}
-			else
-			{
-				if (GetType() == typeof(JungleTemplarLeggings))
-				{
-					recipe.AddIngredient(ItemID.AsphaltBlock, 50);
-				}
-			}
-			recipe.AddIngredient(ItemID.LihzahrdBrick, 50);
-			recipe.AddTile(TileID.LihzahrdAltar);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<AdvancedPlating>(), 8).AddIngredient(ItemID.LihzahrdPowerCell).AddIngredient(ItemID.LihzahrdBrick, 50).AddTile(TileID.LihzahrdAltar).Register();
 		}
 
 	}
@@ -195,12 +178,12 @@ namespace SGAmod.Items.Armors.JungleTemplar
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.defense = 32;
-			item.lifeRegen = 0;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.defense = 32;
+			Item.lifeRegen = 0;
 		}
 
 		public override void UpdateEquip(Player player)
@@ -216,7 +199,7 @@ namespace SGAmod.Items.Armors.JungleTemplar
 
 		public override void UpdateVanity(Player player, EquipType type)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.armorglowmasks[1] = "SGAmod/Items/GlowMasks/" + Name + "_Glow";
 			sgaplayer.armorglowmasks[4] = "SGAmod/Items/GlowMasks/" + Name + "_GlowFemale";
 			sgaplayer.armorglowcolor[1] = ArmorGlow;
@@ -234,12 +217,12 @@ namespace SGAmod.Items.Armors.JungleTemplar
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.rare = ItemRarityID.Yellow;
-			item.defense = 18;
-			item.lifeRegen = 0;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.rare = ItemRarityID.Yellow;
+			Item.defense = 18;
+			Item.lifeRegen = 0;
 		}
 
 		public override void UpdateEquip(Player player)
@@ -260,7 +243,7 @@ namespace SGAmod.Items.Armors.JungleTemplar
 
 	public class PrecurserPowerBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Precursor's Power");
 			Description.SetDefault("Ancient energy powers you up!\nGain shiny stone recovery even while moving, but consumes electric charge!\nExtreme energy causes harm if not wearing the armor set");

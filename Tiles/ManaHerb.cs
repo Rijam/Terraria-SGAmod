@@ -19,7 +19,7 @@ namespace SGAmod.Tiles
 
 			return base.Autoload(ref name, ref texture);
         }
-        public override void SetDefaults() 
+        public override void SetStaticDefaults() 
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileCut[Type] = true;
@@ -83,7 +83,7 @@ namespace SGAmod.Tiles
 
 			ArmorShaderData shader2 = GameShaders.Armor.GetShaderFromItemId(ItemID.StardustDye);
 
-			Texture2D sun2 = ModContent.GetTexture("SGAmod/TiledPerlin");
+			Texture2D sun2 = ModContent.Request<Texture2D>("SGAmod/TiledPerlin");
 
 			/*
 			DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), drawOffset + Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 512, 512)), Microsoft.Xna.Framework.Color.White, 0, new Vector2(256f, 256f), 5f, SpriteEffects.None, 0);
@@ -99,9 +99,9 @@ namespace SGAmod.Tiles
 
 			for (int z = -2; z < 5; z += 4)
 			{
-				spriteBatch.Draw(Main.tileTexture[Type], drawOffset - Main.screenPosition, new Rectangle(Main.tile[i, j].frameX, Main.tile[i, j].frameY, 16, 16), Color.White, 0f, new Vector2(z, 0), new Vector2(1f, 1f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(Main.tileTexture[Type], drawOffset - Main.screenPosition, new Rectangle(Main.tile[i, j].TileFrameX, Main.tile[i, j].TileFrameY, 16, 16), Color.White, 0f, new Vector2(z, 0), new Vector2(1f, 1f), SpriteEffects.None, 0f);
 			}
-			spriteBatch.Draw(Main.tileTexture[Type], drawOffset - Main.screenPosition, new Rectangle(Main.tile[i, j].frameX, Main.tile[i, j].frameY, 16, 16), Color.Blue.MultiplyRGB(Lighting.GetColor(i, j)), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Main.tileTexture[Type], drawOffset - Main.screenPosition, new Rectangle(Main.tile[i, j].TileFrameX, Main.tile[i, j].TileFrameY, 16, 16), Color.Blue.MultiplyRGB(Lighting.GetColor(i, j)), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(1, 1, 1));
@@ -112,7 +112,7 @@ namespace SGAmod.Tiles
 
         public override bool Drop(int i, int j)
 		{
-			int stage = Main.tile[i, j].frameX / 18;
+			int stage = Main.tile[i, j].TileFrameX / 18;
 				Item.NewItem(i * 16, j * 16, 0, 0, ItemID.Star);
 			return false;
 		}

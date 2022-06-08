@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Projectiles
 {
@@ -27,22 +28,22 @@ namespace SGAmod.Projectiles
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile=false;
-			projectile.friendly=true;
-			projectile.tileCollide = true;
-			projectile.magic = true;
-			aiType = 0;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile=false;
+			Projectile.friendly=true;
+			Projectile.tileCollide = true;
+			Projectile.DamageType = DamageClass.Magic;
+			AIType = 0;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+			SoundEngine.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 			for (int num315 = 0; num315 < 60; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 226, projectile.velocity.X+(float)(Main.rand.Next(-250,250)/15f), projectile.velocity.Y+(float)(Main.rand.Next(-250,250)/15f), 50, default(Color), 3.4f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 226, Projectile.velocity.X+(float)(Main.rand.Next(-250,250)/15f), Projectile.velocity.Y+(float)(Main.rand.Next(-250,250)/15f), 50, default(Color), 3.4f);
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.7f;
 				dust3.noGravity = true;
@@ -61,7 +62,7 @@ namespace SGAmod.Projectiles
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 		if (!target.friendly && target.realLife<0){
-		int proj=Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("WaveBeamStun"), damage, knockback, Main.player[projectile.owner].whoAmI);
+		int proj=Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("WaveBeamStun").Type, damage, knockback, Main.player[Projectile.owner].whoAmI);
 		Main.projectile[proj].timeLeft=300;
 		HalfVector2 half=new HalfVector2(target.position.X,target.position.Y);
 		Main.projectile[proj].ai[0]=ReLogic.Utilities.ReinterpretCast.UIntAsFloat(half.PackedValue);
@@ -69,14 +70,14 @@ namespace SGAmod.Projectiles
 		if (target.boss)
 		Main.projectile[proj].timeLeft=80;
 		Main.projectile[proj].netUpdate=true;
-		projectile.Kill();
+		Projectile.Kill();
 		}}
 
 		public override void AI()
 		{
 		for (int num315 = 0; num315 < 2; num315 = num315 + 1)
 			{
-				int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 226, 0f, 0f, 50, Main.hslToRgb(0.4f, 0f, 0.15f), 1.7f);
+				int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 226, 0f, 0f, 50, Main.hslToRgb(0.4f, 0f, 0.15f), 1.7f);
 				Dust dust3 = Main.dust[num316];
 				dust3.velocity *= 0.3f;
 				dust3.noGravity = true;
@@ -84,17 +85,17 @@ namespace SGAmod.Projectiles
 				dust3.fadeIn = 1f + (float)Main.rand.Next(10) * 0.1f;
 			}
 
-		projectile.ai[0]=projectile.ai[0]+1;
-		if (projectile.ai[0]<2){
-		keepspeed=(projectile.velocity).Length();
+		Projectile.ai[0]=Projectile.ai[0]+1;
+		if (Projectile.ai[0]<2){
+		keepspeed=(Projectile.velocity).Length();
 		}
-		NPC target=Main.npc[Idglib.FindClosestTarget(0,projectile.Center,new Vector2(0f,0f),true,true,true,projectile)];
+		NPC target=Main.npc[Idglib.FindClosestTarget(0,Projectile.Center,new Vector2(0f,0f),true,true,true,Projectile)];
 		if (target!=null){
-		if ((target.Center-projectile.Center).Length()<500f){
-		if (projectile.ai[0]<(250f) && projectile.ai[0]>(beginhoming)){
-projectile.velocity=projectile.velocity+(projectile.DirectionTo(target.Center)*((float)keepspeed*homing));
-projectile.velocity.Normalize();
-projectile.velocity=projectile.velocity*(float)keepspeed;
+		if ((target.Center-Projectile.Center).Length()<500f){
+		if (Projectile.ai[0]<(250f) && Projectile.ai[0]>(beginhoming)){
+Projectile.velocity=Projectile.velocity+(Projectile.DirectionTo(target.Center)*((float)keepspeed*homing));
+Projectile.velocity.Normalize();
+Projectile.velocity=Projectile.velocity*(float)keepspeed;
 }}
 
 
@@ -102,7 +103,7 @@ projectile.velocity=projectile.velocity*(float)keepspeed;
 
 }
 
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 
 
 
@@ -121,14 +122,14 @@ projectile.velocity=projectile.velocity*(float)keepspeed;
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile=false;
-			projectile.friendly=true;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			aiType = 0;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile=false;
+			Projectile.friendly=true;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			AIType = 0;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -146,14 +147,14 @@ projectile.velocity=projectile.velocity*(float)keepspeed;
 		public override void AI()
 		{
 
-		NPC enemy=Main.npc[(int)projectile.ai[1]];
+		NPC enemy=Main.npc[(int)Projectile.ai[1]];
 		if (enemy==null)
-		projectile.Kill();
+		Projectile.Kill();
 		if (enemy.active==false)
-		projectile.Kill();
+		Projectile.Kill();
 
-		Vector2 lockhere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(projectile.ai[0]) }.ToVector2();
-		projectile.position=enemy.position;
+		Vector2 lockhere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(Projectile.ai[0]) }.ToVector2();
+		Projectile.position=enemy.position;
 		enemy.position=lockhere;
 
 		for (int num315 = 0; num315 < 1; num315 = num315 + 1)

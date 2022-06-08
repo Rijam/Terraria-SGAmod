@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.Utilities;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Terraria.ModLoader;
 using Terraria.Graphics;
 using Terraria.IO;
@@ -35,14 +35,14 @@ namespace SGAmod.NPCs.Hellion
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			npc.GetGlobalNPC<SGAnpcs>().TimeSlowImmune = true;
+			NPC.GetGlobalNPC<SGAnpcs>().TimeSlowImmune = true;
 			music = MusicID.Title;
 		}
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Helen 'Hellion' Weygold");
-			Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.Guide];
-			NPCID.Sets.MustAlwaysDraw[npc.type] = true;
+			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.Guide];
+			NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
 		}
 
         public override string Texture => "SGAmod/NPCs/Hellion/Hellion";
@@ -56,11 +56,11 @@ namespace SGAmod.NPCs.Hellion
 		public override bool RematchFirstPhase()
 		{
 			if (Main.netMode>0 || Main.LocalPlayer.name!="giuy")
-			npc.active = false;
+			NPC.active = false;
 			if (subphase == 0)
 			{
 				introtimer += 1;
-				npc.dontTakeDamage = true;
+				NPC.dontTakeDamage = true;
 
 				if (introtimer == 100)
 					HellionTaunt("So... You've come.");

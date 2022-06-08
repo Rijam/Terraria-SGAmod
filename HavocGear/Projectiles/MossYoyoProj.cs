@@ -12,23 +12,23 @@ namespace SGAmod.HavocGear.Projectiles
     	public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Quagmire");
-			ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 3f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 160f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 14f;
+			ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 3f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 160f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 14f;
 		}
        
 	    public override void SetDefaults()
         {
         	Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Amarok);
-			projectile.extraUpdates = 0;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = 99;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.scale = 1f;
+			Projectile.extraUpdates = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = 99;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.scale = 1f;
         }
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

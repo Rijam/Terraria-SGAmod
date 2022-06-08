@@ -18,36 +18,36 @@ namespace SGAmod.HavocGear.Projectiles
 		
 		public override void SetDefaults()
         { 
-            projectile.width = 40;      
-            projectile.height = 40; 
-            projectile.friendly = true;
-            projectile.magic = true;        
-            projectile.tileCollide = false;   
-            projectile.penetrate = 1000;  
-            projectile.timeLeft = 60;  
-            projectile.light = 0.75f;   
-            projectile.extraUpdates = 1;
-   		    projectile.ignoreWater = true;   
+            Projectile.width = 40;      
+            Projectile.height = 40; 
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;        
+            Projectile.tileCollide = false;   
+            Projectile.penetrate = 1000;  
+            Projectile.timeLeft = 60;  
+            Projectile.light = 0.75f;   
+            Projectile.extraUpdates = 1;
+   		    Projectile.ignoreWater = true;   
         }
         public override bool? CanHitNPC(NPC target)
         {
-            if (projectile.penetrate < 996)
+            if (Projectile.penetrate < 996)
                 return false;
             return base.CanHitNPC(target);
         }
         public override void AI()         
         {
-            projectile.velocity *= 0.98f;
-            projectile.alpha = (255- (int)(100 * (projectile.timeLeft / 60f)));
-            projectile.scale += 0.02f;
-            projectile.width = (int)(40 * projectile.scale);
-            projectile.height = (int)(40 * projectile.scale);
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;  
+            Projectile.velocity *= 0.98f;
+            Projectile.alpha = (255- (int)(100 * (Projectile.timeLeft / 60f)));
+            Projectile.scale += 0.02f;
+            Projectile.width = (int)(40 * Projectile.scale);
+            Projectile.height = (int)(40 * Projectile.scale);
+            Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;  
        	
 		    if (Main.rand.Next(3) == 0)
 			{
-				int dustIndex = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, mod.DustType("MangroveDust"), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 200, default(Color), 0.7f);
-				Main.dust[dustIndex].velocity += projectile.velocity * 0.3f;
+				int dustIndex = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, Mod.Find<ModDust>("MangroveDust").Type, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 200, default(Color), 0.7f);
+				Main.dust[dustIndex].velocity += Projectile.velocity * 0.3f;
 				Main.dust[dustIndex].velocity *= 0.2f;
 			}
 		}

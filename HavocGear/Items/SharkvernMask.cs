@@ -14,9 +14,9 @@ namespace SGAmod.HavocGear.Items
 		}
 		public override void SetDefaults()
 		{
-			item.width = 20;
-			item.height = 26;
-			item.rare = 1;
+			Item.width = 20;
+			Item.height = 26;
+			Item.rare = 1;
 		}
     }
 }

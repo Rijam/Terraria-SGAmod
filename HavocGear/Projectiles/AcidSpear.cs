@@ -18,37 +18,37 @@ namespace SGAmod.HavocGear.Projectiles
 		
 		public override void SetDefaults()
         { 
-            projectile.width = 7;      
-            projectile.height = 22; 
-            projectile.friendly = true;     
-            projectile.melee = true;        
-            projectile.tileCollide = true;   
-            projectile.penetrate = 3;
-            projectile.usesIDStaticNPCImmunity = true;
-            projectile.idStaticNPCHitCooldown = 8;
-	        projectile.alpha = 200;     
-            projectile.timeLeft = 2000;  
-            projectile.light = 0.75f;   
-            projectile.extraUpdates = 1;
-            projectile.ignoreWater = true;   
+            Projectile.width = 7;      
+            Projectile.height = 22; 
+            Projectile.friendly = true;     
+            Projectile.DamageType = DamageClass.Melee;        
+            Projectile.tileCollide = true;   
+            Projectile.penetrate = 3;
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 8;
+	        Projectile.alpha = 200;     
+            Projectile.timeLeft = 2000;  
+            Projectile.light = 0.75f;   
+            Projectile.extraUpdates = 1;
+            Projectile.ignoreWater = true;   
         }
         public override void AI()         
         {                                                    
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;  
+            Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;  
        	
 		    if (Main.rand.Next(3) == 0)
 			{
-				int dustIndex = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, ModContent.DustType<Dusts.AcidDust>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 200, default(Color), 0.7f);
-				Main.dust[dustIndex].velocity += projectile.velocity * 0.3f;
+				int dustIndex = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, ModContent.DustType<Dusts.AcidDust>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 200, default(Color), 0.7f);
+				Main.dust[dustIndex].velocity += Projectile.velocity * 0.3f;
 				Main.dust[dustIndex].velocity *= 0.2f;
 			}
 		}
 
 	public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-        	Player player = Main.player[projectile.owner];
-		target.immune[projectile.owner] = 2;
-		target.AddBuff(mod.BuffType("AcidBurn"), 100);
+        	Player player = Main.player[Projectile.owner];
+		target.immune[Projectile.owner] = 2;
+		target.AddBuff(Mod.Find<ModBuff>("AcidBurn").Type, 100);
     	}	
     }
 }

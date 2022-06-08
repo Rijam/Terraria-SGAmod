@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SGAmod.HavocGear.Items.Accessories;
 using Idglibrary;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Accessories.Charms
 {
@@ -18,20 +19,20 @@ namespace SGAmod.Items.Accessories.Charms
 		{
 			DisplayName.SetDefault("Amulet of Diehard Cataclysm");
 			Tooltip.SetDefault("'Embrace the suffering, indulge on the reward'\n'Truly, only for the worthy... And the british'\n25% more Expertise is earned and respawn instantly outside of boss fights\n" + Idglib.ColorText(Color.Red, "You die in one hit, IFrames cause great damage over time") + "\n" + Idglib.ColorText(Color.Red, "Most if not all methods of death prevention are disabled") + "\n" + Idglib.ColorText(Color.Red, "Death claims you if you attempt to break the curse...") + "\n+An exception to the formentioned rule are Just Blocks\nThis item doesn't take effect til 3 seconds after spawning to prevent soft-locks");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 10));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 10));
 		}
 
 		public override string Texture => "SGAmod/Items/Accessories/Charms/NoHitCharmlv1";
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
-			item.mountType = 6;
-			item.rare = ItemRarityID.Cyan;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+			Item.mountType = 6;
+			Item.rare = ItemRarityID.Cyan;
 		}
 
 		public override Color? GetAlpha(Color lightColor)
@@ -41,19 +42,19 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			if (sgaplayer.NoHitCharmTimer > 180)
 			{
 				if (sgaplayer.NoHitCharmTimer < 100000)
 				{
 					sgaplayer.NoHitCharmTimer = 1000000;
-					SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_PhantomPhoenixShot, player.MountedCenter);
+					SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_PhantomPhoenixShot, player.MountedCenter);
 					if (sound != null)
 					{
 						sound.Pitch = 0.5f;
 					}
 
-					sound = Main.PlaySound(29, (int)player.MountedCenter.X, (int)player.MountedCenter.Y, 105, 1f, -0.6f);
+					sound = SoundEngine.PlaySound(29, (int)player.MountedCenter.X, (int)player.MountedCenter.Y, 105, 1f, -0.6f);
 					if (sound != null)
 					{
 						sound.Pitch = 0.75f;
@@ -89,18 +90,18 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			if (GetType().Name.Length - GetType().Name.Replace("lv3", "").Length > 0)
-				tooltips.Add(new TooltipLine(mod, "Lv3Charm", "Includes the functionality of Mechanical Minecart"));
+				tooltips.Add(new TooltipLine(Mod, "Lv3Charm", "Includes the functionality of Mechanical Minecart"));
 		}
 
 		public override bool CanEquipAccessory(Player player, int slot)
@@ -108,9 +109,9 @@ namespace SGAmod.Items.Accessories.Charms
 			bool canequip = true;
 			for (int x = 3; x < 8 + player.extraAccessorySlots; x++)
 			{
-				if (player.armor[x].modItem != null)
+				if (player.armor[x].ModItem != null)
 				{
-					Type myclass = player.armor[x].modItem.GetType();
+					Type myclass = player.armor[x].ModItem.GetType();
 					if (myclass.BaseType == typeof(MiningCharmlv1) || myclass == typeof(MiningCharmlv1))
 					{
 
@@ -125,7 +126,7 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.UseTimeMulPickaxe += 0.25f;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.consumeCurse += 2;
@@ -133,17 +134,7 @@ namespace SGAmod.Items.Accessories.Charms
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("EmptyCharm"), 1);
-			recipe.AddIngredient(ItemID.Minecart, 1);
-			recipe.AddIngredient(ItemID.Gel, 10);
-			recipe.AddRecipeGroup("SGAmod:Tier1Pickaxe", 1);
-			recipe.AddIngredient(mod.ItemType("CopperWraithNotch"), 2);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 15);
-			recipe.AddRecipeGroup("SGAmod:Tier1Bars", 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("EmptyCharm"), 1).AddIngredient(ItemID.Minecart, 1).AddIngredient(ItemID.Gel, 10).AddRecipeGroup("SGAmod:Tier1Pickaxe", 1).AddIngredient(mod.ItemType("CopperWraithNotch"), 2).AddRecipeGroup("SGAmod:BasicWraithShards", 15).AddRecipeGroup("SGAmod:Tier1Bars", 5).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -158,34 +149,24 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 1, 0, 0); ;
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 1, 0, 0); ;
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.EnhancingCharm = 4;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.potionsicknessincreaser = 10;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("EmptyCharm"), 1);
-			recipe.AddIngredient(ItemID.Minecart, 1);
-			recipe.AddIngredient(ItemID.Gel, 10);
-			recipe.AddIngredient(ItemID.LesserHealingPotion, 5);
-			recipe.AddIngredient(mod.ItemType("CopperWraithNotch"), 2);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 15);
-			recipe.AddRecipeGroup("SGAmod:Tier1Bars", 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("EmptyCharm"), 1).AddIngredient(ItemID.Minecart, 1).AddIngredient(ItemID.Gel, 10).AddIngredient(ItemID.LesserHealingPotion, 5).AddIngredient(mod.ItemType("CopperWraithNotch"), 2).AddRecipeGroup("SGAmod:BasicWraithShards", 15).AddRecipeGroup("SGAmod:Tier1Bars", 5).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -204,34 +185,24 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 1, 0, 0); ;
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 1, 0, 0); ;
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.anticipationLevel = 1;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.damagetaken += 0.20f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("EmptyCharm"), 1);
-			recipe.AddIngredient(ItemID.Minecart, 1);
-			recipe.AddIngredient(ItemID.Gel, 10);
-			recipe.AddIngredient(ItemID.CopperBroadsword, 1);
-			recipe.AddIngredient(mod.ItemType("CopperWraithNotch"), 2);
-			recipe.AddRecipeGroup("SGAmod:BasicWraithShards", 15);
-			recipe.AddRecipeGroup("SGAmod:Tier1Bars", 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("EmptyCharm"), 1).AddIngredient(ItemID.Minecart, 1).AddIngredient(ItemID.Gel, 10).AddIngredient(ItemID.CopperBroadsword, 1).AddIngredient(mod.ItemType("CopperWraithNotch"), 2).AddRecipeGroup("SGAmod:BasicWraithShards", 15).AddRecipeGroup("SGAmod:Tier1Bars", 5).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -247,12 +218,12 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.rare = ItemRarityID.Green;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 		public override bool Autoload(ref string name)
 		{
@@ -262,7 +233,7 @@ namespace SGAmod.Items.Accessories.Charms
 
 		protected void PostAccessoryUpdate(SGAPlayer sgaplayer)
 		{
-			Player player = sgaplayer.player;
+			Player player = sgaplayer.Player;
 
 			//Main.NewText(sgaplayer.energyShieldAmmountAndRecharge.Item2);
 			if (sgaplayer.GetEnergyShieldAmmountAndRecharge.Item2 > 0)
@@ -295,7 +266,7 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			float thepercent = GetType() == typeof(ReservationCharmlv3) ? 0.75f : GetType() == typeof(ReservationCharmlv2) ? 0.50f : 0.25f;
 
 			int percentLife = (int)((player.statLifeMax2) * thepercent);
@@ -307,17 +278,7 @@ namespace SGAmod.Items.Accessories.Charms
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("EmptyCharm"), 1);
-			recipe.AddIngredient(ItemID.Minecart, 1);
-			recipe.AddIngredient(ItemID.Gel, 10);
-			recipe.AddIngredient(mod.ItemType("CopperWraithNotch"), 2);
-			recipe.AddIngredient(ModContent.ItemType<AdvancedPlating>(), 6);
-			recipe.AddIngredient(ModContent.ItemType<WraithFragment3>(), 8);
-			recipe.AddRecipeGroup("SGAmod:Tier5Bars", 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("EmptyCharm"), 1).AddIngredient(ItemID.Minecart, 1).AddIngredient(ItemID.Gel, 10).AddIngredient(mod.ItemType("CopperWraithNotch"), 2).AddIngredient(ModContent.ItemType<AdvancedPlating>(), 6).AddIngredient(ModContent.ItemType<WraithFragment3>(), 8).AddRecipeGroup("SGAmod:Tier5Bars", 5).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -334,25 +295,17 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("ReservationCharmlv1"), 1);
-			recipe.AddIngredient(mod.ItemType("CobaltWraithNotch"), 15);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 10);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 6);
-			recipe.AddIngredient(ItemID.HallowedBar, 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ReservationCharmlv1"), 1).AddIngredient(mod.ItemType("CobaltWraithNotch"), 15).AddIngredient(mod.ItemType("WraithFragment3"), 10).AddIngredient(mod.ItemType("Fridgeflame"), 6).AddIngredient(ItemID.HallowedBar, 5).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -368,27 +321,18 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.accessory = true;
-			item.mountType = 11;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.accessory = true;
+			Item.mountType = 11;
+			Item.expert = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("ReservationCharmlv2"), 1);
-			recipe.AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15);
-			recipe.AddIngredient(ItemID.MinecartMech, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ReservationCharmlv2"), 1).AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15).AddIngredient(ItemID.MinecartMech, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -407,32 +351,24 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.anticipationLevel = 2;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.damagetaken += 0.30f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("AnticipationCharmlv1"), 1);
-			recipe.AddIngredient(mod.ItemType("CobaltWraithNotch"), 15);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 10);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 6);
-			recipe.AddIngredient(ItemID.HallowedBar, 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("AnticipationCharmlv1"), 1).AddIngredient(mod.ItemType("CobaltWraithNotch"), 15).AddIngredient(mod.ItemType("WraithFragment3"), 10).AddIngredient(mod.ItemType("Fridgeflame"), 6).AddIngredient(ItemID.HallowedBar, 5).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -450,34 +386,25 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.accessory = true;
-			item.mountType = 11;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.accessory = true;
+			Item.mountType = 11;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.anticipationLevel = 3;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.damagetaken += 0.40f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("AnticipationCharmlv2"), 1);
-			recipe.AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15);
-			recipe.AddIngredient(ItemID.MinecartMech, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("AnticipationCharmlv2"), 1).AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15).AddIngredient(ItemID.MinecartMech, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -492,32 +419,24 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.EnhancingCharm = 3;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.potionsicknessincreaser = 9;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("EnhancingCharmlv1"), 1);
-			recipe.AddIngredient(mod.ItemType("CobaltWraithNotch"), 15);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 10);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 6);
-			recipe.AddIngredient(ItemID.HallowedBar, 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("EnhancingCharmlv1"), 1).AddIngredient(mod.ItemType("CobaltWraithNotch"), 15).AddIngredient(mod.ItemType("WraithFragment3"), 10).AddIngredient(mod.ItemType("Fridgeflame"), 6).AddIngredient(ItemID.HallowedBar, 5).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -532,34 +451,25 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.accessory = true;
-			item.mountType = 11;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.accessory = true;
+			Item.mountType = 11;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.EnhancingCharm = 2;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.potionsicknessincreaser = 8;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("EnhancingCharmlv2"), 1);
-			recipe.AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15);
-			recipe.AddIngredient(ItemID.MinecartMech, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("EnhancingCharmlv2"), 1).AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15).AddIngredient(ItemID.MinecartMech, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -574,32 +484,24 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.accessory = true;
-			item.mountType = 6;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.accessory = true;
+			Item.mountType = 6;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.UseTimeMulPickaxe += 0.50f;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.consumeCurse += 3;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("MiningCharmlv1"), 1);
-			recipe.AddIngredient(mod.ItemType("CobaltWraithNotch"), 15);
-			recipe.AddIngredient(mod.ItemType("WraithFragment3"), 10);
-			recipe.AddIngredient(mod.ItemType("Fridgeflame"), 6);
-			recipe.AddIngredient(ItemID.HallowedBar, 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("MiningCharmlv1"), 1).AddIngredient(mod.ItemType("CobaltWraithNotch"), 15).AddIngredient(mod.ItemType("WraithFragment3"), 10).AddIngredient(mod.ItemType("Fridgeflame"), 6).AddIngredient(ItemID.HallowedBar, 5).AddTile(TileID.MythrilAnvil).Register();
 		}
 
 	}
@@ -614,34 +516,25 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 10, 0, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.accessory = true;
-			item.mountType = 11;
-			item.expert = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.accessory = true;
+			Item.mountType = 11;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer(Mod, typeof(SGAPlayer).Name) as SGAPlayer;
 			sgaplayer.UseTimeMulPickaxe += 1f;
 			if (!sgaplayer.tpdcpu)
 				sgaplayer.consumeCurse += 4;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("MiningCharmlv2"), 1);
-			recipe.AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15);
-			recipe.AddIngredient(ItemID.MinecartMech, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("MiningCharmlv2"), 1).AddIngredient(mod.ItemType("LuminiteWraithNotch"), 2).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(ModContent.ItemType<OverseenCrystal>(), 15).AddIngredient(ItemID.MinecartMech, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 	}
@@ -662,30 +555,30 @@ namespace SGAmod.Items.Accessories.Charms
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.Orange;
-			item.value = Item.sellPrice(0, 0, 75, 0);
-			item.mountType = MountID.MineCart;
-			item.accessory = true;
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = Item.sellPrice(0, 0, 75, 0);
+			Item.mountType = MountID.MineCart;
+			Item.accessory = true;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "tidalcharm", Idglib.ColorText(Color.DeepSkyBlue, Terraria.Localization.Language.GetTextValue("ItemTooltip.Flipper") + " in the air while it is raining")));
-			tooltips.Add(new TooltipLine(mod, "tidalcharm", Idglib.ColorText(Color.DeepSkyBlue, "Most status effects that trigger while wet will trigger here")));
-			tooltips.Add(new TooltipLine(mod, "tidalcharm", Idglib.ColorText(Color.Red, "But you are always drowning")));
+			tooltips.Add(new TooltipLine(Mod, "tidalcharm", Idglib.ColorText(Color.DeepSkyBlue, Terraria.Localization.Language.GetTextValue("ItemTooltip.Flipper") + " in the air while it is raining")));
+			tooltips.Add(new TooltipLine(Mod, "tidalcharm", Idglib.ColorText(Color.DeepSkyBlue, "Most status effects that trigger while wet will trigger here")));
+			tooltips.Add(new TooltipLine(Mod, "tidalcharm", Idglib.ColorText(Color.Red, "But you are always drowning")));
 
 			if (!SGAWorld.tidalCharmUnlocked)
-				tooltips.Add(new TooltipLine(mod, "tidalcharm", Idglib.ColorText(Color.DarkBlue, "Its full potential is locked behind the Tempest Sharkvern")));
+				tooltips.Add(new TooltipLine(Mod, "tidalcharm", Idglib.ColorText(Color.DarkBlue, "Its full potential is locked behind the Tempest Sharkvern")));
 			else
-				tooltips.Add(new TooltipLine(mod, "tidalcharm", Idglib.ColorText(Color.DeepSkyBlue, "Tempest Sharkvern's defeat allows this to take effect when it is not raining")));
+				tooltips.Add(new TooltipLine(Mod, "tidalcharm", Idglib.ColorText(Color.DeepSkyBlue, "Tempest Sharkvern's defeat allows this to take effect when it is not raining")));
 		}
 
 		public void DefenseBoost(SGAPlayer sgaply)
 		{
 			if (sgaply.tidalCharm >= 2)
 			{
-				Player player = sgaply.player;
+				Player player = sgaply.Player;
 			}
 		}
 
@@ -710,7 +603,7 @@ namespace SGAmod.Items.Accessories.Charms
 
 	public class TidalDrown : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Water Bending Presence");
 			Description.SetDefault("Water Density is thick enough to swim in the air as if it were water!\nAll forms of infinite water breathing are disabled");

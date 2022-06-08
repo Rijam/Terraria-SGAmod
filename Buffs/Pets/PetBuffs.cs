@@ -6,7 +6,7 @@ namespace SGAmod.Buffs.Pets
 {
 	public class CutestIceFairyBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cutest Ice Fairy");
 			Description.SetDefault("Now isn't she the cutest?");
@@ -26,7 +26,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class AcidicSpiderlingBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Acidic Spiderling");
 			Description.SetDefault("Warning: Bites may result in super powers");
@@ -46,7 +46,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class MiniCopperWraithBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Copper Wraith");
 			Description.SetDefault("A Mini Copper Wraith is following you");
@@ -66,7 +66,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class MiniTinWraithBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Tin Wraith");
 			Description.SetDefault("A Mini Tin Wraith is following you");
@@ -86,7 +86,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class MiniCobaltWraithBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Cobalt Wraith");
 			Description.SetDefault("A Mini Cobalt Wraith is following you");
@@ -106,7 +106,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class MiniPalladiumWraithBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Palladium Wraith");
 			Description.SetDefault("A Mini Palladium Wraith is following you");
@@ -126,7 +126,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class MiniLuminiteWraithBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Luminite Wraith");
 			Description.SetDefault("A Mini Luminite Wraith is following you");
@@ -146,7 +146,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class PrismicVisitantBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Prismic Visitant");
 			Description.SetDefault("Not likey to scream");
@@ -166,7 +166,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class SlimeBaronBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Slime Baron");
 			Description.SetDefault("Somehow still apart of the royalty");
@@ -186,7 +186,7 @@ namespace SGAmod.Buffs.Pets
 	}
 	public class SlimeDuchessBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Slime Duchess");
 			Description.SetDefault("Event singularities not included");

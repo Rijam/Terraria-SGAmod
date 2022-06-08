@@ -11,6 +11,7 @@ using Terraria.Utilities;
 using SGAmod.Items.Accessories;
 using SGAmod.NPCs.TownNPCs;
 using Idglibrary;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Consumables.LootBoxes
 {
@@ -25,18 +26,18 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpenDeeperDungeons");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpenDeeperDungeons").Type;
 		}
 	}
 
@@ -54,19 +55,19 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
 
-			projectile.scale = 0;//Prefer to keep this at 0
+			Projectile.scale = 0;//Prefer to keep this at 0
 
 
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
-			projectile.localAI[0] = Main.rand.Next(40, 60);
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
+			Projectile.localAI[0] = Main.rand.Next(40, 60);
 		}
 
 
@@ -93,18 +94,18 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpenVanillaHardmodePotions");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpenVanillaHardmodePotions").Type;
 		}
 	}
 
@@ -122,19 +123,19 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
 
-			projectile.scale = 0;//Prefer to keep this at 0
+			Projectile.scale = 0;//Prefer to keep this at 0
 
 
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
-			projectile.localAI[0] = Main.rand.Next(40, 60);
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
+			Projectile.localAI[0] = Main.rand.Next(40, 60);
 		}
 
 
@@ -163,18 +164,18 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Orange;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpenVanillaPotions");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Orange;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpenVanillaPotions").Type;
 		}
 	}
 
@@ -192,19 +193,19 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
 
-			projectile.scale = 0;//Prefer to keep this at 0
+			Projectile.scale = 0;//Prefer to keep this at 0
 
 
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
-			projectile.localAI[0] = Main.rand.Next(40, 60);
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
+			Projectile.localAI[0] = Main.rand.Next(40, 60);
 		}
 
 
@@ -244,18 +245,18 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpenPotions");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpenPotions").Type;
 		}
 	}
 
@@ -273,19 +274,19 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
 
-			projectile.scale = 0;//Prefer to keep this at 0
+			Projectile.scale = 0;//Prefer to keep this at 0
 
 
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
-			projectile.localAI[0] = Main.rand.Next(40, 60);
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
+			Projectile.localAI[0] = Main.rand.Next(40, 60);
 		}
 
 
@@ -330,18 +331,18 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = ItemRarityID.Expert;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpenAccessoriesEX");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = ItemRarityID.Expert;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpenAccessoriesEX").Type;
 		}
 	}
 
@@ -355,19 +356,19 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
 
-			projectile.scale = 0;//Prefer to keep this at 0
+			Projectile.scale = 0;//Prefer to keep this at 0
 
 
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
-			projectile.localAI[0] = Main.rand.Next(40, 60);
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);
+			Projectile.localAI[0] = Main.rand.Next(40, 60);
 		}
 
 		protected override void FillLootBox(WeightedRandom<LootBoxContents> WR)
@@ -401,23 +402,23 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "LootBoxLine", Idglib.ColorText(Color.SkyBlue, "Rare chance at getting special item!")));
+			tooltips.Add(new TooltipLine(Mod, "LootBoxLine", Idglib.ColorText(Color.SkyBlue, "Rare chance at getting special item!")));
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpenAccessories");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpenAccessories").Type;
 		}
 	}
 
@@ -436,19 +437,19 @@ namespace SGAmod.Items.Consumables.LootBoxes
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
 
-			projectile.scale = 0;//Prefer to keep this at 0
+			Projectile.scale = 0;//Prefer to keep this at 0
 
 			
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);//Adjust how long the ticker goes, again be mindful of the max item count
-			projectile.localAI[0] = Main.rand.Next(40, 60);//Starting position, make sure this is higher than itemsVisible
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);//Adjust how long the ticker goes, again be mindful of the max item count
+			Projectile.localAI[0] = Main.rand.Next(40, 60);//Starting position, make sure this is higher than itemsVisible
 		}
 
 		public override void ExtraItem(WeightedRandom<LootBoxContents> WR)
@@ -503,7 +504,7 @@ namespace SGAmod.Items.Consumables.LootBoxes
 		{
 			tickeffect = 15;
 			//Lets you play a sound or otherwise make a client sided effect when the counter ticks over something
-			Main.PlaySound(SoundID.MenuTick, -1, -1, 0, 1f, 0.6f);
+			SoundEngine.PlaySound(SoundID.MenuTick, -1, -1, 0, 1f, 0.6f);
 		}
 
 		protected override void AwardItem(int itemtype)
@@ -514,35 +515,35 @@ namespace SGAmod.Items.Consumables.LootBoxes
 		//Copy and override PreDraw to make drawing changes of your own!
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D ticker = mod.GetTexture("Ticker");
+			Texture2D ticker = Mod.Assets.Request<Texture2D>("Ticker").Value;
 
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			for (int f = 0; f < loots.Count; f += 1)
 			{
 				int lootboxsize = size;
-				float offsetsizer = (projectile.localAI[0] * -lootboxsize) + ((float)lootboxsize * f);
-				Vector2 hereas = new Vector2((f - projectile.localAI[0]) * (float)lootboxsize, -64);
+				float offsetsizer = (Projectile.localAI[0] * -lootboxsize) + ((float)lootboxsize * f);
+				Vector2 hereas = new Vector2((f - Projectile.localAI[0]) * (float)lootboxsize, -64);
 
-				Vector2 drawPos = ((hereas * projectile.scale) + projectile.Center) - Main.screenPosition;
+				Vector2 drawPos = ((hereas * Projectile.scale) + Projectile.Center) - Main.screenPosition;
 				Color glowingcolors1 = Color.White;
 
-				float alpha = MathHelper.Clamp(1f - Math.Abs((((float)f - projectile.localAI[0]) / (float)itemsVisible)), 0f, 1f);
+				float alpha = MathHelper.Clamp(1f - Math.Abs((((float)f - Projectile.localAI[0]) / (float)itemsVisible)), 0f, 1f);
 
 				if (alpha > 0f)
 				{
 
-					if ((int)projectile.localAI[0] == f)
+					if ((int)Projectile.localAI[0] == f)
 						glowingcolors1 = Color.Red;
 
 					Texture2D tex = Main.itemTexture[loots[f].intid];
-					spriteBatch.Draw(tex, drawPos, null, glowingcolors1 * projectile.scale * alpha, 0, new Vector2(tex.Width / 2, tex.Height / 2), (0.5f + (0.5f * alpha)) * projectile.scale, SpriteEffects.None, 0f);
+					spriteBatch.Draw(tex, drawPos, null, glowingcolors1 * Projectile.scale * alpha, 0, new Vector2(tex.Width / 2, tex.Height / 2), (0.5f + (0.5f * alpha)) * Projectile.scale, SpriteEffects.None, 0f);
 
 				}
 			}
 
-			spriteBatch.Draw(ticker, projectile.Center+(new Vector2(0,-28-64) * projectile.scale) - Main.screenPosition, null, Color.White * projectile.scale, tickeffect*0.04f, new Vector2(ticker.Width/2f, 8), new Vector2(1, 1) * projectile.scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(ticker, projectile.Center + (new Vector2(0, 22-64) * projectile.scale) - Main.screenPosition, null, Color.White * projectile.scale, (float)Math.PI-(tickeffect * 0.04f), new Vector2(ticker.Width/2f, 8), new Vector2(1, 1) * projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(ticker, Projectile.Center+(new Vector2(0,-28-64) * Projectile.scale) - Main.screenPosition, null, Color.White * Projectile.scale, tickeffect*0.04f, new Vector2(ticker.Width/2f, 8), new Vector2(1, 1) * Projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(ticker, Projectile.Center + (new Vector2(0, 22-64) * Projectile.scale) - Main.screenPosition, null, Color.White * Projectile.scale, (float)Math.PI-(tickeffect * 0.04f), new Vector2(ticker.Width/2f, 8), new Vector2(1, 1) * Projectile.scale, SpriteEffects.None, 0f);
 			return false;
 		}
 

@@ -8,8 +8,10 @@ using SGAmod.Items.Weapons.Technical;
 
 namespace SGAmod
 {
-	class SGArecipes : ModRecipe
-	{
+    //ModRecipe maybe replaced with either Recipe, ModSystem, or RecipeLoader
+    /*
+	class SGArecipes : ModSystem
+    {
         /// <summary>
         /// Combines duplicate items and checks if the player has enough. Workaround for duplicate item recipe bug.
         /// Returns true if the player has enough of the item.
@@ -17,7 +19,7 @@ namespace SGAmod
         /// <param name="recipe"></param>
         /// <returns></returns>
         /// this was borrowed from https://github.com/SaerusTierialis/tModLoader_ExperienceAndClasses
-        public static bool EnforceDuplicatesInRecipe(ModRecipe recipe)
+        public static bool EnforceDuplicatesInRecipe(ModSystem recipe)
         {
             List<int> types = new List<int>();
             List<int> stacks = new List<int>();
@@ -64,7 +66,7 @@ namespace SGAmod
                 return SGArecipes.EnforceDuplicatesInRecipe(this);
         }
     }
-    public class DragonClawsRecipe : ModRecipe
+    public class DragonClawsRecipe : ModSystem
     {
         public DragonClawsRecipe(Mod mod) : base(mod)
         {
@@ -72,7 +74,7 @@ namespace SGAmod
         }
         public override void OnCraft(Item item)
         {
-            Main.LocalPlayer.QuickSpawnItem(ModContent.ItemType<DraconicClawNecklace>());
+            Main.LocalPlayer.QuickSpawnItem(null, ModContent.ItemType<DraconicClawNecklace>());
         }
 
         public override bool RecipeAvailable()
@@ -83,7 +85,7 @@ namespace SGAmod
 
     }
 
-    class ShadowJavelinRecipe : ModRecipe
+    class ShadowJavelinRecipe : ModSystem
     {
 
         public double tempvar = 0;
@@ -96,7 +98,7 @@ namespace SGAmod
 
         public override int ConsumeItem (int type, int numRequired)
         {
-            if (type==ItemID.ShadowKey || type == mod.ItemType("OmegaSigil"))
+            if (type==ItemID.ShadowKey || type == Mod.Find<ModItem>("OmegaSigil").Type)
                 return 0;
             else
                 return numRequired;
@@ -124,7 +126,7 @@ namespace SGAmod
 
         public override int ConsumeItem (int type, int numRequired)
         {
-            if (type==mod.ItemType("StarMetalMold"))
+            if (type==Mod.Find<ModItem>("StarMetalMold").Type)
                 return 0;
             else
                 return numRequired;
@@ -132,7 +134,7 @@ namespace SGAmod
 
     }
 
-    class HellionItems : ModRecipe
+    class HellionItems : ModSystem
     {
 
         public double tempvar = 0;
@@ -152,36 +154,36 @@ namespace SGAmod
             return SGArecipes.EnforceDuplicatesInRecipe(this);
         }
 
-    }
+    }*/
 
     class SGAGlobalRecipes : GlobalRecipe
 	{
 
 
-        public override bool Autoload(ref string id)
+        /*public override bool Autoload(ref string id)
         {
         return true;
-        }
+        }*/
 
         public override void OnCraft(Item item, Recipe recipe)
         {
             if ((recipe.createItem.type == ItemID.Furnace || recipe.requiredTile.Any(tile => tile == TileID.Furnaces)) && (SGAWorld.downedWraiths < 1))
             {
 
-                if (!NPC.AnyNPCs(mod.NPCType("CopperWraith")))
+                if (!NPC.AnyNPCs(Mod.Find<ModNPC>("CopperWraith").Type))
                 {
 
                     if (Main.netMode > NetmodeID.SinglePlayer)
                     {
-                        mod.Logger.Debug("Copper Wraith: Server Craft Warning");
-                        ModPacket packet = mod.GetPacket();
+                        Mod.Logger.Debug("Copper Wraith: Server Craft Warning");
+                        ModPacket packet = Mod.GetPacket();
                         packet.Write(995);
                         packet.Send();
                     }
                     else
                     {
                         SGAWorld.CraftWarning();
-                        mod.Logger.Debug("Copper Wraith: SP Craft Warning");
+                        Mod.Logger.Debug("Copper Wraith: SP Craft Warning");
                     }
 
                 }
@@ -189,7 +191,7 @@ namespace SGAmod
 
             if (recipe.createItem.type == ModContent.ItemType<LaserMarker>())
             {
-                ((LaserMarker)recipe.createItem.modItem).gemType = recipe.requiredItem[0].type;
+                ((LaserMarker)recipe.createItem.ModItem).gemType = recipe.requiredItem[0].type;
             }
 
         }
@@ -199,15 +201,15 @@ namespace SGAmod
 
             bool canwemakeit = base.RecipeAvailable(recipe);
 
-            if (!TF2Emblem.CanCraftUp(recipe) || recipe.requiredItem[2].type == SGAmod.Instance.ItemType("AlterCraft_Time"))
+            if (!TF2Emblem.CanCraftUp(recipe) || recipe.requiredItem[2].type == SGAmod.Instance.Find<ModItem>("AlterCraft_Time").Type)
                 return false;
 
             if (recipe.createItem.type == ModContent.ItemType<LaserMarker>())
             {
-                ((LaserMarker)recipe.createItem.modItem).gemType = recipe.requiredItem[0].type;
+                ((LaserMarker)recipe.createItem.ModItem).gemType = recipe.requiredItem[0].type;
             }
 
-            if (recipe.createItem.type == mod.ItemType("HellionSummon") && !(SGAWorld.downedSPinky && SGAWorld.downedCratrosityPML && SGAWorld.downedWraiths > 3))
+            if (recipe.createItem.type == Mod.Find<ModItem>("HellionSummon") .Type&& !(SGAWorld.downedSPinky && SGAWorld.downedCratrosityPML && SGAWorld.downedWraiths > 3))
                 canwemakeit = false;
             //if ((((recipe.createItem.type==ItemID.MythrilAnvil || recipe.requiredTile.Any(tile => tile == TileID.MythrilAnvil)) || recipe.createItem.type==ItemID.OrichalcumAnvil) && (SGAWorld.downedWraiths<2))
             if ((recipe.createItem.type==ItemID.LunarBar && SGAWorld.downedWraiths<4))

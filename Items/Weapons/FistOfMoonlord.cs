@@ -22,73 +22,67 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Fist Of Moon Lord");
 			Tooltip.SetDefault("'Punches shit into next week'\nHold attack to direct Moon Lord's arm, release to let go\nThe fist does more damage the faster it moves\nHitting enemies slows the fist\nCan't crit, but when it would have crit, the fist is not slowed");
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(15, 2));
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(15, 2));
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 1000;
-			item.noMelee = true;
-			item.noUseGraphic = true;
-			item.melee = true;
-			item.width = 22;
-			item.channel = true;
-			item.height = 22;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = 5;
-			item.knockBack = 30;
-			item.value = 2000000;
-			item.rare = 12;
-			item.UseSound = SoundID.Item72;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("FistOfMoonlordProjectile2");
-			item.shootSpeed = 10;
-			Item.staff[item.type] = true;
+			Item.damage = 1000;
+			Item.noMelee = true;
+			Item.noUseGraphic = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 22;
+			Item.channel = true;
+			Item.height = 22;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = 5;
+			Item.knockBack = 30;
+			Item.value = 2000000;
+			Item.rare = 12;
+			Item.UseSound = SoundID.Item72;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("FistOfMoonlordProjectile2").Type;
+			Item.shootSpeed = 10;
+			Item.staff[Item.type] = true;
 		}
 		public override bool CanUseItem(Player player)
 		{
-			return player.ownedProjectileCounts[mod.ProjectileType("FistOfMoonlordProjectile2")]<1;
+			return player.ownedProjectileCounts[Mod.Find<ModProjectile>("FistOfMoonlordProjectile2").Type]<1;
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			type = mod.ProjectileType("FistOfMoonlordProjectile2");
+			type = Mod.Find<ModProjectile>("FistOfMoonlordProjectile2").Type;
 			Projectile.NewProjectile(position.X, position.Y, 0, 0, type,damage, knockBack, player.whoAmI);
 			return false;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<EldritchTentacle>(), 30);
-			recipe.AddIngredient(ModContent.ItemType<DrakeniteBar>(), 12);
-			recipe.AddIngredient(ItemID.SlapHand, 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<EldritchTentacle>(), 30).AddIngredient(ModContent.ItemType<DrakeniteBar>(), 12).AddIngredient(ItemID.SlapHand, 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
 	public class FistOfMoonlordProjectile : ModProjectile,ITrueMeleeProjectile
 	{
-		Player Owner => Main.player[projectile.owner];
+		Player Owner => Main.player[Projectile.owner];
 		int[] armSizes, armOrigins;
 		public override void SetDefaults()
 		{
-			projectile.width = 128;
-			projectile.height = 128;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.timeLeft = 300;
-			projectile.tileCollide = false;
-			projectile.light = 0.1f;
-			projectile.extraUpdates = 6;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = 30;
-			projectile.netImportant = true;
-			aiType = -1;
-			Main.projFrames[projectile.type] = 1;
+			Projectile.width = 128;
+			Projectile.height = 128;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.timeLeft = 300;
+			Projectile.tileCollide = false;
+			Projectile.light = 0.1f;
+			Projectile.extraUpdates = 6;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 30;
+			Projectile.netImportant = true;
+			AIType = -1;
+			Main.projFrames[Projectile.type] = 1;
 		}
 
 		public override string Texture => "Terraria/NPC_" + NPCID.MoonLordHand;
@@ -100,25 +94,25 @@ namespace SGAmod.Items.Weapons
 
 		public override bool CanDamage()
 		{
-			return projectile.velocity.Length()>8;
+			return Projectile.velocity.Length()>8;
 		}
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-			hitDirection = Math.Sign(projectile.velocity.X);
+			hitDirection = Math.Sign(Projectile.velocity.X);
 			if (hitDirection == 0)
 				hitDirection = 1;
 
-			knockback *= (projectile.velocity.Length() / 120f);
+			knockback *= (Projectile.velocity.Length() / 120f);
 
 			if (!crit)
-			projectile.ai[1] /= 5f;
+			Projectile.ai[1] /= 5f;
 
 			crit = false;
 
-			float damagescalez = Math.Min((Owner.channel ? MathHelper.Clamp(projectile.ai[1] / (120f / Owner.meleeSpeed), 0.33f, 1f) : 1f) * (projectile.velocity.Length()/3f),5f);
+			float damagescalez = Math.Min((Owner.channel ? MathHelper.Clamp(Projectile.ai[1] / (120f / Owner.meleeSpeed), 0.33f, 1f) : 1f) * (Projectile.velocity.Length()/3f),5f);
 			damage = (int)(damage* damagescalez);
-			if (projectile.ai[1] < 30)
+			if (Projectile.ai[1] < 30)
 			{
 				damage = (int)(damage * 0.50);
 				damage = (int)(damage * 0.25f);
@@ -138,30 +132,30 @@ namespace SGAmod.Items.Weapons
 
 			if (!Owner.active || Owner.dead || Owner.HeldItem.type != ModContent.ItemType<FistOfMoonlord>())
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
 
-			projectile.ai[0] -= 1;
+			Projectile.ai[0] -= 1;
 			Projectile proj = default;
-			List<Projectile> projs = Main.projectile.Where(testby => testby.active && testby.owner == projectile.owner && testby.type == ModContent.ProjectileType<FistOfMoonlordProjectile2>()).ToList();
+			List<Projectile> projs = Main.projectile.Where(testby => testby.active && testby.owner == Projectile.owner && testby.type == ModContent.ProjectileType<FistOfMoonlordProjectile2>()).ToList();
 			if (projs.Count > 0)
 			{
-				projectile.ai[1] += 1;
+				Projectile.ai[1] += 1;
 				proj = projs[0];
 				if (proj.ai[0] > 0)
                 {
-					projectile.ai[0] = 2;
-					projectile.damage = proj.damage;
-					projectile.knockBack = proj.damage;
+					Projectile.ai[0] = 2;
+					Projectile.damage = proj.damage;
+					Projectile.knockBack = proj.damage;
 				}
             }
             else
             {
-				projectile.ai[1] /= 1.2f;
+				Projectile.ai[1] /= 1.2f;
 			}
 
-			projectile.Opacity = MathHelper.Clamp(projectile.Opacity + (projectile.ai[0] > -60 ? 0.005f : -0.005f),0.0f,1f);
+			Projectile.Opacity = MathHelper.Clamp(Projectile.Opacity + (Projectile.ai[0] > -60 ? 0.005f : -0.005f),0.0f,1f);
 
 			if (Main.netMode != NetmodeID.Server)
 			{
@@ -171,25 +165,25 @@ namespace SGAmod.Items.Weapons
 					iWantToGoThere = Owner.MountedCenter+Vector2.Normalize(iWantToGoThere - Owner.MountedCenter) * (totallength-1);
 				}
 
-				Vector2 toThere = iWantToGoThere - projectile.Center;
-				if (projectile.ai[0]>0)
+				Vector2 toThere = iWantToGoThere - Projectile.Center;
+				if (Projectile.ai[0]>0)
 				{
-					float maxspeed = MathHelper.Clamp(projectile.ai[1] / (120f / Owner.meleeSpeed), 0f, 1.0f);
-					if (toThere.LengthSquared() > 32 + (projectile.velocity.LengthSquared() * 5f))
-						projectile.velocity += Vector2.Normalize(toThere) * ((maxspeed / Owner.meleeSpeed) / Owner.meleeSpeed);
+					float maxspeed = MathHelper.Clamp(Projectile.ai[1] / (120f / Owner.meleeSpeed), 0f, 1.0f);
+					if (toThere.LengthSquared() > 32 + (Projectile.velocity.LengthSquared() * 5f))
+						Projectile.velocity += Vector2.Normalize(toThere) * ((maxspeed / Owner.meleeSpeed) / Owner.meleeSpeed);
 					else
-						projectile.velocity *= 0.80f;
+						Projectile.velocity *= 0.80f;
 				}
 
-				projectile.velocity *= (projectile.ai[0] < 1 ? 0.99f : 0.95f);
+				Projectile.velocity *= (Projectile.ai[0] < 1 ? 0.99f : 0.95f);
 
 
 			}
 
-			projectile.timeLeft = 3;
-			projectile.position += (Owner.velocity/(projectile.extraUpdates+1));
+			Projectile.timeLeft = 3;
+			Projectile.position += (Owner.velocity/(Projectile.extraUpdates+1));
 
-			Vector2 diffs = projectile.Center - Owner.MountedCenter;
+			Vector2 diffs = Projectile.Center - Owner.MountedCenter;
 			Owner.ChangeDir(Math.Sign(1 + Math.Sign(diffs.X) * 2));
 
 			Owner.bodyFrame.Y = Owner.bodyFrame.Height * 3;
@@ -202,19 +196,19 @@ namespace SGAmod.Items.Weapons
 
 			if (diffs.Length() > totallength - 1)
             {
-				projectile.Center = Owner.MountedCenter+Vector2.Normalize(diffs)*(totallength - 1);
+				Projectile.Center = Owner.MountedCenter+Vector2.Normalize(diffs)*(totallength - 1);
             }
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			float handangle = DrawMoonlordHand(spriteBatch, Owner.MountedCenter, projectile.Center);
+			float handangle = DrawMoonlordHand(spriteBatch, Owner.MountedCenter, Projectile.Center);
 
 			Texture2D armTex2 = Main.extraTexture[18];
-			Texture2D handTex = Main.projectileTexture[projectile.type];
-			Rectangle rect = new Rectangle(0, (int)(MathHelper.Clamp((projectile.Opacity*5f),0,3))*(handTex.Height / 4), handTex.Width, handTex.Height / 4);
-			Main.spriteBatch.Draw(armTex2, projectile.Center+new Vector2(2,0) - Main.screenPosition, new Rectangle?(), Color.White* projectile.Opacity, handangle+MathHelper.PiOver2, armTex2.Size() / 2f, projectile.scale+0.25f, Owner.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0); ;
-			Main.spriteBatch.Draw(handTex, projectile.Center - Main.screenPosition, rect, Color.White * projectile.Opacity, handangle + MathHelper.PiOver2, new Vector2(handTex.Width, (handTex.Height/4f)/0.75f) / 2f, projectile.scale, Owner.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0); ;
+			Texture2D handTex = Main.projectileTexture[Projectile.type];
+			Rectangle rect = new Rectangle(0, (int)(MathHelper.Clamp((Projectile.Opacity*5f),0,3))*(handTex.Height / 4), handTex.Width, handTex.Height / 4);
+			Main.spriteBatch.Draw(armTex2, Projectile.Center+new Vector2(2,0) - Main.screenPosition, new Rectangle?(), Color.White* Projectile.Opacity, handangle+MathHelper.PiOver2, armTex2.Size() / 2f, Projectile.scale+0.25f, Owner.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0); ;
+			Main.spriteBatch.Draw(handTex, Projectile.Center - Main.screenPosition, rect, Color.White * Projectile.Opacity, handangle + MathHelper.PiOver2, new Vector2(handTex.Width, (handTex.Height/4f)/0.75f) / 2f, Projectile.scale, Owner.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0); ;
 
 			return false;
 		}
@@ -249,8 +243,8 @@ namespace SGAmod.Items.Weapons
 
 				returnfangle = normal3.ToRotation();
 
-				spriteBatch.Draw(armTex, drawHere - Main.screenPosition, null, Color.White * projectile.Opacity, normal2.ToRotation() + angleoffset, origin1, scale, spriteEffects, 0f);
-				spriteBatch.Draw(armTex2, Circlepos - Main.screenPosition, null, Color.White * projectile.Opacity, normal3.ToRotation() + angleoffset, origin2, scale, spriteEffects, 0f);
+				spriteBatch.Draw(armTex, drawHere - Main.screenPosition, null, Color.White * Projectile.Opacity, normal2.ToRotation() + angleoffset, origin1, scale, spriteEffects, 0f);
+				spriteBatch.Draw(armTex2, Circlepos - Main.screenPosition, null, Color.White * Projectile.Opacity, normal3.ToRotation() + angleoffset, origin2, scale, spriteEffects, 0f);
 
 				//spriteBatch.Draw(TestTex, drawHere - Main.screenPosition, null, Color.White, 0, TestTex.Size() / 2f, scale, spriteEffects, 0f);
 				//spriteBatch.Draw(TestTex, drawHere + dist1Tracker - Main.screenPosition, null, Color.White, 0, TestTex.Size() / 2f, scale, spriteEffects, 0f);
@@ -268,23 +262,23 @@ namespace SGAmod.Items.Weapons
 
 	public class FistOfMoonlordProjectile2 : ModProjectile
 	{
-		Player Owner => Main.player[projectile.owner];
+		Player Owner => Main.player[Projectile.owner];
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.timeLeft = 300;
-			projectile.tileCollide = false;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
-			projectile.netImportant = true;
-			aiType = -1;
-			Main.projFrames[projectile.type] = 1;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.timeLeft = 300;
+			Projectile.tileCollide = false;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
+			Projectile.netImportant = true;
+			AIType = -1;
+			Main.projFrames[Projectile.type] = 1;
 		}
 
         public override bool CanDamage()
@@ -296,14 +290,14 @@ namespace SGAmod.Items.Weapons
 		{
 			if (!Owner.active || Owner.dead || Owner.HeldItem.type != ModContent.ItemType<FistOfMoonlord>() || (!Owner.channel))
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
-			projectile.timeLeft = 2;
+			Projectile.timeLeft = 2;
 			Owner.itemTime = 6;
 			Owner.itemAnimation = 6;
 			Owner.itemAnimationMax = 6;
-			projectile.ai[0] += 1000;
+			Projectile.ai[0] += 1000;
 
 		}
 

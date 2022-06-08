@@ -19,17 +19,17 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			sbyte wingslo = item.wingSlot;
-			item.CloneDefaults(ItemID.WingsVortex);
-			item.width = 26;
-			item.height = 38;
-			item.value = 300000;
-			item.accessory = true;
-			item.wingSlot = wingslo;
+			sbyte wingslo = Item.wingSlot;
+			Item.CloneDefaults(ItemID.WingsVortex);
+			Item.width = 26;
+			Item.height = 38;
+			Item.value = 300000;
+			Item.accessory = true;
+			Item.wingSlot = wingslo;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "Boost", SGAGlobalItem.pboostertextboost));
+			tooltips.Add(new TooltipLine(Mod, "Boost", SGAGlobalItem.pboostertextboost));
 		}
 
 		/*public override string Texture
@@ -72,11 +72,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 15);
-			recipe.AddTile(mod.TileType("PrismalStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("PrismalBar"), 15).AddTile(mod.TileType("PrismalStation")).Register();
 		}
 
 		public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,

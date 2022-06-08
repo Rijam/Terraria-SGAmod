@@ -17,34 +17,34 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ice Fairy");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 		public override void SetDefaults()
 		{
-			npc.width = 40;
-			npc.height = 40;
-			npc.damage = 60;
-			npc.defense = 8;
-			npc.lifeMax = 400;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0.2f;
-			npc.aiStyle = 22;
-			aiType = 0;
-			animationType = 0;
-			npc.noTileCollide = true;
-			npc.noGravity = true;
-			npc.value = 300f;
-			npc.coldDamage = true;
-			banner = npc.type;
-			bannerItem = mod.ItemType("IceFairyBanner");
+			NPC.width = 40;
+			NPC.height = 40;
+			NPC.damage = 60;
+			NPC.defense = 8;
+			NPC.lifeMax = 400;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0.2f;
+			NPC.aiStyle = 22;
+			AIType = 0;
+			AnimationType = 0;
+			NPC.noTileCollide = true;
+			NPC.noGravity = true;
+			NPC.value = 300f;
+			NPC.coldDamage = true;
+			banner = NPC.type;
+			bannerItem = Mod.Find<ModItem>("IceFairyBanner").Type;
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
 			Tile tile = Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY];
 			bool underground = Items.Consumables.AcidicEgg.Underground(spawnInfo.spawnTileY);
-			return !spawnInfo.playerInTown && !spawnInfo.invasion && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && !underground && Main.dayTime && spawnInfo.player.ZoneSnow && Main.hardMode ? 0.25f : 0f;
+			return !spawnInfo.playerInTown && !spawnInfo.invasion && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && !underground && Main.dayTime && spawnInfo.Player.ZoneSnow && Main.hardMode ? 0.25f : 0f;
 		}
 
 		public override void NPCLoot()
@@ -52,7 +52,7 @@ namespace SGAmod.NPCs
 
 			for (int i = 0; i <= Main.rand.Next(3, 6); i++)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("IceFairyDust"));
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("IceFairyDust").Type);
 			}
 
 		}
@@ -60,20 +60,20 @@ namespace SGAmod.NPCs
 
 		public override void AI()
 		{
-			npc.spriteDirection = npc.velocity.X > 0 ? -1 : 1;
+			NPC.spriteDirection = NPC.velocity.X > 0 ? -1 : 1;
 			shooting = shooting + 1;
 			if (shooting % 200 == 0)
 			{
-				npc.netUpdate = true;
-				Player P = Main.player[npc.target];
-				if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+				NPC.netUpdate = true;
+				Player P = Main.player[NPC.target];
+				if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 				{
 				}
 				else
 				{
-					if (Collision.CanHitLine(new Vector2(npc.Center.X, npc.Center.Y), 1, 1, new Vector2(P.Center.X, P.Center.Y), 1, 1))
+					if (Collision.CanHitLine(new Vector2(NPC.Center.X, NPC.Center.Y), 1, 1, new Vector2(P.Center.X, P.Center.Y), 1, 1))
 					{
-						Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), 118, npc.lifeMax > 2000 ? 25 : 40, (float)Main.rand.Next(60, 80) / 6, 35, 2, true, 0, true, 100);
+						Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), 118, NPC.lifeMax > 2000 ? 25 : 40, (float)Main.rand.Next(60, 80) / 6, 35, 2, true, 0, true, 100);
 					}
 				}
 
@@ -86,7 +86,7 @@ namespace SGAmod.NPCs
 		{
 			int frats = (int)((1 + Math.Sin(shooting / 15) * 1.5));
 
-			npc.frame.Y = frats * 40;
+			NPC.frame.Y = frats * 40;
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

@@ -8,7 +8,7 @@ using Terraria.GameContent.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -79,7 +79,7 @@ namespace SGAmod.Dimensions
                 for (int y = tileheight; y < Main.maxTilesY; y += 1)
                 {
                     double nousey = (double)MathHelper.Clamp((float)Noisegen.Noise(x, y) + 0.40f, -1.00f, 1.00f);
-                    Main.tile[x, y].type = TileID.Stone;
+                    Main.tile[x, y].TileType = TileID.Stone;
                     //if (Noisegen.Noise(x,y) > -0.8)
                     //Main.tile[x, y].active(true);
                     //else
@@ -87,10 +87,10 @@ namespace SGAmod.Dimensions
 
                     int index = (int)MathHelper.Clamp((float)(0.50 + nousey / 2.0) * tilesz.Length, 0f, tilesz.Length - 1);
                     //Main.tile[x,y].color((byte)2);
-                    Main.tile[x, y].type = (ushort)tilesz[index];
-                    Main.tile[x, y].active(true);
+                    Main.tile[x, y].TileType = (ushort)tilesz[index];
+                    Main.tile[x, y].HasTile;
                     if (nousey < 0)
-                        Main.tile[x, y].active(false);
+                        Main.tile[x, y].HasTile;
                 }
 
 
@@ -139,7 +139,7 @@ namespace SGAmod.Dimensions
                         int xx = x;
 
                         if (InsideMap(xx, yy))
-                            Main.tile[xx, yy].active(false);
+                            Main.tile[xx, yy].HasTile;
                     }
 
                 }
@@ -154,9 +154,9 @@ namespace SGAmod.Dimensions
                     for (int y = 0; y < Main.maxTilesY; y += 1)
                     {
                         if (GetTilesAround(x, y, 1) > 4)
-                            Main.tile[x, y].active(true);
+                            Main.tile[x, y].HasTile;
                         else
-                            Main.tile[x, y].active(false);
+                            Main.tile[x, y].HasTile;
                     }
                 }
             }

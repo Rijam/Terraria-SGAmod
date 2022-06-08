@@ -11,19 +11,15 @@ namespace SGAmod.Buffs
 {
 	public class Sunburn : ModBuff
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "Terraria/Buff_" + BuffID.OnFire;
-			return true;
-		}
-		public override void SetDefaults()
+		public override string Texture => "Terraria/Images/Buff_" + BuffID.OnFire;
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sun Burn");
 			Description.SetDefault("'The air would be burning if there was oxygen...'");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -44,7 +40,7 @@ namespace SGAmod.Buffs
 	}
 	public class TechnoCurse : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Techno Curse");
 			Description.SetDefault("Technological damage is reduced by 50%");
@@ -55,7 +51,7 @@ namespace SGAmod.Buffs
 	}
 	public class MiningFatigue : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mining Fatigue");
 			Description.SetDefault("Mining speed is reduced!");
@@ -70,14 +66,14 @@ namespace SGAmod.Buffs
 	}
 	public class Watched : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Watched");
 			Description.SetDefault("You are exposed, tread carefully...");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
 		}
 		public override void Update(Player player, ref int buffIndex)
 		{
@@ -90,15 +86,15 @@ namespace SGAmod.Buffs
     }
 	public class NoFly : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Snowfrosted");
 			Description.SetDefault("Cirno's presence is making flight difficult...");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			longerExpertDebuff = true;
-			canBeCleared = false;
+			BuffID.Sets.LongerExpertDebuff[Type] = true;
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false; //true now?
 		}
 
 		public override void Update(Player player, ref int buffIndex)
@@ -108,9 +104,9 @@ namespace SGAmod.Buffs
 
 		public override void ModifyBuffTip(ref string tip, ref int rare)
 		{
-			if (NPC.CountNPCS(mod.NPCType("Cirno")) < 1 && !SGAWorld.downedCirno)
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("Cirno").Type) < 1 && !SGAWorld.downedCirno)
 				tip += "\nBeat Cirno to remove this effect";
-			if (NPC.CountNPCS(mod.NPCType("Hellion")) > 0)
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("Hellion").Type) > 0)
 				tip += "\nHellion's Army has Cirno using this debuff against you";
 		}
 	}

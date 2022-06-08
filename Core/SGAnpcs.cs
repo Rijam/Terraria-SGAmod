@@ -28,6 +28,7 @@ using Terraria.DataStructures;
 using Terraria.Graphics;
 using SGAmod.NPCs;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod
 {
@@ -214,7 +215,7 @@ namespace SGAmod
 			}
 		}
 
-		public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+		public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			if (Snapped > 0 && Snapped < 5)
 				return false;
@@ -229,8 +230,9 @@ namespace SGAmod
 				shader.UseSaturation(1f);
 				shader.UseColor(1f, 1f, 1f);
 				shader.UseSecondaryColor(0f, 0f, 0f);
-				DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), new Vector2(Main.GlobalTime * 6, 0), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle((int)(Main.GlobalTime * 4f), 0, 64, 64)), Microsoft.Xna.Framework.Color.White, Main.GlobalTime * 30f, new Vector2(256f, 256f), 1f, SpriteEffects.None, 0);
-				shader.Apply(null, new DrawData?(value9));
+				//TextureManager was removed I think
+				//DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), new Vector2(Main.GlobalTimeWrappedHourly * 6, 0), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle((int)(Main.GlobalTimeWrappedHourly * 4f), 0, 64, 64)), Microsoft.Xna.Framework.Color.White, Main.GlobalTimeWrappedHourly * 30f, new Vector2(256f, 256f), 1f, SpriteEffects.None, 0);
+				//shader.Apply(null, new DrawData?(value9));
 
 			}
 
@@ -240,7 +242,7 @@ namespace SGAmod
 			}
 
 			if (drawonce)
-				return base.PreDraw(npc, spriteBatch, drawColor);
+				return base.PreDraw(npc, spriteBatch, screenPos, drawColor);
 
 			if (Snapped > 0 && SnappedDrawing != null && !drawonce)
 			{
@@ -266,10 +268,10 @@ namespace SGAmod
 				return false;
 			}
 			//drawColor = Color.Lerp(drawColor, Color.Transparent, MathHelper.Clamp(((float)Snapped / 200f),0f,1f));
-			return base.PreDraw(npc, spriteBatch, drawColor);
+			return base.PreDraw(npc, spriteBatch, screenPos, drawColor);
 		}
 
-		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			if (petrified)
 			{
@@ -498,7 +500,7 @@ namespace SGAmod
 
 				if (Main.rand.Next(2) == 0)
 				{
-					int num52 = Dust.NewDust(position2, npc.width + 4, npc.height + 2, mod.DustType("FadeDust"), 0f, 0f, 50, Color.DarkGreen, ((1.25f - (Snapped / 200f)) / 2f) + (Snapfading ? 0.04f : 0f));
+					int num52 = Dust.NewDust(position2, npc.width + 4, npc.height + 2, Mod.Find<ModDust>("FadeDust").Type, 0f, 0f, 50, Color.DarkGreen, ((1.25f - (Snapped / 200f)) / 2f) + (Snapfading ? 0.04f : 0f));
 					Dust dust;
 					if (Main.rand.Next(2) == 0)
 					{
@@ -685,11 +687,11 @@ namespace SGAmod
 			if (InfinityWarStormbreaker || SunderedDefense)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
-				int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y) + randomcircle * (1.2f * (float)npc.width), npc.width + 4, npc.height + 4, mod.DustType("TornadoDust"), npc.velocity.X * 0.4f, (npc.velocity.Y - 7f) * 0.4f, 30, default(Color) * 1f, 0.5f);
+				int dust = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y) + randomcircle * (1.2f * (float)npc.width), npc.width + 4, npc.height + 4, Mod.Find<ModDust>("TornadoDust").Type, npc.velocity.X * 0.4f, (npc.velocity.Y - 7f) * 0.4f, 30, default(Color) * 1f, 0.5f);
 				Main.dust[dust].noGravity = true;
 				Main.dust[dust].color = Main.hslToRgb(0f, 0.5f, 0.35f);
 			}
-			bool hasbuff = npc.HasBuff(mod.BuffType("DigiCurse"));
+			bool hasbuff = npc.HasBuff(Mod.Find<ModBuff>("DigiCurse").Type);
 			if (MoonLightCurse || hasbuff)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
@@ -860,8 +862,8 @@ namespace SGAmod
 					{
 						npc.value -= Item.buyPrice(0, 0, 25, 0);
 						npc.StrikeNPC(Item.buyPrice(0, 0, 1, 0), 0, 1, false);
-						Main.PlaySound(SoundID.Coins, (int)npc.Center.X, (int)npc.Center.Y, 0, 1f, 0.25f);
-						Item.NewItem(npc.position, new Vector2(npc.width, npc.height),ItemID.SilverCoin ,Main.rand.Next(25,36), noGrabDelay: true);
+						SoundEngine.PlaySound(SoundID.Coins, (int)npc.Center.X, (int)npc.Center.Y, 0, 1f, 0.25f);
+						Item.NewItem(null, npc.position, new Vector2(npc.width, npc.height),ItemID.SilverCoin ,Main.rand.Next(25,36), noGrabDelay: true);
 					}
 				}
 			}
@@ -870,7 +872,7 @@ namespace SGAmod
 			{
 				for (int i = 0; i < npc.buffType.Length; i += 1)
 				{
-					if (npc.buffType[i] != mod.BuffType("EverlastingSuffering") && (npc.buffTime[i] > 10))
+					if (npc.buffType[i] != Mod.Find<ModBuff>("EverlastingSuffering") .Type&& (npc.buffTime[i] > 10))
 					{
 						npc.buffTime[i] += 1;
 						if (npc.buffTime[i] < 15)
@@ -891,11 +893,11 @@ namespace SGAmod
 				Hellion hell = Hellion.GetHellion();
 				if (hell != null)
 				{
-					Player ply = Main.player[hell.npc.target];
+					Player ply = Main.player[hell.NPC.target];
 					hellionTimer += hellionTimer >= 0 ? 1 : 1;
 					if (hellionTimer % 5 == 0)
 					{
-						if (!Collision.CanHitLine(npc.Center, 1, 1, Main.player[hell.npc.target].Center, 1, 1) && npc.aiStyle < 15 && npc.aiStyle > -1)
+						if (!Collision.CanHitLine(npc.Center, 1, 1, Main.player[hell.NPC.target].Center, 1, 1) && npc.aiStyle < 15 && npc.aiStyle > -1)
 						{
 							hellionTimer += 200;
 						}
@@ -911,16 +913,16 @@ namespace SGAmod
 						npc.position.X += (dists2.X - npc.Center.X) / 200f;
 						npc.position.Y += (dists2.Y - npc.Center.Y) / 100f;
 
-						npc.position.X += (ply.Center.X + (float)Math.Sin((hell.npc.ai[0] + (npc.whoAmI * 9f)) * 400f) - npc.Center.X) / 150f;
+						npc.position.X += (ply.Center.X + (float)Math.Sin((hell.NPC.ai[0] + (npc.whoAmI * 9f)) * 400f) - npc.Center.X) / 150f;
 						npc.velocity.Y = (float)Math.Sin(hellionTimer / 90f) * 5f;
 
-						int typr = mod.DustType("TornadoDust");
+						int typr = Mod.Find<ModDust>("TornadoDust").Type;
 
 						Dust dust = Dust.NewDustPerfect(npc.position + new Vector2(Main.rand.Next(npc.width), Main.rand.Next(npc.height)), typr);
 						Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 						Vector2 normvel = npc.velocity;
 						normvel.Normalize(); normvel *= 2f;
-						Color Rainbow = Main.hslToRgb(((Main.GlobalTime + npc.whoAmI) / 3.63f) % 1f, 0.81f, 0.5f);
+						Color Rainbow = Main.hslToRgb(((Main.GlobalTimeWrappedHourly + npc.whoAmI) / 3.63f) % 1f, 0.81f, 0.5f);
 						dust.color = Rainbow;
 						dust.scale = 1f;
 						dust.velocity = ((randomcircle / 1f) + (-normvel)) - npc.velocity;
@@ -1108,7 +1110,7 @@ namespace SGAmod
 						nextSlot++;
 					}
 
-					if (Main.LocalPlayer.inventory.Any(testitem => testitem.modItem != null && testitem.modItem is IShieldItem))
+					if (Main.LocalPlayer.inventory.Any(testitem => testitem.ModItem != null && testitem.ModItem is IShieldItem))
 					{
 						shop.item[nextSlot].SetDefaults(ModContent.ItemType<EnchantedShieldPolish>());
 						shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 5, 0, 0);
@@ -1117,7 +1119,7 @@ namespace SGAmod
 					break;
 			}
 
-			SGAPlayer sgaplayer = player.GetModPlayer(mod, typeof(SGAPlayer).Name) as SGAPlayer;
+			SGAPlayer sgaplayer = player.GetModPlayer<SGAPlayer>();
 
 			if (sgaplayer.intimacy > 0)
 			{
@@ -1189,7 +1191,7 @@ namespace SGAmod
 		{
 			if (Main.rand.Next(0, 3) == 0 && Main.hardMode)
 			{
-				shop[nextSlot] = mod.ItemType(Main.rand.NextBool() ? "ShinobiShiv" : "PeacekeepersDuster");
+				shop[nextSlot] = Mod.Find<ModItem>(Main.rand.NextBool() ? "ShinobiShiv" : "PeacekeepersDuster").Type;
 				nextSlot++;
 			}
 			if (Main.rand.Next(0, 3) == 0)
@@ -1229,6 +1231,8 @@ namespace SGAmod
 			}
 		}
 
+		//Replaced with that new loot system
+		/*
 		public override bool PreNPCLoot(NPC npc)
 		{
 
@@ -1288,8 +1292,9 @@ namespace SGAmod
 			}
 
 			return true;
-		}
+		}*/
 
+		/*
 		public override void NPCLoot(NPC npc)
 		{
 
@@ -1308,7 +1313,7 @@ namespace SGAmod
 					{
 						if ((ply.Center - npc.Center).Length() < 2000)
 						{
-							ModPacket packet = mod.GetPacket();
+							ModPacket packet = Mod.GetPacket();
 							packet.Write((ushort)MessageType.GrantExpertise);
 							packet.Write(npc.type);
 							packet.Send(ply.whoAmI);
@@ -1325,7 +1330,7 @@ namespace SGAmod
 
 							if (Main.dedServ)
 							{
-								ModPacket packet = mod.GetPacket();
+								ModPacket packet = Mod.GetPacket();
 								packet.Write((ushort)MessageType.GrantTf2EmblemXp);
 								packet.Write((int)npc.value);
 								packet.Send(ply.whoAmI);
@@ -1333,14 +1338,14 @@ namespace SGAmod
 						}
 					}
 
-					if (ply.HasItem(mod.ItemType("EntropyTransmuter")))
+					if (ply.HasItem(Mod.Find<ModItem>("EntropyTransmuter").Type))
 					{
 						if (Main.netMode != NetmodeID.MultiplayerClient)
 							ply.GetModPlayer<SGAPlayer>().AddEntropy(npc.lifeMax);
 
 						if (Main.dedServ)
 						{
-							ModPacket packet = mod.GetPacket();
+							ModPacket packet = Mod.GetPacket();
 							packet.Write((ushort)MessageType.GrantEntrophite);
 							packet.Write(npc.lifeMax);
 							packet.Send(ply.whoAmI);
@@ -1362,30 +1367,30 @@ namespace SGAmod
 				SGAWorld.questvars[0] += 1;
 			}
 
-			if (npc.modNPC != null)
+			if (npc.ModNPC != null)
 			{
-				if (npc.modNPC is ISGABoss interfacenpc)
+				if (npc.ModNPC is ISGABoss interfacenpc)
 				{
 					if (interfacenpc.Chance())
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType(interfacenpc.Trophy()));
+						Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>(interfacenpc.Trophy()).Type);
 				}
 			}
 
 			if (npc.type == NPCID.MoonLordCore)
 			{
 				if (Main.rand.Next(10) < (Main.expertMode ? 2 : 1))
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType < SwordofTheBlueMoon>());
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType < SwordofTheBlueMoon>());
 
 				if (dropFork && !Main.expertMode)
 				{
 					dropFork = false;
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<SoulPincher>());
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<SoulPincher>());
 				}
 
 				if (SGAWorld.downedCratrosity)
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType <SalvagedCrate>());
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType <SalvagedCrate>());
 				if (!Main.expertMode)
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType < EldritchTentacle>(), Main.rand.Next(15, 30));
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType < EldritchTentacle>(), Main.rand.Next(15, 30));
 			}
 			if (npc.type == NPCID.Golem && SGAWorld.bossprgressor == 0)
 			{
@@ -1415,7 +1420,7 @@ namespace SGAmod
 			if (lastHitByItem == ModContent.ItemType<ForagersBlade>())
 			{
 				if (npc.HitSound == SoundID.NPCHit1)//Yup... lol
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Leather);
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Leather);
 			}
 			if (SGAWorld.tf2cratedrops && npc.lifeMax>50)
 			{
@@ -1425,76 +1430,76 @@ namespace SGAmod
 
 				if ((Main.rand.Next(0, (int)(craterates * (setting != null ? (201-setting.rate)/25f : 1f))) == 0))
 				{
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TerrariacoCrateBase"));
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("TerrariacoCrateBase").Type);
 				}
 			}
 			if (npc.type == NPCID.WyvernHead && NPC.downedGolemBoss && Main.rand.Next(100) < 5)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Tornado"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("Tornado").Type);
 			}
 
 			if (npc.type == NPCID.Vulture && Main.rand.Next(100) < 50)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Feather);
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Feather);
 			}
 
 			if (npc.type == NPCID.Golem && Main.rand.Next(100) < 20 && !Main.expertMode)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Upheaval"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("Upheaval").Type);
 			}
 			if (npc.type == NPCID.DD2Betsy && !Main.expertMode)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("OmegaSigil"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("OmegaSigil").Type);
 			}
 
 			if (npc.type == NPCID.WallofFlesh)
 			{
 				if (Main.rand.Next(100) <= 25 && !Main.expertMode)
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<LeechYoyo>());
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<LeechYoyo>());
 				if (Main.rand.Next(100) <= 10 && !Main.expertMode)
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Powerjack"));
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("Powerjack").Type);
 			}
 
 			if (npc.type == NPCID.GoblinSorcerer && Main.rand.Next(100) <= 5)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ShadeflameStaff"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("ShadeflameStaff").Type);
 			}
 
 			if (npc.type == NPCID.TacticalSkeleton && Main.rand.Next(100) <= 25)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RiotShield"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("RiotShield").Type);
 			}
 
 			if (npc.value >= Item.buyPrice(gold: 3) && Main.rand.Next(0, 100) < ((npc.type == NPCID.PirateCaptain || npc.type == NPCID.PirateShip || npc.type == ModContent.NPCType<Cratrosity>() || npc.type == ModContent.NPCType<Cratrogeddon>()) ? 3 : 2))
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SybariteGem"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("SybariteGem").Type);
 			}
 
 			if (Main.rand.Next(100) < 50 && SGAWorld.downedSharkvern && npc.type == NPCID.Shark)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SharkTooth"), 10 + Main.rand.Next(21));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("SharkTooth").Type, 10 + Main.rand.Next(21));
 			}
 
 			if (npc.type == NPCID.RedDevil)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FieryShard"), Main.rand.Next(3, 5));
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ConsumeHell"), Main.rand.Next(1, 3));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("FieryShard").Type, Main.rand.Next(3, 5));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("ConsumeHell").Type, Main.rand.Next(1, 3));
 			}
 
 			if ((npc.type == NPCID.Lavabat || npc.type == NPCID.Hellbat) && Main.rand.Next(4) < 1 && Main.hardMode)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FieryShard"), Main.rand.Next(1, 2));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("FieryShard").Type, Main.rand.Next(1, 2));
 			}
 
 			if (npc.Center.Y > ((Main.maxTilesY * 0.90f) * 16) && Main.rand.Next(100) < 2 && Main.hardMode)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FieryShard"));
+				Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, Mod.Find<ModItem>("FieryShard").Type);
 			}
 
 			if (npc.type == NPCID.WallCreeper || npc.type == NPCID.BloodCrawler || npc.type == NPCID.JungleCreeper ||
 			npc.type == NPCID.WallCreeperWall || npc.type == NPCID.BloodCrawlerWall || npc.type == NPCID.JungleCreeperWall || npc.type == NPCID.BlackRecluse || npc.type == NPCID.BlackRecluseWall)
 				if (Main.rand.Next(0, 2) == 0)
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.RottenEgg);
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.RottenEgg);
 
 			if (!NPC.downedMoonlord)
 				return;
@@ -1504,7 +1509,7 @@ namespace SGAmod
 
 				if ((npc.type == NPCID.EnchantedSword || npc.type == NPCID.IlluminantBat || npc.type == NPCID.IlluminantSlime || npc.type == NPCID.ChaosElemental) && Main.rand.Next(3) <= 1)
 				{
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<IlluminantEssence>(), Main.rand.Next(1, Main.rand.Next(1,3)));
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<IlluminantEssence>(), Main.rand.Next(1, Main.rand.Next(1,3)));
 				}
 
 
@@ -1513,18 +1518,18 @@ namespace SGAmod
 				{
 					if (Main.player[npc.target] != null)
 					{
-						if (Main.player[npc.target].ZoneHoly && npc.position.Y > Main.rockLayer)
+						if (Main.player[npc.target].ZoneHallow && npc.position.Y > Main.rockLayer)
 						{
 							if (Main.rand.Next(125) <= 2)
 							{
-								Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<IlluminantEssence>(), Main.rand.Next(1, 3));
+								Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<IlluminantEssence>(), Main.rand.Next(1, 3));
 							}
 						}
 					}
 				}
 			}
 
-		}
+		}*/
 
 		//Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType(dropitems[chances]));
 
@@ -1557,10 +1562,10 @@ namespace SGAmod
 			}
 
 		}
-
+		/*
 		public override bool SpecialNPCLoot(NPC npc)
 		{
-			if (NPC.CountNPCS(mod.NPCType("TPD")) > 0)
+			if (NPC.CountNPCS(Mod.Find<ModNPC>("TPD").Type) > 0)
 			{
 				if (npc.type == NPCID.SkeletronHead || npc.type == NPCID.Spazmatism || npc.type == NPCID.Retinazer || npc.type == NPCID.TheDestroyer || npc.type == NPCID.TheDestroyerBody || npc.type == NPCID.TheDestroyerTail)
 					return false;
@@ -1570,7 +1575,7 @@ namespace SGAmod
 			{
 				if (NPC.CountNPCS(NPCID.CultistBossClone) >= 6 && npc.SGANPCs().NoHit)
 				{
-					Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Weapons.Almighty.NuclearOption>());
+					Item.NewItem(null, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Weapons.Almighty.NuclearOption>());
 				}
 			}
 
@@ -1595,7 +1600,7 @@ namespace SGAmod
 			}
 
 			return base.SpecialNPCLoot(npc);
-		}
+		}*/
 
 		public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
 		{
@@ -1621,7 +1626,7 @@ namespace SGAmod
 
 		public override bool? DrawHealthBar(NPC npc, byte hbPosition, ref float scale, ref Vector2 position)
 		{
-			if (npc.type == NPCID.MoonLordFreeEye && NPC.CountNPCS(mod.NPCType("DoomHarbinger")) > 0)
+			if (npc.type == NPCID.MoonLordFreeEye && NPC.CountNPCS(Mod.Find<ModNPC>("DoomHarbinger").Type) > 0)
 				return false;
 			return base.DrawHealthBar(npc, hbPosition, ref scale, ref position);
 		}
@@ -1631,7 +1636,7 @@ namespace SGAmod
 			switch (npc.type)
 			{
 				case NPCID.Guide:
-					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) > 0)
+					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) > 0)
 					{
 						string[] lines = { "A dragon is the last person I'd expect to move in to be honest.",
 						"Draken seems upset over his past, I feel sorry for his past."};
@@ -1639,7 +1644,7 @@ namespace SGAmod
 					}
 					else
 					{
-						if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) < 1)
+						if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) < 1)
 						{
 							chat = "I think I see something flying above, maybe if you clear the area of powerful monsters, it might land...";
 							if (Main.rand.Next(0, 2) == 0)
@@ -1655,7 +1660,7 @@ namespace SGAmod
 						return;
 
 					}
-					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) > 0)
+					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) > 0)
 					{
 						string[] lines = { "I'm sure the dragon is worth a lot on the black market, just need to find the right person",
 						"How much do you think he could get for selling the dragon? People would pay well for beasts like him."};
@@ -1663,7 +1668,7 @@ namespace SGAmod
 					}
 					break;
 				case NPCID.PartyGirl:
-					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) > 0)
+					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) > 0)
 					{
 						string[] lines = { "I tried coloring Draken pink but he didn't seem to like it, strange.",
 						"Working on a way to way a party hat fit on the derg, though I might just need 2! Twice the party!"};
@@ -1671,7 +1676,7 @@ namespace SGAmod
 					}
 					break;
 				case NPCID.Merchant:
-					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) > 0)
+					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) > 0)
 					{
 						string[] lines = { "I found it odd Draken was asking me about apples even though you know I don't sell those, don't dragons eat meat?",
 						"Those scales on Draken might be worth quite a bit, might peel a few off later when he's sleeping."};
@@ -1679,7 +1684,7 @@ namespace SGAmod
 					}
 					break;
 				case NPCID.TravellingMerchant:
-					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) > 0)
+					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) > 0)
 					{
 						string[] lines = { "Oh a tamed dragon! Are you selling it by any chance?",
 						"What do you mean the dragon isn't for sale? I'll offer you top dollar for it!"};
@@ -1687,7 +1692,7 @@ namespace SGAmod
 					}
 					break;			
 				case NPCID.TaxCollector:
-					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(mod.NPCType("Dergon")) > 0)
+					if (Main.rand.Next(0, 3) == 0 && NPC.CountNPCS(Mod.Find<ModNPC>("Dergon").Type) > 0)
 					{
 						string[] lines = { "I don't expect for one second that scaled lizard is hiding his hoard, tax evasion I say!",
 						"I'll find that dragon's hoard sooner or later, he can't keep lying forever."};

@@ -10,7 +10,7 @@ namespace SGAmod.Tiles
 {
 	public class BossTrophies : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
@@ -33,22 +33,22 @@ namespace SGAmod.Tiles
 				switch (frameX / 54)
 				{
 					case 0:
-						item = mod.ItemType("CopperWraithTrophy");
+						item = Mod.Find<ModItem>("CopperWraithTrophy").Type;
 						break;
 					case 1:
-						item = mod.ItemType("CaliburnATrophy");
+						item = Mod.Find<ModItem>("CaliburnATrophy").Type;
 						break;
 					case 2:
-						item = mod.ItemType("CaliburnBTrophy");
+						item = Mod.Find<ModItem>("CaliburnBTrophy").Type;
 						break;
 					case 3:
-						item = mod.ItemType("CaliburnCTrophy");
+						item = Mod.Find<ModItem>("CaliburnCTrophy").Type;
 						break;
 					case 4:
-						item = mod.ItemType("SpiderQueenTrophy");
+						item = Mod.Find<ModItem>("SpiderQueenTrophy").Type;
 						break;
 					case 5:
-						item = mod.ItemType("MurkTrophy");
+						item = Mod.Find<ModItem>("MurkTrophy").Type;
 						break;
 				}
 			}
@@ -57,22 +57,22 @@ namespace SGAmod.Tiles
 				switch (frameX / 54)
 				{
 					case 0:
-						item = mod.ItemType("CirnoTrophy");
+						item = Mod.Find<ModItem>("CirnoTrophy").Type;
 						break;
 					case 1:
-						item = mod.ItemType("CobaltWraithTrophy");
+						item = Mod.Find<ModItem>("CobaltWraithTrophy").Type;
 						break;
 					case 2:
-						item = mod.ItemType("SharkvernTrophy");
+						item = Mod.Find<ModItem>("SharkvernTrophy").Type;
 						break;
 					case 3:
-						item = mod.ItemType("CratrosityTrophy");
+						item = Mod.Find<ModItem>("CratrosityTrophy").Type;
 						break;
 					case 4:
-						item = mod.ItemType("TwinPrimeDestroyersTrophy");
+						item = Mod.Find<ModItem>("TwinPrimeDestroyersTrophy").Type;
 						break;
 					case 5:
-						item = mod.ItemType("DoomHarbingerTrophy");
+						item = Mod.Find<ModItem>("DoomHarbingerTrophy").Type;
 						break;
 				}
 
@@ -82,22 +82,22 @@ namespace SGAmod.Tiles
 				switch (frameX / 54)
 				{
 					case 0:
-						item = mod.ItemType("LuminiteWraithTrophy");
+						item = Mod.Find<ModItem>("LuminiteWraithTrophy").Type;
 						break;
 					case 1:
-						item = mod.ItemType("CratrogeddonTrophy");
+						item = Mod.Find<ModItem>("CratrogeddonTrophy").Type;
 						break;
 					case 2:
-						item = mod.ItemType("SupremePinkyTrophy");
+						item = Mod.Find<ModItem>("SupremePinkyTrophy").Type;
 						break;
 					case 3:
-						item = mod.ItemType("HellionTrophy");
+						item = Mod.Find<ModItem>("HellionTrophy").Type;
 						break;
 					case 4:
-						item = mod.ItemType("PhaethonTrophy");
+						item = Mod.Find<ModItem>("PhaethonTrophy").Type;
 						break;
 					case 5:
-						item = mod.ItemType("PrismicBansheeTrophy");
+						item = Mod.Find<ModItem>("PrismicBansheeTrophy").Type;
 						break;
 				}
 			}
@@ -106,10 +106,10 @@ namespace SGAmod.Tiles
 				switch (frameX / 54)
 				{
 					case 0:
-						item = mod.ItemType("TinWraithTrophy");
+						item = Mod.Find<ModItem>("TinWraithTrophy").Type;
 						break;
 					case 1:
-						item = mod.ItemType("PalladiumWraithTrophy");
+						item = Mod.Find<ModItem>("PalladiumWraithTrophy").Type;
 						break;
 				}
 			}

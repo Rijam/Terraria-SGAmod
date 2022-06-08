@@ -17,23 +17,23 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "sacrificedMoney", Main.LocalPlayer.SGAPly().MoneyCollected));
+			tooltips.Add(new TooltipLine(Mod, "sacrificedMoney", Main.LocalPlayer.SGAPly().MoneyCollected));
 		}
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.value = Item.sellPrice(gold: 10);
-			item.rare = ItemRarityID.Yellow;
-			item.createTile = mod.TileType("AureateVault");
-			item.placeStyle = 0;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.value = Item.sellPrice(gold: 10);
+			Item.rare = ItemRarityID.Yellow;
+			Item.createTile = Mod.Find<ModTile>("AureateVault").Type;
+			Item.placeStyle = 0;
 		}
 	}
 }

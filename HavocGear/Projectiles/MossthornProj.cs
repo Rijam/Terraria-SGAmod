@@ -20,19 +20,19 @@ namespace SGAmod.HavocGear.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = 30;
-            projectile.height = 30;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.penetrate = -1;
-            projectile.ownerHitCheck = true;
-            projectile.scale = 1.2f;
-            projectile.aiStyle = 19;
-            projectile.melee = true;
-            projectile.timeLeft = 90;
-            projectile.hide = true;
+            Projectile.width = 30;
+            Projectile.height = 30;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = -1;
+            Projectile.ownerHitCheck = true;
+            Projectile.scale = 1.2f;
+            Projectile.aiStyle = 19;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.timeLeft = 90;
+            Projectile.hide = true;
 
             movein=3f;
             moveout=3f;
@@ -41,8 +41,8 @@ namespace SGAmod.HavocGear.Projectiles
 
         public new float movementFactor
         {
-            get { return projectile.ai[0]; }
-            set { projectile.ai[0] = value; }
+            get { return Projectile.ai[0]; }
+            set { Projectile.ai[0] = value; }
         }
     }
 }

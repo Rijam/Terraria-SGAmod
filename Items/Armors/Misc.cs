@@ -18,11 +18,11 @@ namespace SGAmod.Items.Armors
 		}
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = Item.sellPrice(0,5);
-			item.rare = ItemRarityID.Pink;
-			item.defense = 16;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = Item.sellPrice(0,5);
+			Item.rare = ItemRarityID.Pink;
+			Item.defense = 16;
 		}
 		public override void UpdateEquip(Player player)
 		{
@@ -33,11 +33,7 @@ namespace SGAmod.Items.Armors
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.HallowedBar, 12);
-			recipe.AddTile(GetType() == typeof(HallowedVisor) ? TileID.DemonAltar : TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.HallowedBar, 12).AddTile(GetType() == typeof(HallowedVisor) ? TileID.DemonAltar : TileID.MythrilAnvil).Register();
 		}
 	}
 

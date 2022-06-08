@@ -31,35 +31,35 @@ namespace SGAmod.Items.Weapons
 		{
 			if (Main.LocalPlayer.GetModPlayer<SGAPlayer>().devempowerment[1] > 0)
 			{
-				tooltips.Add(new TooltipLine(mod, "DevEmpowerment", "--- Empowerment bonus ---"));
-				tooltips.Add(new TooltipLine(mod, "DevEmpowerment", "10% increased damage on Primary"));
-				tooltips.Add(new TooltipLine(mod, "DevEmpowerment", "Secondary will always summon lightning as if it were raining"));
+				tooltips.Add(new TooltipLine(Mod, "DevEmpowerment", "--- Empowerment bonus ---"));
+				tooltips.Add(new TooltipLine(Mod, "DevEmpowerment", "10% increased damage on Primary"));
+				tooltips.Add(new TooltipLine(Mod, "DevEmpowerment", "Secondary will always summon lightning as if it were raining"));
 			}
 		}
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.Throwing().thrown = true;
-			item.damage = 500;
-			item.shootSpeed = 45f;
-			item.shoot = mod.ProjectileType("Stormbreakerproj");
-			item.useTurn = true;
+			Item.useStyle = 1;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.damage = 500;
+			Item.shootSpeed = 45f;
+			Item.shoot = Mod.Find<ModProjectile>("Stormbreakerproj").Type;
+			Item.useTurn = true;
 			//ProjectileID.CultistBossLightningOrbArc
-			item.width = 20;
-			item.height = 28;
-			item.maxStack = 1;
-			item.knockBack = 9;
-			item.consumable = false;
-			item.UseSound = SoundID.Item1;
-			item.useAnimation = 10;
-			item.useTime = 10;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
-			item.value = Item.sellPrice(1, 0, 0, 0);
-			item.rare = 12;
-			item.channel = true;
-			item.expert = true;
+			Item.width = 20;
+			Item.height = 28;
+			Item.maxStack = 1;
+			Item.knockBack = 9;
+			Item.consumable = false;
+			Item.UseSound = SoundID.Item1;
+			Item.useAnimation = 10;
+			Item.useTime = 10;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.autoReuse = true;
+			Item.value = Item.sellPrice(1, 0, 0, 0);
+			Item.rare = 12;
+			Item.channel = true;
+			Item.expert = true;
 		}
 
 		public override bool AltFunctionUse(Player player)
@@ -83,29 +83,29 @@ namespace SGAmod.Items.Weapons
 
 			if (altfired)
 			{
-				item.useAnimation = 45;
-				item.useTime = 45;
-				item.useStyle = 4;
-				item.UseSound = SoundID.Item44;
-				item.channel = false;
-				item.shoot = mod.ProjectileType("Stormbreaker2");
-				item.useTurn = false;
+				Item.useAnimation = 45;
+				Item.useTime = 45;
+				Item.useStyle = 4;
+				Item.UseSound = SoundID.Item44;
+				Item.channel = false;
+				Item.shoot = Mod.Find<ModProjectile>("Stormbreaker2").Type;
+				Item.useTurn = false;
 
 			}
 			else
 			{
-				item.useStyle = 1;
-				item.shootSpeed = 45f;
-				item.shoot = mod.ProjectileType("Stormbreakerproj");
+				Item.useStyle = 1;
+				Item.shootSpeed = 45f;
+				Item.shoot = Mod.Find<ModProjectile>("Stormbreakerproj").Type;
 				//ProjectileID.CultistBossLightningOrbArc
-				item.UseSound = SoundID.Item1;
-				item.useAnimation = 10;
-				item.useTime = 10;
-				item.channel = true;
-				item.autoReuse = true;
-				item.useTurn = true;
+				Item.UseSound = SoundID.Item1;
+				Item.useAnimation = 10;
+				Item.useTime = 10;
+				Item.channel = true;
+				Item.autoReuse = true;
+				Item.useTurn = true;
 			}
-			if (player.ownedProjectileCounts[item.shoot] > 0)
+			if (player.ownedProjectileCounts[Item.shoot] > 0)
 				return false;
 
 			return true;
@@ -113,15 +113,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.PossessedHatchet, 1);
-			recipe.AddIngredient(mod.ItemType("LunarRoyalGel"), 25);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 30);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 10);
-			recipe.AddIngredient(mod.ItemType("CosmicFragment"), 1);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.PossessedHatchet, 1).AddIngredient(mod.ItemType("LunarRoyalGel"), 25).AddIngredient(mod.ItemType("StarMetalBar"), 30).AddIngredient(mod.ItemType("OmniSoul"), 10).AddIngredient(mod.ItemType("CosmicFragment"), 1).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 
@@ -141,23 +133,23 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 120;
-			projectile.penetrate = 20;
-			aiType = 0;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 120;
+			Projectile.penetrate = 20;
+			AIType = 0;
 			drawOriginOffsetX = 8;
 			drawOriginOffsetY = -8;
 		}
 
 		public override bool? CanHitNPC(NPC target)
 		{
-			if (projectile.penetrate < 10)
+			if (Projectile.penetrate < 10)
 				return false;
 			else
 				return base.CanHitNPC(target);
@@ -170,50 +162,50 @@ namespace SGAmod.Items.Weapons
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			projectile.velocity *= -0.5f;
-			Vector2 dist = (target.Center - projectile.Center);
+			Projectile.velocity *= -0.5f;
+			Vector2 dist = (target.Center - Projectile.Center);
 			Vector2 distnorm = dist; distnorm.Normalize();
-			projectile.velocity -= distnorm * 30f;
-			target.immune[projectile.owner] = 7;
-			target.AddBuff(mod.BuffType("InfinityWarStormbreaker"), 600);
+			Projectile.velocity -= distnorm * 30f;
+			target.immune[Projectile.owner] = 7;
+			target.AddBuff(Mod.Find<ModBuff>("InfinityWarStormbreaker").Type, 600);
 			if (Main.rand.Next(0, 100) < 40)
-				IdgNPC.AddBuffBypass(target.whoAmI, mod.BuffType("InfinityWarStormbreaker"), 400);
+				IdgNPC.AddBuffBypass(target.whoAmI, Mod.Find<ModBuff>("InfinityWarStormbreaker").Type, 400);
 		}
 
 		public override void AI()
 		{
-			Vector2 positiondust = Vector2.Normalize(new Vector2(projectile.velocity.X, projectile.velocity.Y)) * 8f;
-			Player player = Main.player[projectile.owner];
+			Vector2 positiondust = Vector2.Normalize(new Vector2(Projectile.velocity.X, Projectile.velocity.Y)) * 8f;
+			Player player = Main.player[Projectile.owner];
 
 			for (int num315 = 0; num315 < 1; num315 = num315 + 1)
 			{
-				int num622 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y) + positiondust, 0, 0, 185, 0f, 0f, 100, default(Color), 1f);
+				int num622 = Dust.NewDust(new Vector2(Projectile.Center.X, Projectile.Center.Y) + positiondust, 0, 0, 185, 0f, 0f, 100, default(Color), 1f);
 				Main.dust[num622].velocity *= 1f;
 
 				Main.dust[num622].noGravity = true;
-				Main.dust[num622].color = Main.hslToRgb((float)(Main.GlobalTime / 5) % 1, 0.9f, 1f);
+				Main.dust[num622].color = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly / 5) % 1, 0.9f, 1f);
 				Main.dust[num622].color.A = 10;
-				Main.dust[num622].velocity.X = projectile.velocity.X / 3 + (Main.rand.Next(-50, 51) * 0.005f);
-				Main.dust[num622].velocity.Y = projectile.velocity.Y / 3 + (Main.rand.Next(-50, 51) * 0.005f);
+				Main.dust[num622].velocity.X = Projectile.velocity.X / 3 + (Main.rand.Next(-50, 51) * 0.005f);
+				Main.dust[num622].velocity.Y = Projectile.velocity.Y / 3 + (Main.rand.Next(-50, 51) * 0.005f);
 				Main.dust[num622].alpha = 100; ;
 			}
 
-			projectile.ai[0] = projectile.ai[0] + 1;
-			bool channeling = ((projectile.ai[0] < 299 && (player.channel || projectile.ai[0] < 29)) && !player.noItems && !player.CCed);
-			if (projectile.ai[0] < 300 && projectile.ai[0] < 600 && (projectile.penetrate < 10 || !channeling))
-				projectile.ai[0] = 300;
-			projectile.timeLeft = 999;
+			Projectile.ai[0] = Projectile.ai[0] + 1;
+			bool channeling = ((Projectile.ai[0] < 299 && (player.channel || Projectile.ai[0] < 29)) && !player.noItems && !player.CCed);
+			if (Projectile.ai[0] < 300 && Projectile.ai[0] < 600 && (Projectile.penetrate < 10 || !channeling))
+				Projectile.ai[0] = 300;
+			Projectile.timeLeft = 999;
 
-			if (!Main.player[projectile.owner].dead)
+			if (!Main.player[Projectile.owner].dead)
 			{
 				Vector2 flyto = Main.MouseWorld;//new Vector2( ((float)Main.mouseX + (float)Main.screenPosition.X - (float)player.position.X), ((float)Main.mouseY + (float)Main.screenPosition.Y - (float)player.position.Y) );
-				Vector2 dist = (Main.player[projectile.owner].Center - projectile.Center);
+				Vector2 dist = (Main.player[Projectile.owner].Center - Projectile.Center);
 				Vector2 distnorm = dist; distnorm.Normalize();
 
-				Vector2 flytodist = (flyto - projectile.Center);
+				Vector2 flytodist = (flyto - Projectile.Center);
 				Vector2 flytodistnorm = flytodist; flytodistnorm.Normalize();
 
-				if (projectile.ai[0] > 299)
+				if (Projectile.ai[0] > 299)
 				{
 					flytodist = dist;
 					flytodistnorm = distnorm;
@@ -222,33 +214,33 @@ namespace SGAmod.Items.Weapons
 				if (Main.LocalPlayer == player)
 				{
 					float speedBoost = (player.Throwing().thrownVelocity - 1f);
-					projectile.velocity += flytodistnorm * 8f * (speedBoost + 1f);
-					projectile.velocity /= (1.05f * ((speedBoost * 0.05f) + 1f));
+					Projectile.velocity += flytodistnorm * 8f * (speedBoost + 1f);
+					Projectile.velocity /= (1.05f * ((speedBoost * 0.05f) + 1f));
 					float maxspeed = 38f * (1f + ((player.Throwing().thrownVelocity - 1f) / 1f));
-					if (projectile.velocity.Length() > maxspeed)
+					if (Projectile.velocity.Length() > maxspeed)
 					{
-						projectile.velocity.Normalize(); projectile.velocity *= maxspeed;
+						Projectile.velocity.Normalize(); Projectile.velocity *= maxspeed;
 					}
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 				//projectile.Center+=(dist*((float)(projectile.timeLeft-12)/28));
 
 
-				if (projectile.ai[0] < 600)
+				if (Projectile.ai[0] < 600)
 				{
 					player.itemTime = (int)MathHelper.Clamp(player.itemTime, 5, 1111);
 					player.itemAnimation = (int)MathHelper.Clamp(player.itemAnimation, 5, 1111);
 				}
 
-				if (dist.Length() < 64f && projectile.ai[0] > 299)
+				if (dist.Length() < 64f && Projectile.ai[0] > 299)
 				{
-					projectile.ai[0] = 600;
-					if ((player.itemTime < 2) || Main.player[projectile.owner].dead)
-						projectile.Kill();
+					Projectile.ai[0] = 600;
+					if ((player.itemTime < 2) || Main.player[Projectile.owner].dead)
+						Projectile.Kill();
 				}
 
 			}
-			else { projectile.Kill(); }
+			else { Projectile.Kill(); }
 
 			/*NPC target=Main.npc[Idglib.FindClosestTarget(0,projectile.Center,new Vector2(0f,0f),true,true,true,projectile)];
 			if (target!=null && projectile.penetrate>9){
@@ -258,7 +250,7 @@ namespace SGAmod.Items.Weapons
 
 	}}*/
 
-			projectile.rotation = projectile.rotation.AngleLerp(((float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f) + (float)(Math.PI / -4.0), 0.2f);
+			Projectile.rotation = Projectile.rotation.AngleLerp(((float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f) + (float)(Math.PI / -4.0), 0.2f);
 		}
 	}
 
@@ -278,16 +270,16 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			//projectile.CloneDefaults(ProjectileID.CursedFlameHostile);
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 120;
-			projectile.penetrate = 10;
-			aiType = 0;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 120;
+			Projectile.penetrate = 10;
+			AIType = 0;
 			drawOriginOffsetX = 8;
 			drawOriginOffsetY = -8;
 		}
@@ -299,21 +291,21 @@ namespace SGAmod.Items.Weapons
 
 		public override void AI()
 		{
-			Vector2 positiondust = Vector2.Normalize(new Vector2(projectile.velocity.X, projectile.velocity.Y)) * 8f;
-			Player owner = Main.player[projectile.owner];
+			Vector2 positiondust = Vector2.Normalize(new Vector2(Projectile.velocity.X, Projectile.velocity.Y)) * 8f;
+			Player owner = Main.player[Projectile.owner];
 
-			if (projectile.ai[0] < 1f && owner.direction != 1)
-				projectile.rotation *= -1f;
+			if (Projectile.ai[0] < 1f && owner.direction != 1)
+				Projectile.rotation *= -1f;
 
-			projectile.ai[0] += 1;
+			Projectile.ai[0] += 1;
 
-			projectile.velocity = new Vector2(0f, owner.itemAnimation > 12 ? -16f : 0);
-			projectile.Center = owner.Center + new Vector2(-24f + (owner.direction == 1 ? 10f : -5f), -16f);
+			Projectile.velocity = new Vector2(0f, owner.itemAnimation > 12 ? -16f : 0);
+			Projectile.Center = owner.Center + new Vector2(-24f + (owner.direction == 1 ? 10f : -5f), -16f);
 			if (owner.itemAnimation < 8)
-				projectile.Center += new Vector2(0, (int)((8.0 - (double)owner.itemAnimation) * 2.5));
+				Projectile.Center += new Vector2(0, (int)((8.0 - (double)owner.itemAnimation) * 2.5));
 			if (owner.itemAnimation < 1) 
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 
 
@@ -321,8 +313,8 @@ namespace SGAmod.Items.Weapons
 				//	projectile.Kill();
 
 
-				projectile.rotation += (((float)(Math.PI / -4.0)) - projectile.rotation) / 6f; 
-			if (projectile.timeLeft == 110)
+				Projectile.rotation += (((float)(Math.PI / -4.0)) - Projectile.rotation) / 6f; 
+			if (Projectile.timeLeft == 110)
 			{
 				int dist = 1200 * 1200;
 				int nummaxbolts = 5;
@@ -339,14 +331,14 @@ namespace SGAmod.Items.Weapons
 							Vector2 speed = new Vector2(0f, 72f);
 							Vector2 perturbedSpeed = speed.RotatedBy(MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) * 0.02f)) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
 							Vector2 starting = new Vector2(him.Center.X + ((-200 + Main.rand.Next(0, 400)) * rainmeansmore), ((-150 + Main.rand.Next(0, 200)) * rainmeansmore) + him.Center.Y - Main.rand.Next(200, 540));
-							int proj = Projectile.NewProjectile(starting.X, starting.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.CultistBossLightningOrbArc, (int)((projectile.damage * 0.75f) * (1f - owner.manaSickReduction)), 15f, Main.player[projectile.owner].whoAmI, (him.Center - starting).ToRotation());
+							int proj = Projectile.NewProjectile(starting.X, starting.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.CultistBossLightningOrbArc, (int)((Projectile.damage * 0.75f) * (1f - owner.manaSickReduction)), 15f, Main.player[Projectile.owner].whoAmI, (him.Center - starting).ToRotation());
 							Main.projectile[proj].friendly = true;
 							Main.projectile[proj].hostile = false;
 							Main.projectile[proj].penetrate = -1;
 							Main.projectile[proj].timeLeft = 300;
 							//Main.projectile[proj].usesLocalNPCImmunity = true;
 							Main.projectile[proj].localNPCHitCooldown = 8;
-							Main.projectile[proj].Throwing().thrown = true;
+							Main.projectile[proj].Throwing().DamageType = DamageClass.Throwing;
 							IdgProjectile.Sync(proj);
 
 							for (int q = 0; q < 50; q++)

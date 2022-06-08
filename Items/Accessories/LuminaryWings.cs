@@ -23,20 +23,20 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			sbyte wingslo = item.wingSlot;
-			item.CloneDefaults(ItemID.WingsVortex);
-			item.width = 26;
-			item.height = 38;
-			item.value = 2500000;
-			item.accessory = true; 
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
-			item.wingSlot = wingslo;
+			sbyte wingslo = Item.wingSlot;
+			Item.CloneDefaults(ItemID.WingsVortex);
+			Item.width = 26;
+			Item.height = 38;
+			Item.value = 2500000;
+			Item.accessory = true; 
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
+			Item.wingSlot = wingslo;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			base.ModifyTooltips(tooltips);
-			tooltips.Add(new TooltipLine(mod, "Boost", SGAGlobalItem.pboostertextboost));
+			tooltips.Add(new TooltipLine(Mod, "Boost", SGAGlobalItem.pboostertextboost));
 		}
 
 		/*public override string Texture
@@ -48,7 +48,7 @@ namespace SGAmod.Items.Accessories
 		{
 			//base.UpdateAccessory(player, true);
 			Lighting.AddLight(player.Center, Color.HotPink.ToVector3() * 2.5f * Main.essScale);
-			(mod.GetItem("CirnoWings") as CirnoWings).UpdateAccessoryLocal(player, true, false);
+			(Mod.GetItem("CirnoWings") as CirnoWings).UpdateAccessoryLocal(player, true, false);
 			if (!hideVisual)
 				player.GetModPlayer<SGAPlayer>().SpaceDiverWings += 1.5f;
 			int y_bottom_edge = (int)(player.position.Y + (float)player.height + 16f) / 16;
@@ -58,7 +58,7 @@ namespace SGAmod.Items.Accessories
 
 			//ModContent.GetInstance<DemonSteppers>().UpdateAccessory(player, false);
 
-			if (mytile.active() || player.velocity.Y == 0)
+			if (mytile.HasTile || player.velocity.Y == 0)
 			{
 				if (!player.GetModPlayer<SGAPlayer>().Walkmode)
 				{
@@ -84,14 +84,14 @@ namespace SGAmod.Items.Accessories
 
 			Tile mytile = Framing.GetTileSafely(x_edge, y_bottom_edge);
 
-			if (!mytile.active() && Math.Abs(player.velocity.Y) > 0)
+			if (!mytile.HasTile && Math.Abs(player.velocity.Y) > 0)
 			{
 
 				if (player.wingFrameCounter > 0)
 				{
 					int DustID2 = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 72, player.velocity.X * 0.6f, (player.velocity.Y + 4f) * 0.6f, 150, Main.hslToRgb((float)(frameCounter / 30f) % 1, 1f, 0.9f) * 0.2f, 1f);
 					Main.dust[DustID2].noGravity = true;
-					int num316 = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, mod.DustType("NovusSparkleBlue"), player.velocity.X * 0.1f, (player.velocity.Y) * 0.1f, 50, Color.White, 1.5f);
+					int num316 = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, Mod.Find<ModDust>("NovusSparkleBlue").Type, player.velocity.X * 0.1f, (player.velocity.Y) * 0.1f, 50, Color.White, 1.5f);
 					Main.dust[num316].noGravity = true;
 					Main.dust[DustID2].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);
 					Main.dust[num316].shader = GameShaders.Armor.GetSecondaryShader(player.cWings, player);
@@ -104,18 +104,7 @@ namespace SGAmod.Items.Accessories
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			//recipe.AddIngredient(mod.ItemType("DemonSteppers"), 1);
-			recipe.AddIngredient(mod.ItemType("CirnoWings"), 1);
-			recipe.AddIngredient(mod.ItemType("PrismalBooster"), 1);
-			recipe.AddIngredient(mod.ItemType("AuroraTearAwoken"), 2);
-			recipe.AddIngredient(mod.ItemType("IlluminantEssence"), 40);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 30);
-			recipe.AddIngredient(mod.ItemType("LunarRoyalGel"), 25);
-			recipe.AddIngredient(mod.ItemType("MoneySign"), 20);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("CirnoWings"), 1).AddIngredient(mod.ItemType("PrismalBooster"), 1).AddIngredient(mod.ItemType("AuroraTearAwoken"), 2).AddIngredient(mod.ItemType("IlluminantEssence"), 40).AddIngredient(mod.ItemType("OmniSoul"), 30).AddIngredient(mod.ItemType("LunarRoyalGel"), 25).AddIngredient(mod.ItemType("MoneySign"), 20).AddTile(TileID.LunarCraftingStation).Register();
 		}
 
 		public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,

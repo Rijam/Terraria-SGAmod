@@ -9,7 +9,7 @@ namespace SGAmod.Tiles
 {
     public class UnmanedOreTile : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             TileID.Sets.Ore[Type] = true;
             Main.tileSolid[Type] = true;
@@ -23,7 +23,7 @@ namespace SGAmod.Tiles
             soundType = 21;
             soundStyle = 1;
             dustType = 0;
-            drop = mod.ItemType("UnmanedOre");
+            drop = Mod.Find<ModItem>("UnmanedOre").Type;
             minPick = 55;
             mineResist = 1.25f;
             ModTranslation name = CreateMapEntryName();
@@ -58,7 +58,7 @@ namespace SGAmod.Tiles
             soundType = 21;
             soundStyle = 1;
             dustType = DustID.GoldCoin;
-            drop = mod.ItemType("NoviteOre");
+            drop = Mod.Find<ModItem>("NoviteOre").Type;
             minPick = 55;
             mineResist = 1.25f;
             ModTranslation name = CreateMapEntryName();

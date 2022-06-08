@@ -16,13 +16,13 @@ namespace SGAmod.HavocGear.Items.Accessories
 
         public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = 2;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = 2;
 			//item.defense = 3;
-			item.accessory = true;
-			item.expert = true;
+			Item.accessory = true;
+			Item.expert = true;
 		}
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
@@ -40,7 +40,7 @@ namespace SGAmod.HavocGear.Items.Accessories
 				{
 					for (int y = y_top_edge; y <= y_bottom_edge; y++)
 					{
-						if (Main.tile[x, y].type == TileID.Mud || Main.tile[x, y].type == TileID.JungleGrass || Main.tile[x, y].type == TileID.MushroomGrass)
+						if (Main.tile[x, y].TileType == TileID.Mud || Main.tile[x, y].TileType == TileID.JungleGrass || Main.tile[x, y].TileType == TileID.MushroomGrass)
 						{
 							nearMud = true;
 							break;
@@ -52,16 +52,16 @@ namespace SGAmod.HavocGear.Items.Accessories
 				if (nearMud)
 				{
 					player.lifeRegen += 10;
-					player.meleeDamage *= 1.2f;
+					player.GetDamage(DamageClass.Melee) *= 1.2f;
 					player.Throwing().thrownDamage *= 1.3f;
-					player.rangedDamage *= 1.2f;
-					player.magicDamage *= 1.3f;
+					player.GetDamage(DamageClass.Ranged) *= 1.2f;
+					player.GetDamage(DamageClass.Magic) *= 1.3f;
 					player.meleeSpeed *= 1.2f;
-					player.minionDamage *= 1.1f;
+					player.GetDamage(DamageClass.Summon) *= 1.1f;
 					player.Throwing().thrownCrit += 5;
-					player.magicCrit += 5;
-					player.meleeCrit += 4;
-					player.rangedCrit += 4;
+					player.GetCritChance(DamageClass.Magic) += 5;
+					player.GetCritChance(DamageClass.Melee) += 4;
+					player.GetCritChance(DamageClass.Ranged) += 4;
 				}
 				else
 				{

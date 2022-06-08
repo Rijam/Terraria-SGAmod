@@ -23,31 +23,23 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 
         public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.width = 26;
-			item.height = 14;
-			item.value = Item.sellPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Cyan;
-			item.alpha = 0;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createTile = ModContent.TileType<Tiles.TechTiles.NumismaticCrucibleTile>();
+			Item.maxStack = 999;
+			Item.width = 26;
+			Item.height = 14;
+			Item.value = Item.sellPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Cyan;
+			Item.alpha = 0;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.TechTiles.NumismaticCrucibleTile>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<AdvancedPlating>(), 12);
-			recipe.AddRecipeGroup("SGAmod:Tier1Bars", 12);
-			recipe.AddIngredient(ModContent.ItemType<EnergizerBattery>(), 2);
-			recipe.AddIngredient(ModContent.ItemType<Weapons.Technical.LaserMarker>(), 10);
-			recipe.AddIngredient(ItemID.CookingPot, 1);
-			recipe.AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>());
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<AdvancedPlating>(), 12).AddRecipeGroup("SGAmod:Tier1Bars", 12).AddIngredient(ModContent.ItemType<EnergizerBattery>(), 2).AddIngredient(ModContent.ItemType<Weapons.Technical.LaserMarker>(), 10).AddIngredient(ItemID.CookingPot, 1).AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>()).Register();
 		}
 	}
 }

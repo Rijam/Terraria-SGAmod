@@ -11,40 +11,34 @@ namespace SGAmod.HavocGear.Items.Weapons
 		public override void SetDefaults()
 		{
 
-			item.damage = 12;
-			item.magic = true;
-			item.mana = 8;
-			item.width = 50;
-			item.height = 52;
-			item.useTime = 16;
-			item.useAnimation = 16;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 3;
-			item.value = 10000;
-			item.rare = 2;
-            item.UseSound = SoundID.Item20;
-            item.autoReuse = true;
-			item.shoot = mod.ProjectileType("SwampWave");
-			item.shootSpeed = 10f;
+			Item.damage = 12;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 8;
+			Item.width = 50;
+			Item.height = 52;
+			Item.useTime = 16;
+			Item.useAnimation = 16;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 3;
+			Item.value = 10000;
+			Item.rare = 2;
+            Item.UseSound = SoundID.Item20;
+            Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("SwampWave").Type;
+			Item.shootSpeed = 10f;
         }
 
     public override void SetStaticDefaults()
     {
       DisplayName.SetDefault("Dank Wave Staff");
       Tooltip.SetDefault("Shoots a short piercing wave");
-		Item.staff[item.type] = true;
+		Item.staff[Item.type] = true;
 	}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "DankWood", 15);
-			recipe.AddIngredient(null, "DankCore", 1);
-			recipe.AddIngredient(null, "VialofAcid", 8);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "DankWood", 15).AddIngredient(null, "DankCore", 1).AddIngredient(null, "VialofAcid", 8).AddTile(TileID.WorkBenches).Register();
 		}
 
 	}

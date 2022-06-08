@@ -5,6 +5,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using SGAmod.Projectiles;
 using Idglibrary;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -14,39 +16,39 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Reality Shaper");
 			Tooltip.SetDefault("The elements are yours to shape\nRequires a small amount of mana to swing, Double tab to launch 2 heat waves in succession\nFunctions as both a sword and a staff\nHitting with the blade opens several rifts that launch Sky Fracture Blades into the target\nAfter the swing animation hold left mouse to open a rift\nThis will fire fast moving Cirno bolts\nFurthermore, portals appear behind you that summon Hot Rounds!\nThe damage of these are less than the melee damage but are improved by your magic damage multiplier\nIf done after a double tap, you'll summon 2 portals to shoot twice as many projectiles, at double the mana costs");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 340;
-			item.crit = 15;
-			item.melee = true;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 10;
-			item.useAnimation = 11;
-			item.useStyle = 5;
-			item.knockBack = 15;
-			item.value = 1500000;
-			item.shootSpeed = 28f;
-			item.shoot = mod.ProjectileType("ProjectilePortalRealityShaper");
-			item.rare = 11;
-			item.UseSound = SoundID.Item71;
-			item.autoReuse = false;
-			item.useTurn = false;
-			item.channel = true;
-			item.mana = 20;
+			Item.damage = 340;
+			Item.crit = 15;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 10;
+			Item.useAnimation = 11;
+			Item.useStyle = 5;
+			Item.knockBack = 15;
+			Item.value = 1500000;
+			Item.shootSpeed = 28f;
+			Item.shoot = Mod.Find<ModProjectile>("ProjectilePortalRealityShaper").Type;
+			Item.rare = 11;
+			Item.UseSound = SoundID.Item71;
+			Item.autoReuse = false;
+			Item.useTurn = false;
+			Item.channel = true;
+			Item.mana = 20;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/RealityShaper_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/RealityShaper_Glow").Value;
 			}
 
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			if (player.statMana<20 || player.ownedProjectileCounts[mod.ProjectileType("ProjectilePortalRealityShaper")]>1)
+			if (player.statMana<20 || player.ownedProjectileCounts[Mod.Find<ModProjectile>("ProjectilePortalRealityShaper").Type]>1)
 			return false;
 			else
 			return true;
@@ -54,20 +56,20 @@ namespace SGAmod.Items.Weapons
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			item.noMelee = false;
-			item.useStyle = 1;
+			Item.noMelee = false;
+			Item.useStyle = 1;
 
 			float speed = 1.5f;
 			float numberProjectiles = 1;
 			float rotation = MathHelper.ToRadians(8);
 			position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
-			Main.PlaySound(SoundID.Item, player.Center, 45);
+			SoundEngine.PlaySound(SoundID.Item, player.Center, 45);
 			for (int i = 0; i < numberProjectiles; i++)
 			{
 				Vector2 perturbedSpeed = (new Vector2(speedX, speedY) * speed).RotatedBy(MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) / 100f)) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
-				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("HeatWave"), (int)((float)damage * 0.15f), knockBack / 3f, player.whoAmI);
-				Main.projectile[proj].melee = true;
-				Main.projectile[proj].magic = false;
+				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("HeatWave").Type, (int)((float)damage * 0.15f), knockBack / 3f, player.whoAmI);
+				Main.projectile[proj].DamageType = DamageClass.Melee;
+				// Main.projectile[proj].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 				Main.projectile[proj].netUpdate = true;
 				IdgProjectile.Sync(proj);
 
@@ -86,9 +88,9 @@ namespace SGAmod.Items.Weapons
 				Vector2 hereas = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 256;
 				hereas += target.Center;
 				Vector2 gohere = (target.Center - hereas); gohere.Normalize(); gohere *= 16f;
-				int proj = Projectile.NewProjectile(hereas, gohere, mod.ProjectileType("ProjectilePortalRealityShaperFracturePortal"), (int)(damage*0.2f), knockBack, player.whoAmI, ProjectileID.SkyFracture);
-				Main.projectile[proj].magic = false;
-				Main.projectile[proj].melee = true;
+				int proj = Projectile.NewProjectile(hereas, gohere, Mod.Find<ModProjectile>("ProjectilePortalRealityShaperFracturePortal").Type, (int)(damage*0.2f), knockBack, player.whoAmI, ProjectileID.SkyFracture);
+				// Main.projectile[proj].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+				Main.projectile[proj].DamageType = DamageClass.Melee;
 				Main.projectile[proj].timeLeft = 40;
 				Main.projectile[proj].netUpdate = true;
 				IdgProjectile.Sync(proj);
@@ -122,22 +124,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("BigBang"), 1);
-			recipe.AddIngredient(mod.ItemType("HeatWave"), 1);
-			recipe.AddIngredient(ItemID.SkyFracture, 1);
-			recipe.AddIngredient(ItemID.ChristmasTreeSword, 1);
-			recipe.AddIngredient(ItemID.InfluxWaver, 1);
-			recipe.AddIngredient(mod.ItemType("CircuitBreakerBlade"), 1);
-			recipe.AddIngredient(ItemID.DD2SquireBetsySword, 1);
-			recipe.AddIngredient(mod.ItemType("OmegaSigil"), 1);
-			recipe.AddIngredient(mod.ItemType("OmniSoul"), 8);
-			recipe.AddIngredient(mod.ItemType("PrismalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("Entrophite"), 100);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("BigBang"), 1).AddIngredient(mod.ItemType("HeatWave"), 1).AddIngredient(ItemID.SkyFracture, 1).AddIngredient(ItemID.ChristmasTreeSword, 1).AddIngredient(ItemID.InfluxWaver, 1).AddIngredient(mod.ItemType("CircuitBreakerBlade"), 1).AddIngredient(ItemID.DD2SquireBetsySword, 1).AddIngredient(mod.ItemType("OmegaSigil"), 1).AddIngredient(mod.ItemType("OmniSoul"), 8).AddIngredient(mod.ItemType("PrismalBar"), 10).AddIngredient(mod.ItemType("StarMetalBar"), 10).AddIngredient(mod.ItemType("Entrophite"), 100).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 
@@ -165,33 +152,33 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 32;
-			projectile.height = 32;
+			Projectile.width = 32;
+			Projectile.height = 32;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
+			Projectile.friendly = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 40;
-			projectile.tileCollide = false;
-			aiType = -1;
+			Projectile.timeLeft = 40;
+			Projectile.tileCollide = false;
+			AIType = -1;
 		}
 
 		public override void Explode()
 		{
 
-			if (projectile.timeLeft == 30 && projectile.ai[0] > 0)
+			if (Projectile.timeLeft == 30 && Projectile.ai[0] > 0)
 			{
-				Player owner = Main.player[projectile.owner];
+				Player owner = Main.player[Projectile.owner];
 				if (owner != null && !owner.dead)
 				{
 
 					Vector2 gotohere = new Vector2();
-					gotohere = projectile.velocity;//Main.MouseScreen - projectile.Center;
+					gotohere = Projectile.velocity;//Main.MouseScreen - projectile.Center;
 					gotohere.Normalize();
 
-					Vector2 perturbedSpeed = new Vector2(gotohere.X, gotohere.Y).RotatedByRandom(MathHelper.ToRadians(6)) * projectile.velocity.Length();
-					int proj = Projectile.NewProjectile(new Vector2(projectile.Center.X, projectile.Center.Y), new Vector2(perturbedSpeed.X, perturbedSpeed.Y), (int)projectile.ai[0], projectile.damage, projectile.knockBack, owner.whoAmI);
-					Main.projectile[proj].melee = true;
+					Vector2 perturbedSpeed = new Vector2(gotohere.X, gotohere.Y).RotatedByRandom(MathHelper.ToRadians(6)) * Projectile.velocity.Length();
+					int proj = Projectile.NewProjectile(new Vector2(Projectile.Center.X, Projectile.Center.Y), new Vector2(perturbedSpeed.X, perturbedSpeed.Y), (int)Projectile.ai[0], Projectile.damage, Projectile.knockBack, owner.whoAmI);
+					Main.projectile[proj].DamageType = DamageClass.Melee;
 					IdgProjectile.Sync(proj);
 				}
 
@@ -212,9 +199,9 @@ namespace SGAmod.Items.Weapons
 
 		public override int projectilerate => 25;
 		public override int manacost => 6;
-		public override int portalprojectile => mod.ProjectileType("CirnoBoltPlayer");
-		public override int takeeffectdelay =>  Main.player[projectile.owner].HeldItem.useTime;
-		public override float damagescale => 0.50f * Main.player[projectile.owner].magicDamage;
+		public override int portalprojectile => Mod.Find<ModProjectile>("CirnoBoltPlayer").Type;
+		public override int takeeffectdelay =>  Main.player[Projectile.owner].HeldItem.useTime;
+		public override float damagescale => 0.50f * Main.player[Projectile.owner].GetDamage(DamageClass.Magic);
 		public override int penetrate => 1;
 		public override int startrate => 60;
 		public override int drainrate => 5;
@@ -225,9 +212,9 @@ namespace SGAmod.Items.Weapons
 		public override void Explode()
 		{
 
-			if (projectile.timeLeft == timeleftfirerate && projectile.ai[0] > 0)
+			if (Projectile.timeLeft == timeleftfirerate && Projectile.ai[0] > 0)
 			{
-				Player owner = Main.player[projectile.owner];
+				Player owner = Main.player[Projectile.owner];
 
 					if (owner != null && !owner.dead && owner.channel)
 				{
@@ -235,15 +222,15 @@ namespace SGAmod.Items.Weapons
 					everyother %= 2;
 
 					Vector2 gotohere = new Vector2();
-					gotohere = projectile.velocity;//Main.MouseScreen - projectile.Center;
+					gotohere = Projectile.velocity;//Main.MouseScreen - projectile.Center;
 					gotohere.Normalize();
 
-					Vector2 perturbedSpeed = new Vector2(gotohere.X, gotohere.Y).RotatedByRandom(MathHelper.ToRadians(15)) * projectile.velocity.Length();
+					Vector2 perturbedSpeed = new Vector2(gotohere.X, gotohere.Y).RotatedByRandom(MathHelper.ToRadians(15)) * Projectile.velocity.Length();
 					if (everyother == 1)
 					{
-						int proj = Projectile.NewProjectile(new Vector2(projectile.Center.X, projectile.Center.Y), new Vector2(perturbedSpeed.X, perturbedSpeed.Y)*2f, (int)projectile.ai[0], (int)(projectile.damage*1f* damagescale), projectile.knockBack / 10f, owner.whoAmI);
-						Main.projectile[proj].magic = true;
-						Main.projectile[proj].melee = false;
+						int proj = Projectile.NewProjectile(new Vector2(Projectile.Center.X, Projectile.Center.Y), new Vector2(perturbedSpeed.X, perturbedSpeed.Y)*2f, (int)Projectile.ai[0], (int)(Projectile.damage*1f* damagescale), Projectile.knockBack / 10f, owner.whoAmI);
+						Main.projectile[proj].DamageType = DamageClass.Magic;
+						// Main.projectile[proj].melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 						Main.projectile[proj].timeLeft = 300;
 						Main.projectile[proj].penetrate = penetrate;
 						IdgProjectile.Sync(proj);
@@ -256,8 +243,8 @@ namespace SGAmod.Items.Weapons
 					gohere *= 28f;
 					gohere = gohere.RotatedByRandom(MathHelper.ToRadians(20));
 
-					int proj2 = Projectile.NewProjectile(backthere, gohere, mod.ProjectileType("ProjectilePortalRealityShaperHit"), (int)(projectile.damage*1.25f * damagescale), projectile.knockBack / 6f, owner.whoAmI, mod.ProjectileType("HotRound"));
-					Main.projectile[proj2].melee = false;
+					int proj2 = Projectile.NewProjectile(backthere, gohere, Mod.Find<ModProjectile>("ProjectilePortalRealityShaperHit").Type, (int)(Projectile.damage*1.25f * damagescale), Projectile.knockBack / 6f, owner.whoAmI, Mod.Find<ModProjectile>("HotRound").Type);
+					// Main.projectile[proj2].melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 					IdgProjectile.Sync(proj2);
 
 				}
@@ -268,14 +255,14 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 10;
-			projectile.light = 0.5f;
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 38;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 10;
+			Projectile.light = 0.5f;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 38;
 		}
 
 	}

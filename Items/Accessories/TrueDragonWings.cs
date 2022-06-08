@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Accessories
 {
@@ -107,7 +108,7 @@ namespace SGAmod.Items.Accessories
 				if (i < 1)
 					drawY += 8 * (int)drawPlayer.gravDir;
 
-				texture = ModContent.GetTexture("SGAmod/Items/Accessories/BetsyWings/BetsyWings" + (i < 1 ? "Front" : "Back"));
+				texture = ModContent.Request<Texture2D>("SGAmod/Items/Accessories/BetsyWings/BetsyWings" + (i < 1 ? "Front" : "Back"));
 
 				int wingIndex = drawPlayer.GetModPlayer<Items.Accessories.DergWingsPlayer>().wingFrames / 4;
 
@@ -202,7 +203,7 @@ namespace SGAmod.Items.Accessories
 					drawX += 4;
 				}
 
-				texture = ModContent.GetTexture("SGAmod/Items/Accessories/BetsyWings/BetsyWings" + (i < 1 ? "Front" : "Back"));
+				texture = ModContent.Request<Texture2D>("SGAmod/Items/Accessories/BetsyWings/BetsyWings" + (i < 1 ? "Front" : "Back"));
 
 				int wingIndex = drawPlayer.GetModPlayer<Items.Accessories.DergWingsPlayer>().wingFrames / 4;
 
@@ -266,14 +267,14 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			sbyte wingslo = item.wingSlot;
-			item.CloneDefaults(ItemID.FrozenWings);
-			item.width = 26;
-			item.height = 38;
-			item.value = 750000;
-			item.accessory = true;
-			item.rare = ItemRarityID.Red;
-			item.wingSlot = wingslo;
+			sbyte wingslo = Item.wingSlot;
+			Item.CloneDefaults(ItemID.FrozenWings);
+			Item.width = 26;
+			Item.height = 38;
+			Item.value = 750000;
+			Item.accessory = true;
+			Item.rare = ItemRarityID.Red;
+			Item.wingSlot = wingslo;
 		}
         public override bool Autoload(ref string name)
         {
@@ -284,10 +285,10 @@ namespace SGAmod.Items.Accessories
 
         private void SGAPlayer_PostCharmsUpdateEquipsEvent(SGAPlayer sgaplayer)
         {
-			Player player = sgaplayer.player;
+			Player player = sgaplayer.Player;
 			DergWingsPlayer drakeplayer = player.GetModPlayer<DergWingsPlayer>();
 
-			if (player.wingsLogic == item.wingSlot)
+			if (player.wingsLogic == Item.wingSlot)
 			{
 				bool canfly = true;
 
@@ -340,7 +341,7 @@ namespace SGAmod.Items.Accessories
 
         public override void UpdateVanity(Player player, EquipType type)
 		{
-			if (player.wingTime < 1 && player.velocity.Y != 0 && player.controlJump && player.wings == item.wingSlot)
+			if (player.wingTime < 1 && player.velocity.Y != 0 && player.controlJump && player.wings == Item.wingSlot)
 			{
 				player.GetModPlayer<DergWingsPlayer>().wingFrames = 4 * 10;
 				player.GetModPlayer<DergWingsPlayer>().flyingAngle.Item2 = 4;
@@ -354,7 +355,7 @@ namespace SGAmod.Items.Accessories
 		{
 			if (inUse)
 			{
-				if (player.wingsLogic != item.wingSlot && player.wingTime > 0 && player.controlJump)
+				if (player.wingsLogic != Item.wingSlot && player.wingTime > 0 && player.controlJump)
 				{
 					player.GetModPlayer<DergWingsPlayer>().wingFrames += 1;
 					player.GetModPlayer<DergWingsPlayer>().flyingAngle.Item2 = 2;
@@ -362,7 +363,7 @@ namespace SGAmod.Items.Accessories
 
 				if ((player.GetModPlayer<DergWingsPlayer>().wingFrames) % (9*4) == 4*3)
                 {
-					var snd = Main.PlaySound(SoundID.Item,(int)player.MountedCenter.X, (int)player.MountedCenter.Y, 32);
+					var snd = SoundEngine.PlaySound(SoundID.Item,(int)player.MountedCenter.X, (int)player.MountedCenter.Y, 32);
 					if (snd != null)
 					snd.Pitch = 0.80f;
 				}
@@ -416,24 +417,8 @@ namespace SGAmod.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			DragonClawsRecipe recipe = new DragonClawsRecipe(mod);
-			recipe.AddIngredient(ItemID.BetsyWings, 1);
-			recipe.AddIngredient(ItemID.WireCutter, 1);
-			recipe.AddIngredient(ModContent.ItemType<MoneySign>(), 15);
-			recipe.AddIngredient(ItemID.GoldCoin, 50);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
-
-			ModRecipe recipe2 = new ModRecipe(mod);
-			recipe2.AddIngredient(ModContent.ItemType<OmegaSigil>(), 1);
-			recipe2.AddIngredient(ModContent.ItemType<HavocGear.Items.FieryShard>(), 20);
-			recipe2.AddIngredient(ModContent.ItemType<MoneySign>(), 25);
-			recipe2.AddIngredient(ItemID.DefenderMedal, 25);
-			recipe2.AddIngredient(ItemID.GoldCoin, 75);
-			recipe2.AddTile(TileID.WorkBenches);
-			recipe2.SetResult(this, 1);
-			recipe2.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.BetsyWings, 1).AddIngredient(ItemID.WireCutter, 1).AddIngredient(ModContent.ItemType<MoneySign>(), 15).AddIngredient(ItemID.GoldCoin, 50).AddTile(TileID.WorkBenches).Register();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<OmegaSigil>(), 1).AddIngredient(ModContent.ItemType<HavocGear.Items.FieryShard>(), 20).AddIngredient(ModContent.ItemType<MoneySign>(), 25).AddIngredient(ItemID.DefenderMedal, 25).AddIngredient(ItemID.GoldCoin, 75).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 }

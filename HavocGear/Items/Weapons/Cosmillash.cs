@@ -20,32 +20,32 @@ namespace SGAmod.HavocGear.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 130;
-			item.noMelee = true;
-			item.magic = true;
-			item.mana = 12;
-			item.width = 22;
-			item.height = 22;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 5;
-			item.knockBack = 10;
-			item.value = 1000000;
-			item.rare = 10;
-			item.UseSound = SoundID.Item20;
-			item.autoReuse = true;
-			item.shoot = 10;
-			item.shootSpeed = 30;
-			item.crit = 10;
-			Item.staff[item.type] = true;
+			Item.damage = 130;
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 12;
+			Item.width = 22;
+			Item.height = 22;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 5;
+			Item.knockBack = 10;
+			Item.value = 1000000;
+			Item.rare = 10;
+			Item.UseSound = SoundID.Item20;
+			Item.autoReuse = true;
+			Item.shoot = 10;
+			Item.shootSpeed = 30;
+			Item.crit = 10;
+			Item.staff[Item.type] = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/Cosmillash_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/Cosmillash_Glow").Value;
 			}
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			type = mod.ProjectileType("QuasarOrb");
+			type = Mod.Find<ModProjectile>("QuasarOrb").Type;
 			float numberProjectiles = 3; // 3, 4, or 5 shots
 			float rotation = MathHelper.ToRadians(Main.rand.Next(33));
 			position += Vector2.Normalize(new Vector2(speedX, speedY)) * 64f;
@@ -62,15 +62,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("ShadeflameStaff"), 1);
-			recipe.AddIngredient(ItemID.FragmentNebula, 8);
-			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("IlluminantEssence"), 20);
-			recipe.AddIngredient(ItemID.SoulofNight, 6);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("ShadeflameStaff"), 1).AddIngredient(ItemID.FragmentNebula, 8).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(mod.ItemType("IlluminantEssence"), 20).AddIngredient(ItemID.SoulofNight, 6).AddTile(TileID.LunarCraftingStation).Register();
 		}
 	}
 }

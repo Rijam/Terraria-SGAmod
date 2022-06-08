@@ -35,7 +35,7 @@ namespace SGAmod.Items.Accessories
 			for(int i=0;i< totallength; i+=1)
 			{
 				if (NoteWords[notetype, i].Length>0)
-				tooltips.Add(new TooltipLine(mod, "NoteWords", NoteWords[notetype, i]));
+				tooltips.Add(new TooltipLine(Mod, "NoteWords", NoteWords[notetype, i]));
 			}
 		}
 
@@ -55,17 +55,17 @@ namespace SGAmod.Items.Accessories
 			writer.Write((short)notetype);
 		}
 
-		public override void NetRecieve(BinaryReader reader)
+		public override void NetReceive(BinaryReader reader)
 		{
 			notetype = reader.ReadInt16();
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.sellPrice(0, 0, 10, 0);
-			item.rare = 0;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.sellPrice(0, 0, 10, 0);
+			Item.rare = 0;
 			//item.accessory = true;
 		}
 
@@ -151,7 +151,7 @@ namespace SGAmod.Items.Accessories
 				if (SGAWorld.downedWraiths > 1)
 					notetype = 6;
 
-				item.rare = notetype;
+				Item.rare = notetype;
 			}
 		}
 
@@ -160,19 +160,19 @@ namespace SGAmod.Items.Accessories
 
 			for (int i = 0; i < totallength; i += 1)
 			{
-				if (NoteWords[item.rare, i].Length > 0)
+				if (NoteWords[Item.rare, i].Length > 0)
 				{
-					tooltips.Add(new TooltipLine(mod, "NoteWords", NoteWords[item.rare, i]));
+					tooltips.Add(new TooltipLine(Mod, "NoteWords", NoteWords[Item.rare, i]));
 				}
 			}
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 24;
-			item.value = Item.buyPrice(0, 0, 10, 0);
-			item.rare = 0;
+			Item.width = 24;
+			Item.height = 24;
+			Item.value = Item.buyPrice(0, 0, 10, 0);
+			Item.rare = 0;
 			//item.accessory = true;
 		}
 	}

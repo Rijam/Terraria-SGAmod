@@ -41,17 +41,17 @@ namespace SGAmod.Items.Tools
 
         public override Color? GetAlpha(Color lightColor)
         {
-            return Main.hslToRgb((-Main.GlobalTime / 4f) % 1f, 0.85f, 0.50f);
+            return Main.hslToRgb((-Main.GlobalTimeWrappedHourly / 4f) % 1f, 0.85f, 0.50f);
         }
 
         public override void SetDefaults()
         {
-            item.maxStack = 999;
-            item.width = 14;
-            item.height = 14;
-            item.value = 0;
-            item.bait = 250;
-            item.rare = ItemRarityID.Expert;
+            Item.maxStack = 999;
+            Item.width = 14;
+            Item.height = 14;
+            Item.value = 0;
+            Item.bait = 250;
+            Item.rare = ItemRarityID.Expert;
         }
     }
 
@@ -112,7 +112,7 @@ namespace SGAmod.Items.Tools
     {
         public override void SetDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.BobberGolden);
+            Projectile.CloneDefaults(ProjectileID.BobberGolden);
         }
 
         public override void SetStaticDefaults()
@@ -125,15 +125,15 @@ namespace SGAmod.Items.Tools
         public override bool PreDrawExtras(SpriteBatch spriteBatch)      //this draws the fishing line correctly
         {
 
-            if (projectile.bobber && Main.player[projectile.owner].inventory[Main.player[projectile.owner].selectedItem].holdStyle > 0)
+            if (Projectile.bobber && Main.player[Projectile.owner].inventory[Main.player[Projectile.owner].selectedItem].holdStyle > 0)
             {
-                Lighting.AddLight(projectile.Center, 0.13f, 0.86f, 0.59f);  //this defines the projectile/bobber light color
-                Player player = Main.player[projectile.owner];
+                Lighting.AddLight(Projectile.Center, 0.13f, 0.86f, 0.59f);  //this defines the projectile/bobber light color
+                Player player = Main.player[Projectile.owner];
                 float pPosX = player.MountedCenter.X;
             float pPosY = player.MountedCenter.Y;
-            pPosY += Main.player[projectile.owner].gfxOffY;
+            pPosY += Main.player[Projectile.owner].gfxOffY;
 
-                SGAUtils.DrawFishingLine(new Vector2(pPosX, pPosY),projectile.Center,projectile.velocity,projectile.Center+new Vector2(0,32), projectile.localAI[0]);
+                SGAUtils.DrawFishingLine(new Vector2(pPosX, pPosY),Projectile.Center,Projectile.velocity,Projectile.Center+new Vector2(0,32), Projectile.localAI[0]);
 
                 /*float pPosX = player.MountedCenter.X;
                 float pPosY = player.MountedCenter.Y;

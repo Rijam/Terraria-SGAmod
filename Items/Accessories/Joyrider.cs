@@ -23,18 +23,18 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			sbyte wingslo = item.wingSlot;
-			item.CloneDefaults(ItemID.WingsVortex);
-			item.width = 26;
-			item.height = 38;
-			item.value = 200000;
-			item.accessory = true;
-			item.wingSlot = wingslo;
-			item.useAmmo = AmmoID.Bullet;
-			item.shoot = ProjectileID.Bullet;
-			item.shootSpeed = 10f;
-			item.damage = 20;
-			item.ranged = true;
+			sbyte wingslo = Item.wingSlot;
+			Item.CloneDefaults(ItemID.WingsVortex);
+			Item.width = 26;
+			Item.height = 38;
+			Item.value = 200000;
+			Item.accessory = true;
+			Item.wingSlot = wingslo;
+			Item.useAmmo = AmmoID.Bullet;
+			Item.shoot = ProjectileID.Bullet;
+			Item.shootSpeed = 10f;
+			Item.damage = 20;
+			Item.DamageType = DamageClass.Ranged;
 		}
 
 		/*public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
@@ -99,7 +99,7 @@ namespace SGAmod.Items.Accessories
 			{
 				if (player.controlJump)
 				{
-					int projType = item.shoot;
+					int projType = Item.shoot;
 
 					bool canShoot = true;
 					int damage = joyRider.damage;
@@ -107,7 +107,7 @@ namespace SGAmod.Items.Accessories
 					float speed = 32f;
 					if (projType == ProjectileID.Bullet || projType == 10)
 					{
-						player.PickAmmo(item, ref projType, ref speed, ref canShoot, ref damage, ref knockback, true);
+						player.PickAmmo(Item, ref projType, ref speed, ref canShoot, ref damage, ref knockback, true);
 					}
 
 
@@ -124,9 +124,9 @@ namespace SGAmod.Items.Accessories
 					{
 
 						//player.ConsumeItemRespectInfiniteAmmoTypes(ammo2.type);
-						player.PickAmmo(item, ref projType, ref speed, ref canShoot, ref damage, ref knockback, false);
+						player.PickAmmo(Item, ref projType, ref speed, ref canShoot, ref damage, ref knockback, false);
 						sgaplayer.JoyrideShake = 6;
-						int thisoned = Projectile.NewProjectile(player.Center.X + player.direction * -12, player.Center.Y, velo.X, velo.Y, projType, (int)((float)(damage * 1) * (player.rangedDamage + (player.bulletDamage-1f))), knockback/10f, Main.myPlayer);
+						int thisoned = Projectile.NewProjectile(player.Center.X + player.direction * -12, player.Center.Y, velo.X, velo.Y, projType, (int)((float)(damage * 1) * (player.GetDamage(DamageClass.Ranged) + (player.bulletDamage-1f))), knockback/10f, Main.myPlayer);
 					}
                 }
                 else
@@ -152,13 +152,7 @@ namespace SGAmod.Items.Accessories
 
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Megashark, 1);
-			recipe.AddIngredient(ItemID.ChainGun, 1);
-			recipe.AddIngredient(ItemID.Jetpack, 1);
-			recipe.AddTile(mod.GetTile("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.Megashark, 1).AddIngredient(ItemID.ChainGun, 1).AddIngredient(ItemID.Jetpack, 1).AddTile(mod.GetTile("ReverseEngineeringStation")).Register();
 		}
 
 		public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,

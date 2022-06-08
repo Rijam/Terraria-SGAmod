@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework.Audio;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -20,21 +21,21 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 40;
-			item.mana = 15;
-			item.magic = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 20;
-			item.useAnimation = 12;
-			item.useStyle = 1;
-			item.knockBack = 5;
-			item.value = 150000;
-			item.rare = ItemRarityID.Orange;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<EnchantedFuryProjectile>();
-			item.shootSpeed = 16f;
+			Item.damage = 40;
+			Item.mana = 15;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 20;
+			Item.useAnimation = 12;
+			Item.useStyle = 1;
+			Item.knockBack = 5;
+			Item.value = 150000;
+			Item.rare = ItemRarityID.Orange;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<EnchantedFuryProjectile>();
+			Item.shootSpeed = 16f;
 		}
 		public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
 		{
@@ -49,7 +50,7 @@ namespace SGAmod.Items.Weapons
 		{
 			if (player.altFunctionUse != 2)
 			{
-				SoundEffectInstance sound = Main.PlaySound(SoundID.Item28, position);
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item28, position);
 				if (sound != null)
 				{
 					sound.Pitch += 0.50f;
@@ -68,13 +69,13 @@ namespace SGAmod.Items.Weapons
 				if ((double)num13 < 0.0) num13 *= -1f;
 				if ((double)num13 < 20.0) num13 = 20f;
 				float num14 = (float)Math.Sqrt((double)num12 * (double)num12 + (double)num13 * (double)num13);
-				float num15 = (item.shootSpeed * 1f) / num14;
+				float num15 = (Item.shootSpeed * 1f) / num14;
 				float num16 = num12 * num15;
 				float num17 = num13 * num15;
 				float SpeedX = num16 + (float)Main.rand.Next(-40, 41) * 0.05f;
 				float SpeedY = num17 + (float)Main.rand.Next(-40, 41) * 0.05f;
 				Projectile.NewProjectile(vector2_1.X, vector2_1.Y, SpeedX, SpeedY, ProjectileID.FallingStar, (int)(damage * 1f), knockBack, Main.myPlayer, 0.0f, (float)Main.rand.Next(5));
-				SoundEffectInstance sound = Main.PlaySound(SoundID.Item9, new Vector2(vector2_1.X, vector2_1.Y));
+				SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.Item9, new Vector2(vector2_1.X, vector2_1.Y));
 				if (sound != null)
 				{
 					sound.Pitch += 0.75f;
@@ -105,8 +106,8 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Starfury);
-			aiType = ProjectileID.Starfury;
+			Projectile.CloneDefaults(ProjectileID.Starfury);
+			AIType = ProjectileID.Starfury;
 		}
 
 		/*public override string Texture
@@ -117,25 +118,25 @@ namespace SGAmod.Items.Weapons
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			if (target.life - damage < 1)
-				EnchantedFuryProjectile.StarBurst(target.Center, projectile.damage, projectile.owner);
+				EnchantedFuryProjectile.StarBurst(target.Center, Projectile.damage, Projectile.owner);
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type = ProjectileID.Starfury;
+			Projectile.type = ProjectileID.Starfury;
 			return true;
 		}
 
 		public override void PostAI()
 		{
-			projectile.localAI[1] += 1;
-			projectile.position -= projectile.velocity * MathHelper.Clamp(1f - (projectile.localAI[1] / 30f), 0f, 1f);
-			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver4;
+			Projectile.localAI[1] += 1;
+			Projectile.position -= Projectile.velocity * MathHelper.Clamp(1f - (Projectile.localAI[1] / 30f), 0f, 1f);
+			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver4;
 		}
 
 		public static void StarBurst(Vector2 where, int damage, int owner)
 		{
-			Main.PlaySound(SoundID.Item29, where);
+			SoundEngine.PlaySound(SoundID.Item29, where);
 			for (int i = 0; i < 5; i++)
 			{
 				Vector2 velorand = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000));

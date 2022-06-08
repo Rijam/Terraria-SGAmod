@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SGAmod.HavocGear.Items.Weapons
 {
@@ -18,37 +19,28 @@ namespace SGAmod.HavocGear.Items.Weapons
 		
 		public override void SetDefaults()
 		{
-			item.damage = 240;
-			item.melee = true;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 30;
-			item.useAnimation = 12;
-			item.useStyle = 1;
-			item.knockBack = 10;
-			item.value = 500000;
-			item.rare = 10;
-	        item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.damage = 240;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 30;
+			Item.useAnimation = 12;
+			Item.useStyle = 1;
+			Item.knockBack = 10;
+			Item.value = 500000;
+			Item.rare = 10;
+	        Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/CelestialFlare_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/CelestialFlare_Glow").Value;
 			}
 		}
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Mudmore"), 1);
-			recipe.AddIngredient(mod.ItemType("ThermalBlade"), 1);
-			recipe.AddIngredient(ItemID.FragmentSolar, 8);
- 			recipe.AddIngredient(mod.ItemType("StarMetalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("IlluminantEssence"), 20);
-			recipe.AddIngredient(ItemID.SoulofLight, 6);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(mod.ItemType("Mudmore"), 1).AddIngredient(mod.ItemType("ThermalBlade"), 1).AddIngredient(ItemID.FragmentSolar, 8).AddIngredient(mod.ItemType("StarMetalBar"), 12).AddIngredient(mod.ItemType("IlluminantEssence"), 20).AddIngredient(ItemID.SoulofLight, 6).AddTile(TileID.LunarCraftingStation).Register();
 
 		}
 
@@ -57,7 +49,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		for (int num475 = 0; num475 < 3; num475++)
 		{
-		int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("HotDust"));
+		int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, Mod.Find<ModDust>("HotDust").Type);
 		Main.dust[dust].scale=0.5f+(((float)num475)/3.5f);
 		Main.dust[dust].velocity=new Vector2(0f,-5f);
 		Main.dust[dust].velocity.Normalize();
@@ -72,7 +64,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		if (!(Main.rand.Next(5) == 0))
 		{
-			target.AddBuff(mod.BuffType("ThermalBlaze"), 600, false);
+			target.AddBuff(Mod.Find<ModBuff>("ThermalBlaze").Type, 600, false);
 			target.AddBuff(BuffID.Daybreak, 600, true);
 			target.AddBuff(BuffID.OnFire, 600, true);
 		}

@@ -10,7 +10,7 @@ namespace SGAmod.Tiles
 {
     public class PrismalStation : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
@@ -43,9 +43,9 @@ namespace SGAmod.Tiles
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if(Main.tile[i, j].frameX == 0 && Main.tile[i, j].frameY == 0)
+            if(Main.tile[i, j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 0)
             {
-                Item.NewItem(i * 16, j * 16, 48, 48, mod.ItemType("PrismalStation"), 1, false, 0, false, false);
+                Item.NewItem(i * 16, j * 16, 48, 48, Mod.Find<ModItem>("PrismalStation").Type, 1, false, 0, false, false);
             }
         }
     }

@@ -21,53 +21,53 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Tidal Elemental");
-			Main.npcFrameCount[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.lifeMax = 800;
-			npc.defense = 4;
-			npc.damage = 32;
-			npc.scale = 1f;
-			npc.width = 86;
-			npc.height = 86;
-			animationType = -1;
-			npc.aiStyle = -1;
-			npc.knockBackResist = 0.4f;
-			npc.npcSlots = 0.1f;
-			npc.netAlways = true;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath6;
-			npc.value = Item.buyPrice(gold: 1);
-			npc.noTileCollide = false;
-			npc.noGravity = true;
-			npc.netUpdate = true;
-			banner = npc.type;
-			bannerItem = mod.ItemType("TidalElementalBanner");
-			npc.rarity = 1;
+			NPC.lifeMax = 800;
+			NPC.defense = 4;
+			NPC.damage = 32;
+			NPC.scale = 1f;
+			NPC.width = 86;
+			NPC.height = 86;
+			AnimationType = -1;
+			NPC.aiStyle = -1;
+			NPC.knockBackResist = 0.4f;
+			NPC.npcSlots = 0.1f;
+			NPC.netAlways = true;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath6;
+			NPC.value = Item.buyPrice(gold: 1);
+			NPC.noTileCollide = false;
+			NPC.noGravity = true;
+			NPC.netUpdate = true;
+			banner = NPC.type;
+			bannerItem = Mod.Find<ModItem>("TidalElementalBanner").Type;
+			NPC.rarity = 1;
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life < 1)
+			if (NPC.life < 1)
 			{
-				Gore.NewGore(npc.Center + new Vector2(-npc.spriteDirection*16,24), npc.velocity, mod.GetGoreSlot("Gores/TidalElemental_tail_gib"), 1f);
-				Gore.NewGore(npc.Center + new Vector2(0, -16), npc.velocity, mod.GetGoreSlot("Gores/TidalElemental_head_gib"), 1f);
-				Gore.NewGore(npc.Center, npc.velocity, mod.GetGoreSlot("Gores/TidalElemental_arm_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(-NPC.spriteDirection*16,24), NPC.velocity, Mod.GetGoreSlot("Gores/TidalElemental_tail_gib"), 1f);
+				Gore.NewGore(NPC.Center + new Vector2(0, -16), NPC.velocity, Mod.GetGoreSlot("Gores/TidalElemental_head_gib"), 1f);
+				Gore.NewGore(NPC.Center, NPC.velocity, Mod.GetGoreSlot("Gores/TidalElemental_arm_gib"), 1f);
 			}
 		}
 
 		public override void AI()
 		{
 
-			int num254 = (int)(npc.position.X + (float)(npc.width / 2)) / 16;
-			int num255 = (int)(npc.position.Y + (float)(npc.height / 2)) / 16;
-			npc.ai[0] = npc.ai[0] + 1;
-			npc.ai[1] = 0;
+			int num254 = (int)(NPC.position.X + (float)(NPC.width / 2)) / 16;
+			int num255 = (int)(NPC.position.Y + (float)(NPC.height / 2)) / 16;
+			NPC.ai[0] = NPC.ai[0] + 1;
+			NPC.ai[1] = 0;
 			if (Main.tile[num254, num255 + 1] != null && Main.tile[num254, num255 + 1].liquid > 64)
 			{
-				npc.ai[1] = 1;
+				NPC.ai[1] = 1;
 			}
 			if (Main.tile[num254, num255 - 1] == null)
 			{
@@ -81,29 +81,29 @@ namespace SGAmod.NPCs
 			{
 				Main.tile[num254, num255 + 2] = new Tile();
 			}
-			num255 = (int)(npc.position.Y + (float)(npc.height)) / 16;
-			if (Main.tile[num254, num255 + 1].active())
+			num255 = (int)(NPC.position.Y + (float)(NPC.height)) / 16;
+			if (Main.tile[num254, num255 + 1].HasTile)
 			{
 				if (Main.tile[num254, num255 + 1].liquid < 64)
 				{
-					npc.ai[1] = -1;
+					NPC.ai[1] = -1;
 				}
 			}
 
-			if (npc.ai[1] == -1 && outofwater < 300)
+			if (NPC.ai[1] == -1 && outofwater < 300)
 			{
-				npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y - Main.rand.Next(6, 15));
+				NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y - Main.rand.Next(6, 15));
 			}
 
 
-			Player P = Main.player[npc.target];
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
+			Player P = Main.player[NPC.target];
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
-				npc.TargetClosest(false);
-				P = Main.player[npc.target];
+				NPC.TargetClosest(false);
+				P = Main.player[NPC.target];
 				if (!P.active || P.dead)
 				{
-					npc.spriteDirection = npc.velocity.X > 0 ? 1 : -1;
+					NPC.spriteDirection = NPC.velocity.X > 0 ? 1 : -1;
 				}
 
 			}
@@ -112,31 +112,31 @@ namespace SGAmod.NPCs
 				bool RageShark = false;
 				foreach(NPC npc in Main.npc.Where(testby => testby.active && testby.type == ModContent.NPCType<Sharkvern.SharkvernHead>()))
                 {
-					if ((npc.modNPC as Sharkvern.SharkvernHead).RainFight)
+					if ((npc.ModNPC as Sharkvern.SharkvernHead).RainFight)
 						RageShark = true;
                 }
 				if (RageShark)
 				{
-					npc.damage = 80;
-					npc.defense = 30;
+					NPC.damage = 80;
+					NPC.defense = 30;
 				}
-				Vector2 dista = P.Center - npc.Center;
-				Vector2 dista2 = P.Center - npc.Center;
+				Vector2 dista = P.Center - NPC.Center;
+				Vector2 dista2 = P.Center - NPC.Center;
 				//Vector2 dista2=dista;
 				dista2.Normalize();
-				npc.velocity += (dista2 * (npc.ai[1] == 1 ? 0.2f : 0.4f));
-				npc.spriteDirection = dista2.X > 0 ? 1 : -1;
+				NPC.velocity += (dista2 * (NPC.ai[1] == 1 ? 0.2f : 0.4f));
+				NPC.spriteDirection = dista2.X > 0 ? 1 : -1;
 				if (outofwater < 300)
 				{
-					outofwater += (npc.ai[1] == 0 ? 1 : 0) + ((Collision.CanHitLine(new Vector2(npc.Center.X, npc.Center.Y), 16, 32, new Vector2(P.Center.X, P.Center.Y), 16, 32)) ? 0 : 1)+(RageShark ? 1 : 0);
+					outofwater += (NPC.ai[1] == 0 ? 1 : 0) + ((Collision.CanHitLine(new Vector2(NPC.Center.X, NPC.Center.Y), 16, 32, new Vector2(P.Center.X, P.Center.Y), 16, 32)) ? 0 : 1)+(RageShark ? 1 : 0);
 				}
-				if (npc.ai[1] == -1 && outofwater > 299 && dista.Y < -30f)
+				if (NPC.ai[1] == -1 && outofwater > 299 && dista.Y < -30f)
 				{
-					npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y - Main.rand.Next(6, 15));
+					NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y - Main.rand.Next(6, 15));
 				}
-				if (npc.ai[0] % 400 > 250 && npc.ai[0] % 60 == 0 && Collision.CanHitLine(new Vector2(npc.Center.X, npc.Center.Y), 4, 4, new Vector2(P.Center.X, P.Center.Y), 4, 4))
+				if (NPC.ai[0] % 400 > 250 && NPC.ai[0] % 60 == 0 && Collision.CanHitLine(new Vector2(NPC.Center.X, NPC.Center.Y), 4, 4, new Vector2(P.Center.X, P.Center.Y), 4, 4))
 				{
-					List<Projectile> itz = Idglib.Shattershots(npc.Center, P.position, new Vector2(P.width, P.height), mod.ProjectileType("ThrownTrident"), RageShark ? 60 : 20, 8, 0, 1, true, 0, true, 400);
+					List<Projectile> itz = Idglib.Shattershots(NPC.Center, P.position, new Vector2(P.width, P.height), Mod.Find<ModProjectile>("ThrownTrident").Type, RageShark ? 60 : 20, 8, 0, 1, true, 0, true, 400);
 					itz[0].damage /= 2;
 				}
 
@@ -147,50 +147,50 @@ namespace SGAmod.NPCs
 				outofwater += 1;
 				if (outofwater == 300)
 				{
-					Vector2 dista2 = P.Center - npc.Center;
-					npc.velocity = new Vector2(npc.velocity.X, dista2.Y > -100 ? 16f : -16f);
+					Vector2 dista2 = P.Center - NPC.Center;
+					NPC.velocity = new Vector2(NPC.velocity.X, dista2.Y > -100 ? 16f : -16f);
 				}
 				if (outofwater > 350)
-					npc.ai[1] = 1;
+					NPC.ai[1] = 1;
 				if (outofwater > 500)
 				{
 					outofwater = 0;
 
 				}
-				npc.noTileCollide = true;
+				NPC.noTileCollide = true;
 			}
 			else
 			{
-				npc.noTileCollide = false;
+				NPC.noTileCollide = false;
 			}
-			npc.velocity = npc.velocity * 0.98f;
+			NPC.velocity = NPC.velocity * 0.98f;
 
-			if (npc.velocity.Length() > 14)
+			if (NPC.velocity.Length() > 14)
 			{
-				npc.velocity.Normalize();
-				npc.velocity = npc.velocity * 14;
+				NPC.velocity.Normalize();
+				NPC.velocity = NPC.velocity * 14;
 			}
 			//Main.NewText(""+outofwater,255,255,255);
-			if (npc.ai[1] == 1)
+			if (NPC.ai[1] == 1)
 			{
-				npc.rotation = 0f;
+				NPC.rotation = 0f;
 			}
-			if (npc.ai[1] == 0)
+			if (NPC.ai[1] == 0)
 			{
-				npc.velocity = new Vector2(npc.velocity.X, npc.velocity.Y + 1f);
-				npc.rotation = (npc.velocity.Y * 0.03f) * npc.spriteDirection;
+				NPC.velocity = new Vector2(NPC.velocity.X, NPC.velocity.Y + 1f);
+				NPC.rotation = (NPC.velocity.Y * 0.03f) * NPC.spriteDirection;
 			}
-			npc.noGravity = npc.ai[1] == 1 ? true : false;
+			NPC.noGravity = NPC.ai[1] == 1 ? true : false;
 		}
 
 		public override void FindFrame(int frameHeight)
 		{
 
-			if (npc.ai[0] % 15 == 0)
+			if (NPC.ai[0] % 15 == 0)
 				framevar = framevar + 1;
 			if (framevar > 3)
 				framevar = 0;
-			npc.frame.Y = framevar * npc.height;
+			NPC.frame.Y = framevar * NPC.height;
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -198,7 +198,7 @@ namespace SGAmod.NPCs
 			Tile tile = Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY - 3];
 			bool canspawn = tile.liquid > 63 ? true : false;
 			//!NPC.BusyWithAnyInvasionOfSorts() 
-			return !spawnInfo.playerInTown && !spawnInfo.invasion && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && spawnInfo.spawnTileY < Main.rockLayer && spawnInfo.player.ZoneBeach && canspawn && NPC.downedBoss1 ? 0.05f : 0f;
+			return !spawnInfo.playerInTown && !spawnInfo.invasion && !Main.pumpkinMoon && !Main.snowMoon && !Main.eclipse && spawnInfo.spawnTileY < Main.rockLayer && spawnInfo.Player.ZoneBeach && canspawn && NPC.downedBoss1 ? 0.05f : 0f;
 		}
 
 		public override void NPCLoot()
@@ -206,20 +206,20 @@ namespace SGAmod.NPCs
 			int pick = Main.rand.Next(0, 4);
 			if (pick == 0)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("StarfishBlaster"), 1);
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, 2626, Main.rand.Next(50, 100));
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("StarfishBlaster").Type, 1);
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, 2626, Main.rand.Next(50, 100));
 			}
 			if (pick == 1)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ThrownTrident"), 1);
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("ThrownTrident").Type, 1);
 			}
 			if (pick == 2)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TidalWave"), 1);
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("TidalWave").Type, 1);
 			}
 			if (pick == 3)
 			{
-				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TidalCharm"), 1);
+				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("TidalCharm").Type, 1);
 			}
 		}
 	}

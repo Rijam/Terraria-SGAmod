@@ -10,6 +10,7 @@ using SGAmod.NPCs;
 using Idglibrary;
 
 using System.Linq;
+using Terraria.Audio;
 
 namespace SGAmod.Items.Weapons
 {
@@ -23,23 +24,23 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.summon = true;
-			item.damage = 40;
-			item.mana = 50;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.knockBack = 2;
-			item.value = 75000;
-			item.noMelee = true;
-			item.rare = ItemRarityID.Pink;
-			item.shoot = 10;
-			item.shootSpeed = 10f;
-			item.UseSound = SoundID.Item60;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.DamageType = DamageClass.Summon;
+			Item.damage = 40;
+			Item.mana = 50;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.knockBack = 2;
+			Item.value = 75000;
+			Item.noMelee = true;
+			Item.rare = ItemRarityID.Pink;
+			Item.shoot = 10;
+			Item.shootSpeed = 10f;
+			Item.UseSound = SoundID.Item60;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 
 		}
 
@@ -53,7 +54,7 @@ namespace SGAmod.Items.Weapons
 
 			Limit(player);
 
-			int theproj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("SnowfallCloud"), damage, knockBack, player.whoAmI);
+			int theproj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, Mod.Find<ModProjectile>("SnowfallCloud").Type, damage, knockBack, player.whoAmI);
 			float num12 = (float)Main.mouseX + Main.screenPosition.X;
 			float num13 = (float)Main.mouseY + Main.screenPosition.Y;
 			HalfVector2 half = new HalfVector2(num12, num13);
@@ -68,7 +69,7 @@ namespace SGAmod.Items.Weapons
 
 			for (int num475 = 0; num475 < 3; num475++)
 			{
-				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("HotDust"));
+				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, Mod.Find<ModDust>("HotDust").Type);
 				Main.dust[dust].scale = 0.5f + (((float)num475) / 3.5f);
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 				Main.dust[dust].velocity = randomcircle / 2f;
@@ -89,15 +90,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
-			projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 60 * 30;
-			projectile.tileCollide = false;
+			Projectile.timeLeft = 60 * 30;
+			Projectile.tileCollide = false;
 		}
 
 		public override string Texture
@@ -120,27 +121,27 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 
-			Vector2 gohere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(projectile.ai[0]) }.ToVector2();
-			Vector2 anglevect = (gohere - projectile.position);
+			Vector2 gohere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(Projectile.ai[0]) }.ToVector2();
+			Vector2 anglevect = (gohere - Projectile.position);
 			float length = anglevect.Length();
 			anglevect.Normalize();
-			projectile.velocity = (10f * anglevect);
-			bool reached = (length < projectile.velocity.Length() + 1f);
+			Projectile.velocity = (10f * anglevect);
+			bool reached = (length < Projectile.velocity.Length() + 1f);
 			for (int q = 0; q < (reached ? 40 : 4); q++)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 				float reachfloat = reached ? 0f : 1f;
-				int dust = Dust.NewDust(projectile.position - new Vector2(8, 0), 16, 16, DustID.Smoke, ((projectile.velocity.X * 0.75f) * reachfloat) + (randomcircle * (reached ? 12f : 0f)).X, ((projectile.velocity.Y * 0.75f) * reachfloat) + (randomcircle * (reached ? 4f : 0f)).Y, 100, Main.hslToRgb(0.6f, 0.8f, 0.8f), 3f);
+				int dust = Dust.NewDust(Projectile.position - new Vector2(8, 0), 16, 16, DustID.Smoke, ((Projectile.velocity.X * 0.75f) * reachfloat) + (randomcircle * (reached ? 12f : 0f)).X, ((Projectile.velocity.Y * 0.75f) * reachfloat) + (randomcircle * (reached ? 4f : 0f)).Y, 100, Main.hslToRgb(0.6f, 0.8f, 0.8f), 3f);
 				Main.dust[dust].noGravity = true;
 			}
 			if (reached)
 			{
-				int theproj = Projectile.NewProjectile(projectile.position.X + 16f, projectile.position.Y, 0f, 0f, mod.ProjectileType("SnowCloud"), projectile.damage, projectile.knockBack, projectile.owner);
+				int theproj = Projectile.NewProjectile(Projectile.position.X + 16f, Projectile.position.Y, 0f, 0f, Mod.Find<ModProjectile>("SnowCloud").Type, Projectile.damage, Projectile.knockBack, Projectile.owner);
 				Main.projectile[theproj].friendly = true;
 				Main.projectile[theproj].hostile = false;
-				Main.projectile[theproj].timeLeft = projectile.timeLeft;
+				Main.projectile[theproj].timeLeft = Projectile.timeLeft;
 				Main.projectile[theproj].netUpdate = true;
-				projectile.Kill();
+				Projectile.Kill();
 			}
 		}
 
@@ -156,23 +157,23 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.summon = true;
-			item.damage = 65;
-			item.mana = 50;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.knockBack = 2;
-			item.value = 200000;
-			item.noMelee = true;
-			item.rare = ItemRarityID.Lime;
-			item.shoot = 10;
-			item.shootSpeed = 10f;
-			item.UseSound = SoundID.Item60;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.DamageType = DamageClass.Summon;
+			Item.damage = 65;
+			Item.mana = 50;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.knockBack = 2;
+			Item.value = 200000;
+			Item.noMelee = true;
+			Item.rare = ItemRarityID.Lime;
+			Item.shoot = 10;
+			Item.shootSpeed = 10f;
+			Item.UseSound = SoundID.Item60;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 
 		}
 
@@ -181,7 +182,7 @@ namespace SGAmod.Items.Weapons
 
 			Limit(player);
 
-			int theproj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("CursedHailProj"), damage, knockBack, player.whoAmI);
+			int theproj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, Mod.Find<ModProjectile>("CursedHailProj").Type, damage, knockBack, player.whoAmI);
 			float num12 = (float)Main.mouseX + Main.screenPosition.X;
 			float num13 = (float)Main.mouseY + Main.screenPosition.Y;
 			HalfVector2 half = new HalfVector2(num12, num13);
@@ -192,14 +193,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<Snowfall>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Consumables.GasPasser>(), 3);
-			recipe.AddIngredient(ItemID.CursedFlame, 12);
-			recipe.AddIngredient(ItemID.BlizzardStaff, 1);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<Snowfall>(), 1).AddIngredient(ModContent.ItemType<Consumables.GasPasser>(), 3).AddIngredient(ItemID.CursedFlame, 12).AddIngredient(ItemID.BlizzardStaff, 1).AddTile(TileID.MythrilAnvil).Register();
 
 		}
 
@@ -211,15 +205,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
-			projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 60 * 30;
-			projectile.tileCollide = false;
+			Projectile.timeLeft = 60 * 30;
+			Projectile.tileCollide = false;
 		}
 
 		public override string Texture
@@ -229,27 +223,27 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 
-			Vector2 gohere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(projectile.ai[0]) }.ToVector2();
-			Vector2 anglevect = (gohere - projectile.position);
+			Vector2 gohere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(Projectile.ai[0]) }.ToVector2();
+			Vector2 anglevect = (gohere - Projectile.position);
 			float length = anglevect.Length();
 			anglevect.Normalize();
-			projectile.velocity = (10f * anglevect);
-			bool reached = (length < projectile.velocity.Length() + 1f);
+			Projectile.velocity = (10f * anglevect);
+			bool reached = (length < Projectile.velocity.Length() + 1f);
 			for (int q = 0; q < (reached ? 40 : 4); q++)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 				float reachfloat = reached ? 0f : 1f;
-				int dust = Dust.NewDust(projectile.position - new Vector2(8, 0), 16, 16, DustID.Smoke, ((projectile.velocity.X * 0.75f) * reachfloat) + (randomcircle * (reached ? 12f : 0f)).X, ((projectile.velocity.Y * 0.75f) * reachfloat) + (randomcircle * (reached ? 4f : 0f)).Y, 100, Color.LimeGreen, 3f);
+				int dust = Dust.NewDust(Projectile.position - new Vector2(8, 0), 16, 16, DustID.Smoke, ((Projectile.velocity.X * 0.75f) * reachfloat) + (randomcircle * (reached ? 12f : 0f)).X, ((Projectile.velocity.Y * 0.75f) * reachfloat) + (randomcircle * (reached ? 4f : 0f)).Y, 100, Color.LimeGreen, 3f);
 				Main.dust[dust].noGravity = true;
 			}
 			if (reached)
 			{
-				int theproj = Projectile.NewProjectile(projectile.position.X + 16f, projectile.position.Y, 0f, 0f, mod.ProjectileType("CursedHailCloud"), projectile.damage, projectile.knockBack, projectile.owner);
+				int theproj = Projectile.NewProjectile(Projectile.position.X + 16f, Projectile.position.Y, 0f, 0f, Mod.Find<ModProjectile>("CursedHailCloud").Type, Projectile.damage, Projectile.knockBack, Projectile.owner);
 				Main.projectile[theproj].friendly = true;
 				Main.projectile[theproj].hostile = false;
-				Main.projectile[theproj].timeLeft = projectile.timeLeft;
+				Main.projectile[theproj].timeLeft = Projectile.timeLeft;
 				Main.projectile[theproj].netUpdate = true;
-				projectile.Kill();
+				Projectile.Kill();
 
 			}
 
@@ -267,15 +261,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = false;
-			projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 600;
-			projectile.tileCollide = false;
+			Projectile.timeLeft = 600;
+			Projectile.tileCollide = false;
 		}
 
 	}
@@ -292,15 +286,15 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.CloneDefaults(fakeid);
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.penetrate = 5;
-			projectile.minion = true;
-			projectile.extraUpdates = 2;
-			projectile.coldDamage = true;
+			Projectile.CloneDefaults(fakeid);
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.penetrate = 5;
+			Projectile.minion = true;
+			Projectile.extraUpdates = 2;
+			Projectile.coldDamage = true;
 		}
 
 		public override string Texture
@@ -310,43 +304,43 @@ namespace SGAmod.Items.Weapons
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			if (projectile.localAI[0] < 100)
-				projectile.localAI[0] = 100 + Main.rand.Next(0, 3);
+			if (Projectile.localAI[0] < 100)
+				Projectile.localAI[0] = 100 + Main.rand.Next(0, 3);
 			Texture2D tex = SGAmod.HellionTextures[5];
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / 5) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-			int timing = (int)(projectile.localAI[0] - 100);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+			int timing = (int)(Projectile.localAI[0] - 100);
 			timing %= 5;
 			timing *= ((tex.Height) / 5);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), lightColor, MathHelper.ToRadians(180) + projectile.velocity.X * -0.08f, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height - 1) / 5), lightColor, MathHelper.ToRadians(180) + Projectile.velocity.X * -0.08f, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			return false;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			projectile.type = fakeid;
+			Projectile.type = fakeid;
 			return true;
 		}
 
 		public override void AI()
 		{
-			if (projectile.ai[0] == 0)
+			if (Projectile.ai[0] == 0)
 			{
-				projectile.ai[0] = 1;
-				projectile.velocity += new Vector2(0, 10);
-				projectile.velocity *= 0.75f;
+				Projectile.ai[0] = 1;
+				Projectile.velocity += new Vector2(0, 10);
+				Projectile.velocity *= 0.75f;
 			}
-			int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 75);
+			int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 75);
 			Main.dust[dust].scale = 1f;
 			Main.dust[dust].noGravity = true;
-			Main.dust[dust].velocity = projectile.velocity * (float)(Main.rand.NextFloat(0.1f, 0.25f));
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Main.dust[dust].velocity = Projectile.velocity * (float)(Main.rand.NextFloat(0.1f, 0.25f));
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 		}
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			target.AddBuff(BuffID.CursedInferno, 60 * 5);
-			target.immune[projectile.owner] = 4;
+			target.immune[Projectile.owner] = 4;
 		}
 
 	}
@@ -361,23 +355,23 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.summon = true;
-			item.damage = 40;
-			item.mana = 50;
-			item.width = 44;
-			item.height = 52;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
-			item.knockBack = 2;
-			item.value = 100000;
-			item.noMelee = true;
-			item.rare = ItemRarityID.Yellow;
-			item.shoot = 10;
-			item.shootSpeed = 10f;
-			item.UseSound = SoundID.Item60;
-			item.autoReuse = true;
-			item.useTurn = false;
+			Item.DamageType = DamageClass.Summon;
+			Item.damage = 40;
+			Item.mana = 50;
+			Item.width = 44;
+			Item.height = 52;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 1;
+			Item.knockBack = 2;
+			Item.value = 100000;
+			Item.noMelee = true;
+			Item.rare = ItemRarityID.Yellow;
+			Item.shoot = 10;
+			Item.shootSpeed = 10f;
+			Item.UseSound = SoundID.Item60;
+			Item.autoReuse = true;
+			Item.useTurn = false;
 
 		}
 
@@ -386,7 +380,7 @@ namespace SGAmod.Items.Weapons
 
 			Limit(player);
 
-			int theproj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("YellowWinterProj"), damage, knockBack, player.whoAmI);
+			int theproj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, Mod.Find<ModProjectile>("YellowWinterProj").Type, damage, knockBack, player.whoAmI);
 			float num12 = (float)Main.mouseX + Main.screenPosition.X;
 			float num13 = (float)Main.mouseY + Main.screenPosition.Y;
 			HalfVector2 half = new HalfVector2(num12, num13);
@@ -397,14 +391,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<Snowfall>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Consumables.DivineShower>(), 1);
-			recipe.AddIngredient(ModContent.ItemType<Consumables.Jarate>(), 5);
-			recipe.AddIngredient(ItemID.CandyCorn, 100);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ModContent.ItemType<Snowfall>(), 1).AddIngredient(ModContent.ItemType<Consumables.DivineShower>(), 1).AddIngredient(ModContent.ItemType<Consumables.Jarate>(), 5).AddIngredient(ItemID.CandyCorn, 100).AddTile(TileID.MythrilAnvil).Register();
 
 		}
 
@@ -416,15 +403,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = true;
-			projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 60 * 30;
-			projectile.tileCollide = false;
+			Projectile.timeLeft = 60 * 30;
+			Projectile.tileCollide = false;
 		}
 
 		public override string Texture
@@ -434,27 +421,27 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 
-			Vector2 gohere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(projectile.ai[0]) }.ToVector2();
-			Vector2 anglevect = (gohere - projectile.position);
+			Vector2 gohere = new HalfVector2() { PackedValue = ReLogic.Utilities.ReinterpretCast.FloatAsUInt(Projectile.ai[0]) }.ToVector2();
+			Vector2 anglevect = (gohere - Projectile.position);
 			float length = anglevect.Length();
 			anglevect.Normalize();
-			projectile.velocity = (10f * anglevect);
-			bool reached = (length < projectile.velocity.Length() + 1f);
+			Projectile.velocity = (10f * anglevect);
+			bool reached = (length < Projectile.velocity.Length() + 1f);
 			for (int q = 0; q < (reached ? 40 : 4); q++)
 			{
 				Vector2 randomcircle = new Vector2(Main.rand.Next(-8000, 8000), Main.rand.Next(-8000, 8000)); randomcircle.Normalize();
 				float reachfloat = reached ? 0f : 1f;
-				int dust = Dust.NewDust(projectile.position - new Vector2(8, 0), 16, 16, DustID.Smoke, ((projectile.velocity.X * 0.75f) * reachfloat) + (randomcircle * (reached ? 12f : 0f)).X, ((projectile.velocity.Y * 0.75f) * reachfloat) + (randomcircle * (reached ? 4f : 0f)).Y, 100, Color.Yellow, 3f);
+				int dust = Dust.NewDust(Projectile.position - new Vector2(8, 0), 16, 16, DustID.Smoke, ((Projectile.velocity.X * 0.75f) * reachfloat) + (randomcircle * (reached ? 12f : 0f)).X, ((Projectile.velocity.Y * 0.75f) * reachfloat) + (randomcircle * (reached ? 4f : 0f)).Y, 100, Color.Yellow, 3f);
 				Main.dust[dust].noGravity = true;
 			}
 			if (reached)
 			{
-				int theproj = Projectile.NewProjectile(projectile.position.X + 16f, projectile.position.Y, 0f, 0f, ModContent.ProjectileType<YellowWinterCloud>(), projectile.damage, projectile.knockBack, projectile.owner);
+				int theproj = Projectile.NewProjectile(Projectile.position.X + 16f, Projectile.position.Y, 0f, 0f, ModContent.ProjectileType<YellowWinterCloud>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 				Main.projectile[theproj].friendly = true;
 				Main.projectile[theproj].hostile = false;
-				Main.projectile[theproj].timeLeft = projectile.timeLeft;
+				Main.projectile[theproj].timeLeft = Projectile.timeLeft;
 				Main.projectile[theproj].netUpdate = true;
-				projectile.Kill();
+				Projectile.Kill();
 
 			}
 
@@ -470,15 +457,15 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			Projectile.width = 30;
+			Projectile.height = 30;
 			//projectile.aiStyle = 1;
-			projectile.friendly = false;
-			projectile.hostile = true;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
 			//projectile.magic = true;
 			//projectile.penetrate = 1;
-			projectile.timeLeft = 600;
-			projectile.tileCollide = false;
+			Projectile.timeLeft = 600;
+			Projectile.tileCollide = false;
 		}
 
 	}
@@ -493,22 +480,22 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 42;
-			item.melee = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = 1;
-			item.knockBack = 4;
-			item.crit = 7;
-			item.value = Item.sellPrice(0, 15, 0, 0);
-			item.rare = 5;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 42;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = 1;
+			Item.knockBack = 4;
+			Item.crit = 7;
+			Item.value = Item.sellPrice(0, 15, 0, 0);
+			Item.rare = 5;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/RubiedBlade_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/RubiedBlade_Glow").Value;
 			}
 
 		}
@@ -521,8 +508,8 @@ namespace SGAmod.Items.Weapons
 			hereas -= new Vector2(0, 800);
 			Vector2 gohere = ((hereas + new Vector2(Main.rand.NextFloat(-100f, 100f), 800f)) - hereas); gohere.Normalize(); gohere *= 15f;
 			int proj = Projectile.NewProjectile(hereas, gohere, ProjectileID.RubyBolt, (int)(damage * 1), knockBack, player.whoAmI);
-			Main.projectile[proj].melee = true;
-			Main.projectile[proj].magic = false;
+			Main.projectile[proj].DamageType = DamageClass.Melee;
+			// Main.projectile[proj].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 			Main.projectile[proj].timeLeft = 300;
 			IdgProjectile.Sync(proj);
 		}
@@ -551,20 +538,20 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.GoldenShower);
-			item.damage = 38;
-			item.useAnimation = 18;
-			item.useTime = 5;
-			item.reuseDelay = 20;
-			item.knockBack = 6;
-			item.value = 75000;
-			item.rare = ItemRarityID.Pink;
-			item.magic = false;
-			item.ranged = true;
-			item.mana = 10;
-			item.shoot = ProjectileID.StarAnise;
-			item.shootSpeed = 9f;
-			item.useAmmo = AmmoID.FallenStar;
+			Item.CloneDefaults(ItemID.GoldenShower);
+			Item.damage = 38;
+			Item.useAnimation = 18;
+			Item.useTime = 5;
+			Item.reuseDelay = 20;
+			Item.knockBack = 6;
+			Item.value = 75000;
+			Item.rare = ItemRarityID.Pink;
+			// item.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Item.DamageType = DamageClass.Ranged;
+			Item.mana = 10;
+			Item.shoot = ProjectileID.StarAnise;
+			Item.shootSpeed = 9f;
+			Item.useAmmo = AmmoID.FallenStar;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -590,7 +577,7 @@ namespace SGAmod.Items.Weapons
 			if (type == ProjectileID.StarAnise)
 				Itd = 9;
 			int probg = Terraria.Projectile.NewProjectile(position.X + (int)speedX * 4, position.Y + (int)speedY * 4, speedX * (rander), speedY * (rander), Itd, damage, knockBack, player.whoAmI);
-			Main.projectile[probg].ranged = true;
+			Main.projectile[probg].DamageType = DamageClass.Ranged;
 			Main.projectile[probg].tileCollide = true;
 			return false;
 		}
@@ -610,20 +597,20 @@ namespace SGAmod.Items.Weapons
 		}
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.GoldenShower);
-			item.damage = 50;
-			item.useAnimation = 18;
-			item.useTime = 5;
-			item.reuseDelay = 20;
-			item.knockBack = 6;
-			item.value = 250000;
-			item.rare = 7;
-			item.magic = false;
-			item.ranged = true;
+			Item.CloneDefaults(ItemID.GoldenShower);
+			Item.damage = 50;
+			Item.useAnimation = 18;
+			Item.useTime = 5;
+			Item.reuseDelay = 20;
+			Item.knockBack = 6;
+			Item.value = 250000;
+			Item.rare = 7;
+			// item.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Item.DamageType = DamageClass.Ranged;
 			//item.shoot = mod.ProjectileType("SunbringerFlare");
-			item.shoot = mod.ProjectileType("StarfishProjectile");
-			item.shootSpeed = 11f;
-			item.useAmmo = 2626;
+			Item.shoot = Mod.Find<ModProjectile>("StarfishProjectile").Type;
+			Item.shootSpeed = 11f;
+			Item.useAmmo = 2626;
 		}
 
 		/*
@@ -636,18 +623,7 @@ namespace SGAmod.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "StarfishBlaster", 1);
-			recipe.AddIngredient(null, "Starburster", 1);
-			recipe.AddIngredient(null, "WraithFragment4", 10);
-			recipe.AddIngredient(null, "CryostalBar", 8);
-			recipe.AddIngredient(null, "SharkTooth", 100);
-			recipe.AddIngredient(ItemID.Coral, 8);
-			recipe.AddIngredient(ItemID.Starfish, 5);
-			recipe.AddIngredient(ItemID.HallowedBar, 6);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "StarfishBlaster", 1).AddIngredient(null, "Starburster", 1).AddIngredient(null, "WraithFragment4", 10).AddIngredient(null, "CryostalBar", 8).AddIngredient(null, "SharkTooth", 100).AddIngredient(ItemID.Coral, 8).AddIngredient(ItemID.Starfish, 5).AddIngredient(ItemID.HallowedBar, 6).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
 		}
 
 	}
@@ -662,24 +638,24 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 36;
-			item.magic = true;
-			item.width = 34;
-			item.mana = 8;
-			item.height = 24;
-			item.useTime = 17;
-			item.useAnimation = 17;
-			item.useStyle = 5;
-			item.knockBack = 2;
-			item.value = 50000;
-			item.rare = ItemRarityID.Pink;
-			item.shootSpeed = 8f;
-			item.noMelee = true;
-			item.shoot = 14;
-			item.shootSpeed = 11f;
-			item.UseSound = SoundID.Item8;
-			item.autoReuse = true;
-			Item.staff[item.type] = true;
+			Item.damage = 36;
+			Item.DamageType = DamageClass.Magic;
+			Item.width = 34;
+			Item.mana = 8;
+			Item.height = 24;
+			Item.useTime = 17;
+			Item.useAnimation = 17;
+			Item.useStyle = 5;
+			Item.knockBack = 2;
+			Item.value = 50000;
+			Item.rare = ItemRarityID.Pink;
+			Item.shootSpeed = 8f;
+			Item.noMelee = true;
+			Item.shoot = 14;
+			Item.shootSpeed = 11f;
+			Item.UseSound = SoundID.Item8;
+			Item.autoReuse = true;
+			Item.staff[Item.type] = true;
 		}
 
 		public override bool AltFunctionUse(Player player)
@@ -709,11 +685,11 @@ namespace SGAmod.Items.Weapons
 						Main.projectile[proj].friendly = true;
 						Main.projectile[proj].hostile = false;
 						Main.projectile[proj].timeLeft = 240;
-						Main.projectile[proj].knockBack = item.knockBack;
+						Main.projectile[proj].knockBack = Item.knockBack;
 						player.itemTime = 90;
 
 					}
-					player.CheckMana(item,60,true);
+					player.CheckMana(Item,60,true);
 					player.manaRegenDelay = 1200;
 				}
 
@@ -728,11 +704,11 @@ namespace SGAmod.Items.Weapons
 				position += Vector2.Normalize(new Vector2(speedX, speedY)) * 48f;
 				Vector2 perturbedSpeed = (new Vector2(speedX, speedY)).RotatedBy(MathHelper.Lerp(-rotation, rotation, (float)Main.rand.Next(0, 100) / 100f)) * .2f;
 
-				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CirnoBoltPlayer"), damage, knockBack, player.whoAmI);
+				int proj = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("CirnoBoltPlayer").Type, damage, knockBack, player.whoAmI);
 				Main.projectile[proj].friendly = true;
 				Main.projectile[proj].hostile = false;
 				Main.projectile[proj].timeLeft = 240;
-				Main.projectile[proj].knockBack = item.knockBack;
+				Main.projectile[proj].knockBack = Item.knockBack;
 
 			}
 			return false;
@@ -752,21 +728,21 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.useStyle = 1;
-			item.Throwing().thrown = true;
-			item.damage = 20;
-			item.crit = 0;
-			item.knockBack = 0f;
-			item.useTime = 25;
-			item.useAnimation = 25;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
-			item.maxStack = 1;
-			item.shootSpeed = 12f;
-			item.shoot = mod.ProjectileType("CirnoIceShardPlayerCore");
-			item.value = Item.buyPrice(0, 2, 5, 0);
-			item.rare = 6;
+			Item.useStyle = 1;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.damage = 20;
+			Item.crit = 0;
+			Item.knockBack = 0f;
+			Item.useTime = 25;
+			Item.useAnimation = 25;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.autoReuse = true;
+			Item.maxStack = 1;
+			Item.shootSpeed = 12f;
+			Item.shoot = Mod.Find<ModProjectile>("CirnoIceShardPlayerCore").Type;
+			Item.value = Item.buyPrice(0, 2, 5, 0);
+			Item.rare = 6;
 		}
 
 	}
@@ -782,16 +758,16 @@ namespace SGAmod.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(fakeid);
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.penetrate = 1;
-			projectile.Throwing().thrown = true;
-			projectile.coldDamage = true;
-			projectile.extraUpdates = 0;
-			projectile.aiStyle = -1;
+			Projectile.CloneDefaults(fakeid);
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.penetrate = 1;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.coldDamage = true;
+			Projectile.extraUpdates = 0;
+			Projectile.aiStyle = -1;
 		}
 
 		public override string Texture
@@ -802,26 +778,26 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 
-			projectile.rotation += projectile.velocity.X * 0.02f;
-			projectile.velocity.Y += 0.2f;
-			if (projectile.velocity.Y > 0)
+			Projectile.rotation += Projectile.velocity.X * 0.02f;
+			Projectile.velocity.Y += 0.2f;
+			if (Projectile.velocity.Y > 0)
 			{
-				Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 30, 1f, -0.5f);
+				SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 30, 1f, -0.5f);
 				for (float xx = 0f; xx < 6f; xx += 1f)
 				{
-					int proj2 = Projectile.NewProjectile(projectile.Center, projectile.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(0, 3f)), mod.ProjectileType("CirnoIceShardPlayer"), (int)((float)projectile.damage * 1f), 0f, projectile.owner);
+					int proj2 = Projectile.NewProjectile(Projectile.Center, Projectile.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(0, 3f)), Mod.Find<ModProjectile>("CirnoIceShardPlayer").Type, (int)((float)Projectile.damage * 1f), 0f, Projectile.owner);
 					Main.projectile[proj2].friendly = true;
 					Main.projectile[proj2].hostile = false;
 					Main.projectile[proj2].netUpdate = true;
 				}
-				projectile.Kill();
+				Projectile.Kill();
 			}
 			for (float i = 0f; i < 4f; i += 1f)
 			{
-				int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Ice);
+				int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Ice);
 				Main.dust[dust].scale = 1.5f;
 				Main.dust[dust].noGravity = true;
-				Main.dust[dust].velocity = projectile.velocity * (float)(Main.rand.NextFloat(0.1f, 0.25f) * i);
+				Main.dust[dust].velocity = Projectile.velocity * (float)(Main.rand.NextFloat(0.1f, 0.25f) * i);
 			}
 		}
 
@@ -839,16 +815,16 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.CloneDefaults(fakeid);
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.penetrate = 1;
-			projectile.Throwing().thrown = true;
-			projectile.coldDamage = true;
-			projectile.extraUpdates = 0;
-			projectile.aiStyle = -1;
+			Projectile.CloneDefaults(fakeid);
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.penetrate = 1;
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.coldDamage = true;
+			Projectile.extraUpdates = 0;
+			Projectile.aiStyle = -1;
 		}
 
 		public override string Texture
@@ -859,10 +835,10 @@ namespace SGAmod.Items.Weapons
 		public override void AI()
 		{
 			base.AI();
-			projectile.hostile = false;
-			projectile.friendly = true;
-			if (projectile.ai[1]<=0)
-			projectile.velocity.Y += 0.1f;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			if (Projectile.ai[1]<=0)
+			Projectile.velocity.Y += 0.1f;
 		}
 	}
 
@@ -877,30 +853,30 @@ namespace SGAmod.Items.Weapons
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.penetrate = 1;
-			projectile.thrown = false;
-			projectile.magic = true;
-			projectile.extraUpdates = 0;
-			projectile.aiStyle = -1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.penetrate = 1;
+			// projectile.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.extraUpdates = 0;
+			Projectile.aiStyle = -1;
 		}
 
 		public override void AI()
 		{
-			projectile.ai[0] += 0.1f;
-			projectile.localAI[1] += 0.2f;
-			Projectile parent = Main.projectile[(int)projectile.ai[1]];
-			if (parent.active && parent.type == mod.ProjectileType("CirnoBoltPlayer") && projectile.ai[0]>-5000)
+			Projectile.ai[0] += 0.1f;
+			Projectile.localAI[1] += 0.2f;
+			Projectile parent = Main.projectile[(int)Projectile.ai[1]];
+			if (parent.active && parent.type == Mod.Find<ModProjectile>("CirnoBoltPlayer") .Type&& Projectile.ai[0]>-5000)
 			{
-				projectile.velocity = (projectile.ai[0] + MathHelper.ToRadians(90)).ToRotationVector2() * 7;
-				projectile.Center = parent.Center + (projectile.ai[0]).ToRotationVector2()*Math.Min(projectile.localAI[1],12f); 
+				Projectile.velocity = (Projectile.ai[0] + MathHelper.ToRadians(90)).ToRotationVector2() * 7;
+				Projectile.Center = parent.Center + (Projectile.ai[0]).ToRotationVector2()*Math.Min(Projectile.localAI[1],12f); 
 			}
 			else
 			{
-				projectile.ai[0] = -10000;
+				Projectile.ai[0] = -10000;
 			}
 
 			base.AI();
@@ -914,36 +890,36 @@ namespace SGAmod.Items.Weapons
 		{
 			DisplayName.SetDefault("Rod of The Misty Lake");
 			Tooltip.SetDefault("Summons Ice Fairies to fight for you with blasts of ice\nThey orbit around you and seek out enemies\nPeriodically converts projectiles nearby into Cold Damage\nThis also boosts their damage by 25% of your summon damage\nCosts 2 minion slots");
-			ItemID.Sets.GamepadWholeScreenUseRange[item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
-			ItemID.Sets.LockOnIgnoresCollision[item.type] = true;
+			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
+			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 22;
-			item.knockBack = 3f;
-			item.mana = 10;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 36;
-			item.useAnimation = 36;
-			item.useStyle = 1;
-			item.value = Item.buyPrice(0, 2, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.UseSound = SoundID.Item44;
+			Item.damage = 22;
+			Item.knockBack = 3f;
+			Item.mana = 10;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 36;
+			Item.useAnimation = 36;
+			Item.useStyle = 1;
+			Item.value = Item.buyPrice(0, 2, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.UseSound = SoundID.Item44;
 
 			// These below are needed for a minion weapon
-			item.noMelee = true;
-			item.summon = true;
-			item.buffType = ModContent.BuffType<CirnoMinionBuff>();
+			Item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.buffType = ModContent.BuffType<CirnoMinionBuff>();
 			// No buffTime because otherwise the item tooltip would say something like "1 minute duration"
-			item.shoot = ModContent.ProjectileType<CirnoMinionProjectile>();
+			Item.shoot = ModContent.ProjectileType<CirnoMinionProjectile>();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			// This is needed so the buff that keeps your minion alive and allows you to despawn it properly applies
-			player.AddBuff(item.buffType, 2);
+			player.AddBuff(Item.buffType, 2);
 
 			return true;
 		}
@@ -965,22 +941,22 @@ namespace SGAmod.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ice Fairy Minion");
-			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
-			Main.projPet[projectile.type] = true;
-			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
+			Main.projPet[Projectile.type] = true;
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public sealed override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.tileCollide = false;
-			projectile.friendly = true;
-			projectile.minion = true;
-			projectile.minionSlots = 2f;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.minion = true;
+			Projectile.minionSlots = 2f;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
 		}
 
 		public override bool? CanCutTiles()
@@ -1007,16 +983,16 @@ namespace SGAmod.Items.Weapons
 			//if (projectile.owner == null || projectile.owner < 0)
 			//return;
 
-			projectile.ai[0]++;
-			projectile.localAI[0]++;
-			Player player = Main.player[projectile.owner];
+			Projectile.ai[0]++;
+			Projectile.localAI[0]++;
+			Player player = Main.player[Projectile.owner];
 			if (player.dead || !player.active)
 			{
 				player.ClearBuff(ModContent.BuffType<CirnoMinionBuff>());
 			}
 			if (player.HasBuff(ModContent.BuffType<CirnoMinionBuff>()))
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 			Vector2 gothere = player.Center;
 
@@ -1030,10 +1006,10 @@ namespace SGAmod.Items.Weapons
 				Projectile currentProjectile = Main.projectile[i];
 				if (currentProjectile.active // Make sure the projectile is active
 				&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
-				&& currentProjectile.type == projectile.type)
+				&& currentProjectile.type == Projectile.type)
 				{ // Make sure the projectile is of the same type as this javelin
 
-					if (i == projectile.whoAmI)
+					if (i == Projectile.whoAmI)
 						us = maxus;
 					maxus += 1f;
 
@@ -1051,7 +1027,7 @@ namespace SGAmod.Items.Weapons
 
 			NPC enemy = null;
 
-			List<NPC> enemies = SGAUtils.ClosestEnemies(projectile.Center,1200,player.Center);
+			List<NPC> enemies = SGAUtils.ClosestEnemies(Projectile.Center,1200,player.Center);
 
 			if (enemies != null && enemies.Count > 0)
             {
@@ -1065,25 +1041,25 @@ namespace SGAmod.Items.Weapons
 
 			if (enemy != null)
             {
-				where = enemy.Center + Vector2.Normalize(projectile.Center - enemy.Center).RotatedBy((-MathHelper.PiOver2+(angles*MathHelper.Pi))/1.5f) * (dist*2);
+				where = enemy.Center + Vector2.Normalize(Projectile.Center - enemy.Center).RotatedBy((-MathHelper.PiOver2+(angles*MathHelper.Pi))/1.5f) * (dist*2);
 
-				Vector2 generalDist = enemy.Center - projectile.Center;
+				Vector2 generalDist = enemy.Center - Projectile.Center;
 
-				projectile.spriteDirection = generalDist.X > 0 ? 1 : -1;
+				Projectile.spriteDirection = generalDist.X > 0 ? 1 : -1;
 
-				if ((int)projectile.ai[0]%80==0 && generalDist.Length()< dist + 360)
+				if ((int)Projectile.ai[0]%80==0 && generalDist.Length()< dist + 360)
                 {
 					for (float xx = 0f; xx < 6f; xx += 1f)
 					{
 						Vector2 aiming = Vector2.Normalize(generalDist) * 32f + new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3, 3f));
 
-						Vector2 distxxx = SGAUtils.PredictiveAim(aiming.Length(), projectile.Center, enemy.Center, enemy.velocity, false) - (projectile.Center);
+						Vector2 distxxx = SGAUtils.PredictiveAim(aiming.Length(), Projectile.Center, enemy.Center, enemy.velocity, false) - (Projectile.Center);
 
-						int proj2 = Projectile.NewProjectile(projectile.Center,(Vector2.Normalize(distxxx) * aiming.Length()) + new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8, 8f)), ProjectileID.IceBolt, (int)((float)projectile.damage * 1f), 0f, projectile.owner);
+						int proj2 = Projectile.NewProjectile(Projectile.Center,(Vector2.Normalize(distxxx) * aiming.Length()) + new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8, 8f)), ProjectileID.IceBolt, (int)((float)Projectile.damage * 1f), 0f, Projectile.owner);
 						Main.projectile[proj2].friendly = true;
 						Main.projectile[proj2].minion = true;
 						Main.projectile[proj2].timeLeft = 30;
-						Main.projectile[proj2].melee = false;
+						// Main.projectile[proj2].melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 						Main.projectile[proj2].hostile = false;
 						Main.projectile[proj2].netUpdate = true;
 					}
@@ -1092,12 +1068,12 @@ namespace SGAmod.Items.Weapons
             }
             else
             {
-				projectile.spriteDirection = projectile.velocity.X > 0 ? 1 : -1;
+				Projectile.spriteDirection = Projectile.velocity.X > 0 ? 1 : -1;
 			}
 
 			if ((int)(ptimer+ percent * 30)%30 == 0)
             {
-				List<Projectile> allfriendlyprojs = Main.projectile.Where(testby => testby.active && !testby.coldDamage && testby.damage>0 && testby.owner == projectile.owner && projectile.type != testby.type && (testby.Center - projectile.Center).LengthSquared()<640000).OrderBy(testby => (testby.Center-projectile.Center).LengthSquared()).ToList();
+				List<Projectile> allfriendlyprojs = Main.projectile.Where(testby => testby.active && !testby.coldDamage && testby.damage>0 && testby.owner == Projectile.owner && Projectile.type != testby.type && (testby.Center - Projectile.Center).LengthSquared()<640000).OrderBy(testby => (testby.Center-Projectile.Center).LengthSquared()).ToList();
 
 				if (allfriendlyprojs.Count > 0)
 				{
@@ -1105,11 +1081,11 @@ namespace SGAmod.Items.Weapons
 					coldenproj.coldDamage = true;
 					if (!coldenproj.hostile)
 					{
-						coldenproj.damage = (int)(coldenproj.damage*(1f+(player.minionDamage-1f)*0.25f));
+						coldenproj.damage = (int)(coldenproj.damage*(1f+(player.GetDamage(DamageClass.Summon)-1f)*0.25f));
 					}
 					coldenproj.netUpdate = true;
 
-					Vector2 generalDist = coldenproj.Center - projectile.Center;
+					Vector2 generalDist = coldenproj.Center - Projectile.Center;
 
 					for (int i = 0; i < 60; i += 1)
                     {
@@ -1119,7 +1095,7 @@ namespace SGAmod.Items.Weapons
 						Main.dust[dustx].noGravity = true;
 					}
 
-					Main.PlaySound(SoundID.Item, (int)coldenproj.Center.X, (int)coldenproj.Center.Y, 30, 1f, -0.5f);
+					SoundEngine.PlaySound(SoundID.Item, (int)coldenproj.Center.X, (int)coldenproj.Center.Y, 30, 1f, -0.5f);
 				}
 
 
@@ -1129,22 +1105,22 @@ namespace SGAmod.Items.Weapons
 			//				Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 30, 1f, -0.5f);
 
 
-			if ((where - projectile.Center).Length() > 8f)
+			if ((where - Projectile.Center).Length() > 8f)
 			{
-				projectile.velocity += Vector2.Normalize((where - projectile.Center)) * 0.01f;
-				projectile.velocity += (where - projectile.Center) * 0.0025f;
-				projectile.velocity *= 0.975f;
+				Projectile.velocity += Vector2.Normalize((where - Projectile.Center)) * 0.01f;
+				Projectile.velocity += (where - Projectile.Center) * 0.0025f;
+				Projectile.velocity *= 0.975f;
 			}
-			float maxspeed = Math.Min(projectile.velocity.Length(), 32);
-			projectile.velocity.Normalize();
-			projectile.velocity *= maxspeed;
+			float maxspeed = Math.Min(Projectile.velocity.Length(), 32);
+			Projectile.velocity.Normalize();
+			Projectile.velocity *= maxspeed;
 
-			int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 135);
+			int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 135);
 			Main.dust[dust].scale = 0.50f;
-			Main.dust[dust].velocity = projectile.velocity * 0.2f;
+			Main.dust[dust].velocity = Projectile.velocity * 0.2f;
 			Main.dust[dust].noGravity = true;
 
-			Lighting.AddLight(projectile.Center, Color.Aqua.ToVector3() * 0.78f);
+			Lighting.AddLight(Projectile.Center, Color.Aqua.ToVector3() * 0.78f);
 
 		}
 
@@ -1156,24 +1132,24 @@ namespace SGAmod.Items.Weapons
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 
-			Texture2D tex = Main.projectileTexture[projectile.type];
+			Texture2D tex = Main.projectileTexture[Projectile.type];
 
 			int maxFrames = 4;
 
 			Vector2 drawOrigin = new Vector2(tex.Width, tex.Height / maxFrames) / 2f;
-			Vector2 drawPos = ((projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
-			Color color = Color.Lerp((projectile.GetAlpha(lightColor) * 0.5f), Color.White, 0.75f);
-			int timing = (int)(projectile.localAI[0] / 8f);
+			Vector2 drawPos = ((Projectile.Center - Main.screenPosition)) + new Vector2(0f, 4f);
+			Color color = Color.Lerp((Projectile.GetAlpha(lightColor) * 0.5f), Color.White, 0.75f);
+			int timing = (int)(Projectile.localAI[0] / 8f);
 			timing %= maxFrames;
 			timing *= ((tex.Height) / maxFrames);
-			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height) / maxFrames), color*MathHelper.Clamp(projectile.localAI[0]/30f,0f,1f), projectile.velocity.X * 0.04f, drawOrigin, projectile.scale, projectile.spriteDirection>0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+			spriteBatch.Draw(tex, drawPos, new Rectangle(0, timing, tex.Width, (tex.Height) / maxFrames), color*MathHelper.Clamp(Projectile.localAI[0]/30f,0f,1f), Projectile.velocity.X * 0.04f, drawOrigin, Projectile.scale, Projectile.spriteDirection>0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 			return false;
 		}
 
 	}
 	public class CirnoMinionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ice Fairies");
 			Description.SetDefault("They serve the new strongest");
@@ -1214,15 +1190,15 @@ namespace SGAmod.NPCs
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cirno's Grace");
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.coldDamage = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.coldDamage = true;
 			keepspeed = 0.0;
 			homing = 0.05f;
 		}
@@ -1230,16 +1206,16 @@ namespace SGAmod.NPCs
 		public override void AI()
 		{
 			base.AI();
-			if (projectile.ai[0] == 2)
+			if (Projectile.ai[0] == 2)
 			{
 				float rand = Main.rand.Next(0, 360);
 				for (int i = 0; i < 360; i += 180)
 				{
-					int proj2 = Projectile.NewProjectile(projectile.Center, projectile.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(0, 3f)), mod.ProjectileType("CirnoIceShardPlayerOrbit"), (int)((float)projectile.damage * 0.5f), 0f, projectile.owner);
+					int proj2 = Projectile.NewProjectile(Projectile.Center, Projectile.velocity + new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(0, 3f)), Mod.Find<ModProjectile>("CirnoIceShardPlayerOrbit").Type, (int)((float)Projectile.damage * 0.5f), 0f, Projectile.owner);
 					Main.projectile[proj2].ai[0] = MathHelper.ToRadians(i+ rand);
-					Main.projectile[proj2].ai[1] = projectile.whoAmI;
-					Main.projectile[proj2].Throwing().thrown = false;
-					Main.projectile[proj2].magic = projectile.magic;
+					Main.projectile[proj2].ai[1] = Projectile.whoAmI;
+					// Main.projectile[proj2].Throwing().thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+					Main.projectile[proj2].DamageType = projectile.magic;
 					Main.projectile[proj2].netUpdate = true;
 				}
 			}

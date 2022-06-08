@@ -16,31 +16,25 @@ namespace SGAmod.Items.Placeable.TechPlaceable
 		}
         public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = ItemRarityID.LightRed;
-			item.consumable = true;
-			item.value = Item.buyPrice(silver: 10);
-			item.rare = ItemRarityID.LightRed;
-			item.createTile = mod.TileType("ShiftingFunnelTile");
-			item.placeStyle = 0;
+			Item.width = 30;
+			Item.height = 30;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = ItemRarityID.LightRed;
+			Item.consumable = true;
+			Item.value = Item.buyPrice(silver: 10);
+			Item.rare = ItemRarityID.LightRed;
+			Item.createTile = Mod.Find<ModTile>("ShiftingFunnelTile").Type;
+			Item.placeStyle = 0;
 		}
         public override string Texture => "SGAmod/Items/Placeable/TechPlaceable/SiftingFunnelItem";
 
         public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Extractinator, 1);
-			recipe.AddIngredient(ModContent.ItemType<HopperItem>(), 3);
-			recipe.AddIngredient(ItemID.MetalShelf, 10);
-			recipe.AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>());
-			recipe.SetResult(this, 3);
-			recipe.AddRecipe();
+			CreateRecipe(3).AddIngredient(ItemID.Extractinator, 1).AddIngredient(ModContent.ItemType<HopperItem>(), 3).AddIngredient(ItemID.MetalShelf, 10).AddTile(ModContent.TileType<Tiles.ReverseEngineeringStation>()).Register();
 		}
 	}
 }

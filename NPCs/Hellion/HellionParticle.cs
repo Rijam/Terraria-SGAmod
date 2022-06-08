@@ -34,11 +34,11 @@ namespace SGAmod.NPCs.Hellion
 
         public static Effect ShadowEffect;
         public static List<ShadowParticle> particles;
-        public Texture2D CloudTexture => SGAmod.Instance.GetTexture("NPCs/Hellion/Clouds" + (1 + cloudIndex));
+        public Texture2D CloudTexture => SGAmod.Instance.Assets.Request<Texture2D>("NPCs/Hellion/Clouds" + (1 + cloudIndex)).Value;
 
         public static void Load()
         {
-            ShadowEffect = SGAmod.Instance.GetEffect("Effects/Shadow");
+            ShadowEffect = SGAmod.Instance.Assets.Request<Effect>("Effects/Shadow").Value;
             particles = new List<ShadowParticle>();
             SGAmod.RenderTargetsEvent += SGAmod_RenderTargetsEvent;
             SGAmod.RenderTargetsCheckEvent += SGAmod_RenderTargetsCheckEvent;
@@ -286,11 +286,11 @@ namespace SGAmod.NPCs.Hellion
                         effect.Parameters["rainbowCoordMultiplier"].SetValue(new Vector2(1f, 1f));
                         effect.Parameters["rainbowColor"].SetValue(new Vector3(SGAWorld.modtimer / 300f, 1f, 0.75f));
                         effect.Parameters["rainbowScale"].SetValue(1f);
-                        effect.Parameters["rainbowTexture"].SetValue(SGAmod.Instance.GetTexture("TiledPerlin"));
+                        effect.Parameters["rainbowTexture"].SetValue(SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin").Value);
                     }
 
                     effect.Parameters["WorldViewProjection"].SetValue(WVP.View(Vector2.One) * WVP.Projection());
-                    effect.Parameters["imageTexture"].SetValue(i<1 ? SGAmod.Instance.GetTexture("TiledPerlin") : SGAmod.Instance.GetTexture("Space"));
+                    effect.Parameters["imageTexture"].SetValue(i<1 ? SGAmod.Instance.Assets.Request<Texture2D>("TiledPerlin") .Value: SGAmod.Instance.Assets.Request<Texture2D>("Space").Value);
                     effect.Parameters["coordOffset"].SetValue(parallex);
                     effect.Parameters["coordMultiplier"].SetValue(i < 1 ? new Vector2(2f, 1.5f)*3f : (new Vector2(3f, 2f)+ new Vector2(rando.NextFloat(-0.5f,0.5f), rando.NextFloat(-0.5f, 0.5f)))*3f);
                     effect.Parameters["strength"].SetValue(i == 0 ? 0.50f : (1.75f* alpha)/(1f+(i/4f)));
@@ -337,7 +337,7 @@ namespace SGAmod.NPCs.Hellion
                 /*foreach(NPC hellionarm in Main.npc.Where(testby => testby.active && (testby.type == ModContent.NPCType<HellionCore>() || testby.type == ModContent.NPCType<HellionMonolog>())))
                 {
                     Hellion.HellionTeleport(Main.spriteBatch, (Main.screenPosition+hellionarm.Center)/2f, 0.5f, 48);
-                    //((HellionWorm)(hellionarm.modNPC as HellionWorm)).DrawMe(Main.spriteBatch,Color.White,0.5f);
+                    //((HellionWorm)(hellionarm.ModNPC as HellionWorm)).DrawMe(Main.spriteBatch,Color.White,0.5f);
                 }*/
 
                 //Main.spriteBatch.Draw(hellionTex, -reallyHellion.velocity + new Vector2(0, 10) + (reallyHellion.Center - Main.screenPosition) / 2f, null, Color.White * (settings != null ? settings.HelliontransparencyRate : 0.15f), 0, hellionTex.Size() / 2f, 0.50f, SpriteEffects.None, 0f);

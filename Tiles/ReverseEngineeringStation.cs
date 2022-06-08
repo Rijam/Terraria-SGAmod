@@ -13,7 +13,7 @@ namespace SGAmod.Tiles
 {
     public class ReverseEngineeringStation : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
@@ -42,7 +42,7 @@ namespace SGAmod.Tiles
             {
                 Item item = Main.LocalPlayer.HeldItem;
 
-                UncraftClass craft = new UncraftClass(new Terraria.DataStructures.Point16(i, j - (Main.tile[i, j].frameY / 16) - 3), item, SGAmod.RecipeIndex, i+j*3);
+                UncraftClass craft = new UncraftClass(new Terraria.DataStructures.Point16(i, j - (Main.tile[i, j].TileFrameY / 16) - 3), item, SGAmod.RecipeIndex, i+j*3);
                 SGAInterface.Uncrafts = craft;
                 if (!craft.uncraftable)
                 {
@@ -53,13 +53,13 @@ namespace SGAmod.Tiles
 
         }
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
             if (!Main.LocalPlayer.HeldItem.IsAir && !Main.LocalPlayer.HeldItem.favorited)
             {
                 Item item = Main.LocalPlayer.HeldItem;
 
-                UncraftClass craft = new UncraftClass(new Terraria.DataStructures.Point16(i, j - (Main.tile[i, j].frameY / 16) - 3), item, SGAmod.RecipeIndex, i + j * 3);
+                UncraftClass craft = new UncraftClass(new Terraria.DataStructures.Point16(i, j - (Main.tile[i, j].TileFrameY / 16) - 3), item, SGAmod.RecipeIndex, i + j * 3);
                 SGAInterface.Uncrafts = craft;
                     craft.Uncraft(Main.LocalPlayer,75+(Main.LocalPlayer.SGAPly().uncraftBoost>0 ? 15 : 0));
             }
@@ -69,9 +69,9 @@ namespace SGAmod.Tiles
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if(Main.tile[i, j].frameX == 0 && Main.tile[i, j].frameY == 0)
+            if(Main.tile[i, j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 0)
             {
-                Item.NewItem(i * 16, j * 16, 48, 48, mod.ItemType("ReverseEngineeringStation"), 1, false, 0, false, false);
+                Item.NewItem(i * 16, j * 16, 48, 48, Mod.Find<ModItem>("ReverseEngineeringStation").Type, 1, false, 0, false, false);
             }
         }
     }

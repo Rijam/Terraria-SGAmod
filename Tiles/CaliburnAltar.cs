@@ -14,7 +14,7 @@ namespace SGAmod.Tiles
     {
         public virtual string myitem => "CaliburnTypeA";
         public virtual int summontype => 0;
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
@@ -43,12 +43,12 @@ namespace SGAmod.Tiles
 
         public override void MouseOver(int i, int j)
         {
-            Main.LocalPlayer.showItemIcon2 = mod.ItemType(myitem);
+            Main.LocalPlayer.showItemIcon2 = Mod.Find<ModItem>(myitem).Type;
             Main.LocalPlayer.showItemIconText = "";
             Main.LocalPlayer.showItemIcon = true;
         }
 
-        public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
         {
 
 
@@ -66,7 +66,7 @@ namespace SGAmod.Tiles
 
                     if ((Main.player[z].Center - new Vector2(i * 16, j * 16)).Length() < 160)
                     {
-                        bool bossNotActive = NPC.CountNPCS(mod.NPCType("CaliburnGuardian")) < 1;
+                        bool bossNotActive = NPC.CountNPCS(Mod.Find<ModNPC>("CaliburnGuardian").Type) < 1;
                         if (Main.player[z].statLife >= 200 && bossNotActive)
                         {
                             if (SGAWorld.downedCaliburnGuardiansPoints > 0)
@@ -76,11 +76,11 @@ namespace SGAmod.Tiles
                             {
                                 if (Main.netMode < 1)
                                 {
-                                    NPC.NewNPC(i * 16, j * 16, mod.NPCType("CaliburnGuardian"), 0, 0, 0, summontype);
+                                    NPC.NewNPC(i * 16, j * 16, Mod.Find<ModNPC>("CaliburnGuardian").Type, 0, 0, 0, summontype);
                                 }
                                 else
                                 {
-                                    ModPacket packet = mod.GetPacket();
+                                    ModPacket packet = Mod.GetPacket();
                                     packet.Write((ushort)999);
                                     packet.Write((int)(i * 16));
                                     packet.Write((int)(j * 16));
@@ -134,11 +134,11 @@ namespace SGAmod.Tiles
             {
                 //him.Hurt(new PlayerDeathReason(), 1, him.direction, false, true);
 
-                if (Main.tile[i, j].frameX == 0 && Main.tile[i, j].frameY == 0)
+                if (Main.tile[i, j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 0)
                 {
                     //Item.NewItem(i * 16, j * 16, 48, 48, mod.ItemType(myitem), 1, false, 0, false, false);
                     NPC npc = new NPC();
-                    npc.DropItemInstanced(new Vector2(i * 16, j * 16), new Vector2(48, 48), mod.ItemType(myitem), 1, false);
+                    npc.DropItemInstanced(new Vector2(i * 16, j * 16), new Vector2(48, 48), Mod.Find<ModItem>(myitem).Type, 1, false);
                     SGAWorld.downedCaliburnGuardiansPoints -= 1;
                     if (Main.netMode == NetmodeID.Server)
                     {

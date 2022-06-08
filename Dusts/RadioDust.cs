@@ -45,11 +45,7 @@ namespace SGAmod.Dusts
 
 	public class ViralDust : RadioDust
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-			texture = "SGAmod/Items/Accessories/LostNotes";
-			return true;
-        }
+        public override string Texture => "SGAmod/Items/Accessories/LostNotes";
 
 		public override void OnSpawn(Dust dust)
 		{

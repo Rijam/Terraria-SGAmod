@@ -15,30 +15,25 @@ namespace SGAmod.Items.Tools
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Add(new TooltipLine(mod, "Faster Icey Item", "25% faster use speed in the snow biome"));
+			tooltips.Add(new TooltipLine(Mod, "Faster Icey Item", "25% faster use speed in the snow biome"));
 		}
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.MythrilPickaxe);
-			item.useTime = 10;
+			Item.CloneDefaults(ItemID.MythrilPickaxe);
+			Item.useTime = 10;
 		}
 		
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 10);
-			recipe.AddIngredient(mod.ItemType("FrigidShard"), 10);
-			recipe.AddTile(TileID.IceMachine);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("CryostalBar"), 10).AddIngredient(mod.ItemType("FrigidShard"), 10).AddTile(TileID.IceMachine).Register();
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
 			if (Main.rand.Next(7) == 0)
 			{
-				SGAPlayer sgaplayer = player.GetModPlayer(mod,typeof(SGAPlayer).Name) as SGAPlayer;
+				SGAPlayer sgaplayer = player.GetModPlayer(Mod,typeof(SGAPlayer).Name) as SGAPlayer;
 				int num316 = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, 92, 0f, 0f, 50, Main.hslToRgb(0.6f, 0.9f, 1f), 0.5f);
 				Main.dust[num316].noGravity = true;
 			}
@@ -62,19 +57,14 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.MythrilDrill);
-			item.shoot = mod.ProjectileType("BoreicDrillProj");
-			item.useTime = 10;
+			Item.CloneDefaults(ItemID.MythrilDrill);
+			Item.shoot = Mod.Find<ModProjectile>("BoreicDrillProj").Type;
+			Item.useTime = 10;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 8);
-			recipe.AddIngredient(mod.ItemType("FrigidShard"), 8);
-			recipe.AddTile(TileID.IceMachine);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("CryostalBar"), 8).AddIngredient(mod.ItemType("FrigidShard"), 8).AddTile(TileID.IceMachine).Register();
 		}
 
 	}
@@ -87,21 +77,16 @@ namespace SGAmod.Items.Tools
 
 			public override void SetDefaults()
 			{
-				item.CloneDefaults(ItemID.MythrilWaraxe);
-				item.hammer = 50;
-			item.damage = 20;
-			item.useTime = 10;
-			item.useAnimation = 20;
+				Item.CloneDefaults(ItemID.MythrilWaraxe);
+				Item.hammer = 50;
+			Item.damage = 20;
+			Item.useTime = 10;
+			Item.useAnimation = 20;
 		}
 
 			public override void AddRecipes()
 			{
-				ModRecipe recipe = new ModRecipe(mod);
-				recipe.AddIngredient(mod.ItemType("CryostalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("FrigidShard"), 8);
-			recipe.AddTile(TileID.IceMachine);
-				recipe.SetResult(this);
-				recipe.AddRecipe();
+				CreateRecipe(1).AddIngredient(mod.ItemType("CryostalBar"), 12).AddIngredient(mod.ItemType("FrigidShard"), 8).AddTile(TileID.IceMachine).Register();
 			}
 
 		}
@@ -115,36 +100,31 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.damage = 26;
-			item.melee = true;
-			item.width = 56;
-			item.height = 22;
-			item.useTime = 7;
-			item.useAnimation = 25;
-			item.channel = true;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.axe = 17;
-			item.hammer = 85;
-			item.tileBoost++;
-			item.useStyle = 5;
-			item.knockBack = 5;
-			item.value = 3000;
-			item.rare = 4;
-			item.UseSound = SoundID.Item23;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("BoreicJacksawProj");
-			item.shootSpeed = 40f;
+			Item.damage = 26;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 56;
+			Item.height = 22;
+			Item.useTime = 7;
+			Item.useAnimation = 25;
+			Item.channel = true;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.axe = 17;
+			Item.hammer = 85;
+			Item.tileBoost++;
+			Item.useStyle = 5;
+			Item.knockBack = 5;
+			Item.value = 3000;
+			Item.rare = 4;
+			Item.UseSound = SoundID.Item23;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("BoreicJacksawProj").Type;
+			Item.shootSpeed = 40f;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 12);
-			recipe.AddIngredient(mod.ItemType("FrigidShard"), 8);
-			recipe.AddTile(TileID.IceMachine);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("CryostalBar"), 12).AddIngredient(mod.ItemType("FrigidShard"), 8).AddTile(TileID.IceMachine).Register();
 		}
 	}
 
@@ -162,7 +142,7 @@ namespace SGAmod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.MythrilDrill);
+			Projectile.CloneDefaults(ProjectileID.MythrilDrill);
 		}
 
 	}
@@ -175,15 +155,15 @@ namespace SGAmod.Items.Tools
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = 22;
-			projectile.height = 56;
-			projectile.aiStyle = 20;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.hide = true;
-			projectile.ownerHitCheck = true;
-			projectile.melee = true;
+			Projectile.width = 22;
+			Projectile.height = 56;
+			Projectile.aiStyle = 20;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.hide = true;
+			Projectile.ownerHitCheck = true;
+			Projectile.DamageType = DamageClass.Melee;
 		}
 	}
 

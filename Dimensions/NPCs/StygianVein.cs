@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Audio;
 using SGAmod.Buffs;
 using SubworldLibrary;
 using SGAmod.Items;
+using Terraria.Audio;
 
 namespace SGAmod.Dimensions.NPCs
 {
@@ -25,26 +26,26 @@ namespace SGAmod.Dimensions.NPCs
 
         public override void SetDefaults()
         {
-            npc.width = 42;
-            npc.height = 42;
-            npc.damage = 0;
-            npc.defense = 0;
-            npc.lifeMax = 1000;
+            NPC.width = 42;
+            NPC.height = 42;
+            NPC.damage = 0;
+            NPC.defense = 0;
+            NPC.lifeMax = 1000;
             //npc.HitSound = SoundID.Ti;
             //npc.DeathSound = SoundID.LiquidsWaterHoney;
-            npc.value = 0f;
-            npc.knockBackResist = 1.1f;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.aiStyle = -1;
-            npc.alpha = 0;
-            npc.rarity = 1;
-            npc.chaseable = false;
-            npc.SGANPCs().dotImmune = true;
-            npc.SGANPCs().TimeSlowImmune = true;
-            for (int buff=0;buff<npc.buffImmune.Length;buff++)
+            NPC.value = 0f;
+            NPC.knockBackResist = 1.1f;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.aiStyle = -1;
+            NPC.alpha = 0;
+            NPC.rarity = 1;
+            NPC.chaseable = false;
+            NPC.SGANPCs().dotImmune = true;
+            NPC.SGANPCs().TimeSlowImmune = true;
+            for (int buff=0;buff<NPC.buffImmune.Length;buff++)
             {
-                npc.buffImmune[buff] = true;
+                NPC.buffImmune[buff] = true;
             }
         }
         public override string Texture
@@ -54,11 +55,11 @@ namespace SGAmod.Dimensions.NPCs
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            Main.PlaySound(SoundID.Tink, (int)npc.Center.X, (int)npc.Center.Y, 0, 1, 0.65f);
-            npc.ai[1] = ((int)damage*25)+120;
-            if (npc.life < 1)
+            SoundEngine.PlaySound(SoundID.Tink, (int)NPC.Center.X, (int)NPC.Center.Y, 0, 1, 0.65f);
+            NPC.ai[1] = ((int)damage*25)+120;
+            if (NPC.life < 1)
             {
-                SoundEffectInstance sound = Main.PlaySound(SoundID.DD2_EtherianPortalDryadTouch, (int)npc.Center.X, (int)npc.Center.Y);
+                SoundEffectInstance sound = SoundEngine.PlaySound(SoundID.DD2_EtherianPortalDryadTouch, (int)NPC.Center.X, (int)NPC.Center.Y);
                 if (sound != null)
                 {
                     sound.Pitch = -0.5f;
@@ -69,17 +70,17 @@ namespace SGAmod.Dimensions.NPCs
 
         public override void NPCLoot()
         {
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<StygianCore>());
-            SpookyDarkSectorEye.Release(npc.Center, false, Main.rand.NextVector2Circular(32f, 32f));
+            Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<StygianCore>());
+            SpookyDarkSectorEye.Release(NPC.Center, false, Main.rand.NextVector2Circular(32f, 32f));
         }
 
         public override void AI()
         {
-            NullWatcher.DoAwarenessChecks((int)npc.ai[1], false, true, npc.Center);
-            npc.ai[1] = 0;
-            npc.ai[0] += 1;
-            npc.velocity = new Vector2(0, (float)Math.Cos(npc.ai[0] / 90f)) / 3f;
-            foreach (NPC enemy in Main.npc.Where(testnpc => testnpc.active && !testnpc.friendly && testnpc.type != npc.type && testnpc.Distance(npc.Center) < 720))
+            NullWatcher.DoAwarenessChecks((int)NPC.ai[1], false, true, NPC.Center);
+            NPC.ai[1] = 0;
+            NPC.ai[0] += 1;
+            NPC.velocity = new Vector2(0, (float)Math.Cos(NPC.ai[0] / 90f)) / 3f;
+            foreach (NPC enemy in Main.npc.Where(testnpc => testnpc.active && !testnpc.friendly && testnpc.type != NPC.type && testnpc.Distance(NPC.Center) < 720))
             {
                 enemy.AddBuff(BuffID.Invisibility, 120);
             }
@@ -94,31 +95,31 @@ namespace SGAmod.Dimensions.NPCs
         public void PostEffectsDraw(SpriteBatch spriteBatch,float drawScale=2f)
         {
 
-            Texture2D inner = Main.npcTexture[npc.type];
+            Texture2D inner = Main.npcTexture[NPC.type];
 
             Vector2 drawOrigin = inner.Size()/ 2f;
 
 
-            Vector2 drawPos = (npc.Center - Main.screenPosition)/ drawScale;
+            Vector2 drawPos = (NPC.Center - Main.screenPosition)/ drawScale;
             float drawscale2 = 2f / drawScale;
 
 
             for (float i = 0; i < 1f; i += 0.10f)
             {
-                float scale = (1f - 0.80f * (((Main.GlobalTime / 2f) + i) % 1f));
-                Color color = Color.DarkMagenta * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.75f;
+                float scale = (1f - 0.80f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f));
+                Color color = Color.DarkMagenta * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.75f;
 
-                float percent = (((Main.GlobalTime / 2f) + i) % 1f);
+                float percent = (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f);
 
-                Vector2 drawpos2 = new Vector2((float)Math.Sin((percent*MathHelper.Pi) - Main.GlobalTime*1.25f) *percent*26f, percent * -64f)* drawscale2;
+                Vector2 drawpos2 = new Vector2((float)Math.Sin((percent*MathHelper.Pi) - Main.GlobalTimeWrappedHourly*1.25f) *percent*26f, percent * -64f)* drawscale2;
 
                 spriteBatch.Draw(inner, drawPos + drawpos2, null, color, i * MathHelper.TwoPi, drawOrigin, drawscale2 * scale, SpriteEffects.None, 0f);
             }
 
             for (float i = 0; i < 1f; i += 0.10f)
             {
-                float scale = (1f - 0.25f * (((Main.GlobalTime / 2f) + i) % 1f));
-                Color color = Color.Magenta * (1f - ((i + (Main.GlobalTime / 2f)) % 1f)) * 0.75f;
+                float scale = (1f - 0.25f * (((Main.GlobalTimeWrappedHourly / 2f) + i) % 1f));
+                Color color = Color.Magenta * (1f - ((i + (Main.GlobalTimeWrappedHourly / 2f)) % 1f)) * 0.75f;
 
                 spriteBatch.Draw(inner, drawPos, null, color, i * MathHelper.TwoPi, drawOrigin, drawscale2 * scale, SpriteEffects.None, 0f);
             }

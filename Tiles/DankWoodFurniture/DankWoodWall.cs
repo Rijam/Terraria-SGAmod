@@ -7,7 +7,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
 {
 	public class DankWoodWall : ModWall
 	{
-		public override void SetDefaults() {
+		public override void SetStaticDefaults() {
 			Main.wallHouse[Type] = true;
 			drop = ModContent.ItemType<Items.Placeable.DankWoodFurniture.DankWoodWall>();
 			AddMapEntry(new Color(41, 31, 23));
@@ -15,7 +15,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
 	}
 	public class DankWoodFence : ModWall
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = true;
 			drop = ModContent.ItemType<Items.Placeable.DankWoodFurniture.DankWoodFence>();
@@ -24,7 +24,7 @@ namespace SGAmod.Tiles.DankWoodFurniture
 	}
 	public class BrokenDankWoodFence : ModWall
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = true;
 			drop = ModContent.ItemType<Items.Placeable.DankWoodFurniture.BrokenDankWoodFence>();

@@ -9,7 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +32,7 @@ using SGAmod.Dimensions.NPCs;
 using SGAmod.NPCs;
 using SGAmod.NPCs.Sharkvern;
 using SGAmod.NPCs.Wraiths;
+using Terraria.GameContent;
 
 namespace SGAmod.Dimensions
 {
@@ -46,14 +47,14 @@ namespace SGAmod.Dimensions
             DisplayName.SetDefault("Timer and Fog Drawer");
         }
 
-        public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
-            drawCacheProjsOverWiresUI.Add(index);
+            overWiresUI.Add(index);
         }
 
         public override string Texture
         {
-            get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; }
+            get { return "Terraria/Images/Projectile_" + ProjectileID.ShadowBeamFriendly; }
         }
 
         public static void DrawFog()
@@ -97,9 +98,9 @@ namespace SGAmod.Dimensions
                     Main.graphics.GraphicsDevice.SetRenderTarget(SGAmod.drawnscreen);
                     Main.graphics.GraphicsDevice.Clear(Color.Transparent);
 
-                    Texture2D pern = ModContent.GetTexture("SGAmod/Perlin");
+                    Texture2D pern = (Texture2D)ModContent.Request<Texture2D>("SGAmod/Perlin");
                     Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Custommatrix);
-                    Main.spriteBatch.Draw(Main.blackTileTexture, new Vector2(0, 0), new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black, 0, new Vector2(0, 0), new Vector2(1f, 1f), SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Vector2(0, 0), new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black, 0, new Vector2(0, 0), new Vector2(1f, 1f), SpriteEffects.None, 0f);
 
                     if (SGAPocketDim.WhereAmI != null && SGAPocketDim.WhereAmI == typeof(SpaceDim))
                     {
@@ -117,8 +118,8 @@ namespace SGAmod.Dimensions
                     }
                     else
                     {
-                        Main.spriteBatch.Draw(pern, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, null, (Main.hslToRgb((Main.GlobalTime / 3) % 1f, 1f, 0.75f)).MultiplyRGB(Color.Lerp(Color.Black,Color.White,0.50f)) * 0.5f, Main.GlobalTime * 0.24f, new Vector2(pern.Width / 2, pern.Height / 2), new Vector2(5f, 5f), SpriteEffects.None, 0f);
-                        Main.spriteBatch.Draw(pern, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, null, Main.hslToRgb(((Main.GlobalTime + 1.5f) / 3) % 1f, 1f, 0.75f).MultiplyRGB(Color.Lerp(Color.Black, Color.White, 0.50f)) * 0.5f, Main.GlobalTime * -0.24f, new Vector2(pern.Width / 2, pern.Height / 2), new Vector2(5f, 5f), SpriteEffects.None, 0f);
+                        Main.spriteBatch.Draw(pern, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, null, (Main.hslToRgb((Main.GlobalTimeWrappedHourly / 3) % 1f, 1f, 0.75f)).MultiplyRGB(Color.Lerp(Color.Black,Color.White,0.50f)) * 0.5f, Main.GlobalTimeWrappedHourly * 0.24f, new Vector2(pern.Width / 2, pern.Height / 2), new Vector2(5f, 5f), SpriteEffects.None, 0f);
+                        Main.spriteBatch.Draw(pern, new Vector2(Main.screenWidth, Main.screenHeight) / 2f, null, Main.hslToRgb(((Main.GlobalTimeWrappedHourly + 1.5f) / 3) % 1f, 1f, 0.75f).MultiplyRGB(Color.Lerp(Color.Black, Color.White, 0.50f)) * 0.5f, Main.GlobalTimeWrappedHourly * -0.24f, new Vector2(pern.Width / 2, pern.Height / 2), new Vector2(5f, 5f), SpriteEffects.None, 0f);
                     }
 
                     skipdraw:
@@ -128,7 +129,7 @@ namespace SGAmod.Dimensions
                     Main.graphics.GraphicsDevice.SetRenderTarget(SGAmod.drawnscreenAdditiveTextures);
                     Main.graphics.GraphicsDevice.Clear(Color.Transparent);
 
-                    pern = ModContent.GetTexture("SGAmod/Extra_49c");
+                    pern = (Texture2D)ModContent.Request<Texture2D>("SGAmod/Extra_49c");
                     //Yay, finally we have Additive Blending! No more nega-blending!
 
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
@@ -165,7 +166,7 @@ namespace SGAmod.Dimensions
                         for (int i = 0; i < 360; i += 360 / 30)
                         {
                             float sizer = 1f - (i / 1000f);
-                            Main.spriteBatch.Draw(pern, new Vector2(vecx.X, vecx.Y) - Main.screenPosition, null, Color.White * 0.1f, MathHelper.ToRadians(i) + (Main.GlobalTime * ((i % (360 / 15)) == 0 ? 0.25f : -0.25f)), new Vector2(pern.Width / 2, pern.Height / 2), (new Vector2(1f, 1f) * size) * sizer, SpriteEffects.None, 0f);
+                            Main.spriteBatch.Draw(pern, new Vector2(vecx.X, vecx.Y) - Main.screenPosition, null, Color.White * 0.1f, MathHelper.ToRadians(i) + (Main.GlobalTimeWrappedHourly * ((i % (360 / 15)) == 0 ? 0.25f : -0.25f)), new Vector2(pern.Width / 2, pern.Height / 2), (new Vector2(1f, 1f) * size) * sizer, SpriteEffects.None, 0f);
                         }
                         */
 
@@ -199,15 +200,15 @@ namespace SGAmod.Dimensions
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
 
-                    foreach (Projectile proj in Main.projectile.Where(proj => proj.active && proj.modProjectile != null && proj.modProjectile is IPostEffectsDraw))
+                    foreach (Projectile proj in Main.projectile.Where(proj => proj.active && proj.ModProjectile != null && proj.ModProjectile is IPostEffectsDraw))
                     {
                         SGAmod.postRenderEffectsTargetDoUpdates = 450;
-                        (proj.modProjectile as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, 2f);
+                        (proj.ModProjectile as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, 2f);
                     }
-                    foreach (NPC npc in Main.npc.Where(npc => npc.active && npc.modNPC != null && npc.modNPC is IPostEffectsDraw))
+                    foreach (NPC npc in Main.npc.Where(npc => npc.active && npc.ModNPC != null && npc.ModNPC is IPostEffectsDraw))
                     {
                         SGAmod.postRenderEffectsTargetDoUpdates = 450;
-                        (npc.modNPC as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, 2f);
+                        (npc.ModNPC as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, 2f);
                     }
 
                     Main.spriteBatch.End();
@@ -225,13 +226,13 @@ namespace SGAmod.Dimensions
 
             public static void DrawPostEffectNPCs(float scale = 2f)
             {
-                foreach (Projectile proj in Main.projectile.Where(proj => proj.active && proj.modProjectile != null && proj.modProjectile is IPostEffectsDraw))
+                foreach (Projectile proj in Main.projectile.Where(proj => proj.active && proj.ModProjectile != null && proj.ModProjectile is IPostEffectsDraw))
                 {
-                    (proj.modProjectile as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, scale);
+                    (proj.ModProjectile as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, scale);
                 }
-                foreach (NPC npc in Main.npc.Where(npc => npc.active && npc.modNPC != null && npc.modNPC is IPostEffectsDraw))
+                foreach (NPC npc in Main.npc.Where(npc => npc.active && npc.ModNPC != null && npc.ModNPC is IPostEffectsDraw))
                 {
-                    (npc.modNPC as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, scale);
+                    (npc.ModNPC as IPostEffectsDraw).PostEffectsDraw(Main.spriteBatch, scale);
                 }
             }
 
@@ -265,7 +266,7 @@ namespace SGAmod.Dimensions
             return new Vector3(((-Main.screenWidth / 2) + input.X) * 0.920f, ((Main.screenHeight / 2) - input.Y) * 1.21f, 0) / 16f;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor) //Spritebatch was removed!
         {
             if (!Main.dedServ)
             {
@@ -306,7 +307,7 @@ namespace SGAmod.Dimensions
 
 
 
-                PrismShardHinted.Draw(spriteBatch, lightColor);
+                //PrismShardHinted.Draw(spriteBatch, lightColor);
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -327,7 +328,7 @@ namespace SGAmod.Dimensions
                         UnifiedRandom rando = new UnifiedRandom(player.whoAmI + Main.worldName.GetHashCode());
 
 
-                        Texture2D extra = Main.extraTexture[89];
+                        Texture2D extra = TextureAssets.Extra[89].Value;
                         Vector2 sizehalf = extra.Size() / 2f;
 
                         float counter = sgaply.valkyrieSet.Item2 * 1f;
@@ -337,11 +338,11 @@ namespace SGAmod.Dimensions
 
                             float alphaxxx = MathHelper.Clamp((counter - i), 0f, 1f) * 0.75f;
 
-                            Matrix aurashards = Matrix.CreateFromYawPitchRoll(rando.NextFloat(MathHelper.TwoPi) + (Main.GlobalTime * (rando.NextFloat(0.25f, 1f) * (rando.NextBool() ? 1f : -1f))) + (player.Center.X / 120f), 0, rando.NextFloat(-MathHelper.Pi / 1f, MathHelper.Pi / 1f));
+                            Matrix aurashards = Matrix.CreateFromYawPitchRoll(rando.NextFloat(MathHelper.TwoPi) + (Main.GlobalTimeWrappedHourly * (rando.NextFloat(0.25f, 1f) * (rando.NextBool() ? 1f : -1f))) + (player.Center.X / 120f), 0, rando.NextFloat(-MathHelper.Pi / 1f, MathHelper.Pi / 1f));
 
                             Vector3 loc = Vector3.Transform(Vector3.UnitX, aurashards);
 
-                            spriteBatch.Draw(extra, (player.MountedCenter + new Vector2(loc.X, loc.Y) * (48f * sgaply.valkyrieSet.Item4)) - Main.screenPosition, null, Main.hslToRgb(rando.NextFloat(1f), 0.45f, 0.75f) * MathHelper.Clamp(loc.Z, 0f, 1f) * alphaxxx, 0, sizehalf, 1f, SpriteEffects.None, 0f);
+                            //spriteBatch.Draw(extra, (player.MountedCenter + new Vector2(loc.X, loc.Y) * (48f * sgaply.valkyrieSet.Item4)) - Main.screenPosition, null, Main.hslToRgb(rando.NextFloat(1f), 0.45f, 0.75f) * MathHelper.Clamp(loc.Z, 0f, 1f) * alphaxxx, 0, sizehalf, 1f, SpriteEffects.None, 0f);
                         }
 
 
@@ -351,7 +352,7 @@ namespace SGAmod.Dimensions
                     if (sgaply.GetEnergyShieldAmmountAndRecharge.Item1 > 0)
                     {
                         //Main.NewText("test");
-                        Texture2D noise = SGAmod.Instance.GetTexture(sgaply.jellybruSet ? "NPCs/Prismicbansheerealtex" : "Perlin");
+                        Texture2D noise = SGAmod.Instance.Assets.Request<Texture2D>(sgaply.jellybruSet ? "NPCs/Prismicbansheerealtex" : "Perlin").Value;
                         Vector2 noisesize = noise.Size();
                         float alphapercent = (sgaply.GetEnergyShieldAmmountAndRecharge.Item1 / (float)sgaply.GetEnergyShieldAmmountAndRecharge.Item2);
 
@@ -364,10 +365,10 @@ namespace SGAmod.Dimensions
                             hallowed.Parameters["alpha"].SetValue(alphapercent);
                             hallowed.Parameters["prismColor"].SetValue(Color.Magenta.ToVector3());
                             hallowed.Parameters["prismAlpha"].SetValue(0f);
-                            hallowed.Parameters["overlayTexture"].SetValue(mod.GetTexture("Stain"));
-                            hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTime / 5f, Main.GlobalTime / 3f, 0f));
+                            hallowed.Parameters["overlayTexture"].SetValue(Mod.Assets.Request<Texture2D>("Stain").Value);
+                            hallowed.Parameters["overlayProgress"].SetValue(new Vector3(Main.GlobalTimeWrappedHourly / 5f, Main.GlobalTimeWrappedHourly / 3f, 0f));
                             hallowed.Parameters["overlayAlpha"].SetValue(0.25f);
-                            hallowed.Parameters["overlayStrength"].SetValue(new Vector3(2f, 0.10f, Main.GlobalTime / 4f));
+                            hallowed.Parameters["overlayStrength"].SetValue(new Vector3(2f, 0.10f, Main.GlobalTimeWrappedHourly / 4f));
                             hallowed.Parameters["overlayMinAlpha"].SetValue(0f);
                             hallowed.Parameters["rainbowScale"].SetValue(0.8f);
                             hallowed.Parameters["overlayScale"].SetValue(new Vector2(1f, 1f));
@@ -375,12 +376,12 @@ namespace SGAmod.Dimensions
                             hallowed.CurrentTechnique.Passes["Prism"].Apply();
 
 
-                            Texture2D bubbles = ModContent.GetTexture("Terraria/NPC_" + NPCID.DetonatingBubble);
+                            Texture2D bubbles = ModContent.Request<Texture2D>("Terraria/Images/NPC_" + NPCID.DetonatingBubble).Value;
                             Vector2 half = new Vector2(bubbles.Width, bubbles.Height / 2f) / 2f;
 
-                            spriteBatch.Draw(bubbles, (player.MountedCenter) - Main.screenPosition, new Rectangle(0, bubbles.Height / 2, bubbles.Width, bubbles.Height / 2), Color.LightPink * alphapercent, -(float)Math.Sin(Main.GlobalTime) / 4f, half, (Vector2.One * 1.5f) + (new Vector2((float)Math.Sin(Main.GlobalTime), (float)Math.Cos(Main.GlobalTime))) * 0.25f, SpriteEffects.None, 0f);
+                            //spriteBatch.Draw(bubbles, (player.MountedCenter) - Main.screenPosition, new Rectangle(0, bubbles.Height / 2, bubbles.Width, bubbles.Height / 2), Color.LightPink * alphapercent, -(float)Math.Sin(Main.GlobalTimeWrappedHourly) / 4f, half, (Vector2.One * 1.5f) + (new Vector2((float)Math.Sin(Main.GlobalTimeWrappedHourly), (float)Math.Cos(Main.GlobalTimeWrappedHourly))) * 0.25f, SpriteEffects.None, 0f);
 
-                            spriteBatch.Draw(bubbles, (player.MountedCenter) - Main.screenPosition, new Rectangle(0, bubbles.Height / 2, bubbles.Width, bubbles.Height / 2), Color.LightPink * alphapercent, (float)Math.Sin(Main.GlobalTime) / 4f, half, (Vector2.One * 1.5f) + (new Vector2((float)Math.Cos(Main.GlobalTime + MathHelper.PiOver2), (float)Math.Sin(Main.GlobalTime - MathHelper.PiOver2))) * 0.25f, SpriteEffects.None, 0f);
+                            //spriteBatch.Draw(bubbles, (player.MountedCenter) - Main.screenPosition, new Rectangle(0, bubbles.Height / 2, bubbles.Width, bubbles.Height / 2), Color.LightPink * alphapercent, (float)Math.Sin(Main.GlobalTimeWrappedHourly) / 4f, half, (Vector2.One * 1.5f) + (new Vector2((float)Math.Cos(Main.GlobalTimeWrappedHourly + MathHelper.PiOver2), (float)Math.Sin(Main.GlobalTimeWrappedHourly - MathHelper.PiOver2))) * 0.25f, SpriteEffects.None, 0f);
 
                             Main.spriteBatch.End();
                             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -406,7 +407,7 @@ namespace SGAmod.Dimensions
                             }
 
                             Color lighting = Lighting.GetColor((int)(player.MountedCenter.X) >> 4, (int)(player.MountedCenter.Y) >> 4, Color.White);
-                            spriteBatch.Draw(noise, (player.MountedCenter + loc) - Main.screenPosition, null, basecolor * alphapercent*(((lighting.R+ lighting.G+ lighting.B)/255f)/3f), angle, noise.Size() / 2f, (new Vector2(200f, 150f) / noisesize) * 0.6f, SpriteEffects.None, 0f);
+                            //spriteBatch.Draw(noise, (player.MountedCenter + loc) - Main.screenPosition, null, basecolor * alphapercent*(((lighting.R+ lighting.G+ lighting.B)/255f)/3f), angle, noise.Size() / 2f, (new Vector2(200f, 150f) / noisesize) * 0.6f, SpriteEffects.None, 0f);
                         }
 
                     }
@@ -424,7 +425,7 @@ namespace SGAmod.Dimensions
 
                 Matrix Custommatrix = Matrix.CreateScale(1f, 1f, 0f);// Main.screenWidth / 1920f, Main.screenHeight / 1024f, 0f);
 
-                if (Lighting.lightMode < 2)
+                if ((int)Lighting.Mode < 2)
                 {
 
                     if (alpha > 0f)
@@ -481,15 +482,15 @@ namespace SGAmod.Dimensions
                         Main.spriteBatch.End();
                         Main.spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend, default, default, default, null, Main.GameViewMatrix.TransformationMatrix);
 
-                        foreach (NPC npc in Main.npc.Where(testby => testby.active && testby.modNPC != null && testby.modNPC is IDrawThroughFog))
+                        foreach (NPC npc in Main.npc.Where(testby => testby.active && testby.ModNPC != null && testby.ModNPC is IDrawThroughFog))
                         {
-                            IDrawThroughFog ifog = npc.modNPC as IDrawThroughFog;
-                            ifog.DrawThroughFog(spriteBatch);
+                            IDrawThroughFog ifog = npc.ModNPC as IDrawThroughFog;
+                            //ifog.DrawThroughFog(spriteBatch);
                         }
-                        foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.modProjectile != null && testby.modProjectile is IDrawThroughFog))
+                        foreach (Projectile proj in Main.projectile.Where(testby => testby.active && testby.ModProjectile != null && testby.ModProjectile is IDrawThroughFog))
                         {
-                            IDrawThroughFog ifog = proj.modProjectile as IDrawThroughFog;
-                            ifog.DrawThroughFog(spriteBatch);
+                            IDrawThroughFog ifog = proj.ModProjectile as IDrawThroughFog;
+                            //ifog.DrawThroughFog(spriteBatch);
                         }
                     }
 
@@ -501,12 +502,12 @@ namespace SGAmod.Dimensions
                     shader.UseOpacity(1f);
                     shader.UseSaturation(1f);
                     shader.UseColor(0.4f,0f,0.1f);
-                    DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), new Vector2(Main.GlobalTime * 6, 0), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle((int)(Main.GlobalTime * 24f) * (DrawOverride.swaptargets == 0 ? 1 : -1), 0, 64, 64)), Microsoft.Xna.Framework.Color.Purple, Main.GlobalTime * 30f, new Vector2(256f, 256f), 1f, SpriteEffects.None, 0);
-                    shader.Apply(null, new DrawData?(value9));
+                    //DrawData value9 = new DrawData(TextureManager.Load("Images/Misc/Perlin"), new Vector2(Main.GlobalTimeWrappedHourly * 6, 0), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle((int)(Main.GlobalTimeWrappedHourly * 24f) * (DrawOverride.swaptargets == 0 ? 1 : -1), 0, 64, 64)), Microsoft.Xna.Framework.Color.Purple, Main.GlobalTimeWrappedHourly * 30f, new Vector2(256f, 256f), 1f, SpriteEffects.None, 0);
+                    //shader.Apply(null, new DrawData?(value9));
 
                     for (float f = 0; f < 1f; f += 0.25f)
                     {
-                        float perce = (f + Main.GlobalTime/3f) % 1f;
+                        float perce = (f + Main.GlobalTimeWrappedHourly/3f) % 1f;
                         Main.spriteBatch.Draw(SGAmod.postRenderEffectsTargetCopy, SGAmod.postRenderEffectsTargetCopy.Size(), null, Color.White * 0.50f*(1f- perce), 0, SGAmod.postRenderEffectsTargetCopy.Size()/2f, new Vector2(2f, 2f)* (1f+MathHelper.SmoothStep(0f,1f, perce) /16f), SpriteEffects.None, 0f);
                     }
 
@@ -542,16 +543,16 @@ namespace SGAmod.Dimensions
 
         public override void SetDefaults()
         {
-            projectile.width = 24;
-            projectile.height = 24;
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 2;
-            projectile.hide = true;
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 2;
+            Projectile.hide = true;
         }
 
-        public override bool CanDamage()
+        public override bool ? CanDamage()
         {
             return false;
         }

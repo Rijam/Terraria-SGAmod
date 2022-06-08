@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Enums;
+using Terraria.Audio;
 
 namespace SGAmod.HavocGear.Projectiles
 {
@@ -18,24 +19,24 @@ namespace SGAmod.HavocGear.Projectiles
 		
 	public override void SetDefaults()
         { 
-	    projectile.CloneDefaults(ProjectileID.Bullet);
-	    aiType = ProjectileID.Bullet;
-            projectile.width = 9;      
-            projectile.height = 12;
-            projectile.friendly = true;     
-            projectile.ranged = true;        
-            projectile.tileCollide = true;   
-            projectile.penetrate = -1;     
-            projectile.timeLeft = 2000; 
-            projectile.ignoreWater = true;   
+	    Projectile.CloneDefaults(ProjectileID.Bullet);
+	    AIType = ProjectileID.Bullet;
+            Projectile.width = 9;      
+            Projectile.height = 12;
+            Projectile.friendly = true;     
+            Projectile.DamageType = DamageClass.Ranged;        
+            Projectile.tileCollide = true;   
+            Projectile.penetrate = -1;     
+            Projectile.timeLeft = 2000; 
+            Projectile.ignoreWater = true;   
         }
 
         public override bool PreKill(int timeLeft)
         {
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+            SoundEngine.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
             for (int num315 = 0; num315 < 15; num315 = num315 + 1)
             {
-                int num316 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 51, projectile.velocity.X+(float)(Main.rand.Next(-20,20)/15f), projectile.velocity.Y+(float)(Main.rand.Next(-20,20)/15f), 50, Main.hslToRgb(0f, 0.15f, 0.8f)*0.75f, 0.75f);
+                int num316 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 51, Projectile.velocity.X+(float)(Main.rand.Next(-20,20)/15f), Projectile.velocity.Y+(float)(Main.rand.Next(-20,20)/15f), 50, Main.hslToRgb(0f, 0.15f, 0.8f)*0.75f, 0.75f);
                 Dust dust3 = Main.dust[num316];
                 dust3.velocity *= 0.75f;
             }
@@ -46,7 +47,7 @@ namespace SGAmod.HavocGear.Projectiles
 
 	{
         if (this.GetType().Name=="SnappyTooth")
-		target.AddBuff(mod.BuffType("Gourged"), 240);
+		target.AddBuff(Mod.Find<ModBuff>("Gourged").Type, 240);
 	}			
     }
 }

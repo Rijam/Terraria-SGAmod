@@ -38,46 +38,46 @@ namespace SGAmod.NPCs.TownNPCs
 		{
 			// DisplayName automatically assigned from .lang files, but the commented line below is the normal approach.
 			// DisplayName.SetDefault("Example Person");
-			Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.Guide];
-			NPCID.Sets.ExtraFramesCount[npc.type] = 10;
-			NPCID.Sets.AttackFrameCount[npc.type] = 5;
-			NPCID.Sets.DangerDetectRange[npc.type] = 700;
-			NPCID.Sets.AttackType[npc.type] = 0;
-			NPCID.Sets.AttackTime[npc.type] = 90;
-			NPCID.Sets.AttackAverageChance[npc.type] = 30;
-			NPCID.Sets.HatOffsetY[npc.type] = 4;
+			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.Guide];
+			NPCID.Sets.ExtraFramesCount[NPC.type] = 10;
+			NPCID.Sets.AttackFrameCount[NPC.type] = 5;
+			NPCID.Sets.DangerDetectRange[NPC.type] = 700;
+			NPCID.Sets.AttackType[NPC.type] = 0;
+			NPCID.Sets.AttackTime[NPC.type] = 90;
+			NPCID.Sets.AttackAverageChance[NPC.type] = 30;
+			NPCID.Sets.HatOffsetY[NPC.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.townNPC = true;
-			npc.friendly = true;
-			npc.width = 18;
-			npc.height = 40;
-			npc.aiStyle = 7;
-			npc.damage = 10;
-			npc.defense = 15;
-			npc.lifeMax = 250;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath1;
-			npc.knockBackResist = 0.5f;
-			animationType = NPCID.Guide;
-			npc.homeless = true;
-			Color c = Main.hslToRgb((float)(Main.GlobalTime/2)%1f, 0.5f, 0.35f);
+			NPC.townNPC = true;
+			NPC.friendly = true;
+			NPC.width = 18;
+			NPC.height = 40;
+			NPC.aiStyle = 7;
+			NPC.damage = 10;
+			NPC.defense = 15;
+			NPC.lifeMax = 250;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath1;
+			NPC.knockBackResist = 0.5f;
+			AnimationType = NPCID.Guide;
+			NPC.homeless = true;
+			Color c = Main.hslToRgb((float)(Main.GlobalTimeWrappedHourly/2)%1f, 0.5f, 0.35f);
 
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
+			if (NPC.life <= 0)
 			{
 
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/Goat_head_gib"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/Goat_head_gib"), 1f);
 
 				for (int k = 0; k < 2; k++)
 				{
-					Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/Goat_leg_gib"), 1f);
-					Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/Goat_arm_gib"), 1f);
+					Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/Goat_leg_gib"), 1f);
+					Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/Goat_arm_gib"), 1f);
 				}
 			}
 		}
@@ -112,13 +112,13 @@ namespace SGAmod.NPCs.TownNPCs
 
 		public override void AI()
         {
-			if (!ContrabandMerchant.IsNpcOnscreen(npc.Center) && !NPC.AnyNPCs(ModContent.NPCType<Draken>()))
+			if (!ContrabandMerchant.IsNpcOnscreen(NPC.Center) && !NPC.AnyNPCs(ModContent.NPCType<Draken>()))
 			{
-				if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(npc.FullName + " has left!", 50, 125, 255);
-				else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(npc.FullName + " has left!"), new Color(50, 125, 255));
-				npc.active = false;
-				npc.netSkip = -1;
-				npc.life = 0;
+				if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(NPC.FullName + " has left!", 50, 125, 255);
+				else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(NPC.FullName + " has left!"), new Color(50, 125, 255));
+				NPC.active = false;
+				NPC.netSkip = -1;
+				NPC.life = 0;
 			}
 
 			base.AI();
@@ -172,55 +172,55 @@ namespace SGAmod.NPCs.TownNPCs
 		public override void SetupShop(Chest shop, ref int nextSlot)
 		{
 
-			shop.item[nextSlot].SetDefaults(mod.ItemType("DergPainting"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("DergPainting").Type);
 			shop.item[nextSlot].value = Item.buyPrice(0, 1);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("CalmnessPainting"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("CalmnessPainting").Type);
 			shop.item[nextSlot].value = Item.buyPrice(0, 10);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("MeetingTheSunPainting"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("MeetingTheSunPainting").Type);
 			shop.item[nextSlot].value = Item.buyPrice(0, 10);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AdventurePainting"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AdventurePainting").Type);
 			shop.item[nextSlot].value = Item.buyPrice(1, 0);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("SerenityPainting"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("SerenityPainting").Type);
 			shop.item[nextSlot].value = Item.buyPrice(1, 0);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("UnderTheWaterfallPainting"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("UnderTheWaterfallPainting").Type);
 			shop.item[nextSlot].value = Item.buyPrice(1, 0);
 			nextSlot += 1;
 			if (SGAWorld.NightmareHardcore > 0 && SGAWorld.downedHellion > 1)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("ParadoxGeneralPainting"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("ParadoxGeneralPainting").Type);
 				shop.item[nextSlot].value = Item.buyPrice(1, 0);
 				nextSlot += 1;
 			}
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AncientSpaceDiverHelmet"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AncientSpaceDiverHelmet").Type);
 			nextSlot += 1; 		
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AncientSpaceDiverChestplate"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AncientSpaceDiverChestplate").Type);
 			nextSlot += 1; 		
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AncientSpaceDiverLeggings"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AncientSpaceDiverLeggings").Type);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AncientUnmanedHood"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AncientUnmanedHood").Type);
 			nextSlot += 1; 		
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AncientUnmanedBreastplate"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AncientUnmanedBreastplate").Type);
 			nextSlot += 1; 		
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AncientUnmanedLeggings"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AncientUnmanedLeggings").Type);
 			nextSlot += 1;
 
-			shop.item[nextSlot].SetDefaults(mod.ItemType("MasterfullyCraftedHatOfTheDragonGods"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("MasterfullyCraftedHatOfTheDragonGods").Type);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("JoyfulShroom"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("JoyfulShroom").Type);
 			shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 10, 0, 0);
 			nextSlot += 1;			
-			shop.item[nextSlot].SetDefaults(mod.ItemType("AvariceRingWeaker"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("AvariceRingWeaker").Type);
 			shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 75, 0, 0);
 			nextSlot += 1;			
-			shop.item[nextSlot].SetDefaults(mod.ItemType("NoHitCharmlv1"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("NoHitCharmlv1").Type);
 			shop.item[nextSlot].shopCustomPrice = Item.buyPrice(1, 0, 0, 0);
 			nextSlot += 1;
-			shop.item[nextSlot].SetDefaults(mod.ItemType("TheWholeExperience"));
+			shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("TheWholeExperience").Type);
 			shop.item[nextSlot].shopCustomPrice = Item.buyPrice(1, 0, 0, 0);
 			nextSlot += 1;
 			if (Main.LocalPlayer.HasItem(ModContent.ItemType<CopperTack>()))
@@ -245,12 +245,12 @@ namespace SGAmod.NPCs.TownNPCs
 			}
 			if (SGAWorld.downedWraiths >= 1)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("TinWraithTrophy"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("TinWraithTrophy").Type);
 				nextSlot++;
 			}
 			if (SGAWorld.downedWraiths >= 2)
 			{
-				shop.item[nextSlot].SetDefaults(mod.ItemType("PalladiumWraithTrophy"));
+				shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("PalladiumWraithTrophy").Type);
 				nextSlot++;
 			}
 		}

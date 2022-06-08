@@ -9,7 +9,7 @@ using System.Linq;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -350,11 +350,11 @@ namespace SGAmod.Dimensions
 
         public virtual void PlatformBlockType(Tile thetile, ref int platformtype)
         {
-            if (thetile.type == TileID.BlueDungeonBrick || thetile.type == TileID.TeamBlockBluePlatform)
+            if (thetile.TileType == TileID.BlueDungeonBrick || thetile.TileType == TileID.TeamBlockBluePlatform)
                 platformtype = TileID.TeamBlockBluePlatform;
-            if (thetile.type == TileID.GreenDungeonBrick || thetile.type == TileID.TeamBlockGreenPlatform)
+            if (thetile.TileType == TileID.GreenDungeonBrick || thetile.TileType == TileID.TeamBlockGreenPlatform)
                 platformtype = TileID.TeamBlockGreenPlatform;
-            if (thetile.type == TileID.PinkDungeonBrick || thetile.type == TileID.TeamBlockPinkPlatform)
+            if (thetile.TileType == TileID.PinkDungeonBrick || thetile.TileType == TileID.TeamBlockPinkPlatform)
                 platformtype = TileID.TeamBlockPinkPlatform;
 
         }
@@ -381,8 +381,8 @@ namespace SGAmod.Dimensions
                 for (int y = 0; y < Main.maxTilesY; y += 1)
                 {
                     Tile thetile = Framing.GetTileSafely(x, y);
-                    thetile.active(true);
-                    thetile.type = TileID.Dirt;
+                    thetile.HasTile;
+                    thetile.TileType = TileID.Dirt;
                 }
             }
 
@@ -524,8 +524,8 @@ namespace SGAmod.Dimensions
             for (int x = 0; x < allareas.Count; x += 1)
             {
                 Tile thetile = Framing.GetTileSafely((int)allareas[x].vector.X, (int)allareas[x].vector.Y);
-                thetile.active(false);
-                thetile.type = TileID.BlueDungeonBrick;
+                thetile.HasTile;
+                thetile.TileType = TileID.BlueDungeonBrick;
                 if (allareas[x].type == 4)
                 {
                     DeeperDungeon.pathwayloothalls.Add(allareas[x].vector);
@@ -551,7 +551,7 @@ namespace SGAmod.Dimensions
             {
                 for (int yy = 0; yy < height; yy += 1)
                 {
-                    if (Main.tile[xx, yy].type == TileID.Cobweb)
+                    if (Main.tile[xx, yy].TileType == TileID.Cobweb)
                         cob += 1;
 
                 }
@@ -579,19 +579,19 @@ namespace SGAmod.Dimensions
             for (int x = 0; x < DeeperDungeon.pathwayloothalls.Count; x += 1)
             {
                 Tile thetile = Framing.GetTileSafely((int)DeeperDungeon.pathwayloothalls[x].X, (int)DeeperDungeon.pathwayloothalls[x].Y);
-                thetile.active(false);
+                thetile.HasTile;
             }
             for (int x = 0; x < lootrooms.Count; x += 1)
             {
                 Tile thetile = Framing.GetTileSafely((int)lootrooms[x].vector.X, (int)lootrooms[x].vector.Y);
-                thetile.wall = (ushort)DeeperDungeon.DungeonWallLoot;
+                thetile.WallType = (ushort)DeeperDungeon.DungeonWallLoot;
                 if (lootrooms[x].floor)
                 {
                     Tile thetile2 = Framing.GetTileSafely((int)lootrooms[x].vector.X, (int)lootrooms[x].vector.Y + 1);
-                    if (!thetile2.active())
+                    if (!thetile2.HasTile)
                         WorldGen.PlaceTile((int)lootrooms[x].vector.X, (int)lootrooms[x].vector.Y + 1, DeeperDungeon.DungeonPlatform);
                 }
-                thetile.active(false);
+                thetile.HasTile;
             }
 
             //Smooth Ice chunks
@@ -603,13 +603,13 @@ namespace SGAmod.Dimensions
                 {
                     for (int x = 0; x < Main.maxTilesX; x += 1)
                     {
-                        if (Main.tile[x, y].type != TileID.BreakableIce)// && Main.tile[x, y].type != TileID.JungleThorns && Main.tile[x, y].type != TileID.CorruptThorns && Main.tile[x, y].type != TileID.CrimtaneThorns)
+                        if (Main.tile[x, y].TileType != TileID.BreakableIce)// && Main.tile[x, y].type != TileID.JungleThorns && Main.tile[x, y].type != TileID.CorruptThorns && Main.tile[x, y].type != TileID.CrimtaneThorns)
                             continue;
 
                         if (GetTilesAround(x, y, 1) > UniRand.Next(3, 6))
-                            Main.tile[x, y].active(true);
+                            Main.tile[x, y].HasTile;
                         else
-                            Main.tile[x, y].active(false);
+                            Main.tile[x, y].HasTile;
                     }
                 }
             }
@@ -637,7 +637,7 @@ namespace SGAmod.Dimensions
 
                 List<int> barTypes = new List<int>();
                 //Silver and up, includes metorite and hellstone and a few modded bars
-                barTypes.Add(4); barTypes.Add(5); barTypes.Add(6); barTypes.Add(7); barTypes.Add(8); barTypes.Add(9); barTypes.Add(SGAmod.Instance.TileType("UnmanedBarTile")); barTypes.Add(SGAmod.Instance.TileType("NoviteBarTile")); barTypes.Add(SGAmod.Instance.TileType("BiomassBarTile"));
+                barTypes.Add(4); barTypes.Add(5); barTypes.Add(6); barTypes.Add(7); barTypes.Add(8); barTypes.Add(9); barTypes.Add(SGAmod.Instance.Find<ModTile>("UnmanedBarTile").Type); barTypes.Add(SGAmod.Instance.Find<ModTile>("NoviteBarTile").Type); barTypes.Add(SGAmod.Instance.Find<ModTile>("BiomassBarTile").Type);
 
                 //Evil Bars
                 barTypes.Add(10); barTypes.Add(19);
@@ -656,7 +656,7 @@ namespace SGAmod.Dimensions
                 }
 
                 if (SGAWorld.GennedVirulent)
-                    barTypes.Add(SGAmod.Instance.TileType("VirulentBarTile"));
+                    barTypes.Add(SGAmod.Instance.Find<ModTile>("VirulentBarTile").Type);
 
 
                 for (int thisone22 = -4; thisone22 < 5; thisone22 += 8)
@@ -829,7 +829,7 @@ namespace SGAmod.Dimensions
                         if (UniRand.Next(0, DeeperDungeon.Spikeclusterchance[i]) == 1)
                         {
                             Tile thetile = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X), (int)(allareas[x].vector.Y + where[i].Y));
-                            if (thetile.active() && !DeeperDungeon.instance.IsSpike(thetile.type, 0))
+                            if (thetile.HasTile && !DeeperDungeon.instance.IsSpike(thetile.TileType, 0))
                             {
                                 ushort type = DeeperDungeon.SpikeType;
                                 float[] sizer = DeeperDungeon.Spikeclustersizemul;
@@ -880,7 +880,7 @@ namespace SGAmod.Dimensions
                     for (int y = rect2.Y; y < rect2.Y + rect2.Height; y += 1)
                     {
                         Tile thetile = Framing.GetTileSafely((int)MathHelper.Clamp(x, 0, Main.maxTilesX), (int)MathHelper.Clamp(y, 0, Main.maxTilesY));
-                        if (!(DeeperDungeon.instance).IsDirt(thetile.type))
+                        if (!(DeeperDungeon.instance).IsDirt(thetile.TileType))
                         {
                             tilecounter += 1;
                             if (tilecounter > DeeperDungeon.LootRoomMaxTiles)
@@ -961,7 +961,7 @@ namespace SGAmod.Dimensions
                             for (int zz = 0; zz < DeeperDungeon.platformmaxsize; zz += 1)
                             {
                                 Tile thetile = Framing.GetTileSafely((int)(shuffledareas[z].vector.X + (zz * zzz * expandto)), (int)(shuffledareas[z].vector.Y));
-                                if (thetile.active() && !DeeperDungeon.instance.IsSpike(thetile.type, 0))
+                                if (thetile.HasTile && !DeeperDungeon.instance.IsSpike(thetile.TileType, 0))
                                 {
                                     DeeperDungeon.instance.PlatformBlockType(thetile, ref platformtype);
                                     touchingoneend = true;
@@ -1007,8 +1007,8 @@ namespace SGAmod.Dimensions
                             Tile thetile3 = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X - 1), (int)(allareas[x].vector.Y + where[i].Y));
                             Tile thetile4 = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X), (int)(allareas[x].vector.Y + where[i].Y+1));
                             Tile thetile5 = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X), (int)(allareas[x].vector.Y + where[i].Y+2));
-                            if (thetile.active() && thetile2.active() && thetile3.active()
-                              && !(DeeperDungeon.instance.IsSpike(thetile.type, 1) || DeeperDungeon.instance.IsSpike(thetile2.type, 1) || DeeperDungeon.instance.IsSpike(thetile3.type, 1) || DeeperDungeon.instance.IsSpike(thetile4.type, 1) || DeeperDungeon.instance.IsSpike(thetile5.type, 1)))
+                            if (thetile.HasTile && thetile2.HasTile && thetile3.HasTile
+                              && !(DeeperDungeon.instance.IsSpike(thetile.TileType, 1) || DeeperDungeon.instance.IsSpike(thetile2.TileType, 1) || DeeperDungeon.instance.IsSpike(thetile3.TileType, 1) || DeeperDungeon.instance.IsSpike(thetile4.TileType, 1) || DeeperDungeon.instance.IsSpike(thetile5.TileType, 1)))
                             {
                                 if (i == 0 && allareas[x].type <2)
                                 {
@@ -1086,20 +1086,20 @@ namespace SGAmod.Dimensions
                                 Tile thetile = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X), (int)(allareas[x].vector.Y + where[i].Y));
                                 Tile thetile2 = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X + 1), (int)(allareas[x].vector.Y + where[i].Y));
                                 Tile thetile3 = Framing.GetTileSafely((int)(allareas[x].vector.X + where[i].X - 1), (int)(allareas[x].vector.Y + where[i].Y));
-                                if (thetile.active()
-                                  && !DeeperDungeon.instance.IsSpike(thetile.type, 1) && !DeeperDungeon.instance.IsSpike(thetile2.type, 1) && !DeeperDungeon.instance.IsSpike(thetile3.type, 1))
+                                if (thetile.HasTile
+                                  && !DeeperDungeon.instance.IsSpike(thetile.TileType, 1) && !DeeperDungeon.instance.IsSpike(thetile2.TileType, 1) && !DeeperDungeon.instance.IsSpike(thetile3.TileType, 1))
                                 {
 
-                                    if ((thetile.type == TileID.BlueDungeonBrick || thetile.type == TileID.GreenDungeonBrick || thetile.type == TileID.PinkDungeonBrick)
-                                        && (thetile2.type == TileID.BlueDungeonBrick || thetile2.type == TileID.GreenDungeonBrick || thetile2.type == TileID.PinkDungeonBrick))
+                                    if ((thetile.TileType == TileID.BlueDungeonBrick || thetile.TileType == TileID.GreenDungeonBrick || thetile.TileType == TileID.PinkDungeonBrick)
+                                        && (thetile2.TileType == TileID.BlueDungeonBrick || thetile2.TileType == TileID.GreenDungeonBrick || thetile2.TileType == TileID.PinkDungeonBrick))
                                     {
 
                                         int typeofhang = 5;
-                                        if (thetile.wall == WallID.BlueDungeonUnsafe || thetile.wall == WallID.BlueDungeonSlabUnsafe || thetile.wall == WallID.BlueDungeonTileUnsafe)
+                                        if (thetile.WallType == WallID.BlueDungeonUnsafe || thetile.WallType == WallID.BlueDungeonSlabUnsafe || thetile.WallType == WallID.BlueDungeonTileUnsafe)
                                             typeofhang = 1;
-                                        if (thetile.wall == WallID.GreenDungeonUnsafe || thetile.wall == WallID.GreenDungeonSlabUnsafe || thetile.wall == WallID.GreenDungeonTileUnsafe)
+                                        if (thetile.WallType == WallID.GreenDungeonUnsafe || thetile.WallType == WallID.GreenDungeonSlabUnsafe || thetile.WallType == WallID.GreenDungeonTileUnsafe)
                                             typeofhang = 3;
-                                        if (thetile.wall == WallID.PinkDungeonUnsafe || thetile.wall == WallID.PinkDungeonSlabUnsafe || thetile.wall == WallID.PinkDungeonTileUnsafe)
+                                        if (thetile.WallType == WallID.PinkDungeonUnsafe || thetile.WallType == WallID.PinkDungeonSlabUnsafe || thetile.WallType == WallID.PinkDungeonTileUnsafe)
                                             typeofhang = 4;
                                         //if (allareas[x].type == 1)
                                         //    typeofhang = 21;
@@ -1161,14 +1161,14 @@ namespace SGAmod.Dimensions
             {
                 List<int> loot = new List<int> { ItemID.AmmoReservationPotion, ItemID.LifeforcePotion, ItemID.EndurancePotion, ItemID.RagePotion, ItemID.InfernoPotion, ItemID.WrathPotion, ItemID.RecallPotion, ItemID.TeleportationPotion, ItemID.LovePotion, ItemID.StinkPotion, ItemID.FishingPotion, ItemID.SonarPotion, ItemID.CratePotion, ItemID.WarmthPotion, ItemID.ThornsPotion, ItemID.WaterWalkingPotion, ItemID.ArcheryPotion, ItemID.HunterPotion, ItemID.GravitationPotion, ItemID.ObsidianSkinPotion, ItemID.RegenerationPotion, ItemID.SwiftnessPotion, ItemID.GillsPotion, ItemID.IronskinPotion, ItemID.ManaRegenerationPotion, ItemID.MagicPowerPotion, ItemID.FeatherfallPotion, ItemID.SpelunkerPotion, ItemID.InvisibilityPotion, ItemID.ShinePotion, ItemID.NightOwlPotion, ItemID.BattlePotion, ItemID.LesserRestorationPotion, ItemID.HealingPotion, ItemID.ManaPotion, ItemID.LesserManaPotion, ItemID.LesserHealingPotion};
 
-                List<int> lootmain = new List<int> { unirand.NextBool() ? SGAmod.Instance.ItemType("UnmanedBar") : SGAmod.Instance.ItemType("NoviteBar"), SGAmod.Instance.ItemType("WraithFragment3"), ItemID.SilverCoin, ItemID.RestorationPotion,ItemID.ManaPotion, ItemID.StrangeBrew,ItemID.Bomb };
-                List<int> lootrare = new List<int> { SGAmod.Instance.ItemType("DankCore"), SGAmod.Instance.ItemType("CondenserPotion"),SGAmod.Instance.ItemType("TinkerPotion"), SGAmod.Instance.ItemType("RagnarokBrew"), SGAmod.Instance.ItemType("DankCrate"), SGAmod.Instance.ItemType("Megido"),ItemID.GreaterHealingPotion,ItemID.GoldCoin,ItemID.Dynamite };
+                List<int> lootmain = new List<int> { unirand.NextBool() ? SGAmod.Instance.Find<ModItem>("UnmanedBar") .Type: SGAmod.Instance.Find<ModItem>("NoviteBar").Type, SGAmod.Instance.Find<ModItem>("WraithFragment3").Type, ItemID.SilverCoin, ItemID.RestorationPotion,ItemID.ManaPotion, ItemID.StrangeBrew,ItemID.Bomb };
+                List<int> lootrare = new List<int> { SGAmod.Instance.Find<ModItem>("DankCore").Type, SGAmod.Instance.Find<ModItem>("CondenserPotion").Type,SGAmod.Instance.Find<ModItem>("TinkerPotion").Type, SGAmod.Instance.Find<ModItem>("RagnarokBrew").Type, SGAmod.Instance.Find<ModItem>("DankCrate").Type, SGAmod.Instance.Find<ModItem>("Megido").Type,ItemID.GreaterHealingPotion,ItemID.GoldCoin,ItemID.Dynamite };
                 int e = 0;
 
                 if (SGAWorld.downedSpiderQueen)
-                    lootmain.Add(SGAmod.Instance.ItemType("VialofAcid"));
+                    lootmain.Add(SGAmod.Instance.Find<ModItem>("VialofAcid").Type);
                 if (SGAWorld.downedMurk > 1)
-                    lootmain.Add(SGAmod.Instance.ItemType("MurkyGel"));
+                    lootmain.Add(SGAmod.Instance.Find<ModItem>("MurkyGel").Type);
                 if (SGAWorld.GennedVirulent)
                     lootmain.Add(ModContent.ItemType<HavocGear.Items.VirulentBar>());
                 if (postPlantera)
@@ -1184,7 +1184,7 @@ namespace SGAmod.Dimensions
                         int[] theitem = CommonItems;
                         int commisionitem = theitem[unirand.Next(0, theitem.Length)];
                         Main.chest[chestid].item[e].SetDefaults(commisionitem);
-                        Main.chest[chestid].item[e].stack = (commisionitem == SGAmod.Instance.ItemType("Megido") ? unirand.Next(4,13) : 1);
+                        Main.chest[chestid].item[e].stack = (commisionitem == SGAmod.Instance.Find<ModItem>("Megido") .Type? unirand.Next(4,13) : 1);
                         e += 1;
                     }
                     if (unirand.Next(0, 90) < 3 + (SGAWorld.dungeonlevel * 1))
@@ -1244,8 +1244,8 @@ namespace SGAmod.Dimensions
                     Main.chest[chestid].item[e].stack = 1;
                     e += 1;
 
-                    lootmain = new List<int> {SGAmod.Instance.ItemType("DragonsMightPotion"),SGAmod.Instance.ItemType("TimePotion"), SGAmod.Instance.ItemType("WraithFragment3"), ItemID.GoldCoin, ItemID.LesserRestorationPotion, ItemID.LifeforcePotion,
-                         SGAmod.Instance.ItemType("BiomassBar"), SGAmod.Instance.ItemType("WraithFragment3"), ItemID.Dynamite, ItemID.LesserRestorationPotion, ItemID.LifeforcePotion, ItemID.GoldBar
+                    lootmain = new List<int> {SGAmod.Instance.Find<ModItem>("DragonsMightPotion").Type,SGAmod.Instance.Find<ModItem>("TimePotion").Type, SGAmod.Instance.Find<ModItem>("WraithFragment3").Type, ItemID.GoldCoin, ItemID.LesserRestorationPotion, ItemID.LifeforcePotion,
+                         SGAmod.Instance.Find<ModItem>("BiomassBar").Type, SGAmod.Instance.Find<ModItem>("WraithFragment3").Type, ItemID.Dynamite, ItemID.LesserRestorationPotion, ItemID.LifeforcePotion, ItemID.GoldBar
                         ,ItemID.PlatinumBar,ItemID.PinkGel};
 
                     for (int kk = 0; kk < 3 + (Main.expertMode ? 6 : 3); kk += 1)

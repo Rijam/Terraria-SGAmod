@@ -25,34 +25,25 @@ namespace SGAmod.Items.Tools
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-			item.damage = 46;
-			item.useTime = 60;
-			item.useAnimation = 60;
-			item.useStyle = 5;
-			item.channel = true;
-			item.melee = true;
-			item.noMelee = true;
-			item.knockBack = 7f;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Lime;
-			item.pick = 200;
-			item.noUseGraphic = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item19;
-			item.shoot = mod.ProjectileType("TerraExcavatorProj");
+			Item.damage = 46;
+			Item.useTime = 60;
+			Item.useAnimation = 60;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true;
+			Item.knockBack = 7f;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Lime;
+			Item.pick = 200;
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item19;
+			Item.shoot = Mod.Find<ModProjectile>("TerraExcavatorProj").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Geyodo"), 1);
-			recipe.AddIngredient(ItemID.SpectrePickaxe, 1);
-			recipe.AddIngredient(ItemID.ShroomiteDiggingClaw, 1);
-			recipe.AddIngredient(ItemID.ChlorophytePickaxe, 1);
-			recipe.AddIngredient(ItemID.PickaxeAxe, 1);
-			recipe.AddIngredient(ItemID.BrokenHeroSword, 1);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Geyodo"), 1).AddIngredient(ItemID.SpectrePickaxe, 1).AddIngredient(ItemID.ShroomiteDiggingClaw, 1).AddIngredient(ItemID.ChlorophytePickaxe, 1).AddIngredient(ItemID.PickaxeAxe, 1).AddIngredient(ItemID.BrokenHeroSword, 1).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
 
 		}
 	}
@@ -64,8 +55,8 @@ namespace SGAmod.Items.Tools
 		{
 			DisplayName.SetDefault("Terra Excavator");
 			//ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 5000f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 300f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 8f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 300f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 8f;
 		}
 	}
 	public class Geyodo : Excavator
@@ -80,36 +71,25 @@ namespace SGAmod.Items.Tools
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-			item.damage = 36;
-			item.useTime = 60;
-			item.useAnimation = 60;
-			item.useStyle = 5;
-			item.channel = true;
-			item.melee = true;
-			item.noMelee = true;
-			item.knockBack = 7f;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.rare = ItemRarityID.Pink;
-			item.pick = 180;
-			item.noUseGraphic = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item19;
-			item.shoot = mod.ProjectileType("GeyodoProj");
+			Item.damage = 36;
+			Item.useTime = 60;
+			Item.useAnimation = 60;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true;
+			Item.knockBack = 7f;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.rare = ItemRarityID.Pink;
+			Item.pick = 180;
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item19;
+			Item.shoot = Mod.Find<ModProjectile>("GeyodoProj").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("Excavator"), 1);
-			recipe.AddRecipeGroup("SGAmod:Tier5Pickaxe", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier6Pickaxe", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier7Pickaxe", 1);
-			recipe.AddIngredient(ItemID.MoltenPickaxe, 1);
-			recipe.AddIngredient(mod.ItemType("VirulentBar"), 5);
-			recipe.AddIngredient(mod.ItemType("CryostalBar"), 5);
-			recipe.AddIngredient(mod.ItemType("WraithFragment4"), 15);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(mod.ItemType("Excavator"), 1).AddRecipeGroup("SGAmod:Tier5Pickaxe", 1).AddRecipeGroup("SGAmod:Tier6Pickaxe", 1).AddRecipeGroup("SGAmod:Tier7Pickaxe", 1).AddIngredient(ItemID.MoltenPickaxe, 1).AddIngredient(mod.ItemType("VirulentBar"), 5).AddIngredient(mod.ItemType("CryostalBar"), 5).AddIngredient(mod.ItemType("WraithFragment4"), 15).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
 
 		}
 	}
@@ -121,8 +101,8 @@ namespace SGAmod.Items.Tools
 		{
 			DisplayName.SetDefault("Geyodo Proj");
 			//ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 5000f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 300f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 7f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 300f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 7f;
 		}
 	}
 
@@ -138,40 +118,31 @@ namespace SGAmod.Items.Tools
 		{
 			Item refItem = new Item();
 			refItem.SetDefaults(ItemID.TheEyeOfCthulhu);
-			item.damage = 20;
-			item.useTime = 60;
-			item.useAnimation = 60;
-			item.useStyle = 5;
-			item.channel = true;
-			item.melee = true;
-			item.noMelee = true;
-			item.knockBack = 7f;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.rare = ItemRarityID.Orange;
-			item.pick = 70;
-			item.noUseGraphic = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item19;
-			item.shoot = mod.ProjectileType("ExcavatorProj");
+			Item.damage = 20;
+			Item.useTime = 60;
+			Item.useAnimation = 60;
+			Item.useStyle = 5;
+			Item.channel = true;
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true;
+			Item.knockBack = 7f;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.rare = ItemRarityID.Orange;
+			Item.pick = 70;
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item19;
+			Item.shoot = Mod.Find<ModProjectile>("ExcavatorProj").Type;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("SGAmod:Tier1Pickaxe", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier2Pickaxe", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier3Pickaxe", 1);
-			recipe.AddRecipeGroup("SGAmod:Tier4Pickaxe", 1);
-			recipe.AddIngredient(ItemID.WoodYoyo, 1);
-			recipe.AddIngredient(mod.ItemType("EvilBossMaterials"), 15);
-			recipe.AddTile(mod.TileType("ReverseEngineeringStation"));
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddRecipeGroup("SGAmod:Tier1Pickaxe", 1).AddRecipeGroup("SGAmod:Tier2Pickaxe", 1).AddRecipeGroup("SGAmod:Tier3Pickaxe", 1).AddRecipeGroup("SGAmod:Tier4Pickaxe", 1).AddIngredient(ItemID.WoodYoyo, 1).AddIngredient(mod.ItemType("EvilBossMaterials"), 15).AddTile(mod.TileType("ReverseEngineeringStation")).Register();
 
 		}
 		public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			int proj = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, (int)((double)damage), knockBack, player.whoAmI, 0.0f, 0.0f);
-			//(Main.projectile[proj].modProjectile as ExcavatorProj).PickPower = item.pick;
+			//(Main.projectile[proj].ModProjectile as ExcavatorProj).PickPower = item.pick;
 			Main.projectile[proj].netUpdate = true;
 
 			return false;
@@ -188,8 +159,8 @@ namespace SGAmod.Items.Tools
 		{
 			DisplayName.SetDefault("Excavator Proj");
 			//ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 5000f;
-			ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 300f;
-			ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 6f;
+			ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 300f;
+			ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 6f;
 		}
 		public override void ReceiveExtraAI(BinaryReader reader)
 		{
@@ -204,19 +175,19 @@ namespace SGAmod.Items.Tools
 		{
 			Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.TheEyeOfCthulhu);
-			projectile.extraUpdates = 0;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = 99;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.melee = true;
-			projectile.scale = 1f;
+			Projectile.extraUpdates = 0;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.aiStyle = 99;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.scale = 1f;
 		}
 
 		public override void AI()
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 			if (owner != null && !owner.dead)
 			{
 				PickPower += 1;
@@ -231,18 +202,18 @@ namespace SGAmod.Items.Tools
 						PowerPick += 1;
 
 						int dist = 64 * 64;
-						foreach(Projectile asteriodproj in Main.projectile.Where(testby => testby.active && testby.modProjectile != null && testby.modProjectile is IMineableAsteriod && (testby.Center - projectile.Center).LengthSquared() < dist))
+						foreach(Projectile asteriodproj in Main.projectile.Where(testby => testby.active && testby.ModProjectile != null && testby.ModProjectile is IMineableAsteriod && (testby.Center - Projectile.Center).LengthSquared() < dist))
                         {
-							IMineableAsteriod asteriod = asteriodproj.modProjectile as IMineableAsteriod;
+							IMineableAsteriod asteriod = asteriodproj.ModProjectile as IMineableAsteriod;
 							asteriod.MineAsteriod(owner.HeldItem,false);
 						}
 
-						Point16 hereIAm = new Point16((int)projectile.Center.X >> 4, (int)projectile.Center.Y >> 4);
+						Point16 hereIAm = new Point16((int)Projectile.Center.X >> 4, (int)Projectile.Center.Y >> 4);
 						for (int x = -3; x <= 3; x += 1)
 						{
 							for (int y = -3; y <= 3; y += 1)
 							{
-								if (new Vector2(x, y).LengthSquared() < 3*3 && !Main.tileAxe[Main.tile[hereIAm.X + x, hereIAm.Y + y].type])
+								if (new Vector2(x, y).LengthSquared() < 3*3 && !Main.tileAxe[Main.tile[hereIAm.X + x, hereIAm.Y + y].TileType])
 									owner.PickTile(hereIAm.X + x, hereIAm.Y + y, pickPower);
 							}
 						}
@@ -272,10 +243,10 @@ namespace SGAmod.Items.Tools
 			{
 				Texture2D tex = Main.itemTexture[Pickaxes[i]];
 				Vector2 offset = new Vector2(0, tex.Height*percenthit);
-				float angle = projectile.rotation + MathHelper.TwoPi * (i / (float)Pickaxes.Length);
+				float angle = Projectile.rotation + MathHelper.TwoPi * (i / (float)Pickaxes.Length);
 				//spriteBatch.Draw(tex, projectile.Center - Main.screenPosition,null, lightColor, angle, offset, projectile.scale, default, 0);
 
-				spriteBatch.Draw(tex, projectile.Center - Main.screenPosition, new Rectangle(0, (int)(tex.Height * (1f-percenthit)),(int)(tex.Width* percenthit), (int)(tex.Height* (percenthit))), Color.White, angle, offset, projectile.scale, default, 0);
+				spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, new Rectangle(0, (int)(tex.Height * (1f-percenthit)),(int)(tex.Width* percenthit), (int)(tex.Height* (percenthit))), Color.White, angle, offset, Projectile.scale, default, 0);
 			}
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
@@ -286,7 +257,7 @@ namespace SGAmod.Items.Tools
 
 			RadialEffect.Parameters["overlayTexture"].SetValue(mod.GetTexture("Space"));
 			RadialEffect.Parameters["alpha"].SetValue(1f);
-			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTime*0.125f, Main.GlobalTime * 0.275f));
+			RadialEffect.Parameters["texOffset"].SetValue(new Vector2(-Main.GlobalTimeWrappedHourly*0.125f, Main.GlobalTimeWrappedHourly * 0.275f));
 			RadialEffect.Parameters["texMultiplier"].SetValue(new Vector2(2f,1f));
 			RadialEffect.Parameters["ringScale"].SetValue(0.30f);
 			RadialEffect.Parameters["ringOffset"].SetValue(0.50f);

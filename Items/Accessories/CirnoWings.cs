@@ -20,14 +20,14 @@ namespace SGAmod.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			sbyte wingslo=item.wingSlot;
-			item.CloneDefaults(ItemID.FrozenWings);
-			item.width = 26;
-			item.height = 38;
-			item.value = 300000;
-			item.accessory = true;
-			item.expert=true;
-			item.wingSlot=wingslo;
+			sbyte wingslo=Item.wingSlot;
+			Item.CloneDefaults(ItemID.FrozenWings);
+			Item.width = 26;
+			Item.height = 38;
+			Item.value = 300000;
+			Item.accessory = true;
+			Item.expert=true;
+			Item.wingSlot=wingslo;
 		}
 
 		/*public override string Texture

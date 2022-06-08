@@ -20,32 +20,27 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 23;
-			item.ranged = true;
-			item.width = 20;
-			item.height = 32;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 5;
-			item.noMelee = true;
-			item.knockBack = 4;
-			item.value = 25000;
-			item.rare = 5;
-			item.UseSound = SoundID.Item5;
-			item.autoReuse = true;
-			item.shoot = 10;
-			item.shootSpeed = 50f;
-			item.useAmmo = AmmoID.Arrow;
+			Item.damage = 23;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 20;
+			Item.height = 32;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.useStyle = 5;
+			Item.noMelee = true;
+			Item.knockBack = 4;
+			Item.value = 25000;
+			Item.rare = 5;
+			Item.UseSound = SoundID.Item5;
+			Item.autoReuse = true;
+			Item.shoot = 10;
+			Item.shootSpeed = 50f;
+			Item.useAmmo = AmmoID.Arrow;
 		}
 
         	public override void AddRecipes()
         	{
-            		ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "DankWoodBow", 1);
-			recipe.AddIngredient(null, "BiomassBar", 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-            		recipe.AddRecipe();
+            		CreateRecipe(1).AddIngredient(null, "DankWoodBow", 1).AddIngredient(null, "BiomassBar", 8).AddTile(TileID.Anvils).Register();
         	}
 		
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -74,18 +69,18 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 32;
-			item.melee = true;
-			item.width = 36;
-			item.height = 36;
-			item.useTime = 19;
-			item.useAnimation = 20;
-			item.useStyle = 1;
-			item.knockBack = 7;
-			item.value = 25000;
-			item.rare = 3;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			Item.damage = 32;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 36;
+			Item.height = 36;
+			Item.useTime = 19;
+			Item.useAnimation = 20;
+			Item.useStyle = 1;
+			Item.knockBack = 7;
+			Item.value = 25000;
+			Item.rare = 3;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 		}
 
 		public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
@@ -98,12 +93,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "DankWoodSword", 1);
-			recipe.AddIngredient(null, "BiomassBar", 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "DankWoodSword", 1).AddIngredient(null, "BiomassBar", 8).AddTile(TileID.Anvils).Register();
 		}
 	}
 
@@ -117,32 +107,28 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 12;
-			item.magic = true;
-			item.mana = 5;
-			item.width = 38;
-			item.height = 40;
-			item.useTime = 10;
-			item.useAnimation = 30;
-			Item.staff[item.type] = true;
-			item.useStyle = 5;
-			item.knockBack = 0.5f;
-			item.value = 25000;
-			item.rare = 3;
-			item.noMelee = true;
-			item.shoot = mod.ProjectileType("MangroveStaffOrb");
-			item.shootSpeed = 12f;
-			item.UseSound = SoundID.Item8;
-			item.autoReuse = true;
+			Item.damage = 12;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 5;
+			Item.width = 38;
+			Item.height = 40;
+			Item.useTime = 10;
+			Item.useAnimation = 30;
+			Item.staff[Item.type] = true;
+			Item.useStyle = 5;
+			Item.knockBack = 0.5f;
+			Item.value = 25000;
+			Item.rare = 3;
+			Item.noMelee = true;
+			Item.shoot = Mod.Find<ModProjectile>("MangroveStaffOrb").Type;
+			Item.shootSpeed = 12f;
+			Item.UseSound = SoundID.Item8;
+			Item.autoReuse = true;
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "BiomassBar", 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(null, "BiomassBar", 8).AddTile(TileID.Anvils).Register();
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
@@ -161,24 +147,24 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 16;
-			item.Throwing().thrown = true;
-			item.width = 32;
-			item.height = 32;
-			item.useTime = 12;
-			item.useAnimation = 12;
-			item.useStyle = 1;
-			item.knockBack = 1;
-			item.value = 25;
-			item.consumable = true;
-			item.maxStack = 999;
-			item.rare = 3;
-			item.UseSound = SoundID.Item1;
-			item.shoot = mod.ProjectileType("MangroveShivProj");
-			item.shootSpeed = 15f;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.damage = 16;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.width = 32;
+			Item.height = 32;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
+			Item.useStyle = 1;
+			Item.knockBack = 1;
+			Item.value = 25;
+			Item.consumable = true;
+			Item.maxStack = 999;
+			Item.rare = 3;
+			Item.UseSound = SoundID.Item1;
+			Item.shoot = Mod.Find<ModProjectile>("MangroveShivProj").Type;
+			Item.shootSpeed = 15f;
+			Item.noUseGraphic = true;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -194,11 +180,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(null, "BiomassBar", 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this,50);
-			recipe.AddRecipe();
+			CreateRecipe(50).AddIngredient(null, "BiomassBar", 1).AddTile(TileID.Anvils).Register();
 		}
 
 	}
@@ -217,15 +199,15 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Grenade);
-			projectile.Throwing().thrown = true;
-			projectile.timeLeft = 600;
-			projectile.aiStyle = -1;
-			projectile.width = 24;
-			projectile.height = 24;
-			projectile.penetrate = 3;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = -1;
+			Projectile.CloneDefaults(ProjectileID.Grenade);
+			Projectile.Throwing().DamageType = DamageClass.Throwing;
+			Projectile.timeLeft = 600;
+			Projectile.aiStyle = -1;
+			Projectile.width = 24;
+			Projectile.height = 24;
+			Projectile.penetrate = 3;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = -1;
 		}
 
 		public override string Texture
@@ -236,36 +218,36 @@ namespace SGAmod.HavocGear.Items.Weapons
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
 			listOfPoints.Add(new Point(target.whoAmI,1000000));
-			List<NPC> closestnpcs = SGAUtils.ClosestEnemies(projectile.Center, 200,AddedWeight: listOfPoints,checkCanChase: false);
+			List<NPC> closestnpcs = SGAUtils.ClosestEnemies(Projectile.Center, 200,AddedWeight: listOfPoints,checkCanChase: false);
 
 			if (target.HasBuff(BuffID.DryadsWardDebuff))
-				projectile.penetrate += 1;
+				Projectile.penetrate += 1;
 
 			if (closestnpcs != null && closestnpcs.Count>0)
             {
 				NPC target2 = closestnpcs[0];
-				Vector2 dist = target2.Center - projectile.Center;
+				Vector2 dist = target2.Center - Projectile.Center;
 
 				while (dist.Length() > 24f)
                 {
-					projectile.Center += Vector2.Normalize(dist)*6f;
-					dist = target2.Center - projectile.Center;
+					Projectile.Center += Vector2.Normalize(dist)*6f;
+					dist = target2.Center - Projectile.Center;
 
 
-					int dust = Dust.NewDust(new Vector2(projectile.Center.X - 8, projectile.Center.Y - 8), 16, 16, ModContent.DustType<MangroveDust>());
+					int dust = Dust.NewDust(new Vector2(Projectile.Center.X - 8, Projectile.Center.Y - 8), 16, 16, ModContent.DustType<MangroveDust>());
 					Main.dust[dust].scale = 1.75f;
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].velocity = Vector2.Zero;
 				}
-				projectile.velocity = Vector2.Normalize(dist) * 6f;
-				projectile.rotation = projectile.velocity.ToRotation()+(MathHelper.Pi/4f);
+				Projectile.velocity = Vector2.Normalize(dist) * 6f;
+				Projectile.rotation = Projectile.velocity.ToRotation()+(MathHelper.Pi/4f);
 
 			}
 		}
 
         public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.Kill();
+			Projectile.Kill();
 			return false;
 		}
 
@@ -279,16 +261,16 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 			if (Main.rand.Next(0, 3) == 0)
 			{
-				int dust = Dust.NewDust(new Vector2(projectile.Center.X - 12, projectile.Center.Y - 12), 24, 24, 96);
+				int dust = Dust.NewDust(new Vector2(Projectile.Center.X - 12, Projectile.Center.Y - 12), 24, 24, 96);
 				Main.dust[dust].scale = 0.50f;
 				Main.dust[dust].noGravity = false;
-				Main.dust[dust].velocity = -projectile.velocity * (float)(Main.rand.Next(60, 100) * 0.01f);
+				Main.dust[dust].velocity = -Projectile.velocity * (float)(Main.rand.Next(60, 100) * 0.01f);
 			}
 
-			projectile.timeLeft -= 1;
-			projectile.velocity.Y += 0.25f;
-			projectile.velocity.X *= 0.98f;
-			projectile.rotation += projectile.velocity.Length() * (float)(Math.Sign(projectile.velocity.X * 1000f) / 1000f) * 10f;
+			Projectile.timeLeft -= 1;
+			Projectile.velocity.Y += 0.25f;
+			Projectile.velocity.X *= 0.98f;
+			Projectile.rotation += Projectile.velocity.Length() * (float)(Math.Sign(Projectile.velocity.X * 1000f) / 1000f) * 10f;
 		}
 
 	}

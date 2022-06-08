@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Utilities;
+using Terraria.DataStructures;
 
 namespace SGAmod
 {
@@ -22,7 +23,7 @@ namespace SGAmod
 			Tooltip.SetDefault("'Totally banned in Norway'\nAlso, your not suppose to have this!");
 		}
 
-		public override bool Autoload(ref string name)
+		public override bool IsLoadingEnabled(Mod mod)
 		{
 			return !(GetType()==typeof(LootBox));
 		}
@@ -32,9 +33,9 @@ namespace SGAmod
 			bool canopen = true;
 			for(int i = 0; i < Main.maxProjectiles; i += 1)
 			{
-				if (Main.projectile[i].modProjectile != null)
+				if (Main.projectile[i].ModProjectile != null)
 				{
-					Type boxtype = Main.projectile[i].modProjectile.GetType();
+					Type boxtype = Main.projectile[i].ModProjectile.GetType();
 					if (Main.projectile[i].owner == player.whoAmI && Main.projectile[i].timeLeft>0 && (boxtype == typeof(LootBoxOpen) || boxtype.BaseType == typeof(LootBoxOpen) || boxtype.IsSubclassOf(typeof(LootBoxOpen))))
 					{
 						canopen = false;
@@ -47,24 +48,24 @@ namespace SGAmod
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 24;
-			item.maxStack = 30;
-			item.rare = 8;
-			item.value = 1000;
-			item.useStyle = 2;
-			item.useAnimation = 17;
-			item.useTime = 17;
-			item.useTurn = true;
-			item.UseSound = SoundID.Item3;
-			item.consumable = true;
-			item.shoot = mod.ProjectileType("LootBoxOpen");
+			Item.width = 14;
+			Item.height = 24;
+			Item.maxStack = 30;
+			Item.rare = 8;
+			Item.value = 1000;
+			Item.useStyle = 2;
+			Item.useAnimation = 17;
+			Item.useTime = 17;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item3;
+			Item.consumable = true;
+			Item.shoot = Mod.Find<ModProjectile>("LootBoxOpen").Type;
 		}
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			if (Main.netMode == NetmodeID.Server)
 				return false;
-			Projectile.NewProjectile(player.Center.X, player.Center.Y, Vector2.Zero.X, Vector2.Zero.Y, type, damage, knockBack, player.whoAmI);
+			Projectile.NewProjectile(null, player.Center.X, player.Center.Y, Vector2.Zero.X, Vector2.Zero.Y, type, damage, knockback, player.whoAmI);
 			return false;
 		}
 	}
@@ -103,26 +104,26 @@ namespace SGAmod
 			DisplayName.SetDefault("Loot Box?");
 		}
 
-		public override bool CanDamage()
+		public override bool ? CanDamage()
 		{
 			return false;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.ignoreWater = true;
-			projectile.hostile = false;
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.penetrate = -1;
-			aiType = ProjectileID.WoodenArrowFriendly;
-			projectile.scale = 0;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.ignoreWater = true;
+			Projectile.hostile = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = -1;
+			AIType = ProjectileID.WoodenArrowFriendly;
+			Projectile.scale = 0;
 
 			
-			projectile.timeLeft = 800 + Main.rand.Next(-100, 300);//Adjust how long the ticker goes, again be mindful of the max item count
-			projectile.localAI[0] = Main.rand.Next(40, 60);//Starting position, make sure this is higher than items Visible
+			Projectile.timeLeft = 800 + Main.rand.Next(-100, 300);//Adjust how long the ticker goes, again be mindful of the max item count
+			Projectile.localAI[0] = Main.rand.Next(40, 60);//Starting position, make sure this is higher than items Visible
 		}
 
 		public virtual void ExtraItem(WeightedRandom<LootBoxContents> WR)
@@ -140,7 +141,7 @@ namespace SGAmod
 			loots.Add(WR.Get());
 		}
 
-		public override bool Autoload(ref string name)
+		public override bool IsLoadingEnabled(Mod mod)
 		{
 			return !(GetType() == typeof(LootBoxOpen));
 		}
@@ -162,12 +163,12 @@ namespace SGAmod
 
 		public override void AI()
 		{
-			Player owner = Main.player[projectile.owner];
-			projectile.extraUpdates = 0;
+			Player owner = Main.player[Projectile.owner];
+			Projectile.extraUpdates = 0;
 
 			if (owner != null && owner.active && owner.SGAPly().liquidGambling > 0)
             {
-				projectile.extraUpdates = 3;
+				Projectile.extraUpdates = 3;
             }
 
 
@@ -184,86 +185,86 @@ namespace SGAmod
 				}
 			}
 
-			projectile.localAI[0] += Math.Max(0f,((projectile.timeLeft - (slowDownRate)) / (float)slowDownRate) * speed);
+			Projectile.localAI[0] += Math.Max(0f,((Projectile.timeLeft - (slowDownRate)) / (float)slowDownRate) * speed);
 
-			if (projectile.localAI[0] > loots.Count)
-				projectile.localAI[0] = 0f;
+			if (Projectile.localAI[0] > loots.Count)
+				Projectile.localAI[0] = 0f;
 
-			if (lastitem!= (int)projectile.localAI[0])
+			if (lastitem!= (int)Projectile.localAI[0])
 			{
-				lastitem = (int)projectile.localAI[0];
+				lastitem = (int)Projectile.localAI[0];
 				TickEffect();
 			}
 
 
-				Player player = Main.player[projectile.owner];
+				Player player = Main.player[Projectile.owner];
 
 			if (player != null && player.active)
 			{
 
-				projectile.scale = Math.Min(projectile.scale+(1f/60f), Math.Min(1f,projectile.timeLeft / 60f));
+				Projectile.scale = Math.Min(Projectile.scale+(1f/60f), Math.Min(1f,Projectile.timeLeft / 60f));
 
 				if (player.dead)
 				{
-					projectile.Kill();
+					Projectile.Kill();
 				}
 				else
 				{
-					if (projectile.timeLeft == 200 && Main.netMode!=NetmodeID.Server)
+					if (Projectile.timeLeft == 200 && Main.netMode!=NetmodeID.Server)
 					{
-						LootBoxContents itemtype = loots[(int)projectile.localAI[0]];
-						player.QuickSpawnItem(itemtype.intid, itemtype.ammount);
+						LootBoxContents itemtype = loots[(int)Projectile.localAI[0]];
+						player.QuickSpawnItem(null, itemtype.intid, itemtype.ammount);
 						AwardItem(itemtype.intid);
 					}
 
 					Vector2 mousePos = Main.MouseWorld;
 
-					if (projectile.owner == Main.myPlayer)
+					if (Projectile.owner == Main.myPlayer)
 					{
 						Vector2 diff = mousePos - player.Center;
 						diff.Normalize();
-						projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
-						projectile.netUpdate = true;
+						Projectile.direction = Main.MouseWorld.X > player.position.X ? 1 : -1;
+						Projectile.netUpdate = true;
 					}
 
-					projectile.velocity = default(Vector2);
-					projectile.Center = (player.Center);
+					Projectile.velocity = default(Vector2);
+					Projectile.Center = (player.Center);
 
 				}
 			}
 			else
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
 		{
 
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			for (int f = 0; f < loots.Count; f += 1)
 				{
 				int lootboxsize = size;
-				float offsetsizer = (projectile.localAI[0]* -lootboxsize) + ((float)lootboxsize*f);
-					Vector2 hereas = new Vector2((f-projectile.localAI[0])* (float)lootboxsize, -64);
+				float offsetsizer = (Projectile.localAI[0]* -lootboxsize) + ((float)lootboxsize*f);
+					Vector2 hereas = new Vector2((f-Projectile.localAI[0])* (float)lootboxsize, -64);
 
-					Vector2 drawPos = ((hereas * projectile.scale)+ projectile.Center) - Main.screenPosition;
+					Vector2 drawPos = ((hereas * Projectile.scale)+ Projectile.Center) - Main.screenPosition;
 					Color glowingcolors1 = Color.White;
 
-				float alpha = MathHelper.Clamp(1f-Math.Abs((((float)f-projectile.localAI[0])/(float)itemsVisible)),0f,1f);
+				float alpha = MathHelper.Clamp(1f-Math.Abs((((float)f-Projectile.localAI[0])/(float)itemsVisible)),0f,1f);
 
 					if (alpha > 0f)
 					{
 
-					if ((int)projectile.localAI[0] == f)
+					if ((int)Projectile.localAI[0] == f)
 						glowingcolors1 = Color.Red;
 
-					Texture2D tex = Main.itemTexture[loots[f].intid];
-					spriteBatch.Draw(tex, drawPos, null, glowingcolors1 * projectile.scale * alpha, 0, new Vector2(tex.Width / 2, tex.Height / 2), (0.5f + (0.5f * alpha)) * projectile.scale, SpriteEffects.None, 0f);
+					Texture2D tex = Terraria.GameContent.TextureAssets.Item[loots[f].intid].Value;
+					//spriteBatch.Draw(tex, drawPos, null, glowingcolors1 * Projectile.scale * alpha, 0, new Vector2(tex.Width / 2, tex.Height / 2), (0.5f + (0.5f * alpha)) * Projectile.scale, SpriteEffects.None, 0f);
 					}
 				}
-			spriteBatch.Draw(Main.blackTileTexture, projectile.Center - Main.screenPosition, new Rectangle(0, 0, 4, 200), Color.Red * projectile.scale, MathHelper.Pi, new Vector2(2, 8), new Vector2(1, 1) * projectile.scale, SpriteEffects.None, 0f);
+			//spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, 4, 200), Color.Red * Projectile.scale, MathHelper.Pi, new Vector2(2, 8), new Vector2(1, 1) * Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

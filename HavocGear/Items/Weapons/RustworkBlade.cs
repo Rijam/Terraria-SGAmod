@@ -18,20 +18,20 @@ namespace SGAmod.HavocGear.Items.Weapons
         {
             base.SetDefaults();
 
-            item.damage = 5;
-            item.width = 19;
-            item.height = 22;
-            item.melee = true;
-            item.rare = 2;
-            item.useStyle = 1;
-            item.useAnimation = 20;
-            item.useTime = 20;
-            item.autoReuse = true;
-            item.useTurn = true;
-            item.knockBack = 3;
-            item.value = 5000;
-            item.consumable = false;
-            item.UseSound = SoundID.Item19;
+            Item.damage = 5;
+            Item.width = 19;
+            Item.height = 22;
+            Item.DamageType = DamageClass.Melee;
+            Item.rare = 2;
+            Item.useStyle = 1;
+            Item.useAnimation = 20;
+            Item.useTime = 20;
+            Item.autoReuse = true;
+            Item.useTurn = true;
+            Item.knockBack = 3;
+            Item.value = 5000;
+            Item.consumable = false;
+            Item.UseSound = SoundID.Item19;
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {

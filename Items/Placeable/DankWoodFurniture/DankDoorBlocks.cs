@@ -20,28 +20,23 @@ namespace SGAmod.HavocGear.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 14;
-			item.height = 28;
-			item.maxStack = 99;
-			item.rare = 1;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = 150;
-			item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankDoorClosed>();
+			Item.width = 14;
+			Item.height = 28;
+			Item.maxStack = 99;
+			Item.rare = 1;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = 150;
+			Item.createTile = ModContent.TileType<Tiles.DankWoodFurniture.DankDoorClosed>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WoodenDoor);
-			recipe.AddIngredient(ModContent.ItemType<DankWood>(), 15);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1).AddIngredient(ItemID.WoodenDoor).AddIngredient(ModContent.ItemType<DankWood>(), 15).AddTile(TileID.WorkBenches).Register();
 		}
 	}
 

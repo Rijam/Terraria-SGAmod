@@ -9,19 +9,19 @@ namespace SGAmod.HavocGear.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			item.autoReuse = true;
+			Item.autoReuse = true;
 
-			item.useTurn = true;
-			item.useStyle = 1;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.maxStack = 99;
-			item.consumable = true;
-			item.placeStyle = 0;
-			item.width = 12;
-			item.height = 14;
-			item.value = 10;
-			item.createTile = mod.TileType("SwampGrassGrow");
+			Item.useTurn = true;
+			Item.useStyle = 1;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.maxStack = 99;
+			Item.consumable = true;
+			Item.placeStyle = 0;
+			Item.width = 12;
+			Item.height = 14;
+			Item.value = 10;
+			Item.createTile = Mod.Find<ModTile>("SwampGrassGrow").Type;
 		}
 
     public override void SetStaticDefaults()
@@ -31,7 +31,7 @@ namespace SGAmod.HavocGear.Items.Weapons
     }
 
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             if (Main.tile[Player.tileTargetX, Player.tileTargetY+1].type == ModContent.TileType<Tiles.MoistStone>() && !Main.tile[Player.tileTargetX, Player.tileTargetY + 1].active())
             {

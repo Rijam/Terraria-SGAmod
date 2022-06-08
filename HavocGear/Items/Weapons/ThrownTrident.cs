@@ -16,25 +16,25 @@ namespace SGAmod.HavocGear.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.DayBreak);
-			item.damage = 15;
-			item.ranged = true;
-			item.width = 56;
-			item.height = 28;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.noMelee = true;
-			item.melee = false;
-			item.ranged = false;
-			item.magic = false;
-			item.thrown = false;
-			item.Throwing().thrown = true;
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = ItemRarityID.Green;
-			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("ThrownTridentFriendly");
-			item.shootSpeed = 12f;
+			Item.CloneDefaults(ItemID.DayBreak);
+			Item.damage = 15;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 56;
+			Item.height = 28;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.noMelee = true;
+			// item.melee = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			// item.ranged = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			// item.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			// item.thrown = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+			Item.Throwing().DamageType = DamageClass.Throwing;
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Green;
+			Item.autoReuse = true;
+			Item.shoot = Mod.Find<ModProjectile>("ThrownTridentFriendly").Type;
+			Item.shootSpeed = 12f;
 
 		}
 

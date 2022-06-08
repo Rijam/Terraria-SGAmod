@@ -19,7 +19,7 @@ namespace SGAmod.Tiles.TechTiles
 		const int maxXSize = 18 * 6;
 		const int maxYSize = 18 * 4;
 		protected virtual int DropItem => ModContent.ItemType<HopperItem>();
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			TileID.Sets.DrawsWalls[Type] = true;
 			Main.tileFrameImportant[Type] = true;
@@ -68,7 +68,7 @@ namespace SGAmod.Tiles.TechTiles
 		// - ((tile.frameX / 36) % 2)
 		public static Point GetRealHopperCorner(Point here, Tile tile)
 		{
-			Point coords = new Point(here.X - ((tile.frameX) % 36) / 18, here.Y - ((tile.frameY) % 36) / 18);
+			Point coords = new Point(here.X - ((tile.TileFrameX) % 36) / 18, here.Y - ((tile.TileFrameY) % 36) / 18);
 			return coords;
 
 		}
@@ -89,9 +89,9 @@ namespace SGAmod.Tiles.TechTiles
 					Tile tile = Framing.GetTileSafely(tilePosition.X, tilePosition.Y);
 					//Main.NewText(tile.type + " this type "+item.position);
 					//if (tile.type == ModContent.TileType<HopperTile>() || tile.type == ModContent.TileType<ChestHopperTile>() || tile.type == ModContent.TileType<ShiftingFunnelTile>() || tile.type == ModContent.TileType<LiquidationHopperTile>())
-					if (tile.type>TileID.Count)
+					if (tile.TileType>TileID.Count)
 					{
-						if (ModContent.GetModTile(tile.type) is ModTile modTile)
+						if (ModContent.GetModTile(tile.TileType) is ModTile modTile)
 						{
 							if (modTile != null && modTile is HopperTile)
 							{
@@ -262,7 +262,7 @@ namespace SGAmod.Tiles.TechTiles
 				return true;
 			}
 
-			if (tile == null || !tile.active())
+			if (tile == null || !tile.HasTile)
 				return false;
 
 			int chester = Chest.FindChest(checkCoords.X, checkCoords.Y);
@@ -371,17 +371,17 @@ namespace SGAmod.Tiles.TechTiles
 			//Main.NewText("Debug Message 2!");
 			Tile tile = Framing.GetTileSafely(tilePos.X, tilePos.Y);
 
-			if ((tile.frameY / 36) % 2 > 0)
+			if ((tile.TileFrameY / 36) % 2 > 0)
 				return false;
 
 			Point coords = GetRealHopperCorner(tilePos, tile);
-			Point offset = tileDirection[tile.frameX / 36];
+			Point offset = tileDirection[tile.TileFrameX / 36];
 
 			Point checkCoords = new Point(coords.X + offset.X, coords.Y + offset.Y);
 
 			Tile modtile = Framing.GetTileSafely(checkCoords.X, checkCoords.Y);
 
-			if (ModContent.GetModTile(modtile.type) is ModTile modTile)
+			if (ModContent.GetModTile(modtile.TileType) is ModTile modTile)
 			{
 				if (modTile != null && modTile is IHopperInterface)
 				{
@@ -401,7 +401,7 @@ namespace SGAmod.Tiles.TechTiles
 				for (int y = 0; y < 2; y += 1)
 				{
 					Tile corner = Framing.GetTileSafely(coords.X + x, coords.Y + y);
-					corner.frameX = (short)((corner.frameX + 36) % maxXSize);
+					corner.TileFrameX = (short)((corner.TileFrameX + 36) % maxXSize);
 				}
 			}
 			if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -421,7 +421,7 @@ namespace SGAmod.Tiles.TechTiles
 				for (int y = 0; y < 2; y += 1)
 				{
 					Tile corner = Framing.GetTileSafely(coords.X + x, coords.Y + y);
-					corner.frameY = (short)((corner.frameY + 36) % maxYSize);
+					corner.TileFrameY = (short)((corner.TileFrameY + 36) % maxYSize);
 				}
 			}
 			if (Main.netMode == NetmodeID.Server)
@@ -443,8 +443,8 @@ namespace SGAmod.Tiles.TechTiles
 				{
 					SGAmod.Instance.Logger.Warn("Tile here: "+(coords.X + x) +" - "+(coords.Y - y));
 					Tile tilehere = Framing.GetTileSafely(coords.X + x, coords.Y - y);
-					ModTile modtile = TileLoader.GetTile(tilehere.type);
-					if (Chest.FindChestByGuessing(coords.X + x, coords.Y - y) >= 0 || tilehere.type == TileID.Containers || (modtile != null && modtile.chest != ""))
+					ModTile modtile = TileLoader.GetTile(tilehere.TileType);
+					if (Chest.FindChestByGuessing(coords.X + x, coords.Y - y) >= 0 || tilehere.TileType == TileID.Containers || (modtile != null && modtile.chest != ""))
 					{
 						return false;
 					}
@@ -463,12 +463,12 @@ namespace SGAmod.Tiles.TechTiles
 			Tile tile = Framing.GetTileSafely(i, j);
 			Point coords = GetRealHopperCorner(new Point(i, j), tile);
 
-			if (tile.type == ModContent.TileType<ChestHopperTile>())
+			if (tile.TileType == ModContent.TileType<ChestHopperTile>())
 				ModContent.GetInstance<ChestHopperTE>().Kill(coords.X, coords.Y);
 
 			if (item > 0)
 			{
-				if (((tile.frameX) % 36) / 18 == 0 && ((tile.frameY) % 36) / 18 == 0)
+				if (((tile.TileFrameX) % 36) / 18 == 0 && ((tile.TileFrameY) % 36) / 18 == 0)
 					Item.NewItem(coords.X * 16, coords.Y * 16, 32, 32, item);
 			}
 
@@ -496,7 +496,7 @@ namespace SGAmod.Tiles.TechTiles
 
 		public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
-			if (Main.tile[x, y].type == base.Type)
+			if (Main.tile[x, y].TileType == base.Type)
 			{
 				if (nextSpecialDrawIndex < Main.specX.Length)
 				{
@@ -512,12 +512,12 @@ namespace SGAmod.Tiles.TechTiles
 			Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 			Tile tile = Framing.GetTileSafely(i, j);
 			Texture2D curser = Main.cursorTextures[7];
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
-				if (tile.frameX%36 == 0 && tile.frameY%36 == 0)
+				if (tile.TileFrameX%36 == 0 && tile.TileFrameY%36 == 0)
 				{
 					Vector2 offset = zerooroffset + (new Vector2(i, j) * 16) + new Vector2(16, 16);
-					spriteBatch.Draw(curser, offset - Main.screenPosition, null, (tile.frameY > 0 ? Color.Gray : Color.White).MultiplyRGBA(Lighting.GetColor(i, j)), 0, curser.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0f);
+					spriteBatch.Draw(curser, offset - Main.screenPosition, null, (tile.TileFrameY > 0 ? Color.Gray : Color.White).MultiplyRGBA(Lighting.GetColor(i, j)), 0, curser.Size() / 2f, new Vector2(1f, 1f), SpriteEffects.None, 0f);
 				}
 			}
 		}
@@ -542,7 +542,7 @@ namespace SGAmod.Tiles.TechTiles
 		{
 			Tile tile = Framing.GetTileSafely(i, j);
 
-			bool valid = tile.active() && tile.type == ModContent.TileType<ChestHopperTile>();
+			bool valid = tile.HasTile && tile.TileType == ModContent.TileType<ChestHopperTile>();
 			if (!valid)
 			{
 				LuminousAlterTE.DebugText("Deleted");
@@ -559,7 +559,7 @@ namespace SGAmod.Tiles.TechTiles
 				Tile mymodtile = Framing.GetTileSafely(coords.X, coords.Y);
 				Point ChestData = new Point(-1,-1);
 
-				if (mymodtile.frameY < 36)
+				if (mymodtile.TileFrameY < 36)
 				{
 					Point testcoords = new Point(coords.X, coords.Y - 2);
 					Tile modtile = Framing.GetTileSafely(testcoords.X, testcoords.Y);
@@ -567,7 +567,7 @@ namespace SGAmod.Tiles.TechTiles
 					Item clonedItem = null;
 					bool checkIfOnlyWeAreTesting = false;
 
-					if (ModContent.GetModTile(modtile.type) is ModTile modTile)
+					if (ModContent.GetModTile(modtile.TileType) is ModTile modTile)
 					{
 						if (modTile != null && modTile is IHopperInterface)
 						{

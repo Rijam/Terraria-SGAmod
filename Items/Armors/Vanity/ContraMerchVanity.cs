@@ -19,12 +19,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 10;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 28;
+			Item.height = 10;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
         public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
         {
@@ -41,18 +41,18 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 34;
-			item.height = 32;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 34;
+			Item.height = 32;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 		public override void SetMatch(bool male, ref int equipSlot, ref bool robes)
 		{
 			robes = true;
 			// The equipSlot is added in SGAmod.cs --> Load hook
-			equipSlot = mod.GetEquipSlot("ContraMerchCoat_Legs", EquipType.Legs);
+			equipSlot = Mod.GetEquipSlot("ContraMerchCoat_Legs", EquipType.Legs);
 			//Legs become "invisible". Idk how to fix it.
 		}
 
@@ -71,12 +71,12 @@ namespace SGAmod.Items.Armors.Vanity
 		}
 		public override void SetDefaults()
 		{
-			item.width = 22;
-			item.height = 10;
-			item.value = Item.sellPrice(gold: 1);
-			item.rare = ItemRarityID.Blue;//1
-			item.vanity = true;
-			item.defense = 0;
+			Item.width = 22;
+			Item.height = 10;
+			Item.value = Item.sellPrice(gold: 1);
+			Item.rare = ItemRarityID.Blue;//1
+			Item.vanity = true;
+			Item.defense = 0;
 		}
 	}
 }

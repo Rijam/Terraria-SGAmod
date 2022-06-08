@@ -113,15 +113,15 @@ namespace SGAmod.Tiles.TechTiles
         {
 			Vector2 zerooroffset = Main.drawToScreen ? Vector2.Zero : new Vector2((float)Main.offScreenRange);
 			Tile tile = Framing.GetTileSafely(i, j);
-			Texture2D tex = Main.tileTexture[tile.type];
+			Texture2D tex = Main.tileTexture[tile.TileType];
 
 			Vector2 offset = zerooroffset + (new Vector2(i, j) * 16);
-			spriteBatch.Draw(tex, offset - Main.screenPosition, new Rectangle(tile.frameX, tile.frameY,16,16), (Color.Yellow.MultiplyRGBA(Lighting.GetColor(i,j))).MultiplyRGBA(tile.actColor(Color.White)), 0, Vector2.Zero, new Vector2(1f, 1f), SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, offset - Main.screenPosition, new Rectangle(tile.TileFrameX, tile.TileFrameY,16,16), (Color.Yellow.MultiplyRGBA(Lighting.GetColor(i,j))).MultiplyRGBA(tile.actColor(Color.White)), 0, Vector2.Zero, new Vector2(1f, 1f), SpriteEffects.None, 0f);
 		}
 
         public override void DrawEffects(int x, int y, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
-			if (Main.tile[x, y].type == base.Type)
+			if (Main.tile[x, y].TileType == base.Type)
 			{
 				if (nextSpecialDrawIndex < Main.specX.Length)
 				{
@@ -139,11 +139,11 @@ namespace SGAmod.Tiles.TechTiles
 			Texture2D coinTexture = Main.coinTexture[2];
 			int texHeight = coinTexture.Height / 8;
 
-			if (Main.tile[i, j].type == base.Type)
+			if (Main.tile[i, j].TileType == base.Type)
 			{
-				if (tile.frameX % 36 == 0 && tile.frameY % 36 == 0)
+				if (tile.TileFrameX % 36 == 0 && tile.TileFrameY % 36 == 0)
 				{
-					Rectangle rect = new Rectangle(0, (int)((Main.GlobalTime * (tile.frameY>0 ? 3f : 8f)) % 8) * texHeight, coinTexture.Width, texHeight);
+					Rectangle rect = new Rectangle(0, (int)((Main.GlobalTimeWrappedHourly * (tile.TileFrameY>0 ? 3f : 8f)) % 8) * texHeight, coinTexture.Width, texHeight);
 					Vector2 offset = zerooroffset + (new Vector2(i, j) * 16) + new Vector2(16, 16);
 					spriteBatch.Draw(coinTexture, offset - Main.screenPosition, rect, Color.White.MultiplyRGBA(Lighting.GetColor(i, j)), 0, new Vector2(coinTexture.Width,texHeight)/2, new Vector2(1f, 1f), SpriteEffects.None, 0f);
 				}

@@ -16,11 +16,11 @@ namespace SGAmod.Items
 
 		public override void SetDefaults()
 		{
-			item.width = 16;
-			item.height = 16;
-			item.maxStack = 999;
-			item.rare = 0;
-			item.value = 0;//Item.sellPrice(0, 0, 20, 0);		
+			Item.width = 16;
+			Item.height = 16;
+			Item.maxStack = 999;
+			Item.rare = 0;
+			Item.value = 0;//Item.sellPrice(0, 0, 20, 0);		
 		}
 	}
 }

@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SGAmod.HavocGear.Items.Weapons 
 {
@@ -16,25 +17,25 @@ namespace SGAmod.HavocGear.Items.Weapons
 	
         public override void SetDefaults()
         {
-            item.damage = 50;
-            item.magic = true;
-            item.mana = 8;
-            item.width = 28;
-            item.height = 30;
-            item.useTime = 5;
-            item.useAnimation = 20;
-            item.useStyle = 5;
-            item.noMelee = true; 
-            item.knockBack = 3.5f;
-            item.value = 10000;
-            item.rare = 6;
-            item.UseSound = SoundID.Item103;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("HeatTentacle");
-            item.shootSpeed = 17f;
+            Item.damage = 50;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 8;
+            Item.width = 28;
+            Item.height = 30;
+            Item.useTime = 5;
+            Item.useAnimation = 20;
+            Item.useStyle = 5;
+            Item.noMelee = true; 
+            Item.knockBack = 3.5f;
+            Item.value = 10000;
+            Item.rare = 6;
+            Item.UseSound = SoundID.Item103;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("HeatTentacle").Type;
+            Item.shootSpeed = 17f;
 			if (!Main.dedServ)
 			{
-				item.GetGlobalItem<ItemUseGlow>().glowTexture = mod.GetTexture("Items/GlowMasks/DjinnsInferno_Glow");
+				Item.GetGlobalItem<ItemUseGlow>().glowTexture = Mod.Assets.Request<Texture2D>("Items/GlowMasks/DjinnsInferno_Glow").Value;
 			}
 		}
     
@@ -43,8 +44,8 @@ namespace SGAmod.HavocGear.Items.Weapons
     	    int i = Main.myPlayer;
 		    int num73 = damage;
 		    float num74 = knockBack;
-    	    num74 = player.GetWeaponKnockback(item, num74);
-    	    player.itemTime = item.useTime;
+    	    num74 = player.GetWeaponKnockback(Item, num74);
+    	    player.itemTime = Item.useTime;
     	    Vector2 vector2 = player.RotatedRelativePoint(player.MountedCenter, true);
     	    float num78 = (float)Main.mouseX + Main.screenPosition.X - vector2.X;
 		    float num79 = (float)Main.mouseY + Main.screenPosition.Y - vector2.Y;
@@ -54,7 +55,7 @@ namespace SGAmod.HavocGear.Items.Weapons
 		    value3.Normalize();
 		    value2 = value2 * 4f + value3;
 		    value2.Normalize();
-		    value2 *= item.shootSpeed;
+		    value2 *= Item.shootSpeed;
 		    int projChoice = Main.rand.Next(5);
 		    float num91 = (float)Main.rand.Next(10, 160) * 0.001f;
 		    if (Main.rand.Next(2) == 0)
@@ -68,26 +69,18 @@ namespace SGAmod.HavocGear.Items.Weapons
 		    }
 		    if (projChoice == 0)
 		    {
-		 	    Projectile.NewProjectile(vector2.X, vector2.Y, value2.X, value2.Y, mod.ProjectileType("HotterTentacle"), (int)((double)num73 * 1.5f), num74, i, num92, num91);
+		 	    Projectile.NewProjectile(vector2.X, vector2.Y, value2.X, value2.Y, Mod.Find<ModProjectile>("HotterTentacle").Type, (int)((double)num73 * 1.5f), num74, i, num92, num91);
 		    }
 		    else
 		    {
-			    Projectile.NewProjectile(vector2.X, vector2.Y, value2.X, value2.Y, mod.ProjectileType("HeatTentacle"), num73, num74, i, num92, num91);
+			    Projectile.NewProjectile(vector2.X, vector2.Y, value2.X, value2.Y, Mod.Find<ModProjectile>("HeatTentacle").Type, num73, num74, i, num92, num91);
 		    }
     	    return false;
 	    }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ShadowFlameHexDoll, 1);
-			recipe.AddIngredient(ItemID.SpiritFlame, 1);
-			recipe.AddIngredient(ItemID.HallowedBar, 8);
-			recipe.AddIngredient(null, "FieryShard", 10);
-			recipe.AddIngredient(mod.ItemType("UnmanedBar"), 10);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1).AddIngredient(ItemID.ShadowFlameHexDoll, 1).AddIngredient(ItemID.SpiritFlame, 1).AddIngredient(ItemID.HallowedBar, 8).AddIngredient(null, "FieryShard", 10).AddIngredient(mod.ItemType("UnmanedBar"), 10).AddTile(TileID.MythrilAnvil).Register();
         }
     }
 }

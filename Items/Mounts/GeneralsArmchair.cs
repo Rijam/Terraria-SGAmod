@@ -98,8 +98,8 @@ namespace SGAmod.Items.Mounts
 			// Draw is called for each mount texture we provide, so we check drawType to avoid duplicate draws.
 
 			GeneralsArmchairSpecificData chairData = (GeneralsArmchairSpecificData)drawPlayer.mount._mountSpecificData;
-			Texture2D frontChair = mod.GetTexture("Items/Mounts/GeneralsArmchairFrontOnly");
-			Texture2D fullChair = mod.GetTexture("Items/Accessories/ArmchairGeneral");
+			Texture2D frontChair = Mod.Assets.Request<Texture2D>("Items/Mounts/GeneralsArmchairFrontOnly").Value;
+			Texture2D fullChair = Mod.Assets.Request<Texture2D>("Items/Accessories/ArmchairGeneral").Value;
 			Vector2 frontChairSize = frontChair.Size() / 2f;
 
 			if (drawType == 0)
@@ -122,7 +122,7 @@ namespace SGAmod.Items.Mounts
 			SGAmod mod = SGAmod.Instance;
 			SGAPlayer modply = drawPlayer.GetModPlayer<SGAPlayer>();
 
-			Texture2D frontChair = mod.GetTexture("Items/Mounts/GeneralsArmchairFrontOnly");
+			Texture2D frontChair = mod.Assets.Request<Texture2D>("Items/Mounts/GeneralsArmchairFrontOnly").Value;
 
 			//better version, from Qwerty's Mod
 			Color color = drawInfo.mountColor;
@@ -141,7 +141,7 @@ namespace SGAmod.Items.Mounts
 	public class GeneralsArmchairBuff : ModBuff
 	{
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("General's Armchair");
 			Description.SetDefault("Grants 10 defense, 10% endurance, Shiny Stone regen, and knockback immunity\n'Rule over with a Kaiser's Knuckles'");

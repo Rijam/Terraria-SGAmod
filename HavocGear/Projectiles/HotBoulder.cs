@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 
 namespace SGAmod.HavocGear.Projectiles
@@ -19,32 +20,32 @@ namespace SGAmod.HavocGear.Projectiles
         {
             Projectile refProjectile = new Projectile();
 			refProjectile.SetDefaults(ProjectileID.Boulder);
-            aiType = ProjectileID.Boulder;      
-            projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = 3;
-            projectile.melee = true;
-            projectile.light = 0.5f;
-            projectile.width = 16;
-            projectile.height = 16;
+            AIType = ProjectileID.Boulder;      
+            Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 3;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.light = 0.5f;
+            Projectile.width = 16;
+            Projectile.height = 16;
         }
        
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.penetrate--;
-            if (projectile.penetrate <= 0)
+            Projectile.penetrate--;
+            if (Projectile.penetrate <= 0)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             else
             {
-                if (projectile.velocity.X != oldVelocity.X)
+                if (Projectile.velocity.X != oldVelocity.X)
                 {
-                    projectile.velocity.X = -oldVelocity.X;
+                    Projectile.velocity.X = -oldVelocity.X;
                 }
-                if (projectile.velocity.Y != oldVelocity.Y)
+                if (Projectile.velocity.Y != oldVelocity.Y)
                 {
-                    projectile.velocity.Y = -oldVelocity.Y;
+                    Projectile.velocity.Y = -oldVelocity.Y;
                 }
             }
             return false;
@@ -52,13 +53,13 @@ namespace SGAmod.HavocGear.Projectiles
 
 	    public override bool PreKill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item45,projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item45,Projectile.Center);
         	int numProj = 2;
             float rotation = MathHelper.ToRadians(1);
             for (int i = 0; i < numProj; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(projectile.velocity.X, projectile.velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numProj - 1)));
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("BoulderBlast"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
+                Vector2 perturbedSpeed = new Vector2(Projectile.velocity.X, Projectile.velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numProj - 1)));
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("BoulderBlast").Type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, 0f);
             }
             return true;
         }
@@ -66,7 +67,7 @@ namespace SGAmod.HavocGear.Projectiles
 		public override void AI()
         {
 			
-           int DustID2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y + 2f), projectile.width + 2, projectile.height + 2, mod.DustType("HotDust"), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 20, default(Color), 1f);
+           int DustID2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y + 2f), Projectile.width + 2, Projectile.height + 2, Mod.Find<ModDust>("HotDust").Type, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 20, default(Color), 1f);
             Main.dust[DustID2].noGravity = true;
 		
 		
