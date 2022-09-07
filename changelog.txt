@@ -1,6 +1,18 @@
 
 Changelog:
 
+3.658-(9/6/22)--Unofficial Official Update
+
+--Fixed:
+
+-Noise texture for the 100th time
+
+--Changed:
+
+-Added ProVGM's music!
+-New music for Murk, Supreme Pinky, and Pink Singularity!
+-Added new music boxes for the 3 new songs + 1 for Hellion.
+
 3.655-(6/3/22)--Hotfix 43
 
 --Fixed:

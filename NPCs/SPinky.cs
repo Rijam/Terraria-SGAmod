@@ -55,7 +55,7 @@ namespace SGAmod.NPCs
 			npc.boss = true;
 			aiType = NPCID.BlueSlime;
 			animationType = NPCID.BlueSlime;
-			music = MusicID.Boss2;
+			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/PinkSingularity"); //MusicID.Boss2;
 			bossBag = mod.ItemType("SPinkyBag");
 			npc.value = Item.buyPrice(0, 1, 0, 0);
 			phase = 0;
@@ -1610,7 +1610,7 @@ namespace SGAmod.NPCs
 			animationType = NPCID.BlueSlime;
 			npc.noTileCollide = false;
 			npc.noGravity = false;
-			music = MusicID.Boss2;
+			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SupremePinky"); ;
 			//bossBag = mod.ItemType("SPinkyBag");
 			npc.value = Item.buyPrice(0, 1, 0, 0);
 		}

@@ -369,7 +369,7 @@ namespace SGAmod
 
 		private void AddMusicBoxes()
 		{
-			AddItem("MusicBox_Boss2Remix", new SGAItemMusicBox("MusicBox_Boss2Remix", "Murk", "Boss 2 Remix", "Unknown"));
+			AddItem("MusicBox_Boss2Remix", new SGAItemMusicBox("MusicBox_Boss2Remix", "Killer Fly Swarm", "Boss 2 Remix", "Unknown"));
 			AddItem("MusicBox_Swamp", new SGAItemMusicBox("MusicBox_Swamp", "Dank Shrine", "The Swamp of Ebag sah'now", "Skyre Ventes"));
 			AddItem("MusicBox_Caliburn", new SGAItemMusicBox("MusicBox_Caliburn", "Caliburn Guardians", "Guardians Down Below", "Rijam"));
 			AddItem("MusicBox_Wraith", new SGAItemMusicBox("MusicBox_Wraith", "Wraiths", "First Night", "Musicman"));
@@ -380,6 +380,10 @@ namespace SGAmod
 			AddItem("MusicBox_Space", new SGAItemMusicBox("MusicBox_Space", "Space", "Asteriod Expanse", "Rijam"));
 			AddItem("MusicBox_SpaceBoss", new SGAItemMusicBox("MusicBox_SpaceBoss", "Phaethon", "Meteoroid Barrage", "Rijam"));
 			AddItem("MusicBox_Cratrosity", new SGAItemMusicBox("MusicBox_Cratrosity", "Cratrosity", "A Perilous Venture", "Rijam"));
+			AddItem("MusicBox_Murk", new SGAItemMusicBox("MusicBox_Murk", "Murk", "The Great Stink", "ProVGM"));
+			AddItem("MusicBox_SupremePinky", new SGAItemMusicBox("MusicBox_SupremePinky", "Supreme Pinky", "The Great Stink", "ProVGM"));
+			AddItem("MusicBox_PinkSingularity", new SGAItemMusicBox("MusicBox_PinkSingularity", "Pink Singularity", "The Great Stink", "ProVGM"));
+			AddItem("MusicBox_Hellion", new SGAItemMusicBox("MusicBox_Hellion", "Hellion", "Catastrophic Circuitry Rebooted", "AquaSurferGames"));
 
 			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Murk"), ItemType("MusicBox_Boss2Remix"), TileType("MusicBox_Boss2Remix"));
 			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Swamp"), ItemType("MusicBox_Swamp"), TileType("MusicBox_Swamp"));
@@ -392,6 +396,10 @@ namespace SGAmod
 			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Space"), ItemType("MusicBox_Space"), TileType("MusicBox_Space"));
 			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Space_Boss"), ItemType("MusicBox_SpaceBoss"), TileType("MusicBox_SpaceBoss"));
 			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/SGAmod_Cratrosity"), ItemType("MusicBox_Cratrosity"), TileType("MusicBox_Cratrosity"));
+			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/MurkNew"), ItemType("MusicBox_Murk"), TileType("MusicBox_Murk"));
+			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/SupremePinky"), ItemType("MusicBox_SupremePinky"), TileType("MusicBox_SupremePinky"));
+			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/PinkSingularity"), ItemType("MusicBox_PinkSingularity"), TileType("MusicBox_PinkSingularity"));
+			AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CatastrophicCircuitryRebooted"), ItemType("MusicBox_Hellion"), TileType("MusicBox_Hellion"));
 		}
 
 		public static void LoadOrUnloadTextures(bool load)

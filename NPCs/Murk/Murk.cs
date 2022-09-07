@@ -73,7 +73,7 @@ namespace SGAmod.NPCs.Murk
             //aiType = NPCID.KingSlime;
             animationType = NPCID.KingSlime;
             NPCID.Sets.MustAlwaysDraw[npc.type] = true;
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Murk");
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/MurkNew");
             bossBag = mod.ItemType("MurkBossBag");
             npc.value = Item.buyPrice(0, 7, 50, 0);
             npc.buffImmune[mod.BuffType("AcidBurn")] = true;
@@ -1625,6 +1625,7 @@ namespace SGAmod.NPCs.Murk
             npc.noTileCollide = true;
             aiType = NPCID.BeeSmall;
             animationType = NPCID.BeeSmall;
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Murk");
 
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)

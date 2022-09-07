@@ -23,6 +23,18 @@ A few warnings before the changelog:
 -This mod has not been properly tested/optimized for multiplayer, while it supports some MP features, many things are disabled in MP
 -There's still alot of placeholder sprites! I don't sprite so please be gentle on that front!
 
+3.658-(9/6/22)--Unofficial Official Update
+
+--Fixed:
+
+-Noise texture for the 100th time
+
+--Changed:
+
+-Added ProVGM's music!
+-New music for Murk, Supreme Pinky, and Pink Singularity!
+-Added new music boxes for the 3 new songs + 1 for Hellion.
+
 3.655-(6/3/22)--Hotfix 43
 
 --Fixed:
